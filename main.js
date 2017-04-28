@@ -1,5 +1,6 @@
 var Colors = {
     black: 0x000000,
+    white: 0xCDCDCD,
     silver: 0x9DACAD,
     table: 0xBDB380,
     tableLeg: 0x4C5454,
@@ -17,6 +18,7 @@ function init(textures) {
     createScene();
     createDesk(textures[0]);
     createLaptop(textures[1]);
+    createPhone();
 	renderer.render(scene, camera);
 }
 
@@ -103,23 +105,29 @@ function createDesk(texture) {
 var Laptop = function(speakersTexture) {
     this.mesh = new THREE.Object3D();
 
-    var gBase = new THREE.BoxGeometry(10,14,0.3);
+    var sBase = roundedRect(0, 0, 10, 14, 0.5);
+    var gBase = new THREE.ExtrudeGeometry(sBase, {amount: 0.3, bevelEnabled: false});
     var mBase = new THREE.MeshPhongMaterial({color: Colors.silver});
     var base = new THREE.Mesh(gBase, mBase);
     base.rotation.x = NINETY;
     base.rotation.z = -NINETY;
     base.position.y = 0.85;
+    base.position.x = -7;
+    base.position.z = 5;
     this.mesh.add(base);
 
     var kb = new Keyboard();
 
-    var gScreen = new THREE.BoxGeometry(10,13.8,0.1);
+    var sScreen = roundedRect(0, 0, 9, 14, 0.5);
+    // var gScreen = new THREE.BoxGeometry(10,13.8,0.1);
+    var gScreen = new THREE.ExtrudeGeometry(sScreen, {amount: 0.1, bevelEnabled: false});
     var mScreen = new THREE.MeshPhongMaterial({color: Colors.black});
     var screen = new THREE.Mesh(gScreen, mScreen);
     screen.rotation.z = -NINETY;
     screen.rotation.x = - Math.PI / 6;
-    screen.position.y = 5;
-    screen.position.z = -7.5;
+    screen.position.y = 8.2;
+    screen.position.z = -10;
+    screen.position.x = -7;
     var gWireFrame = new THREE.EdgesGeometry(screen.geometry);
     var mWireFrame = new THREE.LineBasicMaterial({color: Colors.silver, linewidth: 2});
     var wireframe = new THREE.LineSegments(gWireFrame, mWireFrame);
@@ -230,5 +238,94 @@ function createLaptop(speakersTexture) {
     laptop.mesh.rotation.y = - Math.PI / 4;
     laptop.mesh.position.x = 15;
     scene.add(laptop.mesh);
+}
+
+function roundedRect(x, y, width, height, radius) {
+    var ctx = new THREE.Shape();
+	ctx.moveTo( x, y + radius );
+	ctx.lineTo( x, y + height - radius );
+	ctx.quadraticCurveTo( x, y + height, x + radius, y + height );
+	ctx.lineTo( x + width - radius, y + height );
+	ctx.quadraticCurveTo( x + width, y + height, x + width, y + height - radius );
+	ctx.lineTo( x + width, y + radius );
+	ctx.quadraticCurveTo( x + width, y, x + width - radius, y );
+	ctx.lineTo( x + radius, y );
+	ctx.quadraticCurveTo( x, y, x, y + radius );
+	return ctx;
+}
+
+function circle(r) {
+    var ctx = new THREE.Shape();
+    ctx.moveTo( 0, r  );
+    ctx.quadraticCurveTo( r, r, r, 0  );
+    ctx.quadraticCurveTo( r, - r, 0, - r  );
+    ctx.quadraticCurveTo( - r, - r, - r, 0  );
+    ctx.quadraticCurveTo( - r, r, 0, r  );
+    return ctx;
+}
+
+var Phone = function() {
+    this.mesh = new THREE.Object3D();
+
+    var mDark = new THREE.MeshPhongMaterial({color: Colors.black});
+
+	var sPhone = roundedRect(0, 0, 2.5, 5, 0.5);
+    var extrudeSettings = {amount: 0.2, bevelEnabled: false};
+
+    var gPhone = new THREE.ExtrudeGeometry(sPhone, extrudeSettings);
+    var mPhone = new THREE.MeshPhongMaterial({color: Colors.white});
+    var phone = new THREE.Mesh(gPhone, mPhone);
+    var gWireFrame = new THREE.EdgesGeometry(phone.geometry);
+    var mWireFrame = new THREE.LineBasicMaterial({color: Colors.silver, linewidth: 4});
+    var wireframe = new THREE.LineSegments(gWireFrame, mWireFrame);
+    phone.add(wireframe);
+    phone.rotation.x = NINETY;
+    phone.position.y = 1;
+    phone.position.x = -1.25;
+    phone.position.z = -2.5;
+    this.mesh.add(phone);
+
+    var gScreen = new THREE.BoxGeometry(2.3, 3.8, 0.1);
+    var screen = new THREE.Mesh(gScreen, mDark);
+    screen.rotation.x = NINETY;
+    screen.position.y = 1;
+    this.mesh.add(screen);
+
+    var buttonExtrude = {amount: 0.04, bevelEnabled: false};
+
+    var gHome = new THREE.ExtrudeGeometry(circle(0.2), buttonExtrude);
+    var home = new THREE.Mesh(gHome, new THREE.MeshPhongMaterial({color: 0xABABAB}));
+    home.rotation.x = NINETY;
+    home.position.y = 1.1;
+    home.position.z = 2.15;
+    this.mesh.add(home);
+
+    var gCamera = new THREE.ExtrudeGeometry(circle(0.05), buttonExtrude);
+    var phoneCamera = new THREE.Mesh(gCamera, mDark);
+    phoneCamera.rotation.x = NINETY;
+    phoneCamera.position.y = 1.1;
+    phoneCamera.position.z = -2.15;
+    phoneCamera.position.x = -.4;
+    this.mesh.add(phoneCamera);
+
+    var gHole = new THREE.ExtrudeGeometry(circle(0.04), buttonExtrude);
+    var hole = new THREE.Mesh(gHole, mDark);
+    hole.rotation.x = NINETY;
+    hole.position.y = 1.1;
+    hole.position.z = -2.3;
+    this.mesh.add(hole);
+
+    var gSpeakers = new THREE.BoxGeometry(0.05, 0.5, 0.1);
+    var speakers = new THREE.Mesh(gSpeakers, mDark);
+    speakers.rotation.x = NINETY;
+    speakers.rotation.z = NINETY;
+    speakers.position.y = 1.1;
+    speakers.position.z = -2.15;
+    this.mesh.add(speakers);
+}
+
+function createPhone() {
+    var phone = new Phone();
+    scene.add(phone.mesh);
 }
 
