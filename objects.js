@@ -3,7 +3,7 @@ var Phone = function() {
 
     var mDark = new THREE.MeshPhongMaterial({color: Colors.black});
 
-	var sPhone = roundedRect(0, 0, 2.5, 5, 0.5);
+	var sPhone = roundedRect(0, 0, 2.5, 5, 0.2);
     var extrudeSettings = {amount: 0.2, bevelEnabled: false};
 
     var gPhone = extrude(sPhone, 0.2);
@@ -53,12 +53,12 @@ var Phone = function() {
 var Laptop = function(speakersTexture) {
     this.mesh = new THREE.Object3D();
 
-    var sBase = roundedRect(0, 0, 10, 14, 0.5);
+    var sBase = roundedRect(0, 0, 9, 14, 0.5);
     var gBase = extrude(sBase, 0.3);
     var mBase = new THREE.MeshPhongMaterial({color: Colors.silver});
     var base = new THREE.Mesh(gBase, mBase);
     base.rotation.set(NINETY, 0, -NINETY);
-    base.position.set(-7, 0.85, 5);
+    base.position.set(-7, 0.85, 4);
     this.mesh.add(base);
 
     var kb = new Keyboard();
@@ -69,27 +69,38 @@ var Laptop = function(speakersTexture) {
     var gScreen = extrude(sScreen, 0.1);
     var mScreen = new THREE.MeshPhongMaterial({color: Colors.black});
     var screen = new THREE.Mesh(gScreen, mScreen);
-    screen.rotation.set(-Math.PI/6, 0, -NINETY);
-    screen.position.set(-7, 8.2, -10);
+    screen.rotation.set(-NINETY/3, 0, -NINETY);
+    screen.position.set(-7, 8.2, -9.5);
     var gWireFrame = new THREE.EdgesGeometry(screen.geometry);
     var mWireFrame = new THREE.LineBasicMaterial({color: Colors.silver, linewidth: 2});
     var wireframe = new THREE.LineSegments(gWireFrame, mWireFrame);
     screen.add(wireframe);
+    screen.name = 'screen';
     this.mesh.add(screen);
+
+    var gCamera = extrude(circle(0.03), 0.1);
+    var cameraLight = new THREE.Mesh(gCamera, new THREE.MeshPhongMaterial({color: Colors.green}));
+    cameraLight.position.set(0.5, 7.85, -9.1);
+    cameraLight.rotation.set(-NINETY/3, 2*NINETY, 0);
+    cameraLight.name = 'light';
+    cameraLight.visible = false;
+    this.mesh.add(cameraLight);
 
     // used for both trackpad and keyboard base
     var mIndentation = new THREE.MeshPhongMaterial({color: 0x8D9c9d});
 
-    var gTrackpad = new THREE.BoxGeometry(3,4,0.1);
+    var sTp = roundedRect(-1.6, -2, 3, 4, 0.2);
+    var gTrackpad = extrude(sTp, 0.1);
     var tp = new THREE.Mesh(gTrackpad, mIndentation);
     tp.rotation.set(NINETY, 0, -NINETY);
-    tp.position.set(0, 1, 2.5);
+    tp.position.set(0, 0.9, 2);
     this.mesh.add(tp);
 
-    var gKbBase = new THREE.BoxGeometry(4.2, 10.5, 0.1);
+    var sKbBase = roundedRect(-2.15, -5.35, 4.2, 10.7, 0.2);
+    var gKbBase = extrude(sKbBase, 0.1);
     var kbBase = new THREE.Mesh(gKbBase, mIndentation);
     kbBase.rotation.set(NINETY, 0, -NINETY);
-    kbBase.position.set(0, 1, -2);
+    kbBase.position.set(0, 0.9, -2);
     this.mesh.add(kbBase);
 
     var gSpeakers = new THREE.BoxGeometry(3.8,1,0.01);
@@ -104,7 +115,6 @@ var Laptop = function(speakersTexture) {
         speaker.position.set(i*6, 1.05, -2);
         this.mesh.add(speaker);
     }
-
 }
 
 var Keyboard = function() {
@@ -145,21 +155,26 @@ var Keyboard = function() {
         ['n','n','n','cmd','space','cmd','n','arrow','n','arrow']
     ];
 
-    var xpos, i, j, k, g, mesh;
+    var xpos, i, j, k, s, g, mesh, w, l;
+    var mWf = new THREE.LineBasicMaterial({color: 0x1C1E1F, linewidth: 1});
     for (i=0; i<keys.length; i++) {
         xpos = -4.7;
         for (j=0; j<keys[i].length; j++) {
             k = keys[i][j];
-            g = new THREE.BoxGeometry(
-                (k === 'fn' || k === 'arrow') ? 0.3 : 0.5,
-                keyLengths[k],
-                0.1
-            );
+            w = k == 'fn' || k == 'arrow' ? 0.3 : 0.5;
+            l = keyLengths[k];
+            s = roundedRect(-w/2, -l/2, w, l, 0.1);
+            g = extrude(s, 0.1);
             mesh = new THREE.Mesh(g, m);
+            mesh.name = k;
             fix(mesh);
             mesh.position.z = z + (k === 'arrow' ? 0.1 : 0);
+            mesh.position.y += 0.01;
             mesh.position.x = xpos + extra[k];
             xpos += 0.2 + keyLengths[k];
+            var gWf = new THREE.EdgesGeometry(mesh.geometry);
+            var wf = new THREE.LineSegments(gWf, mWf);
+            mesh.add(wf);
             this.mesh.add(mesh);
         }
         if (i === 0) z += 0.6;
@@ -170,20 +185,20 @@ var Keyboard = function() {
 var Desk = function(texture) {
     this.mesh = new THREE.Object3D();
 
-    var gTable = new THREE.BoxGeometry(30,60,1);
-    gTable.vertices.push(new THREE.Vector3(15,-10,0.5));
-    gTable.vertices.push(new THREE.Vector3(15,-10,-0.5));
+    var l = 20, w = 15;
+    var lx = l/2 - 2, wx = w/2 - 2;
+
+    var gTable = new THREE.BoxGeometry(w,l,1);
     var mTable = new THREE.MeshPhongMaterial({
         color: Colors.table,
         map: texture
     });
     var table = new THREE.Mesh(gTable, mTable);
-    table.rotation.z = NINETY;
-    table.rotation.x = NINETY;
+    table.rotation.set(NINETY, 0, NINETY);
     this.mesh.add(table);
 
-    var x = [28, 28, -28, -28];
-    var z = [13, -13, 13, -13];
+    var x = [lx, lx, -lx, -lx];
+    var z = [wx, -wx, wx, -wx];
 
     for (var i=0; i<4; i++) {
         var gLeg = new THREE.CylinderGeometry(1,1,25);
@@ -194,4 +209,19 @@ var Desk = function(texture) {
     }
 }
 
+var BTKeyboard = function() {
+    this.mesh = new THREE.Object3D();
+
+    var base = roundedRect(0, 0, 4.6, 10.7, 0.5);
+    var gBase = extrude(base, 0.2);
+    var mBase = new THREE.MeshPhongMaterial({color: 0x303536});
+    var base = new THREE.Mesh(gBase, mBase);
+    base.rotation.set(NINETY, 0, NINETY);
+    base.position.set(5.4, 1, -2.4);
+    this.mesh.add(base);
+
+    var keys = new Keyboard();
+    keys.mesh.position.set(0, 0.01, 2);
+    this.mesh.add(keys.mesh);
+}
 
