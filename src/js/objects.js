@@ -78,7 +78,7 @@ var Laptop = function(speakersTexture) {
     screen.name = 'screen';
     this.mesh.add(screen);
 
-    var gCamera = extrude(circle(0.03), 0.1);
+    var gCamera = extrude(circle(0.05), 0.1);
     var cameraLight = new THREE.Mesh(gCamera, new THREE.MeshPhongMaterial({color: Colors.green}));
     cameraLight.position.set(0.5, 7.85, -9.1);
     cameraLight.rotation.set(-NINETY/3, 2*NINETY, 0);
