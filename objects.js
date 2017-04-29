@@ -61,8 +61,8 @@ var Laptop = function(speakersTexture) {
     base.position.set(-7, 0.85, 4);
     this.mesh.add(base);
 
-    var kb = new Keyboard();
-    this.mesh.add(kb.mesh);
+    keyboard = new Keyboard();
+    this.mesh.add(keyboard.mesh);
 
     var sScreen = roundedRect(0, 0, 9, 14, 0.5);
     // var gScreen = new THREE.BoxGeometry(10,13.8,0.1);
@@ -112,13 +112,14 @@ var Laptop = function(speakersTexture) {
     for (var i=-1; i<2; i+=2) {
         var speaker = new THREE.Mesh(gSpeakers, mSpeakers);
         speaker.rotation.set(NINETY, 0, -NINETY);
-        speaker.position.set(i*6, 1.05, -2);
+        speaker.position.set(i*6, 0.9, -2);
         this.mesh.add(speaker);
     }
 }
 
 var Keyboard = function() {
     this.mesh = new THREE.Object3D();
+    this.keyState = Array(77).fill(false);
 
     const fix = function(key) {
         key.rotation.set(NINETY, 0, -NINETY);
@@ -179,6 +180,31 @@ var Keyboard = function() {
         }
         if (i === 0) z += 0.6;
         else z += 0.7;
+    }
+
+    $(document).on('keyup', this.release.bind(this));
+    $(document).on('keydown', this.press.bind(this));
+}
+
+Keyboard.prototype.press = function(e) {
+    var num = KEY_MAPS[e.which];
+    if (!this.keyState[num]) {
+        this.keyState[num] = true;
+        var k = this.mesh.children[num];
+        k.position.y -= 0.05;
+        renderer.render(scene, camera);
+    } else if (e.which == 20) {
+        this.release(e);
+    }
+}
+
+Keyboard.prototype.release = function(e) {
+    var num = KEY_MAPS[e.which];
+    if (this.keyState[num]) {
+        this.keyState[num] = false;
+        var k = this.mesh.children[num];
+        k.position.y += 0.05;
+        renderer.render(scene, camera);
     }
 }
 

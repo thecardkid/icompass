@@ -27,6 +27,48 @@ function extrude(shape, amount) {
     return new THREE.ExtrudeGeometry(shape, {amount: amount, bevelEnabled: false});
 }
 
+function animateEntrance() {
+    setTimeout(function() {
+        $('#world').removeClass('hidden');
+    }, 1000);
+    setTimeout(function() {
+        $('#duckduckgo').removeClass('hidden');
+        setTimeout(function() {
+            $('#search').removeClass('hidden').focus();
+        }, 1400);
+        $('#loading').addClass('hidden');
+    }, 3000);
+}
+
+function setCss() {
+    var w = WIDTH * 0.33;
+    var h = HEIGHT * 0.365;
+    var left = (WIDTH-w) / 2;
+    $('#duckduckgo').css({
+        'top': HEIGHT * 0.13,
+        'height': h,
+        'left': left,
+        'width': w
+    });
+
+    var searchW = WIDTH * 0.23;
+    $('#search').css({
+        'top': 354 * HEIGHT / H,
+        'height': 35 * HEIGHT / H,
+        'left': left + (w - searchW - 60) / 2,
+        'width': searchW
+    });
+}
+
+function cameraLightToggle() {
+    cameraOn = !cameraOn;
+}
+
+function flashCameraLight() {
+    laptop.mesh.children[3].visible = cameraOn;
+    renderer.render(scene, camera);
+}
+
 const KEY_MAPS = {
     27: 1, // esc
     192: 14, // ~

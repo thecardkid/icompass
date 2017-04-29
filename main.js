@@ -13,25 +13,12 @@ const loader = new THREE.TextureLoader();
 const NINETY = Math.PI / 2;
 const W = 1916, H = 978;
 const ASPECT_RATIO = W / H;
-$(document).ready(loadTextures);
-$(document).on('keyup', releaseKey);
-$(document).on('keydown', pressKey);
-var laptop;
+var laptop, keyboard;
 var cameraOn = false;
-var KEY_STATE = Array(77).fill(false);
 
-function loadTextures() {
+$(document).ready(function loadTextures() {
     TW.loadTextures(['images/table.jpeg', 'images/speakers.jpg'], init);
-}
-
-function cameraLightToggle() {
-    cameraOn = !cameraOn;
-}
-
-function flashCameraLight() {
-    laptop.mesh.children[3].visible = cameraOn;
-    renderer.render(scene, camera);
-}
+});
 
 function init(textures) {
     // set up scene, camera, renderer
@@ -39,63 +26,11 @@ function init(textures) {
     createDesk(textures[0]);
     createLaptop(textures[1]);
 	renderer.render(scene, camera);
-    setTimeout(function() {
-        $('#world').removeClass('hidden');
-    }, 1000);
-    setTimeout(function() {
-        $('#duckduckgo').removeClass('hidden');
-        setTimeout(function() {
-            $('#search').removeClass('hidden').focus();
-        }, 1400);
-        $('#loading').addClass('hidden');
-    }, 3000);
+
+    animateEntrance();
     setInterval(flashCameraLight, 6000);
     setInterval(cameraLightToggle, 4000);
     setCss();
-}
-
-function setCss() {
-    var w = WIDTH * 0.33;
-    var h = HEIGHT * 0.365;
-    var left = (WIDTH-w) / 2;
-    $('#duckduckgo').css({
-        'top': HEIGHT * 0.13,
-        'height': h,
-        'left': left,
-        'width': w
-    });
-
-    var searchW = WIDTH * 0.23;
-    $('#search').css({
-        'top': 354 * HEIGHT / H,
-        'height': 35 * HEIGHT / H,
-        'left': left + (w - searchW - 60) / 2,
-        'width': searchW
-    });
-}
-
-function pressKey(e) {
-    var num = KEY_MAPS[e.which];
-    if (!KEY_STATE[num]) {
-        KEY_STATE[num] = true;
-        var key = laptop.mesh.children[1].children[num];
-        key.position.y -= 0.05;
-        renderer.render(scene, camera);
-    } else if (e.which === 20) {
-        releaseKey(e);
-    }
-}
-
-function releaseKey(e) {
-    var num = KEY_MAPS[e.which];
-    if (KEY_STATE[num]) {
-        KEY_STATE[num] = false;
-        var key = laptop.mesh.children[1].children[num];
-        key.position.y += 0.05;
-        renderer.render(scene, camera);
-    } else if (e.which === 20) {
-        pressKey(e);
-    }
 }
 
 var scene, camera, fieldOfView, aspectRatio, near, far, HEIGHT, WIDTH,
@@ -105,11 +40,8 @@ function createScene() {
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
 
-    if (WIDTH < ASPECT_RATIO * HEIGHT) {
-        HEIGHT = WIDTH / ASPECT_RATIO;
-    } else if (HEIGHT < WIDTH / ASPECT_RATIO) {
-        WIDTH = HEIGHT * ASPECT_RATIO;
-    }
+    if (WIDTH < ASPECT_RATIO * HEIGHT) HEIGHT = WIDTH / ASPECT_RATIO;
+    else if (HEIGHT < WIDTH / ASPECT_RATIO) WIDTH = HEIGHT * ASPECT_RATIO;
 
     scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
@@ -151,6 +83,8 @@ function createDesk(texture) {
 }
 
 function createLaptop(speakersTexture) {
+    speakersTexture.wrapS = speakersTexture.wrapT = THREE.RepeatWrapping;
+    speakersTexture.repeat.set(5,2);
     laptop = new Laptop(speakersTexture);
     laptop.mesh.position.z = 5;
     scene.add(laptop.mesh);
