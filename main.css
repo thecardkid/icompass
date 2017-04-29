@@ -6,14 +6,18 @@ canvas {width: 100%; height: 100%}
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: linear-gradient(#bcbcbc, #ababab);
+    background: linear-gradient(#343434, #232323);
+    display: hidden;
+    animation: fadein 2s;
 }
 
-#text {
+#duckduckgo {
+    color: black;
     position: absolute;
     background: white;
     background: #ffffff url("images/screen.png") no-repeat right top;
     background-size: 100%;
+    animation: fadein 2s;
 }
 
 #search {
@@ -26,6 +30,24 @@ canvas {width: 100%; height: 100%}
     padding-right: 45px;
 }
 
+#loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    line-height: 90vh;
+    font-family: monospace;
+    font-size: 20px;
+}
+
 .hidden {
     display: none;
+}
+
+@keyframes fadein {
+    from {opacity: 0};
+    to {opacity: 1};
 }

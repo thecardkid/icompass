@@ -8,9 +8,6 @@ var Colors = {
     green: 0x00FF41, //4BFF00,
 };
 
-setInterval(flashCameraLight, 6000);
-setInterval(cameraLightToggle, 4000);
-
 // var tableTexture = 'http://4.bp.blogspot.com/-06IPFRCgmH0/VDuFtXJZZNI/AAAAAAAAGjw/K1ew83hDI_c/s1600/seamless-wood-pattern.jpg'
 const loader = new THREE.TextureLoader();
 const NINETY = Math.PI / 2;
@@ -28,12 +25,10 @@ function loadTextures() {
 }
 
 function cameraLightToggle() {
-    console.log('toggling');
     cameraOn = !cameraOn;
 }
 
 function flashCameraLight() {
-    console.log('render');
     laptop.mesh.children[3].visible = cameraOn;
     renderer.render(scene, camera);
 }
@@ -44,7 +39,18 @@ function init(textures) {
     createDesk(textures[0]);
     createLaptop(textures[1]);
 	renderer.render(scene, camera);
-    $('#text').removeClass('hidden');
+    setTimeout(function() {
+        $('#world').removeClass('hidden');
+    }, 1000);
+    setTimeout(function() {
+        $('#duckduckgo').removeClass('hidden');
+        setTimeout(function() {
+            $('#search').removeClass('hidden').focus();
+        }, 1400);
+        $('#loading').addClass('hidden');
+    }, 3000);
+    setInterval(flashCameraLight, 6000);
+    setInterval(cameraLightToggle, 4000);
     setCss();
 }
 
@@ -52,7 +58,7 @@ function setCss() {
     var w = WIDTH * 0.33;
     var h = HEIGHT * 0.365;
     var left = (WIDTH-w) / 2;
-    $('#text').css({
+    $('#duckduckgo').css({
         'top': HEIGHT * 0.13,
         'height': h,
         'left': left,
