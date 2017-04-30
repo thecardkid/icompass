@@ -30,13 +30,13 @@ function extrude(shape, amount) {
 function animateEntrance() {
     setTimeout(function() {
         $('#world').removeClass('hidden');
+        $('#loading').addClass('hidden');
     }, 1000);
     setTimeout(function() {
         $('#screen').removeClass('hidden');
         setTimeout(function() {
             $('#search').focus();
         }, 1400);
-        $('#loading').addClass('hidden');
     }, 3000);
 }
 
@@ -63,12 +63,20 @@ function setCss() {
         'top': 405 * HEIGHT / H,
         'left': left,
         'width': w,
+        'font-size': 15 * HEIGHT / H,
     });
 
     $('#fake-title').css({
         'top': 287 * HEIGHT/H,
         'left': left,
-        'width': w
+        'width': w,
+        'font-size': 30 * HEIGHT / H,
+    });
+
+    $('#search').css({
+        'font-size': 15 * HEIGHT/H,
+        'padding-left': 15 * W / WIDTH,
+        'padding-right': 45 * WIDTH / W
     });
 }
 

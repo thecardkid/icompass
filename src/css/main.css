@@ -33,7 +33,6 @@ canvas {width: 100%; height: 100%}
     font-family: sans-serif;
     letter-spacing: 0.1px;
     font-weight: 100;
-    font-size: 30px;
     cursor: default;
 }
 
@@ -44,7 +43,6 @@ canvas {width: 100%; height: 100%}
 
 #fake-text {
     position: absolute;
-    font-size: 15px;
     letter-spacing: 0.8px;
     text-align: center;
     line-height: 40px;
@@ -58,9 +56,6 @@ canvas {width: 100%; height: 100%}
     position: absolute;
     background: transparent;
     color: grey;
-    font-size: 15px;
-    padding-left: 15px;
-    padding-right: 45px;
 }
 
 #search:focus {
