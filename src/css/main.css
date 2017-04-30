@@ -11,13 +11,46 @@ canvas {width: 100%; height: 100%}
     animation: fadein 2s;
 }
 
+#screen {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    animation: fadein 2s;
+}
+
 #duckduckgo {
     color: black;
     position: absolute;
     background: white;
     background: #ffffff url("images/screen.png") no-repeat right top;
     background-size: 100%;
-    animation: fadein 2s;
+}
+
+#fake-title {
+    position: absolute;
+    text-align: center;
+    color: #4C4C4C;
+    font-family: sans-serif;
+    letter-spacing: 0.1px;
+    font-weight: 100;
+    font-size: 30px;
+    cursor: default;
+}
+
+#learn-more {
+    color: #4495D4;
+    cursor: default;
+}
+
+#fake-text {
+    position: absolute;
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    text-align: center;
+    line-height: 40px;
+    font-family: sans-serif;
+    color: #9A9A9A;
+    cursor: default;
 }
 
 #search {

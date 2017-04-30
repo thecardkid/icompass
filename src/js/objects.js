@@ -65,7 +65,6 @@ var Laptop = function(speakersTexture) {
     this.mesh.add(keyboard.mesh);
 
     var sScreen = roundedRect(0, 0, 9, 14, 0.5);
-    // var gScreen = new THREE.BoxGeometry(10,13.8,0.1);
     var gScreen = extrude(sScreen, 0.1);
     var mScreen = new THREE.MeshPhongMaterial({color: Colors.black});
     var screen = new THREE.Mesh(gScreen, mScreen);
@@ -86,29 +85,19 @@ var Laptop = function(speakersTexture) {
     cameraLight.visible = false;
     this.mesh.add(cameraLight);
 
-    // used for both trackpad and keyboard base
-    var mIndentation = new THREE.MeshPhongMaterial({color: 0x8D9c9d});
-
-    var sTp = roundedRect(-1.6, -2, 3, 4, 0.2);
+    var sTp = roundedRect(-1.6, -2.28, 3, 4, 0.2);
+    var mTp = new THREE.MeshPhongMaterial({color: 0x8D9c9d});
     var gTrackpad = extrude(sTp, 0.1);
-    var tp = new THREE.Mesh(gTrackpad, mIndentation);
+    var tp = new THREE.Mesh(gTrackpad, mTp);
     tp.rotation.set(NINETY, 0, -NINETY);
     tp.position.set(0, 0.9, 2);
     this.mesh.add(tp);
-
-    var sKbBase = roundedRect(-2.15, -5.35, 4.2, 10.7, 0.2);
-    var gKbBase = extrude(sKbBase, 0.1);
-    var kbBase = new THREE.Mesh(gKbBase, mIndentation);
-    kbBase.rotation.set(NINETY, 0, -NINETY);
-    kbBase.position.set(0, 0.9, -2);
-    this.mesh.add(kbBase);
 
     var gSpeakers = new THREE.BoxGeometry(3.8,1,0.01);
     var mSpeakers = new THREE.MeshPhongMaterial({
         color: Colors.silver,
         map: speakersTexture
     });
-
     for (var i=-1; i<2; i+=2) {
         var speaker = new THREE.Mesh(gSpeakers, mSpeakers);
         speaker.rotation.set(NINETY, 0, -NINETY);
@@ -170,7 +159,6 @@ var Keyboard = function() {
             mesh.name = k;
             fix(mesh);
             mesh.position.z = z + (k === 'arrow' ? 0.1 : 0);
-            mesh.position.y += 0.01;
             mesh.position.x = xpos + extra[k];
             xpos += 0.2 + keyLengths[k];
             var gWf = new THREE.EdgesGeometry(mesh.geometry);
@@ -189,6 +177,7 @@ var Keyboard = function() {
 Keyboard.prototype.press = function(e) {
     var num = KEY_MAPS[e.which];
     if (!this.keyState[num]) {
+        if (e.which === 13) enterPress();
         this.keyState[num] = true;
         var k = this.mesh.children[num];
         k.position.y -= 0.05;

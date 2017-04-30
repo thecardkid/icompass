@@ -32,9 +32,9 @@ function animateEntrance() {
         $('#world').removeClass('hidden');
     }, 1000);
     setTimeout(function() {
-        $('#duckduckgo').removeClass('hidden');
+        $('#screen').removeClass('hidden');
         setTimeout(function() {
-            $('#search').removeClass('hidden').focus();
+            $('#search').focus();
         }, 1400);
         $('#loading').addClass('hidden');
     }, 3000);
@@ -58,6 +58,18 @@ function setCss() {
         'left': left + (w - searchW - 60) / 2,
         'width': searchW
     });
+
+    $('#fake-text').css({
+        'top': 405 * HEIGHT / H,
+        'left': left,
+        'width': w,
+    });
+
+    $('#fake-title').css({
+        'top': 287 * HEIGHT/H,
+        'left': left,
+        'width': w
+    });
 }
 
 function cameraLightToggle() {
@@ -70,7 +82,7 @@ function flashCameraLight() {
 }
 
 const KEY_MAPS = {
-    27: 1, // esc
+    27: 0, // esc
     192: 14, // ~
     49: 15, // 1
     50: 16,

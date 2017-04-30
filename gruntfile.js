@@ -10,13 +10,13 @@ module.exports = function (grunt) {
 
 		watch: {
 			scripts: {
-				files: ['js/*.js'],
+				files: ['src/js/*.js'],
 				tasks: ['uglify'],
 				options: {
 					spawn: false,
 				},
 			},
-			files: 'css/*.css',
+			files: 'src/css/*.css',
 			tasks: ['cssmin']
 		},
 

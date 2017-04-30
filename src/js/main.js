@@ -15,6 +15,10 @@ const W = 1916, H = 978;
 const ASPECT_RATIO = W / H;
 var laptop, keyboard;
 var cameraOn = false;
+var scene, camera, fieldOfView, aspectRatio, near, far, HEIGHT, WIDTH,
+    renderer, container, light;
+var title, text, span;
+var pressed = false;
 
 $(document).ready(function loadTextures() {
     TW.loadTextures(['images/table.jpeg', 'images/speakers.jpg'], init);
@@ -31,10 +35,31 @@ function init(textures) {
     setInterval(flashCameraLight, 6000);
     setInterval(cameraLightToggle, 4000);
     setCss();
+    var speed = 10;
+    title = new TextScramble(document.getElementById('fake-title'), speed);
+    text = new TextScramble(document.getElementById('fake-text'), speed);
+    span = new TextScramble(document.getElementById('learn-more'), speed);
+    setInterval(function() {
+        if (pressed) return;
+
+        text.setText('The camera is blinking at you.');
+        setTimeout(function() {
+            text.setText('The search engine that doesn\'t track you.');
+        }, 2500);
+    }, 15000);
 }
 
-var scene, camera, fieldOfView, aspectRatio, near, far, HEIGHT, WIDTH,
-    renderer, container, light;
+function enterPress() {
+    pressed = true;
+    title.setText('Duck It!');
+    text.setText('I told you not to search didn\'t I?');
+
+    setTimeout(function() {
+        title.setText('DuckDuckGo');
+        text.setText('The search engine that doesn\'t track you.');
+        pressed = false;
+    }, 3000);
+}
 
 function createScene() {
     HEIGHT = window.innerHeight;
