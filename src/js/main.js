@@ -50,6 +50,8 @@ function init(textures) {
 }
 
 function enterPress() {
+    if (pressed) return;
+
     pressed = true;
     title.setText('Duck It!');
     text.setText('I told you not to search didn\'t I?');
