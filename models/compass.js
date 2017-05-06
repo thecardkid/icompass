@@ -7,7 +7,7 @@ var compassSchema = mongoose.Schema({
     center: String,
     notes: [{
         quadrant: String,
-        user: String,
+        color: String,
         text: String
     }],
 });

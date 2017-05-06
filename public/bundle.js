@@ -64,7 +64,7 @@
 
 	var _main2 = _interopRequireDefault(_main);
 
-	var _landing = __webpack_require__(255);
+	var _landing = __webpack_require__(272);
 
 	var _landing2 = _interopRequireDefault(_landing);
 
@@ -156,7 +156,7 @@
 
 
 	// module
-	exports.push([module.id, "#compass {\n  width: 100vw;\n  height: 100vh;\n}\n.quadrant {\n  position: absolute;\n  width: 50vw;\n  height: 50vh;\n  border: 1px solid black;\n}\n.quadrant ul {\n  overflow: scroll;\n  width: 100%;\n  height: 1005;\n  padding: 40px;\n}\n.quadrant ul li {\n  height: 155px;\n  list-style: none;\n  float: left;\n}\n.quadrant ul li a {\n  text-decoration: none;\n  color: black;\n  display: block;\n  /* background: #ffc; */\n  max-width: 120px;\n  padding: 15px;\n  margin: 0 5px;\n  -moz-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-transform: rotate(-6deg);\n  -o-transform: rotate(-6deg);\n  -moz-transform: rotate(-6deg);\n}\n.quadrant ul li a p {\n  font-family: \"Reenie Beanie\", arial, sans-serif;\n  font-size: 20px;\n}\n.quadrant ul li:nth-child(even) a {\n  -webkit-transform: rotate(4deg);\n  -o-transform: rotate(4deg);\n  -moz-transform: rotate(4deg);\n}\n.quadrant ul li:nth-child(3n) a {\n  -webkit-transform: rotate(-3deg);\n  -o-transform: rotate(-3deg);\n  -moz-transform: rotate(-3deg);\n}\n.quadrant ul li:nth-child(5n) a {\n  -webkit-transform: rotate(5deg);\n  -o-transform: rotate(5deg);\n  -moz-transform: rotate(5deg);\n}\n.quadrant ul li a:hover,\n.quadrant ul li a:focus {\n  -moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-transform: scale(1.5);\n  -moz-transform: scale(1.5);\n  -o-transform: scale(1.5);\n  position: relative;\n  z-index: 5;\n}\n#observation {\n  bottom: 0;\n  left: 0;\n}\n#principle {\n  top: 0;\n  left: 0;\n}\n#idea {\n  top: 0;\n  right: 0;\n}\n#experiment {\n  bottom: 0;\n  right: 0;\n}\n#center {\n  border: 1px solid black;\n  border-radius: 100%;\n  width: 100px;\n  height: 100px;\n  position: absolute;\n  background: white;\n  text-align: center;\n  line-height: 100px;\n}\n.hidden {\n  display: none;\n}\n#new-note {\n  width: 300px;\n  height: 230px;\n  position: absolute;\n  background: yellow;\n}\n#new-note h3#new-note-title {\n  width: 280px;\n  height: 30px;\n  margin-top: 10px;\n  margin-left: 9px;\n}\n#new-note input#new-note-text {\n  height: 130px;\n  margin-top: 10px;\n  width: 280px;\n  margin-left: 9px;\n  padding: 0;\n}\n#new-note button {\n  width: 140px;\n  margin-top: 10px;\n  border-radius: 0px;\n  height: 30px;\n}\n#new-note button#make-note {\n  margin-left: 9px;\n}\nhtml,\nbody,\ndiv,\nspan,\napplet,\nobject,\niframe,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\np,\nblockquote,\npre,\na,\nabbr,\nacronym,\naddress,\nbig,\ncite,\ncode,\ndel,\ndfn,\nem,\nimg,\nins,\nkbd,\nq,\ns,\nsamp,\nsmall,\nstrike,\nstrong,\nsub,\nsup,\ntt,\nvar,\nb,\nu,\ni,\ncenter,\ndl,\ndt,\ndd,\nol,\nul,\nli,\nfieldset,\nform,\nlabel,\nlegend,\ntable,\ncaption,\ntbody,\ntfoot,\nthead,\ntr,\nth,\ntd,\narticle,\naside,\ncanvas,\ndetails,\nembed,\nfigure,\nfigcaption,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\noutput,\nruby,\nsection,\nsummary,\ntime,\nmark,\naudio,\nvideo {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline;\n}\n/* HTML5 display-role reset for older browsers */\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\nsection {\n  display: block;\n}\nbody {\n  line-height: 1;\n}\nol,\nul {\n  list-style: none;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\ninput:focus {\n  outline: none;\n}\na,\nu {\n  text-decoration: none !important;\n}\n", ""]);
+	exports.push([module.id, "#compass {\n  width: 100vw;\n  height: 100vh;\n}\n.quadrant {\n  position: absolute;\n  width: 50vw;\n  height: 50vh;\n  border: 1px solid black;\n}\n.quadrant ul {\n  overflow: scroll;\n  width: 100%;\n  height: 1005;\n  padding: 40px;\n}\n.quadrant ul li {\n  height: 155px;\n  list-style: none;\n  float: left;\n}\n.quadrant ul li a {\n  text-decoration: none;\n  color: black;\n  display: block;\n  background: #ffc;\n  max-width: 120px;\n  padding: 15px;\n  margin: 0 5px;\n  -moz-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-transform: rotate(-6deg);\n  -o-transform: rotate(-6deg);\n  -moz-transform: rotate(-6deg);\n  -moz-transition: -moz-transform 0.15s linear;\n  -o-transition: -o-transform 0.15s linear;\n  -webkit-transition: -webkit-transform 0.15s linear;\n}\n.quadrant ul li a p {\n  font-family: \"Reenie Beanie\", arial, sans-serif;\n  font-size: 20px;\n}\n.quadrant ul li:nth-child(even) a {\n  -webkit-transform: rotate(4deg);\n  -o-transform: rotate(4deg);\n  -moz-transform: rotate(4deg);\n}\n.quadrant ul li:nth-child(3n) a {\n  -webkit-transform: rotate(-3deg);\n  -o-transform: rotate(-3deg);\n  -moz-transform: rotate(-3deg);\n}\n.quadrant ul li:nth-child(5n) a {\n  -webkit-transform: rotate(5deg);\n  -o-transform: rotate(5deg);\n  -moz-transform: rotate(5deg);\n}\n.quadrant ul li a:hover,\n.quadrant ul li a:focus {\n  -moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-transform: scale(1.5);\n  -moz-transform: scale(1.5);\n  -o-transform: scale(1.5);\n  position: relative;\n  z-index: 5;\n}\n#observation {\n  bottom: 0;\n  left: 0;\n}\n#principle {\n  top: 0;\n  left: 0;\n}\n#idea {\n  top: 0;\n  right: 0;\n}\n#experiment {\n  bottom: 0;\n  right: 0;\n}\n#center {\n  border: 1px solid black;\n  border-radius: 100%;\n  width: 100px;\n  height: 100px;\n  position: absolute;\n  background: white;\n  text-align: center;\n  line-height: 100px;\n}\n.hidden {\n  display: none;\n}\n#new-note {\n  width: 300px;\n  height: 230px;\n  position: absolute;\n  background: yellow;\n}\n#new-note h3#new-note-title {\n  width: 280px;\n  height: 30px;\n  margin-top: 10px;\n  margin-left: 9px;\n}\n#new-note input#new-note-text {\n  height: 130px;\n  margin-top: 10px;\n  width: 280px;\n  margin-left: 9px;\n  padding: 0;\n}\n#new-note button {\n  width: 140px;\n  margin-top: 10px;\n  border-radius: 0px;\n  height: 30px;\n}\n#new-note button#make-note {\n  margin-left: 9px;\n}\nhtml,\nbody,\ndiv,\nspan,\napplet,\nobject,\niframe,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\np,\nblockquote,\npre,\na,\nabbr,\nacronym,\naddress,\nbig,\ncite,\ncode,\ndel,\ndfn,\nem,\nimg,\nins,\nkbd,\nq,\ns,\nsamp,\nsmall,\nstrike,\nstrong,\nsub,\nsup,\ntt,\nvar,\nb,\nu,\ni,\ncenter,\ndl,\ndt,\ndd,\nol,\nul,\nli,\nfieldset,\nform,\nlabel,\nlegend,\ntable,\ncaption,\ntbody,\ntfoot,\nthead,\ntr,\nth,\ntd,\narticle,\naside,\ncanvas,\ndetails,\nembed,\nfigure,\nfigcaption,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\noutput,\nruby,\nsection,\nsummary,\ntime,\nmark,\naudio,\nvideo {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline;\n}\n/* HTML5 display-role reset for older browsers */\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\nsection {\n  display: block;\n}\nbody {\n  line-height: 1;\n}\nol,\nul {\n  list-style: none;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\ninput:focus {\n  outline: none;\n}\na,\nu {\n  text-decoration: none !important;\n}\n", ""]);
 
 	// exports
 
@@ -28717,15 +28717,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _underscore = __webpack_require__(256);
+	var _underscore = __webpack_require__(255);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _eventEmitter = __webpack_require__(257);
+	var _eventEmitter = __webpack_require__(256);
 
 	var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
 
-	var _utils = __webpack_require__(272);
+	var _utils = __webpack_require__(271);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28735,66 +28735,46 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var colors = ['#ffc', // yellow
-	'#cfc', // green
-	'#ccf', // purple
-	'#cff', // blue
-	'#fcf'];
-
-	var Note = function (_Component) {
-	    _inherits(Note, _Component);
-
-	    function Note(props, context) {
-	        _classCallCheck(this, Note);
-
-	        var _this = _possibleConstructorReturn(this, (Note.__proto__ || Object.getPrototypeOf(Note)).call(this, props, context));
-
-	        console.log(props);
-	        return _this;
-	    }
-
-	    return Note;
-	}(_react.Component);
-
-	var Main = function (_Component2) {
-	    _inherits(Main, _Component2);
+	var Main = function (_Component) {
+	    _inherits(Main, _Component);
 
 	    function Main(props, context) {
 	        _classCallCheck(this, Main);
 
-	        var _this2 = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this, props, context));
+	        var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this, props, context));
 
-	        _this2.state = {
+	        _this.state = {
 	            vw: window.innerWidth,
 	            vh: window.innerHeight,
 	            newNote: false,
-	            compass: _this2.props.compass,
-	            username: _this2.props.username,
+	            compass: _this.props.compass,
+	            username: _this.props.username,
 	            users: {}
 	        };
 
 	        var updateNotes = function updateNotes(newNote) {
-	            var compass = _this2.state.compass;
+	            var compass = _this.state.compass;
 	            compass.notes.push(newNote);
-	            _this2.setState({ compass: compass });
+	            _this.setState({ compass: compass });
 	        };
 
-	        _this2.socket = io();
-	        _this2.socket.on('update notes', function (newNote) {
+	        var updateUsers = function updateUsers(newUsers) {
+	            return _this.setState({ users: newUsers });
+	        };
+
+	        _this.socket = io();
+	        _this.socket.on('update notes', function (newNote) {
 	            return updateNotes(newNote);
 	        });
-	        _this2.socket.on('user joined', function (newUser) {
-	            var users = _this2.state.users;
-	            users[newUser] = colors[0];
-	            colors = colors.splice(1);
-	            _this2.setState({ users: users });
-	        });
-	        _this2.updateVw = _this2.updateVw.bind(_this2);
-	        _this2.handleKey = _this2.handleKey.bind(_this2);
-	        _this2.renderList = _this2.renderList.bind(_this2);
-	        _this2.makeNote = _this2.makeNote.bind(_this2);
-	        _this2.closeForm = _this2.closeForm.bind(_this2);
-	        return _this2;
+	        _this.socket.on('user joined', updateUsers);
+	        _this.socket.on('user left', updateUsers);
+
+	        _this.updateVw = _this.updateVw.bind(_this);
+	        _this.handleKey = _this.handleKey.bind(_this);
+	        _this.renderList = _this.renderList.bind(_this);
+	        _this.makeNote = _this.makeNote.bind(_this);
+	        _this.closeForm = _this.closeForm.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(Main, [{
@@ -28864,8 +28844,6 @@
 	    }, {
 	        key: 'renderList',
 	        value: function renderList(type) {
-	            var _this3 = this;
-
 	            var list = _underscore2.default.filter(this.state.compass.notes, function (e) {
 	                return e.quadrant === type;
 	            });
@@ -28875,7 +28853,7 @@
 	                    { key: e.quadrant + i },
 	                    _react2.default.createElement(
 	                        'a',
-	                        { style: { background: _this3.state.users[e.user] } },
+	                        { style: { background: e.color } },
 	                        _react2.default.createElement(
 	                            'p',
 	                            null,
@@ -28897,12 +28875,12 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _this4 = this;
+	            var _this2 = this;
 
 	            var centerStyle = function centerStyle(w, h) {
 	                return {
-	                    top: (_this4.state.vh - h) / 2,
-	                    left: (_this4.state.vw - w) / 2
+	                    top: (_this2.state.vh - h) / 2,
+	                    left: (_this2.state.vw - w) / 2
 	                };
 	            };
 
@@ -28963,118 +28941,6 @@
 
 /***/ },
 /* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(7);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(184);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Landing = function (_Component) {
-	    _inherits(Landing, _Component);
-
-	    function Landing(props, context) {
-	        _classCallCheck(this, Landing);
-
-	        var _this = _possibleConstructorReturn(this, (Landing.__proto__ || Object.getPrototypeOf(Landing)).call(this, props, context));
-
-	        _this.newCompass = _this.newCompass.bind(_this);
-	        _this.loadCompass = _this.loadCompass.bind(_this);
-	        return _this;
-	    }
-
-	    _createClass(Landing, [{
-	        key: 'newCompass',
-	        value: function newCompass() {
-	            var username = $('#username').val();
-	            var root = this;
-	            fetch('/api/compass/create', {
-	                method: 'POST',
-	                headers: {
-	                    'Accept': 'application/json',
-	                    'Content-Type': 'application/json'
-	                }
-	            }).then(function (response) {
-	                return response.json();
-	            }).then(function (responseJson) {
-	                root.props.route.setCompass(responseJson.compass, username);
-	            }).catch(function (e) {
-	                return console.error(e);
-	            });
-	        }
-	    }, {
-	        key: 'loadCompass',
-	        value: function loadCompass() {
-	            var id = $('#compass-id').val();
-	            var username = $('#username').val();
-	            var root = this;
-	            fetch('/api/compass/load', {
-	                method: 'POST',
-	                headers: {
-	                    'Accept': 'application/json',
-	                    'Content-Type': 'application/json'
-	                },
-	                credentials: 'same-origin',
-	                body: JSON.stringify({ 'id': id })
-	            }).then(function (response) {
-	                return response.json();
-	            }).then(function (responseJson) {
-	                root.props.route.setCompass(responseJson.compass, username);
-	            }).catch(function (e) {
-	                return console.error(e);
-	            });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                { id: 'landing' },
-	                _react2.default.createElement(
-	                    'p',
-	                    null,
-	                    'Enter ID:'
-	                ),
-	                _react2.default.createElement('input', { id: 'compass-id', type: 'text', placeholder: 'Compass ID' }),
-	                _react2.default.createElement('input', { id: 'username', type: 'text' }),
-	                _react2.default.createElement(
-	                    'button',
-	                    { onClick: this.loadCompass },
-	                    'Load'
-	                ),
-	                _react2.default.createElement(
-	                    'button',
-	                    { onClick: this.newCompass },
-	                    'New'
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Landing;
-	}(_react.Component);
-
-	exports.default = Landing;
-
-/***/ },
-/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
@@ -30628,13 +30494,13 @@
 
 
 /***/ },
-/* 257 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var d        = __webpack_require__(258)
-	  , callable = __webpack_require__(271)
+	var d        = __webpack_require__(257)
+	  , callable = __webpack_require__(270)
 
 	  , apply = Function.prototype.apply, call = Function.prototype.call
 	  , create = Object.create, defineProperty = Object.defineProperty
@@ -30766,15 +30632,15 @@
 
 
 /***/ },
-/* 258 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign        = __webpack_require__(259)
-	  , normalizeOpts = __webpack_require__(266)
-	  , isCallable    = __webpack_require__(267)
-	  , contains      = __webpack_require__(268)
+	var assign        = __webpack_require__(258)
+	  , normalizeOpts = __webpack_require__(265)
+	  , isCallable    = __webpack_require__(266)
+	  , contains      = __webpack_require__(267)
 
 	  , d;
 
@@ -30835,18 +30701,18 @@
 
 
 /***/ },
-/* 259 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(260)()
+	module.exports = __webpack_require__(259)()
 		? Object.assign
-		: __webpack_require__(261);
+		: __webpack_require__(260);
 
 
 /***/ },
-/* 260 */
+/* 259 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30861,13 +30727,13 @@
 
 
 /***/ },
-/* 261 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var keys  = __webpack_require__(262)
-	  , value = __webpack_require__(265)
+	var keys  = __webpack_require__(261)
+	  , value = __webpack_require__(264)
 
 	  , max = Math.max;
 
@@ -30889,18 +30755,18 @@
 
 
 /***/ },
-/* 262 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(263)()
+	module.exports = __webpack_require__(262)()
 		? Object.keys
-		: __webpack_require__(264);
+		: __webpack_require__(263);
 
 
 /***/ },
-/* 263 */
+/* 262 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30914,7 +30780,7 @@
 
 
 /***/ },
-/* 264 */
+/* 263 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30927,7 +30793,7 @@
 
 
 /***/ },
-/* 265 */
+/* 264 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30939,7 +30805,7 @@
 
 
 /***/ },
-/* 266 */
+/* 265 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30962,7 +30828,7 @@
 
 
 /***/ },
-/* 267 */
+/* 266 */
 /***/ function(module, exports) {
 
 	// Deprecated
@@ -30973,18 +30839,18 @@
 
 
 /***/ },
-/* 268 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(269)()
+	module.exports = __webpack_require__(268)()
 		? String.prototype.contains
-		: __webpack_require__(270);
+		: __webpack_require__(269);
 
 
 /***/ },
-/* 269 */
+/* 268 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30998,7 +30864,7 @@
 
 
 /***/ },
-/* 270 */
+/* 269 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31011,7 +30877,7 @@
 
 
 /***/ },
-/* 271 */
+/* 270 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31023,7 +30889,7 @@
 
 
 /***/ },
-/* 272 */
+/* 271 */
 /***/ function(module, exports) {
 
 	
@@ -31035,6 +30901,118 @@
 	});
 
 
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(7);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(184);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Landing = function (_Component) {
+	    _inherits(Landing, _Component);
+
+	    function Landing(props, context) {
+	        _classCallCheck(this, Landing);
+
+	        var _this = _possibleConstructorReturn(this, (Landing.__proto__ || Object.getPrototypeOf(Landing)).call(this, props, context));
+
+	        _this.newCompass = _this.newCompass.bind(_this);
+	        _this.loadCompass = _this.loadCompass.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(Landing, [{
+	        key: 'newCompass',
+	        value: function newCompass() {
+	            var username = $('#username').val();
+	            var root = this;
+	            fetch('/api/compass/create', {
+	                method: 'POST',
+	                headers: {
+	                    'Accept': 'application/json',
+	                    'Content-Type': 'application/json'
+	                }
+	            }).then(function (response) {
+	                return response.json();
+	            }).then(function (responseJson) {
+	                root.props.route.setCompass(responseJson.compass, username);
+	            }).catch(function (e) {
+	                return console.error(e);
+	            });
+	        }
+	    }, {
+	        key: 'loadCompass',
+	        value: function loadCompass() {
+	            var id = $('#compass-id').val();
+	            var username = $('#username').val();
+	            var root = this;
+	            fetch('/api/compass/load', {
+	                method: 'POST',
+	                headers: {
+	                    'Accept': 'application/json',
+	                    'Content-Type': 'application/json'
+	                },
+	                credentials: 'same-origin',
+	                body: JSON.stringify({ 'id': id })
+	            }).then(function (response) {
+	                return response.json();
+	            }).then(function (responseJson) {
+	                root.props.route.setCompass(responseJson.compass, username);
+	            }).catch(function (e) {
+	                return console.error(e);
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'landing' },
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Enter ID:'
+	                ),
+	                _react2.default.createElement('input', { id: 'compass-id', type: 'text', placeholder: 'Compass ID' }),
+	                _react2.default.createElement('input', { id: 'username', type: 'text' }),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.loadCompass },
+	                    'Load'
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.newCompass },
+	                    'New'
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Landing;
+	}(_react.Component);
+
+	exports.default = Landing;
 
 /***/ }
 /******/ ]);

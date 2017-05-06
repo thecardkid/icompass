@@ -5,22 +5,6 @@ import _ from 'underscore';
 import EventEmitter from 'event-emitter';
 import { type } from '../utils';
 
-var colors = [
-    '#ffc', // yellow
-    '#cfc', // green
-    '#ccf', // purple
-    '#cff', // blue
-    '#fcf', // pink
-];
-
-class Note extends Component {
-    constructor(props, context) {
-        super(props, context);
-
-        console.log(props);
-    }
-}
-
 class Main extends Component {
 	constructor(props, context) {
 	    super(props, context);
@@ -40,14 +24,13 @@ class Main extends Component {
             this.setState({compass: compass});
         };
 
+        let updateUsers = (newUsers) => this.setState({users: newUsers});
+
 	    this.socket = io();
         this.socket.on('update notes', newNote => updateNotes(newNote));
-        this.socket.on('user joined', (newUser) => {
-            let users = this.state.users;
-            users[newUser] = colors[0];
-            colors = colors.splice(1);
-            this.setState({users: users});
-        });
+        this.socket.on('user joined', updateUsers);
+        this.socket.on('user left', updateUsers);
+
 	    this.updateVw = this.updateVw.bind(this);
 	    this.handleKey = this.handleKey.bind(this);
 	    this.renderList = this.renderList.bind(this);
@@ -119,7 +102,7 @@ class Main extends Component {
         let renderElem = (e, i) => {
             return (
                 <li key={e.quadrant+i}>
-                    <a style={{background: this.state.users[e.user]}}>
+                    <a style={{background: e.color}}>
                         <p>{e.text}</p>
                     </a>
                 </li>

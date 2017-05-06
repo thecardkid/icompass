@@ -22,6 +22,12 @@
     -o-transform: scale(@s);
 }
 
+.hasTransition (@s) {
+    -moz-transition:-moz-transform @s linear;
+    -o-transition:-o-transform @s linear;
+    -webkit-transition:-webkit-transform @s linear;
+}
+
 .quadrant {
     position: absolute;
     width: 50vw;
@@ -43,12 +49,13 @@
                 text-decoration: none;
                 color: black;
                 display: block;
-                /* background: #ffc; */
+                background: #ffc;
                 max-width: @stickySize;
                 padding: 15px;
                 margin: 0 5px;
                 .boxshadow(3px, 7px, rgba(33,33,33,0.7));
                 .tilt(-6deg);
+                .hasTransition(0.15s);
 
                 p {
                     font-family: "Reenie Beanie", arial, sans-serif;
