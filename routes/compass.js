@@ -18,6 +18,7 @@ router.post('/create', function(req, res, next) {
     var hash = generateUUID();
     var newCompass = DefaultCompass;
     newCompass.id = hash;
+    newCompass.center = req.body.center;
     Compass.create(newCompass, function (err, compass) {
         if (err) return console.log(err);
         res.json({hash: hash, compass: compass});

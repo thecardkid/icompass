@@ -1,6 +1,62 @@
 @import "main.less";
+@import "menu.less";
+@import "newnote.less";
+@import "landing.less";
 @import "reset.less";
+@import "helpscreen.less";
+
+@defaultFont:'Dosis', sans-serif;
+@stickySize:120px;
+@dark:#232323;
+@light:#bcbcbc;
+@blue:#0067E0;
+
+// utility funcs
+.tilt (@x) {
+    -webkit-transform:rotate(@x);
+    -o-transform:rotate(@x);
+    -moz-transform:rotate(@x);
+}
+
+.boxshadow (@offset, @spread, @rgba) {
+    -moz-box-shadow:@offset @offset @spread @rgba;
+    -webkit-box-shadow:@offset @offset @spread @rgba;
+    box-shadow:@offset @offset @spread @rgba;
+}
+
+.scale (@s) {
+    -webkit-transform:scale(@s);
+    -moz-transform:scale(@s);
+    -o-transform:scale(@s);
+}
+
+.hasTransition (@s) {
+    -moz-transition:@s all ease-in-out;
+    -o-transition:@s all ease-in-out;
+    -webkit-transition:@s all ease-in-out;
+    transition:@s all ease-in-out;
+}
+
+.hidden {
+    display:none;
+}
+
+body {
+    font-family:@defaultFont;
+}
+
+button, input {
+    margin:0;
+    padding:0;
+    border:none;
+    cursor:pointer;
+    font-family:@defaultFont;
+}
+
+button:focus {
+    outline:none;
+}
 
 a, u {
-	text-decoration: none !important;
+	text-decoration:none !important;
 }

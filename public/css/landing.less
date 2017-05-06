@@ -1,0 +1,60 @@
+div#landing {
+    text-align: center;
+
+    div#form {
+        position:absolute;
+        top:50%;
+        left:50%;
+        margin:-150px 0 0 -250px;
+        width:500px;
+        height:300px;
+
+        table {
+            width:100%;
+            font-size:15px;
+
+            td {
+                padding:5px;
+            }
+
+            td:nth-child(1) {
+                text-align:right;
+                width:35%;
+            }
+
+            td:nth-child(2) {
+                width:30%;
+            }
+
+            td:nth-child(3) {
+                text-align:left;
+                color: red;
+            }
+
+            input {
+                border-bottom:1px solid grey;
+                cursor:text;
+                background:transparent;
+                padding:5px;
+                font-size:15px;
+            }
+        }
+
+        button {
+            width:150px;
+            padding:10px;
+            font-size:15px;
+            color:@dark;
+            border-radius:5px;
+            margin:10px;
+            background:@light;
+            .hasTransition(0.5s);
+        }
+
+        button:hover {
+            background:@dark;
+            color:@light;
+        }
+    }
+}
+

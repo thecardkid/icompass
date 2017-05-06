@@ -11,15 +11,66 @@ class Landing extends Component {
         this.loadCompass = this.loadCompass.bind(this);
     }
 
-    newCompass() {
+    validateId() {
+        let id = $('#compass-id').val();
+        if (!id) {
+            $('#validate-id').text('This is required');
+            return false;
+        } else if (id.length != 8) {
+            $('#validate-id').text('Not a valid ID');
+            return false;
+        }
+        return id;
+    }
+
+    validateUsername() {
         let username = $('#username').val();
+        if (!username) {
+            $('#validate-username').text('This is required');
+            return false;
+        } else if (username.length > 15) {
+            $('#validate-username').text('Longer than 15 chars');
+            return false;
+        }
+        return username;
+    }
+
+    validateCenter() {
+        let center = $('#compass-center').val();
+        if (!center) {
+            $('#validate-center').text('This is required');
+            return false;
+        } else if (center.length > 15) {
+            $('#validate-center').text('Longer than 15 chars');
+            return false;
+        }
+        return center;
+    }
+
+    clearErrors() {
+        $('#validate-center').text('');
+        $('#validate-id').text('');
+        $('#validate-username').text('');
+    }
+
+    newCompass() {
+        this.clearErrors();
+        let username = this.validateUsername();
+        let center = this.validateCenter();
+
+        if (!username || !center) return;
+
         let root = this;
         fetch('/api/compass/create', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-            }
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                'center': center
+            })
         })
         .then((response) => response.json())
         .then((responseJson) => {
@@ -29,8 +80,12 @@ class Landing extends Component {
     }
 
     loadCompass() {
-        let id = $('#compass-id').val();
-        let username = $('#username').val();
+        this.clearErrors();
+        let id = this.validateId();
+        let username = this.validateUsername();
+
+        if (!id || !username) return;
+
         let root = this;
         fetch('/api/compass/load', {
             method: 'POST',
@@ -43,7 +98,11 @@ class Landing extends Component {
         })
         .then((response) => response.json())
         .then((responseJson) => {
-            root.props.route.setCompass(responseJson.compass, username);
+            console.log(responseJson);
+            if (!responseJson.compass)
+                $('#validate-id').text('Compass does not exist');
+            else
+                root.props.route.setCompass(responseJson.compass, username);
         })
         .catch((e) => console.error(e));
     }
@@ -51,11 +110,29 @@ class Landing extends Component {
     render() {
         return (
             <div id="landing">
-                <p>Enter ID:</p>
-                <input id="compass-id" type="text" placeholder="Compass ID"/>
-                <input id="username" type="text"/>
-                <button onClick={this.loadCompass}>Load</button>
-                <button onClick={this.newCompass}>New</button>
+                <div id="form">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Compass ID:</td>
+                                <td><input id="compass-id" type="text"/></td>
+                                <td id="validate-id"></td>
+                            </tr>
+                            <tr>
+                                <td>Username:</td>
+                                <td><input id="username" type="text"/></td>
+                                <td id="validate-username"></td>
+                            </tr>
+                            <tr>
+                                <td>Centered on:</td>
+                                <td><input id="compass-center" type="text"/></td>
+                                <td id="validate-center"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button id="load-compass" onClick={this.loadCompass}>Find Compass</button>
+                    <button id="make-compass" onClick={this.newCompass}>Make Compass</button>
+                </div>
             </div>
         );
     }

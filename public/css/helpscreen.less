@@ -1,0 +1,53 @@
+#help-screen {
+    position:absolute;
+    width:100vw;
+    height:100vh;
+    color:@dark;
+    background:rgba(255,255,255,0.95);
+    z-index:1;
+
+    button#close-help {
+        position:absolute;
+        font-size:30px;
+        top:0;
+        right:15px;
+        background:transparent;
+    }
+
+    div#text {
+        height:80%;
+        width:60%;
+        margin-left:20%;
+        margin-top:8%;
+        text-align:left;
+
+        h1 {
+            font-size:30px;
+            margin-bottom:20px;
+            text-decoration:underline;
+        }
+
+        p {
+            margin:20px 0;
+            letter-spacing:0.5px;
+        }
+
+        p#footnote {
+            margin-top:40px;
+
+            a {
+                color:@blue;
+                .hasTransition(0.5s);
+            }
+
+            a:hover {
+                text-decoration:underline;
+            }
+        }
+
+        span {
+            font-weight:bold;
+            white-space:pre;
+        }
+    }
+}

@@ -5,11 +5,12 @@ var _ = require('underscore');
 var client, io;
 
 var allColors = [
-    '#ffc', // yellow
-    '#cfc', // green
-    '#ccf', // purple
-    '#cff', // blue
-    '#fcf', // pink
+    '#FFAE27', // orange
+    '#CCFFCC', // green
+    '#FFCCFF', // pink
+    '#CCCCFF', // purple
+    '#CCFFFF', // blue
+    '#FFFFCC', // yellow
 ];
 var userManager = {};
 
@@ -25,14 +26,13 @@ var socketObject = {
                 room = info.hashcode;
                 username = info.username;
 
-                client.compassID = room;
                 client.join(room);
 
                 // check if room existed
                 if (!(room in userManager)) {
                     userManager[room] = {
                         usernameToColor: {},
-                        colors: allColors
+                        colors: allColors.slice()
                     };
                 }
 
@@ -42,17 +42,19 @@ var socketObject = {
                 }
 
                 // assign new username a color. TODO handle "too many users case"
-                userManager[room].usernameToColor[username] = userManager[room].colors[0];
-                userManager[room].colors = userManager[room].colors.slice(1);
+                var r = Math.floor(Math.random() * userManager[room].colors.length);
+                userManager[room].usernameToColor[username] = userManager[room].colors[r];
+                userManager[room].colors.splice(r, 1);
 
-                console.log(userManager);
+                // console.log(userManager);
 
                 io.sockets.in(room).emit('user joined', userManager[room].usernameToColor);
             }); // connect compass
 
             client.on('disconnect', function(reason) {
-                console.log(username, 'disconnected from room', room);
+                // console.log(username, 'disconnected from room', room);
 
+                if (!(userManager[room])) return; // TODO log this
                 var c = userManager[room].usernameToColor[username];
                 delete userManager[room].usernameToColor[username];
 
@@ -63,40 +65,41 @@ var socketObject = {
                     userManager[room].colors.push(c);
                     io.sockets.in(room).emit('user left', userManager[room].usernameToColor);
                 }
-                console.log(userManager);
+                // console.log(userManager);
             }); // disconnect
 
-            client.on('new note', makeNote);
+            client.on('new note', function(info) {
+                Compass.findOne({id: room}, function(err, compass) {
+                    if (err) return console.error(err);
+
+                    if (!(userManager[room])) return; // TODO log this
+                    var color = userManager[room].usernameToColor[info.user];
+
+                    var newNote = {
+                        color: color,
+                        text: info.text,
+                        quadrant: info.type
+                    };
+
+                    Compass.findByIdAndUpdate(
+                        compass._id,
+                        {$push: {notes: newNote}},
+                        {$safe: true, upsert: false, new: true},
+                        function (err, newCompass) {
+                            if (err) return console.error(err);
+
+                            var last = newCompass.notes.length - 1;
+
+                            io.sockets.in(room).emit('update notes', newCompass.notes[last]);
+                        }
+                    );
+                });
+            });
         });
     }
 }
 
 var makeNote = function(info) {
-    Compass.findOne({id: client.compassID}, function(err, compass) {
-        if (err) return console.error(err);
-
-        // TODO handle case where this is undefined
-        var color = userManager[client.compassID].usernameToColor[info.user];
-
-        var newNote = {
-            color: color,
-            text: info.text,
-            quadrant: info.type
-        };
-
-        Compass.findByIdAndUpdate(
-            compass._id,
-            {$push: {notes: newNote}},
-            {$safe: true, upsert: false, new: true},
-            function (err, newCompass) {
-                if (err) return console.error(err);
-
-                var last = newCompass.notes.length - 1;
-
-                io.sockets.in(client.compassID).emit('update notes', newCompass.notes[last]);
-            }
-        );
-    });
 }
 
 module.exports = socketObject;

@@ -2,8 +2,11 @@
 
 import React, { Component } from 'react';
 import _ from 'underscore';
-import EventEmitter from 'event-emitter';
 import { type } from '../utils';
+
+import Menu from './menu.jsx';
+import NewNote from './newNote.jsx';
+import HelpScreen from './helpScreen.jsx';
 
 class Main extends Component {
 	constructor(props, context) {
@@ -16,6 +19,8 @@ class Main extends Component {
             compass: this.props.compass,
             username: this.props.username,
             users: {},
+            showMenu: false,
+            showHelp: false,
         };
 
         let updateNotes = (newNote) => {
@@ -36,6 +41,8 @@ class Main extends Component {
 	    this.renderList = this.renderList.bind(this);
 	    this.makeNote = this.makeNote.bind(this);
 	    this.closeForm = this.closeForm.bind(this);
+	    this.toggleMenu = this.toggleMenu.bind(this);
+	    this.toggleHelp = this.toggleHelp.bind(this);
 	}
 
 	componentDidMount() {
@@ -58,6 +65,7 @@ class Main extends Component {
         if (this.state.newNote) return;
 
         let noteType;
+        console.log(e.which);
         switch (e.which) {
             case 79:
                 noteType = type.OBSERVATION;
@@ -71,12 +79,23 @@ class Main extends Component {
             case 69:
                 noteType = type.EXPERIMENT;
                 break;
+            case 72:
+                this.toggleHelp();
+                break;
         }
 
         if (noteType) {
             $('#new-note-text').focus();
             this.setState({newNote: true, type: noteType});
         }
+    }
+
+    toggleMenu() {
+        this.setState({showMenu: !this.state.showMenu});
+    }
+
+    toggleHelp() {
+        this.setState({showHelp: !this.state.showHelp});
     }
 
     makeNote() {
@@ -110,6 +129,7 @@ class Main extends Component {
         }
         return (
             <div className="quadrant" id={type}>
+                <h1>{type+'s'}</h1>
                 <ul>
                     {_.map(list, renderElem)}
                 </ul>
@@ -125,10 +145,19 @@ class Main extends Component {
             };
         };
 
-        let newNoteClass = 'hidden', title = 'New ';
+        let newNote;
         if (this.state.newNote) {
-            newNoteClass = '';
-            title += this.state.type;
+            newNote = <NewNote
+                style={centerStyle(300,230)}
+                type={this.state.type}
+                make={this.makeNote}
+                close={this.closeForm}
+            />
+        }
+
+        let helpScreen;
+        if (this.state.showHelp) {
+            helpScreen = <HelpScreen close={this.toggleHelp} />;
         }
 
         let observations = this.renderList(type.OBSERVATION),
@@ -142,13 +171,16 @@ class Main extends Component {
             {principles}
             {ideas}
             {experiments}
-            <div id="center" style={centerStyle(100,100)}>{this.state.compass.id}</div>
-            <div id="new-note" className={newNoteClass} style={centerStyle(300,230)}>
-                <h3 id="new-note-title">{title}</h3>
-                <input id="new-note-text"/>
-                <button id="make-note" onClick={this.makeNote}>add note</button>
-                <button id="nevermind" onClick={this.closeForm}>never mind</button>
-            </div>
+            {newNote}
+            {helpScreen}
+            <div id="center" style={centerStyle(100,100)}>{this.state.compass.center}</div>
+            <button id="show-menu" onClick={this.toggleMenu}>Show Menu</button>
+            <Menu
+                id={this.state.compass.id}
+                users={this.state.users}
+                show={this.state.showMenu}
+                toggleMenu={this.toggleMenu}
+            />
         </div>
 		);
 	}

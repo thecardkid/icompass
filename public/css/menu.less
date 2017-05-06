@@ -1,0 +1,64 @@
+#menu {
+    position:absolute;
+    .hasTransition(0.5s);
+    width:200px;
+    background:@dark;
+    color:white;
+    height:100vh;
+
+    div#menu-contents {
+        margin:20px;
+        margin-top:40px;
+
+        button#close-menu {
+            position:absolute;
+            height:20px;
+            width:20px;
+            font-size:20px;
+            top:0;
+            right:0;
+            background:transparent;
+            color:white;
+            cursor:pointer;
+        }
+
+        p#share {
+            color:@blue;
+            cursor:pointer;
+        }
+
+        h1 {
+            font-size:40px;
+            font-weight:700em;
+        }
+
+        div.menu-list {
+            margin-top:40px;
+
+            h2 {
+                font-size:18px;
+                text-decoration:underline;
+            }
+
+            p {
+                margin:10px 0;
+
+                span {
+                    font-size:12px;
+                    border-radius:20%;
+                    margin-right:10px;
+                    white-space:pre;
+                }
+
+                span.keyboard {
+                    font-family:monospace;
+                    background:@light;
+                    color:@dark;
+                    padding:0 4px;
+                    font-size:15px;
+                }
+            }
+        }
+    }
+}
+
