@@ -67,6 +67,10 @@ class Menu extends Component {
                         {userList}
                     </div>
                     <p className="menu-action" id="export" onClick={this.props.exportCompass}>Save Compass</p>
+                    <p id="creator">
+                        Created by
+                        <a href="http://hieuqn.com" target="_blank"> Hieu Nguyen</a>
+                    </p>
                 </div>
             </div>
         );
