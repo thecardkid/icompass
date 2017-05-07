@@ -8,7 +8,7 @@ import Menu from './menu.jsx';
 import NewNote from './newNote.jsx';
 import HelpScreen from './helpScreen.jsx';
 
-class Main extends Component {
+class Compass extends Component {
 	constructor(props, context) {
 	    super(props, context);
 
@@ -107,7 +107,8 @@ class Main extends Component {
         let filename = compass.center + '-compass';
 
         let newline = '\r\n';
-        let text = 'Centered on ' + compass.center + newline + newline;
+        let text = 'Centered on ' + compass.center + newline;
+        text += 'ID: ' + compass.id + newline;
 
         _.map(type, (value) => {
             text += value.toUpperCase() + newline;
@@ -215,5 +216,5 @@ class Main extends Component {
 	}
 };
 
-export default Main;
+export default Compass;
 

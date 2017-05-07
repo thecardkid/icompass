@@ -60,9 +60,9 @@
 
 	var _reactRouter = __webpack_require__(187);
 
-	var _main = __webpack_require__(257);
+	var _compass = __webpack_require__(265);
 
-	var _main2 = _interopRequireDefault(_main);
+	var _compass2 = _interopRequireDefault(_compass);
 
 	var _landing = __webpack_require__(262);
 
@@ -104,7 +104,7 @@
 	                { history: _reactRouter.browserHistory },
 	                _react2.default.createElement(_reactRouter.Route, { path: '/', setCompass: this.setCompass, component: _landing2.default }),
 	                _react2.default.createElement(_reactRouter.Route, { path: '/compass', component: function component() {
-	                        return _react2.default.createElement(_main2.default, { compass: _this2.state.compass, username: _this2.state.username });
+	                        return _react2.default.createElement(_compass2.default, { compass: _this2.state.compass, username: _this2.state.username });
 	                    } })
 	            );
 	        }
@@ -28705,310 +28705,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(10);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _underscore = __webpack_require__(258);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _utils = __webpack_require__(259);
-
-	var _menu = __webpack_require__(260);
-
-	var _menu2 = _interopRequireDefault(_menu);
-
-	var _newNote = __webpack_require__(261);
-
-	var _newNote2 = _interopRequireDefault(_newNote);
-
-	var _helpScreen = __webpack_require__(264);
-
-	var _helpScreen2 = _interopRequireDefault(_helpScreen);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Main = function (_Component) {
-	    _inherits(Main, _Component);
-
-	    function Main(props, context) {
-	        _classCallCheck(this, Main);
-
-	        var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this, props, context));
-
-	        _this.state = {
-	            vw: window.innerWidth,
-	            vh: window.innerHeight,
-	            newNote: false,
-	            compass: _this.props.compass,
-	            username: _this.props.username,
-	            users: {},
-	            showMenu: false,
-	            showHelp: false
-	        };
-
-	        var updateNotes = function updateNotes(newNote) {
-	            var compass = _this.state.compass;
-	            compass.notes.push(newNote);
-	            _this.setState({ compass: compass });
-	        };
-
-	        var updateUsers = function updateUsers(newUsers) {
-	            return _this.setState({ users: newUsers });
-	        };
-
-	        _this.socket = io();
-	        _this.socket.on('update notes', function (newNote) {
-	            return updateNotes(newNote);
-	        });
-	        _this.socket.on('user joined', updateUsers);
-	        _this.socket.on('user left', updateUsers);
-
-	        _this.updateVw = _this.updateVw.bind(_this);
-	        _this.handleKey = _this.handleKey.bind(_this);
-	        _this.renderList = _this.renderList.bind(_this);
-	        _this.makeNote = _this.makeNote.bind(_this);
-	        _this.closeForm = _this.closeForm.bind(_this);
-	        _this.exportCompass = _this.exportCompass.bind(_this);
-	        _this.toggleMenu = _this.toggleMenu.bind(_this);
-	        _this.toggleHelp = _this.toggleHelp.bind(_this);
-	        return _this;
-	    }
-
-	    _createClass(Main, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            $(window).on('resize', this.updateVw);
-	            $(window).on('keydown', this.handleKey);
-	            window.onbeforeunload = function () {
-	                return true;
-	            };
-	            this.socket.emit('connect compass', {
-	                hashcode: this.state.compass.id,
-	                username: this.state.username
-	            });
-	        }
-	    }, {
-	        key: 'updateVw',
-	        value: function updateVw() {
-	            this.setState({
-	                vw: window.innerWidth,
-	                vh: window.innerHeight
-	            });
-	        }
-	    }, {
-	        key: 'handleKey',
-	        value: function handleKey(e) {
-	            if (this.state.newNote) return;
-
-	            var noteType = void 0;
-	            switch (e.which) {
-	                case 79:
-	                    noteType = _utils.type.OBSERVATION;
-	                    break;
-	                case 80:
-	                    noteType = _utils.type.PRINCIPLE;
-	                    break;
-	                case 73:
-	                    noteType = _utils.type.IDEA;
-	                    break;
-	                case 69:
-	                    noteType = _utils.type.EXPERIMENT;
-	                    break;
-	                case 72:
-	                    this.toggleHelp();
-	                    e.preventDefault();
-	                    break;
-	            }
-
-	            if (noteType) {
-	                this.setState({ newNote: true, type: noteType });
-	                e.preventDefault();
-	            }
-	        }
-	    }, {
-	        key: 'toggleMenu',
-	        value: function toggleMenu() {
-	            this.setState({ showMenu: !this.state.showMenu });
-	        }
-	    }, {
-	        key: 'toggleHelp',
-	        value: function toggleHelp() {
-	            this.setState({ showHelp: !this.state.showHelp });
-	        }
-	    }, {
-	        key: 'exportCompass',
-	        value: function exportCompass() {
-	            var compass = this.state.compass;
-	            var fileType = 'text/plain';
-	            var link = document.createElement('a');
-	            var filename = compass.center + '-compass';
-
-	            var newline = '\r\n';
-	            var text = 'Centered on ' + compass.center + newline + newline;
-
-	            _underscore2.default.map(_utils.type, function (value) {
-	                text += value.toUpperCase() + newline;
-	                var list = _underscore2.default.filter(compass.notes, function (e) {
-	                    return e.quadrant === value;
-	                });
-
-	                _underscore2.default.map(list, function (e, i) {
-	                    text += '- ' + e.text + newline;
-	                });
-
-	                text += newline;
-	            });
-
-	            console.log(text);
-	            link.setAttribute('download', filename);
-	            link.setAttribute('href', 'data:' + fileType + ';charset=utf-8,' + encodeURIComponent(text));
-	            link.click();
-	        }
-	    }, {
-	        key: 'makeNote',
-	        value: function makeNote() {
-	            var text = $('#new-note-text').val();
-
-	            if (text === '') return;
-
-	            this.socket.emit('new note', {
-	                type: this.state.type.toLowerCase(),
-	                text: text,
-	                user: this.state.username
-	            });
-	            this.closeForm();
-	        }
-	    }, {
-	        key: 'closeForm',
-	        value: function closeForm() {
-	            $('#new-note-text').val('');
-	            this.setState({ newNote: false, type: null });
-	        }
-	    }, {
-	        key: 'renderList',
-	        value: function renderList(type) {
-	            var list = _underscore2.default.filter(this.state.compass.notes, function (e) {
-	                return e.quadrant === type;
-	            });
-	            var renderElem = function renderElem(e, i) {
-	                return _react2.default.createElement(
-	                    'li',
-	                    { key: e.quadrant + i },
-	                    _react2.default.createElement(
-	                        'a',
-	                        { style: { background: e.color } },
-	                        _react2.default.createElement(
-	                            'p',
-	                            null,
-	                            e.text
-	                        )
-	                    )
-	                );
-	            };
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'quadrant', id: type },
-	                _react2.default.createElement(
-	                    'h1',
-	                    null,
-	                    type + 's'
-	                ),
-	                _react2.default.createElement(
-	                    'ul',
-	                    null,
-	                    _underscore2.default.map(list, renderElem)
-	                )
-	            );
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-
-	            var centerStyle = function centerStyle(w, h) {
-	                return {
-	                    top: (_this2.state.vh - h) / 2,
-	                    left: (_this2.state.vw - w) / 2
-	                };
-	            };
-
-	            var newNote = void 0;
-	            if (this.state.newNote) {
-	                newNote = _react2.default.createElement(_newNote2.default, {
-	                    style: centerStyle(300, 230),
-	                    type: this.state.type,
-	                    make: this.makeNote,
-	                    close: this.closeForm
-	                });
-	            }
-
-	            var helpScreen = void 0;
-	            if (this.state.showHelp) {
-	                helpScreen = _react2.default.createElement(_helpScreen2.default, { close: this.toggleHelp });
-	            }
-
-	            var observations = this.renderList(_utils.type.OBSERVATION),
-	                principles = this.renderList(_utils.type.PRINCIPLE),
-	                ideas = this.renderList(_utils.type.IDEA),
-	                experiments = this.renderList(_utils.type.EXPERIMENT);
-
-	            return _react2.default.createElement(
-	                'div',
-	                { id: 'compass' },
-	                observations,
-	                principles,
-	                ideas,
-	                experiments,
-	                newNote,
-	                helpScreen,
-	                _react2.default.createElement(
-	                    'div',
-	                    { id: 'center', style: centerStyle(100, 100) },
-	                    this.state.compass.center
-	                ),
-	                _react2.default.createElement(
-	                    'button',
-	                    { id: 'show-menu', onClick: this.toggleMenu },
-	                    'Show Menu'
-	                ),
-	                _react2.default.createElement(_menu2.default, {
-	                    id: this.state.compass.id,
-	                    users: this.state.users,
-	                    show: this.state.showMenu,
-	                    toggleMenu: this.toggleMenu,
-	                    exportCompass: this.exportCompass
-	                })
-	            );
-	        }
-	    }]);
-
-	    return Main;
-	}(_react.Component);
-
-	;
-
-	exports.default = Main;
-
-/***/ },
+/* 257 */,
 /* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31180,6 +30877,311 @@
 	}(_react.Component);
 
 	exports.default = HelpScreen;
+
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(10);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _underscore = __webpack_require__(258);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _utils = __webpack_require__(259);
+
+	var _menu = __webpack_require__(260);
+
+	var _menu2 = _interopRequireDefault(_menu);
+
+	var _newNote = __webpack_require__(261);
+
+	var _newNote2 = _interopRequireDefault(_newNote);
+
+	var _helpScreen = __webpack_require__(264);
+
+	var _helpScreen2 = _interopRequireDefault(_helpScreen);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Compass = function (_Component) {
+	    _inherits(Compass, _Component);
+
+	    function Compass(props, context) {
+	        _classCallCheck(this, Compass);
+
+	        var _this = _possibleConstructorReturn(this, (Compass.__proto__ || Object.getPrototypeOf(Compass)).call(this, props, context));
+
+	        _this.state = {
+	            vw: window.innerWidth,
+	            vh: window.innerHeight,
+	            newNote: false,
+	            compass: _this.props.compass,
+	            username: _this.props.username,
+	            users: {},
+	            showMenu: false,
+	            showHelp: false
+	        };
+
+	        var updateNotes = function updateNotes(newNote) {
+	            var compass = _this.state.compass;
+	            compass.notes.push(newNote);
+	            _this.setState({ compass: compass });
+	        };
+
+	        var updateUsers = function updateUsers(newUsers) {
+	            return _this.setState({ users: newUsers });
+	        };
+
+	        _this.socket = io();
+	        _this.socket.on('update notes', function (newNote) {
+	            return updateNotes(newNote);
+	        });
+	        _this.socket.on('user joined', updateUsers);
+	        _this.socket.on('user left', updateUsers);
+
+	        _this.updateVw = _this.updateVw.bind(_this);
+	        _this.handleKey = _this.handleKey.bind(_this);
+	        _this.renderList = _this.renderList.bind(_this);
+	        _this.makeNote = _this.makeNote.bind(_this);
+	        _this.closeForm = _this.closeForm.bind(_this);
+	        _this.exportCompass = _this.exportCompass.bind(_this);
+	        _this.toggleMenu = _this.toggleMenu.bind(_this);
+	        _this.toggleHelp = _this.toggleHelp.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(Compass, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            $(window).on('resize', this.updateVw);
+	            $(window).on('keydown', this.handleKey);
+	            window.onbeforeunload = function () {
+	                return true;
+	            };
+	            this.socket.emit('connect compass', {
+	                hashcode: this.state.compass.id,
+	                username: this.state.username
+	            });
+	        }
+	    }, {
+	        key: 'updateVw',
+	        value: function updateVw() {
+	            this.setState({
+	                vw: window.innerWidth,
+	                vh: window.innerHeight
+	            });
+	        }
+	    }, {
+	        key: 'handleKey',
+	        value: function handleKey(e) {
+	            if (this.state.newNote) return;
+
+	            var noteType = void 0;
+	            switch (e.which) {
+	                case 79:
+	                    noteType = _utils.type.OBSERVATION;
+	                    break;
+	                case 80:
+	                    noteType = _utils.type.PRINCIPLE;
+	                    break;
+	                case 73:
+	                    noteType = _utils.type.IDEA;
+	                    break;
+	                case 69:
+	                    noteType = _utils.type.EXPERIMENT;
+	                    break;
+	                case 72:
+	                    this.toggleHelp();
+	                    e.preventDefault();
+	                    break;
+	            }
+
+	            if (noteType) {
+	                this.setState({ newNote: true, type: noteType });
+	                e.preventDefault();
+	            }
+	        }
+	    }, {
+	        key: 'toggleMenu',
+	        value: function toggleMenu() {
+	            this.setState({ showMenu: !this.state.showMenu });
+	        }
+	    }, {
+	        key: 'toggleHelp',
+	        value: function toggleHelp() {
+	            this.setState({ showHelp: !this.state.showHelp });
+	        }
+	    }, {
+	        key: 'exportCompass',
+	        value: function exportCompass() {
+	            var compass = this.state.compass;
+	            var fileType = 'text/plain';
+	            var link = document.createElement('a');
+	            var filename = compass.center + '-compass';
+
+	            var newline = '\r\n';
+	            var text = 'Centered on ' + compass.center + newline;
+	            text += 'ID: ' + compass.id + newline;
+
+	            _underscore2.default.map(_utils.type, function (value) {
+	                text += value.toUpperCase() + newline;
+	                var list = _underscore2.default.filter(compass.notes, function (e) {
+	                    return e.quadrant === value;
+	                });
+
+	                _underscore2.default.map(list, function (e, i) {
+	                    text += '- ' + e.text + newline;
+	                });
+
+	                text += newline;
+	            });
+
+	            console.log(text);
+	            link.setAttribute('download', filename);
+	            link.setAttribute('href', 'data:' + fileType + ';charset=utf-8,' + encodeURIComponent(text));
+	            link.click();
+	        }
+	    }, {
+	        key: 'makeNote',
+	        value: function makeNote() {
+	            var text = $('#new-note-text').val();
+
+	            if (text === '') return;
+
+	            this.socket.emit('new note', {
+	                type: this.state.type.toLowerCase(),
+	                text: text,
+	                user: this.state.username
+	            });
+	            this.closeForm();
+	        }
+	    }, {
+	        key: 'closeForm',
+	        value: function closeForm() {
+	            $('#new-note-text').val('');
+	            this.setState({ newNote: false, type: null });
+	        }
+	    }, {
+	        key: 'renderList',
+	        value: function renderList(type) {
+	            var list = _underscore2.default.filter(this.state.compass.notes, function (e) {
+	                return e.quadrant === type;
+	            });
+	            var renderElem = function renderElem(e, i) {
+	                return _react2.default.createElement(
+	                    'li',
+	                    { key: e.quadrant + i },
+	                    _react2.default.createElement(
+	                        'a',
+	                        { style: { background: e.color } },
+	                        _react2.default.createElement(
+	                            'p',
+	                            null,
+	                            e.text
+	                        )
+	                    )
+	                );
+	            };
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'quadrant', id: type },
+	                _react2.default.createElement(
+	                    'h1',
+	                    null,
+	                    type + 's'
+	                ),
+	                _react2.default.createElement(
+	                    'ul',
+	                    null,
+	                    _underscore2.default.map(list, renderElem)
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            var centerStyle = function centerStyle(w, h) {
+	                return {
+	                    top: (_this2.state.vh - h) / 2,
+	                    left: (_this2.state.vw - w) / 2
+	                };
+	            };
+
+	            var newNote = void 0;
+	            if (this.state.newNote) {
+	                newNote = _react2.default.createElement(_newNote2.default, {
+	                    style: centerStyle(300, 230),
+	                    type: this.state.type,
+	                    make: this.makeNote,
+	                    close: this.closeForm
+	                });
+	            }
+
+	            var helpScreen = void 0;
+	            if (this.state.showHelp) {
+	                helpScreen = _react2.default.createElement(_helpScreen2.default, { close: this.toggleHelp });
+	            }
+
+	            var observations = this.renderList(_utils.type.OBSERVATION),
+	                principles = this.renderList(_utils.type.PRINCIPLE),
+	                ideas = this.renderList(_utils.type.IDEA),
+	                experiments = this.renderList(_utils.type.EXPERIMENT);
+
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'compass' },
+	                observations,
+	                principles,
+	                ideas,
+	                experiments,
+	                newNote,
+	                helpScreen,
+	                _react2.default.createElement(
+	                    'div',
+	                    { id: 'center', style: centerStyle(100, 100) },
+	                    this.state.compass.center
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { id: 'show-menu', onClick: this.toggleMenu },
+	                    'Show Menu'
+	                ),
+	                _react2.default.createElement(_menu2.default, {
+	                    id: this.state.compass.id,
+	                    users: this.state.users,
+	                    show: this.state.showMenu,
+	                    toggleMenu: this.toggleMenu,
+	                    exportCompass: this.exportCompass
+	                })
+	            );
+	        }
+	    }]);
+
+	    return Compass;
+	}(_react.Component);
+
+	;
+
+	exports.default = Compass;
 
 /***/ }
 /******/ ]);

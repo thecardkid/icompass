@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
 
-import Main from './main.jsx';
+import Compass from './compass.jsx';
 import Landing from './landing.jsx';
 
 class Index extends Component {
@@ -24,7 +24,7 @@ class Index extends Component {
         return (
             <Router history={browserHistory}>
                 <Route path='/' setCompass={this.setCompass} component={Landing}/>
-                <Route path='/compass' component={() => (<Main compass={this.state.compass} username={this.state.username}/>)}/>
+                <Route path='/compass' component={() => (<Compass compass={this.state.compass} username={this.state.username}/>)}/>
             </Router>
         );
     }
