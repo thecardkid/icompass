@@ -159,7 +159,7 @@
 
 
 	// module
-	exports.push([module.id, "#compass {\n  width: 100vw;\n  height: 100vh;\n}\n.quadrant {\n  position: absolute;\n  width: 50vw;\n  height: 50vh;\n  border: 1px solid black;\n}\n.quadrant h1 {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  font-size: 50px;\n  color: #dfdfdf;\n  letter-spacing: 5px;\n  top: 40%;\n  text-align: center;\n}\n.quadrant ul {\n  overflow: scroll;\n  width: 100%;\n  height: 1005;\n  padding: 40px;\n}\n.quadrant ul li {\n  height: 155px;\n  list-style: none;\n  float: left;\n}\n.quadrant ul li a {\n  text-decoration: none;\n  color: black;\n  display: block;\n  background: #ffc;\n  max-width: 120px;\n  padding: 15px;\n  margin: 0 5px;\n  -moz-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-transform: rotate(-6deg);\n  -o-transform: rotate(-6deg);\n  -moz-transform: rotate(-6deg);\n  -moz-transition: 0.15s all ease-in-out;\n  -o-transition: 0.15s all ease-in-out;\n  -webkit-transition: 0.15s all ease-in-out;\n  transition: 0.15s all ease-in-out;\n}\n.quadrant ul li a p {\n  font-family: \"Reenie Beanie\", arial, sans-serif;\n  font-size: 20px;\n}\n.quadrant ul li:nth-child(even) a {\n  -webkit-transform: rotate(4deg);\n  -o-transform: rotate(4deg);\n  -moz-transform: rotate(4deg);\n}\n.quadrant ul li:nth-child(3n) a {\n  -webkit-transform: rotate(-3deg);\n  -o-transform: rotate(-3deg);\n  -moz-transform: rotate(-3deg);\n}\n.quadrant ul li:nth-child(5n) a {\n  -webkit-transform: rotate(5deg);\n  -o-transform: rotate(5deg);\n  -moz-transform: rotate(5deg);\n}\n.quadrant ul li a:hover,\n.quadrant ul li a:focus {\n  -moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-transform: scale(1.5);\n  -moz-transform: scale(1.5);\n  -o-transform: scale(1.5);\n  position: relative;\n  z-index: 5;\n}\n#observation {\n  bottom: 0;\n  left: 0;\n}\n#principle {\n  top: 0;\n  left: 0;\n}\n#idea {\n  top: 0;\n  right: 0;\n}\n#experiment {\n  bottom: 0;\n  right: 0;\n}\n#center {\n  border: 1px solid black;\n  border-radius: 100%;\n  width: 100px;\n  height: 100px;\n  position: absolute;\n  background: white;\n  text-align: center;\n  line-height: 100px;\n}\n#show-menu {\n  position: absolute;\n  top: 20px;\n  left: 20px;\n  background: black;\n  color: white;\n}\n#menu {\n  position: absolute;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n  width: 200px;\n  background: #232323;\n  color: white;\n  height: 100vh;\n}\n#menu div#menu-contents {\n  margin: 20px;\n  margin-top: 40px;\n}\n#menu div#menu-contents button#close-menu {\n  position: absolute;\n  height: 20px;\n  width: 20px;\n  font-size: 20px;\n  top: 0;\n  right: 0;\n  background: transparent;\n  color: white;\n  cursor: pointer;\n}\n#menu div#menu-contents p#share {\n  color: #0067E0;\n  cursor: pointer;\n}\n#menu div#menu-contents h1 {\n  font-size: 40px;\n  font-weight: 700em;\n}\n#menu div#menu-contents div.menu-list {\n  margin-top: 40px;\n}\n#menu div#menu-contents div.menu-list h2 {\n  font-size: 18px;\n  text-decoration: underline;\n}\n#menu div#menu-contents div.menu-list p {\n  margin: 10px 0;\n}\n#menu div#menu-contents div.menu-list p span {\n  font-size: 12px;\n  border-radius: 20%;\n  margin-right: 10px;\n  white-space: pre;\n}\n#menu div#menu-contents div.menu-list p span.keyboard {\n  font-family: monospace;\n  background: #bcbcbc;\n  color: #232323;\n  padding: 0 4px;\n  font-size: 15px;\n}\n#new-note {\n  width: 300px;\n  height: 230px;\n  position: absolute;\n  background: #bcbcbc;\n  z-index: 1;\n}\n#new-note div#note-contents {\n  margin: 10px;\n}\n#new-note div#note-contents h1#new-note-title {\n  width: 100%;\n  height: 30px;\n  line-height: 30px;\n  text-align: center;\n}\n#new-note div#note-contents textarea#new-note-text {\n  font-size: 18px;\n  height: 110px;\n  margin-top: 10px;\n  width: 260px;\n  padding: 10px;\n  border: none;\n  font-family: 'Dosis', sans-serif;\n}\n#new-note div#note-contents textarea:focus {\n  outline: none;\n}\n#new-note div#note-contents button {\n  width: 130px;\n  margin: 10px 5px;\n  height: 30px;\n  font-size: 14px;\n  color: #bcbcbc;\n  background: #232323;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n}\n#new-note div#note-contents button:hover {\n  color: #232323;\n  background: #bcbcbc;\n}\ndiv#landing {\n  text-align: center;\n}\ndiv#landing div#form {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -150px 0 0 -250px;\n  width: 500px;\n  height: 300px;\n}\ndiv#landing div#form table {\n  width: 100%;\n  font-size: 15px;\n}\ndiv#landing div#form table td {\n  padding: 5px;\n}\ndiv#landing div#form table td:nth-child(1) {\n  text-align: right;\n  width: 35%;\n}\ndiv#landing div#form table td:nth-child(2) {\n  width: 30%;\n}\ndiv#landing div#form table td:nth-child(3) {\n  text-align: left;\n  color: red;\n}\ndiv#landing div#form table input {\n  border-bottom: 1px solid grey;\n  cursor: text;\n  background: transparent;\n  padding: 5px;\n  font-size: 15px;\n}\ndiv#landing div#form button {\n  width: 150px;\n  padding: 10px;\n  font-size: 15px;\n  color: #232323;\n  border-radius: 5px;\n  margin: 10px;\n  background: #bcbcbc;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n}\ndiv#landing div#form button:hover {\n  background: #232323;\n  color: #bcbcbc;\n}\nhtml,\nbody,\ndiv,\nspan,\napplet,\nobject,\niframe,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\np,\nblockquote,\npre,\na,\nabbr,\nacronym,\naddress,\nbig,\ncite,\ncode,\ndel,\ndfn,\nem,\nimg,\nins,\nkbd,\nq,\ns,\nsamp,\nsmall,\nstrike,\nstrong,\nsub,\nsup,\ntt,\nvar,\nb,\nu,\ni,\ncenter,\ndl,\ndt,\ndd,\nol,\nul,\nli,\nfieldset,\nform,\nlabel,\nlegend,\ntable,\ncaption,\ntbody,\ntfoot,\nthead,\ntr,\nth,\ntd,\narticle,\naside,\ncanvas,\ndetails,\nembed,\nfigure,\nfigcaption,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\noutput,\nruby,\nsection,\nsummary,\ntime,\nmark,\naudio,\nvideo {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline;\n}\n/* HTML5 display-role reset for older browsers */\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\nsection {\n  display: block;\n}\nbody {\n  line-height: 1;\n}\nol,\nul {\n  list-style: none;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\ninput:focus {\n  outline: none;\n}\n#help-screen {\n  position: absolute;\n  width: 100vw;\n  height: 100vh;\n  color: #232323;\n  background: rgba(255, 255, 255, 0.95);\n  z-index: 1;\n}\n#help-screen button#close-help {\n  position: absolute;\n  font-size: 30px;\n  top: 0;\n  right: 15px;\n  background: transparent;\n}\n#help-screen div#text {\n  height: 80%;\n  width: 60%;\n  margin-left: 20%;\n  margin-top: 8%;\n  text-align: left;\n}\n#help-screen div#text h1 {\n  font-size: 30px;\n  margin-bottom: 20px;\n  text-decoration: underline;\n}\n#help-screen div#text p {\n  margin: 20px 0;\n  letter-spacing: 0.5px;\n}\n#help-screen div#text p#footnote {\n  margin-top: 40px;\n}\n#help-screen div#text p#footnote a {\n  color: #0067E0;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n}\n#help-screen div#text p#footnote a:hover {\n  text-decoration: underline;\n}\n#help-screen div#text span {\n  font-weight: bold;\n  white-space: pre;\n}\n.hidden {\n  display: none;\n}\nbody {\n  font-family: 'Dosis', sans-serif;\n}\nbutton,\ninput {\n  margin: 0;\n  padding: 0;\n  border: none;\n  cursor: pointer;\n  font-family: 'Dosis', sans-serif;\n}\nbutton:focus {\n  outline: none;\n}\na,\nu {\n  text-decoration: none !important;\n}\n", ""]);
+	exports.push([module.id, "#compass {\n  width: 100vw;\n  height: 100vh;\n}\n.quadrant {\n  position: absolute;\n  width: 50vw;\n  height: 50vh;\n  border: 1px solid black;\n}\n.quadrant h1 {\n  position: absolute;\n  width: 100%;\n  height: 60%;\n  font-size: 50px;\n  color: #dfdfdf;\n  letter-spacing: 5px;\n  top: 40%;\n  text-align: center;\n}\n.quadrant ul {\n  overflow: scroll;\n  padding: 40px;\n}\n.quadrant ul li {\n  height: 155px;\n  list-style: none;\n  float: left;\n}\n.quadrant ul li a {\n  text-decoration: none;\n  color: black;\n  display: block;\n  background: #ffc;\n  max-width: 120px;\n  padding: 15px;\n  margin: 0 5px;\n  -moz-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  box-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);\n  -webkit-transform: rotate(-6deg);\n  -o-transform: rotate(-6deg);\n  -moz-transform: rotate(-6deg);\n  -moz-transition: 0.15s all ease-in-out;\n  -o-transition: 0.15s all ease-in-out;\n  -webkit-transition: 0.15s all ease-in-out;\n  transition: 0.15s all ease-in-out;\n  white-space: pre-wrap;\n  white-space: -moz-pre-wrap;\n  white-space: -pre-wrap;\n  white-space: -o-pre-wrap;\n  word-wrap: break-word;\n}\n.quadrant ul li a p {\n  font-family: \"Reenie Beanie\", arial, sans-serif;\n  font-size: 20px;\n}\n.quadrant ul li:nth-child(even) a {\n  -webkit-transform: rotate(4deg);\n  -o-transform: rotate(4deg);\n  -moz-transform: rotate(4deg);\n}\n.quadrant ul li:nth-child(3n) a {\n  -webkit-transform: rotate(-3deg);\n  -o-transform: rotate(-3deg);\n  -moz-transform: rotate(-3deg);\n}\n.quadrant ul li:nth-child(5n) a {\n  -webkit-transform: rotate(5deg);\n  -o-transform: rotate(5deg);\n  -moz-transform: rotate(5deg);\n}\n.quadrant ul li a:hover,\n.quadrant ul li a:focus {\n  -moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  box-shadow: 10px 10px 7px rgba(0, 0, 0, 0.7);\n  -webkit-transform: scale(1.5);\n  -moz-transform: scale(1.5);\n  -o-transform: scale(1.5);\n  position: relative;\n  z-index: 5;\n}\n#observation {\n  bottom: 0;\n  left: 0;\n}\n#principle {\n  top: 0;\n  left: 0;\n}\n#idea {\n  top: 0;\n  right: 0;\n}\n#experiment {\n  bottom: 0;\n  right: 0;\n}\n#center {\n  border: 1px solid black;\n  border-radius: 100%;\n  width: 100px;\n  height: 100px;\n  position: absolute;\n  background: white;\n  text-align: center;\n  line-height: 100px;\n}\n#show-menu {\n  position: absolute;\n  top: 20px;\n  left: 20px;\n  background: black;\n  color: white;\n}\n#menu {\n  position: absolute;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n  width: 200px;\n  background: #232323;\n  color: white;\n  height: 100vh;\n}\n#menu div#menu-contents {\n  margin: 20px;\n  margin-top: 40px;\n}\n#menu div#menu-contents button#close-menu {\n  position: absolute;\n  height: 20px;\n  width: 20px;\n  font-size: 20px;\n  top: 0;\n  right: 0;\n  background: transparent;\n  color: white;\n  cursor: pointer;\n}\n#menu div#menu-contents p.menu-action {\n  color: #0067E0;\n  cursor: pointer;\n}\n#menu div#menu-contents p#export {\n  bottom: 30px;\n  position: absolute;\n}\n#menu div#menu-contents h1 {\n  font-size: 40px;\n  font-weight: 700em;\n}\n#menu div#menu-contents div.menu-list {\n  margin-top: 40px;\n}\n#menu div#menu-contents div.menu-list h2 {\n  font-size: 18px;\n  text-decoration: underline;\n}\n#menu div#menu-contents div.menu-list p {\n  margin: 10px 0;\n}\n#menu div#menu-contents div.menu-list p span {\n  font-size: 12px;\n  border-radius: 20%;\n  margin-right: 10px;\n  white-space: pre;\n}\n#menu div#menu-contents div.menu-list p span.keyboard {\n  font-family: monospace;\n  background: #bcbcbc;\n  color: #232323;\n  padding: 0 4px;\n  font-size: 15px;\n}\n#new-note {\n  width: 300px;\n  height: 230px;\n  position: absolute;\n  background: #bcbcbc;\n  z-index: 1;\n}\n#new-note div#note-contents {\n  margin: 10px;\n}\n#new-note div#note-contents h1#new-note-title {\n  width: 100%;\n  height: 30px;\n  line-height: 30px;\n  text-align: center;\n}\n#new-note div#note-contents textarea#new-note-text {\n  font-size: 18px;\n  height: 110px;\n  margin-top: 10px;\n  width: 260px;\n  padding: 10px;\n  border: none;\n  font-family: 'Dosis', sans-serif;\n}\n#new-note div#note-contents textarea:focus {\n  outline: none;\n}\n#new-note div#note-contents button {\n  width: 130px;\n  margin: 10px 5px;\n  height: 30px;\n  font-size: 14px;\n  color: #bcbcbc;\n  background: #232323;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n  border: 1px solid #232323;\n}\n#new-note div#note-contents button:hover {\n  color: #232323;\n  background: #bcbcbc;\n}\ndiv#landing {\n  text-align: center;\n}\ndiv#landing div#form {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  margin: -150px 0 0 -250px;\n  width: 500px;\n  height: 300px;\n}\ndiv#landing div#form table {\n  width: 100%;\n  font-size: 15px;\n}\ndiv#landing div#form table td {\n  padding: 5px;\n}\ndiv#landing div#form table td:nth-child(1) {\n  text-align: right;\n  width: 35%;\n}\ndiv#landing div#form table td:nth-child(2) {\n  width: 30%;\n}\ndiv#landing div#form table td:nth-child(3) {\n  text-align: left;\n  color: red;\n}\ndiv#landing div#form table input {\n  border-bottom: 1px solid grey;\n  cursor: text;\n  background: transparent;\n  padding: 5px;\n  font-size: 15px;\n}\ndiv#landing div#form button {\n  width: 150px;\n  padding: 10px;\n  font-size: 15px;\n  color: #232323;\n  border-radius: 5px;\n  margin: 10px;\n  background: #bcbcbc;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n}\ndiv#landing div#form button:hover {\n  background: #232323;\n  color: #bcbcbc;\n}\nhtml,\nbody,\ndiv,\nspan,\napplet,\nobject,\niframe,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\np,\nblockquote,\npre,\na,\nabbr,\nacronym,\naddress,\nbig,\ncite,\ncode,\ndel,\ndfn,\nem,\nimg,\nins,\nkbd,\nq,\ns,\nsamp,\nsmall,\nstrike,\nstrong,\nsub,\nsup,\ntt,\nvar,\nb,\nu,\ni,\ncenter,\ndl,\ndt,\ndd,\nol,\nul,\nli,\nfieldset,\nform,\nlabel,\nlegend,\ntable,\ncaption,\ntbody,\ntfoot,\nthead,\ntr,\nth,\ntd,\narticle,\naside,\ncanvas,\ndetails,\nembed,\nfigure,\nfigcaption,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\noutput,\nruby,\nsection,\nsummary,\ntime,\nmark,\naudio,\nvideo {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline;\n}\n/* HTML5 display-role reset for older browsers */\narticle,\naside,\ndetails,\nfigcaption,\nfigure,\nfooter,\nheader,\nhgroup,\nmenu,\nnav,\nsection {\n  display: block;\n}\nbody {\n  line-height: 1;\n}\nol,\nul {\n  list-style: none;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\ninput:focus {\n  outline: none;\n}\n#help-screen {\n  position: absolute;\n  width: 100vw;\n  height: 100vh;\n  color: #232323;\n  background: rgba(255, 255, 255, 0.95);\n  z-index: 1;\n}\n#help-screen button#close-help {\n  position: absolute;\n  font-size: 30px;\n  top: 0;\n  right: 15px;\n  background: transparent;\n}\n#help-screen div#text {\n  height: 80%;\n  width: 60%;\n  margin-left: 20%;\n  margin-top: 8%;\n  text-align: left;\n}\n#help-screen div#text h1 {\n  font-size: 30px;\n  margin-bottom: 20px;\n  text-decoration: underline;\n}\n#help-screen div#text p {\n  margin: 20px 0;\n  letter-spacing: 0.5px;\n}\n#help-screen div#text p#footnote {\n  margin-top: 40px;\n}\n#help-screen div#text p#footnote a {\n  color: #0067E0;\n  -moz-transition: 0.5s all ease-in-out;\n  -o-transition: 0.5s all ease-in-out;\n  -webkit-transition: 0.5s all ease-in-out;\n  transition: 0.5s all ease-in-out;\n}\n#help-screen div#text p#footnote a:hover {\n  text-decoration: underline;\n}\n#help-screen div#text span {\n  font-weight: bold;\n  white-space: pre;\n}\n.wordwrap {\n  white-space: pre-wrap;\n  white-space: -moz-pre-wrap;\n  white-space: -pre-wrap;\n  white-space: -o-pre-wrap;\n  word-wrap: break-word;\n}\n.hidden {\n  display: none;\n}\nbody {\n  font-family: 'Dosis', sans-serif;\n}\nbutton,\ninput {\n  margin: 0;\n  padding: 0;\n  border: none;\n  cursor: pointer;\n  font-family: 'Dosis', sans-serif;\n}\nbutton:focus {\n  outline: none;\n}\na,\nu {\n  text-decoration: none !important;\n}\n", ""]);
 
 	// exports
 
@@ -28787,6 +28787,7 @@
 	        _this.renderList = _this.renderList.bind(_this);
 	        _this.makeNote = _this.makeNote.bind(_this);
 	        _this.closeForm = _this.closeForm.bind(_this);
+	        _this.exportCompass = _this.exportCompass.bind(_this);
 	        _this.toggleMenu = _this.toggleMenu.bind(_this);
 	        _this.toggleHelp = _this.toggleHelp.bind(_this);
 	        return _this;
@@ -28797,6 +28798,9 @@
 	        value: function componentDidMount() {
 	            $(window).on('resize', this.updateVw);
 	            $(window).on('keydown', this.handleKey);
+	            window.onbeforeunload = function () {
+	                return true;
+	            };
 	            this.socket.emit('connect compass', {
 	                hashcode: this.state.compass.id,
 	                username: this.state.username
@@ -28816,7 +28820,6 @@
 	            if (this.state.newNote) return;
 
 	            var noteType = void 0;
-	            console.log(e.which);
 	            switch (e.which) {
 	                case 79:
 	                    noteType = _utils.type.OBSERVATION;
@@ -28832,12 +28835,13 @@
 	                    break;
 	                case 72:
 	                    this.toggleHelp();
+	                    e.preventDefault();
 	                    break;
 	            }
 
 	            if (noteType) {
-	                $('#new-note-text').focus();
 	                this.setState({ newNote: true, type: noteType });
+	                e.preventDefault();
 	            }
 	        }
 	    }, {
@@ -28849,6 +28853,35 @@
 	        key: 'toggleHelp',
 	        value: function toggleHelp() {
 	            this.setState({ showHelp: !this.state.showHelp });
+	        }
+	    }, {
+	        key: 'exportCompass',
+	        value: function exportCompass() {
+	            var compass = this.state.compass;
+	            var fileType = 'text/plain';
+	            var link = document.createElement('a');
+	            var filename = compass.center + '-compass';
+
+	            var newline = '\r\n';
+	            var text = 'Centered on ' + compass.center + newline + newline;
+
+	            _underscore2.default.map(_utils.type, function (value) {
+	                text += value.toUpperCase() + newline;
+	                var list = _underscore2.default.filter(compass.notes, function (e) {
+	                    return e.quadrant === value;
+	                });
+
+	                _underscore2.default.map(list, function (e, i) {
+	                    text += '- ' + e.text + newline;
+	                });
+
+	                text += newline;
+	            });
+
+	            console.log(text);
+	            link.setAttribute('download', filename);
+	            link.setAttribute('href', 'data:' + fileType + ';charset=utf-8,' + encodeURIComponent(text));
+	            link.click();
 	        }
 	    }, {
 	        key: 'makeNote',
@@ -28961,7 +28994,8 @@
 	                    id: this.state.compass.id,
 	                    users: this.state.users,
 	                    show: this.state.showMenu,
-	                    toggleMenu: this.toggleMenu
+	                    toggleMenu: this.toggleMenu,
+	                    exportCompass: this.exportCompass
 	                })
 	            );
 	        }
@@ -30653,7 +30687,7 @@
 	                    ),
 	                    _react2.default.createElement(
 	                        'p',
-	                        { id: 'share', onClick: this.copyCode },
+	                        { className: 'menu-action', onClick: this.copyCode },
 	                        'Share this code'
 	                    ),
 	                    _react2.default.createElement(
@@ -30675,6 +30709,11 @@
 	                            'Collaborators'
 	                        ),
 	                        userList
+	                    ),
+	                    _react2.default.createElement(
+	                        'p',
+	                        { className: 'menu-action', id: 'export', onClick: this.props.exportCompass },
+	                        'Save Compass'
 	                    )
 	                )
 	            );
@@ -30739,7 +30778,7 @@
 	                        { id: 'new-note-title' },
 	                        'New ' + this.props.type
 	                    ),
-	                    _react2.default.createElement('textarea', { id: 'new-note-text' }),
+	                    _react2.default.createElement('textarea', { autoFocus: true, id: 'new-note-text' }),
 	                    _react2.default.createElement(
 	                        'button',
 	                        { id: 'make-note', onClick: this.props.make },

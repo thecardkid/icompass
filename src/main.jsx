@@ -41,6 +41,7 @@ class Main extends Component {
 	    this.renderList = this.renderList.bind(this);
 	    this.makeNote = this.makeNote.bind(this);
 	    this.closeForm = this.closeForm.bind(this);
+	    this.exportCompass = this.exportCompass.bind(this);
 	    this.toggleMenu = this.toggleMenu.bind(this);
 	    this.toggleHelp = this.toggleHelp.bind(this);
 	}
@@ -48,6 +49,7 @@ class Main extends Component {
 	componentDidMount() {
 	    $(window).on('resize', this.updateVw);
 	    $(window).on('keydown', this.handleKey);
+	    window.onbeforeunload = () => true;
 	    this.socket.emit('connect compass', {
 	        hashcode: this.state.compass.id,
 	        username: this.state.username
@@ -65,7 +67,6 @@ class Main extends Component {
         if (this.state.newNote) return;
 
         let noteType;
-        console.log(e.which);
         switch (e.which) {
             case 79:
                 noteType = type.OBSERVATION;
@@ -81,12 +82,13 @@ class Main extends Component {
                 break;
             case 72:
                 this.toggleHelp();
+                e.preventDefault();
                 break;
         }
 
         if (noteType) {
-            $('#new-note-text').focus();
             this.setState({newNote: true, type: noteType});
+            e.preventDefault();
         }
     }
 
@@ -96,6 +98,32 @@ class Main extends Component {
 
     toggleHelp() {
         this.setState({showHelp: !this.state.showHelp});
+    }
+
+    exportCompass() {
+        let compass = this.state.compass;
+        let fileType = 'text/plain';
+        let link = document.createElement('a');
+        let filename = compass.center + '-compass';
+
+        let newline = '\r\n';
+        let text = 'Centered on ' + compass.center + newline + newline;
+
+        _.map(type, (value) => {
+            text += value.toUpperCase() + newline;
+            let list = _.filter(compass.notes, (e) => e.quadrant === value);
+
+            _.map(list, (e, i) => {
+                text += '- ' + e.text + newline;
+            });
+
+            text += newline;
+        });
+
+        console.log(text);
+        link.setAttribute('download', filename);
+        link.setAttribute('href', 'data:' + fileType + ';charset=utf-8,' + encodeURIComponent(text));
+        link.click();
     }
 
     makeNote() {
@@ -180,6 +208,7 @@ class Main extends Component {
                 users={this.state.users}
                 show={this.state.showMenu}
                 toggleMenu={this.toggleMenu}
+                exportCompass={this.exportCompass}
             />
         </div>
 		);

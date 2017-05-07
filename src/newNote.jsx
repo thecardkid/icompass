@@ -14,7 +14,7 @@ class NewNote extends Component {
             <div id="new-note" style={this.props.style}>
                 <div id="note-contents">
                     <h1 id="new-note-title">{'New ' + this.props.type}</h1>
-                    <textarea id="new-note-text"/>
+                    <textarea autoFocus id="new-note-text"/>
                     <button id="make-note" onClick={this.props.make}>add note</button>
                     <button id="nevermind" onClick={this.props.close}>never mind</button>
                 </div>

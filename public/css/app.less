@@ -11,6 +11,14 @@
 @light:#bcbcbc;
 @blue:#0067E0;
 
+.wordwrap {
+    white-space: pre-wrap;          // CSS3
+    white-space: -moz-pre-wrap;     // Firefox
+    white-space: -pre-wrap;         // Opera <7
+    white-space: -o-pre-wrap;       // Opera 7
+    word-wrap: break-word;          // IE
+}
+
 // utility funcs
 .tilt (@x) {
     -webkit-transform:rotate(@x);

@@ -57,7 +57,7 @@ class Menu extends Component {
                 <div id="menu-contents">
                     <button id="close-menu" onClick={this.props.toggleMenu}>x</button>
                     <h1>{this.props.id}</h1>
-                    <p id="share" onClick={this.copyCode}>Share this code</p>
+                    <p className="menu-action" onClick={this.copyCode}>Share this code</p>
                     <div className="menu-list">
                         <h2>Controls</h2>
                         {controlList}
@@ -66,6 +66,7 @@ class Menu extends Component {
                         <h2>Collaborators</h2>
                         {userList}
                     </div>
+                    <p className="menu-action" id="export" onClick={this.props.exportCompass}>Save Compass</p>
                 </div>
             </div>
         );
