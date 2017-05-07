@@ -108,7 +108,7 @@ class Compass extends Component {
 
         let newline = '\r\n';
         let text = 'Centered on ' + compass.center + newline;
-        text += 'ID: ' + compass.id + newline;
+        text += 'ID: ' + compass.id + newline + newline;
 
         _.map(type, (value) => {
             text += value.toUpperCase() + newline;
@@ -121,7 +121,6 @@ class Compass extends Component {
             text += newline;
         });
 
-        console.log(text);
         link.setAttribute('download', filename);
         link.setAttribute('href', 'data:' + fileType + ';charset=utf-8,' + encodeURIComponent(text));
         link.click();
@@ -204,6 +203,8 @@ class Compass extends Component {
             {helpScreen}
             <div id="center" style={centerStyle(100,100)}>{this.state.compass.center}</div>
             <button id="show-menu" onClick={this.toggleMenu}>Show Menu</button>
+            <div id="horiz-line" style={{top: this.state.vh/2 - 2}}></div>
+            <div id="vert-line" style={{left: this.state.vw/2 - 2}}></div>
             <Menu
                 id={this.state.compass.id}
                 users={this.state.users}

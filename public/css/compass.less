@@ -7,7 +7,6 @@
     position:absolute;
     width:50vw;
     height:50vh;
-    border:1px solid black;
 
     h1 {
         position:absolute;
@@ -92,12 +91,12 @@
 }
 
 #center {
-    border:1px solid black;
     border-radius:100%;
     width:100px;
     height:100px;
     position:absolute;
-    background:white;
+    background:@dark;
+    color:@light;
     text-align:center;
     line-height:100px;
 }
@@ -106,8 +105,23 @@
     position:absolute;
     top:20px;
     left:20px;
-    background:black;
-    color:white;
+    background:@dark;
+    color:@light;
 }
 
+#horiz-line {
+    width:100vw;
+    height:4px;
+    background:@dark;
+    position:absolute;
+    z-index:-1;
+}
+
+#vert-line {
+    width:4px;
+    height:100vh;
+    z-index:-1;
+    background:@dark;
+    position:absolute;
+}
 

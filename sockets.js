@@ -1,6 +1,7 @@
 var socketIO = require('socket.io');
 var ObjectId = require('mongoose').Types.ObjectId;
 var Compass = require('./models/compass');
+var winston = require('winston');
 var _ = require('underscore');
 var client, io;
 
@@ -13,6 +14,15 @@ var allColors = [
     '#FFFFCC', // yellow
 ];
 var userManager = {};
+
+var logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({'timestamp': true}),
+        new (winston.transports.File)({filename: 'compass.log'})
+    ]
+});
+
+logger.level = 'debug';
 
 var socketObject = {
     socketServer: function(server) {
@@ -27,6 +37,7 @@ var socketObject = {
                 username = info.username;
 
                 client.join(room);
+                logger.info(username + ' joined room ' + room);
 
                 // check if room existed
                 if (!(room in userManager)) {
@@ -37,22 +48,20 @@ var socketObject = {
                 }
 
                 // make username unique
-                while (username in userManager[room].usernameToColor) {
+                while (username in userManager[room].usernameToColor)
                     username += 'x';
-                }
 
                 // assign new username a color. TODO handle "too many users case"
                 var r = Math.floor(Math.random() * userManager[room].colors.length);
                 userManager[room].usernameToColor[username] = userManager[room].colors[r];
                 userManager[room].colors.splice(r, 1);
 
-                // console.log(userManager);
-
+                logger.log('debug', 'Manager after user joined', {manager: userManager});
                 io.sockets.in(room).emit('user joined', userManager[room].usernameToColor);
             }); // connect compass
 
             client.on('disconnect', function(reason) {
-                // console.log(username, 'disconnected from room', room);
+                logger.info(username + ' left room ', room);
 
                 if (!(userManager[room])) return; // TODO log this
                 var c = userManager[room].usernameToColor[username];
@@ -65,14 +74,14 @@ var socketObject = {
                     userManager[room].colors.push(c);
                     io.sockets.in(room).emit('user left', userManager[room].usernameToColor);
                 }
-                // console.log(userManager);
+                logger.log('debug', 'Manager after user left', {manager: userManager});
             }); // disconnect
 
             client.on('new note', function(info) {
                 Compass.findOne({id: room}, function(err, compass) {
-                    if (err) return console.error(err);
+                    if (err) logger.log('error', 'Error finding compass with ID ' + room, err);
 
-                    if (!(userManager[room])) return; // TODO log this
+                    if (!(userManager[room])) logger.log('debug', 'Creating a note for a room that does not exist!', {info: info});
                     var color = userManager[room].usernameToColor[info.user];
 
                     var newNote = {
@@ -86,10 +95,12 @@ var socketObject = {
                         {$push: {notes: newNote}},
                         {$safe: true, upsert: false, new: true},
                         function (err, newCompass) {
-                            if (err) return console.error(err);
+                            if (err) logger.log('error', 'Error updating compass with ID ' + room, err);
 
                             var last = newCompass.notes.length - 1;
 
+                            logger.info(username + ' created a note');
+                            logger.log('debug', username + ' created a note', {note: info});
                             io.sockets.in(room).emit('update notes', newCompass.notes[last]);
                         }
                     );

@@ -98,7 +98,6 @@ class Landing extends Component {
         })
         .then((response) => response.json())
         .then((responseJson) => {
-            console.log(responseJson);
             if (!responseJson.compass)
                 $('#validate-id').text('Compass does not exist');
             else
