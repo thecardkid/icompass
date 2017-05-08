@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "watch": "webpack -d --watch",
-    "build": "webpack",
+    "build": "NODE_ENV=production webpack -p --config ./webpack.production.config.js",
     "start": "node index.js"
   },
   "author": "Hieu Nguyen",

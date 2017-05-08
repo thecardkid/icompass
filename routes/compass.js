@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var sockets = require('../sockets');
 var Compass = require('../models/compass');
+var winston = require('winston');
 var DefaultCompass = require('../models/defaultCompass');
 
 function generateUUID() {
@@ -21,6 +22,7 @@ router.post('/create', function(req, res, next) {
     newCompass.center = req.body.center;
     Compass.create(newCompass, function (err, compass) {
         if (err) return console.log(err);
+        console.log(compass);
         res.json({hash: hash, compass: compass});
     });
 });

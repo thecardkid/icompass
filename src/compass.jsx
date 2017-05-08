@@ -46,6 +46,16 @@ class Compass extends Component {
 	    this.toggleHelp = this.toggleHelp.bind(this);
 	}
 
+    componentShouldUpdate(nextProps, nextState) {
+        if (this.state.compass.notes.length !== nextState.compass.notes.length)
+            return true;
+
+        if (this.state.users.length !== nextState.users.length)
+            return true;
+
+        return false;
+    }
+
 	componentDidMount() {
 	    $(window).on('resize', this.updateVw);
 	    $(window).on('keydown', this.handleKey);

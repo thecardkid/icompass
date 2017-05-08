@@ -5,12 +5,30 @@ var BUILD_DIR = path.resolve(__dirname, 'public/');
 var APP_DIR = path.resolve(__dirname, 'src/');
 
 var config = {
-    devtool: 'eval',
+    devtool: 'cheap-module-source-map',
 	entry: APP_DIR + '/index.jsx',
 	output: {
 		path: BUILD_DIR,
 		filename: 'bundle.js'
 	},
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            }
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            beautify: false,
+            mangle: {
+                screw_ie8: true,
+                keep_fnames: true
+            },
+            compress: {
+                screw_ie8: true
+            },
+            comments: false
+        })
+    ],
 	module: {
 		loaders: [
 			{

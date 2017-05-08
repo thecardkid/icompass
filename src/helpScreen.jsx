@@ -3,6 +3,10 @@
 import React, { Component } from 'react';
 
 class HelpScreen extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return false;
+    }
+
     render() {
         return (
             <div id="help-screen">
