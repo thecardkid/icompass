@@ -70,7 +70,7 @@ var socketObject = {
 
             client.on('new note', function(info) {
                 Compass.findOne({id: room}, function(err, compass) {
-                    if (err) logger.error('Error finding compass with ID ' + room, err);
+                    if (err) logger.error('Error finding compass with ID', room, err);
 
                     if (!(userManager[room])) logger.debug('Creating a note for a room that does not exist!', info);
                     var color = userManager[room].usernameToColor[info.user];
@@ -78,7 +78,8 @@ var socketObject = {
                     var newNote = {
                         color: color,
                         text: info.text,
-                        quadrant: info.type
+                        x: info.x,
+                        y: info.y
                     };
 
                     Compass.findByIdAndUpdate(
@@ -86,22 +87,86 @@ var socketObject = {
                         {$push: {notes: newNote}},
                         {$safe: true, upsert: false, new: true},
                         function (err, newCompass) {
-                            if (err) logger.error('Error updating compass with ID ' + room, err);
+                            if (err) logger.error('Error updating compass with ID', room, err);
 
                             var last = newCompass.notes.length - 1;
 
-                            logger.info(username + ' created a note');
-                            logger.debug(username + ' created a note', info);
-                            io.sockets.in(room).emit('update notes', newCompass.notes[last]);
+                            logger.info(username, 'created a note');
+                            logger.debug(username, 'created a note', newNote);
+                            io.sockets.in(room).emit('add note', newCompass.notes[last]);
                         }
                     );
                 });
-            });
+            }); // new note
+
+            client.on('move note', function(info) {
+                Compass.findOne({id: room}, function(err, compass) {
+                    if (err) logger.error('Error finding compass with ID', room, err);
+
+                    if (!(userManager[room])) logger.debug('Moving a note for a room that does not exist', info);
+
+                    var changed;
+                    var newNotes = _.filter(compass.notes, function(e, i) {
+                        if (e._id.toString() == info.noteId) {
+                            changed = e;
+                            return false;
+                        }
+                        return true;
+                    });
+
+                    changed.x = info.x;
+                    changed.y = info.y;
+                    newNotes.push(changed);
+
+                    Compass.findByIdAndUpdate(
+                        compass._id,
+                        {$set: {notes: newNotes}},
+                        {$safe: true, upsert: false, new: true},
+                        function (err, newCompass) {
+                            if (err) logger.error('Error updating compass with ID', room, err);
+
+                            logger.info(username, 'moved a note');
+                            logger.debug(username, 'moved a note', changed);
+                            io.sockets.in(room).emit('refresh notes', newCompass.notes);
+                        }
+                    );
+                });
+            }); // move note
+
+            client.on('edit note', function(info) {
+                Compass.findOne({id: room}, function(err, compass) {
+                    if (err) logger.error('Error finding compass with ID', room, err);
+
+                    if (!(userManager[room])) logger.debug('Moving a note for a room that does not exist', info);
+
+                    var changed;
+                    var newNotes = _.filter(compass.notes, function(e, i) {
+                        if (e._id.toString() == info.noteId) {
+                            changed = e;
+                            return false;
+                        }
+                        return true;
+                    });
+
+                    changed.text = info.text;
+                    newNotes.push(changed);
+
+                    Compass.findByIdAndUpdate(
+                        compass._id,
+                        {$set: {notes: newNotes}},
+                        {$safe: true, upsert: false, new: true},
+                        function (err, newCompass) {
+                            if (err) logger.error('Error updating compass with ID', room, err);
+
+                            logger.info(username, 'edited a note');
+                            logger.debug(username, 'edited a note', changed);
+                            io.sockets.in(room).emit('refresh notes', newCompass.notes);
+                        }
+                    );
+                });
+            }); // edit note
         });
     }
-}
-
-var makeNote = function(info) {
 }
 
 module.exports = socketObject;

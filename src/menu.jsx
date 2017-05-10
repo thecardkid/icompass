@@ -5,10 +5,8 @@ import _ from 'underscore';
 import { type } from '../utils';
 
 const controls = {
-    'o': 'new observation',
-    'p': 'new principle',
-    'i': 'new idea',
-    'e': 'new experiment',
+    'n': 'new post-it',
+    'm': 'toggle menu',
     'h': 'show help'
 };
 
@@ -66,7 +64,6 @@ class Menu extends Component {
                         <h2>Collaborators</h2>
                         {userList}
                     </div>
-                    <p className="menu-action" id="export" onClick={this.props.exportCompass}>Save Compass</p>
                     <p id="creator">
                         Created by
                         <a href="http://hieuqn.com" target="_blank"> Hieu Nguyen</a>
