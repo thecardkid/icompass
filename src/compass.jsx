@@ -7,6 +7,7 @@ import Menu from './menu.jsx';
 import NoteForm from './newNote.jsx';
 import StickyNote from './sticky.jsx';
 import HelpScreen from './helpScreen.jsx';
+import Instructions from './instructions.jsx';
 
 class Compass extends Component {
 	constructor(props, context) {
@@ -21,6 +22,7 @@ class Compass extends Component {
             users: {},
             showMenu: false,
             showHelp: false,
+            showInstructions: false,
             update: false,
         };
 
@@ -60,6 +62,7 @@ class Compass extends Component {
 	    this.center = this.center.bind(this);
 	    this.exportCompass = this.exportCompass.bind(this);
 	    this.showSavePrompt = this.showSavePrompt.bind(this);
+	    this.toggleInstructions = this.toggleInstructions.bind(this);
 	}
 
 	componentDidMount() {
@@ -92,6 +95,10 @@ class Compass extends Component {
                 break;
             case 72:
                 e.preventDefault();
+                this.toggleInstructions();
+                break;
+            case 87:
+                e.preventDefault();
                 this.toggleHelp();
                 break;
             case 77:
@@ -107,6 +114,10 @@ class Compass extends Component {
 
     toggleHelp() {
         this.setState({showHelp: !this.state.showHelp});
+    }
+
+    toggleInstructions() {
+        this.setState({showInstructions: !this.state.showInstructions});
     }
 
     validateText() {
@@ -210,6 +221,11 @@ class Compass extends Component {
             />
         }
 
+        let instructions;
+        if (this.state.showInstructions) {
+            instructions = <Instructions style={this.center(420,300)} close={this.toggleInstructions}/>
+        }
+
         let helpScreen;
         if (this.state.showHelp)
             helpScreen = <HelpScreen close={this.toggleHelp} />;
@@ -220,6 +236,7 @@ class Compass extends Component {
         <div id="compass">
             {stickies}
             {form}
+            {instructions}
             {helpScreen}
             <div className="quadrant" id="observations">
                 <h1>OBSERVATIONS</h1>

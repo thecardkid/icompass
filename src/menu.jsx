@@ -6,7 +6,8 @@ import _ from 'underscore';
 const controls = {
     'n': 'new post-it',
     'm': 'toggle menu',
-    'h': 'show help'
+    'w': 'what is this?',
+    'h': 'help page',
 };
 
 class Menu extends Component {
@@ -63,8 +64,12 @@ class Menu extends Component {
                         <h2>Collaborators</h2>
                         {userList}
                     </div>
+                    <p id="innovator">
+                        Compass by
+                        <a href="http://innovatorscompass.org" target="_blank"> Ela Ben-Ur</a>
+                    </p>
                     <p id="creator">
-                        Created by
+                        App by
                         <a href="http://hieuqn.com" target="_blank"> Hieu Nguyen</a>
                     </p>
                 </div>
