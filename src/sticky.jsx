@@ -31,14 +31,17 @@ class StickyNote extends Component {
 
     render() {
         let n = this.props.note;
-        let rotate = 'rotate(' + n.tilt + 'deg)'
         let style = {
             left: n.x * this.props.w,
             top: n.y * this.props.h
         };
 
         return (
-            <li style={style} onClick={() => this.props.edit(this.props.note)} draggable="true" id={n._id} onDragEnd={(e) => this.apiMoveNote(e, n._id)}>
+            <li style={style}
+                draggable="true"
+                onClick={() => this.props.edit(this.props.note)}
+                id={n._id}
+                onDragEnd={(e) => this.apiMoveNote(e, n._id)}>
                 <a style={{background: n.color}}>
                     <p>{n.text}</p>
                 </a>

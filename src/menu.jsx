@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import _ from 'underscore';
-import { type } from '../utils';
 
 const controls = {
     'n': 'new post-it',

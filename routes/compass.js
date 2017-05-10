@@ -1,7 +1,6 @@
 var router = require('express').Router();
 var sockets = require('../sockets');
 var Compass = require('../models/compass');
-var winston = require('winston');
 var DefaultCompass = require('../models/defaultCompass');
 
 function generateUUID() {

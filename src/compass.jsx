@@ -58,12 +58,14 @@ class Compass extends Component {
 	    this.toggleMenu = this.toggleMenu.bind(this);
 	    this.toggleHelp = this.toggleHelp.bind(this);
 	    this.center = this.center.bind(this);
+	    this.exportCompass = this.exportCompass.bind(this);
+	    this.showSavePrompt = this.showSavePrompt.bind(this);
 	}
 
 	componentDidMount() {
 	    $(window).on('resize', this.updateVw);
 	    $(window).on('keydown', this.handleKey);
-	    $(window).on('beforeunload', () => true);
+        $(window).on('beforeunload', () => true);
 	    this.socket.emit('connect compass', {
 	        hashcode: this.state.compass.id,
 	        username: this.state.username
@@ -171,6 +173,24 @@ class Compass extends Component {
         };
     }
 
+    exportCompass() {
+        window.html2canvas(document.body).then((canvas) => {
+            let imgData = canvas.toDataURL('image/png');
+            let doc = new jsPDF('l', 'cm', 'a4');
+            doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
+            doc.save(this.state.compass.center + '-compass.pdf');
+        });
+    }
+
+    showSavePrompt() {
+        let text = 'I see you want to save this compass as a PDF. You can:\n\n' +
+            '1. Click \'OK\' and I can try to create a pdf for you, but the image ' +
+            'quality may not be to your liking. Or\n\n' +
+            '2. Click \'Cancel\' and take a screenshot (recommended)';
+
+        if (confirm(text)) this.exportCompass();
+    }
+
 	render() {
         let form;
         if (this.state.newNote) {
@@ -180,11 +200,9 @@ class Compass extends Component {
                 make={this.apiMakeNote}
                 close={this.closeForm}
             />
-        }
-
-        if (this.state.editNote) {
+        } else if (this.state.editNote) {
             form = <NoteForm
-                style={this.cetner(300,230)}
+                style={this.center(300,230)}
                 title={'Edit this post-it'}
                 text={this.state.editNote.text}
                 make={this.apiEditNote}
@@ -203,7 +221,26 @@ class Compass extends Component {
             {stickies}
             {form}
             {helpScreen}
-            <div id="center" style={this.center(100,100)}>{this.state.compass.center}</div>
+            <div className="quadrant" id="observations">
+                <h1>OBSERVATIONS</h1>
+                <h2>What's happening? Why?</h2>
+            </div>
+            <div className="quadrant" id="principles">
+                <h1>PRINCIPLES</h1>
+                <h2>What matters most?</h2>
+            </div>
+            <div className="quadrant" id="ideas">
+                <h1>IDEAS</h1>
+                <h2>What could happen?</h2>
+            </div>
+            <div className="quadrant" id="experiments">
+                <h1>EXPERIMENTS</h1>
+                <h2>What's a way to try?</h2>
+            </div>
+            <div id="center" style={this.center(100,100)}>
+                {this.state.compass.center}
+                <button id="export" onClick={this.showSavePrompt}>Save as PDF</button>
+            </div>
             <button id="show-menu" onClick={this.toggleMenu}>Show Menu</button>
             <div id="horiz-line" style={{top: this.state.vh/2 - 2}}></div>
             <div id="vert-line" style={{left: this.state.vw/2 - 2}}></div>
