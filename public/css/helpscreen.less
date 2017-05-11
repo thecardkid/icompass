@@ -1,53 +1,30 @@
-#help-screen {
+div#help-screen {
+    width:420px;
+    height:300px;
     position:absolute;
-    width:100vw;
-    height:100vh;
-    color:@dark;
-    background:rgba(255,255,255,0.95);
-    z-index:1;
+    z-index:2;
+    background:#cecece;
+    text-align:center;
 
-    button#close-help {
-        position:absolute;
-        font-size:30px;
-        top:0;
-        right:15px;
-        background:transparent;
-    }
-
-    div#text {
-        height:80%;
-        width:60%;
-        margin-left:20%;
-        margin-top:8%;
-        text-align:left;
+    div#contents {
+        margin:30px;
 
         h1 {
+            margin-bottom:30px;
             font-size:30px;
-            margin-bottom:20px;
-            text-decoration:underline;
         }
 
-        p {
-            margin:20px 0;
-            letter-spacing:0.5px;
+        ul li {
+            text-align: left;
+            margin:10px 0;
         }
+    }
 
-        p#footnote {
-            margin-top:40px;
-
-            a {
-                color:@blue;
-                .hasTransition(0.5s);
-            }
-
-            a:hover {
-                text-decoration:underline;
-            }
-        }
-
-        span {
-            font-weight:bold;
-            white-space:pre;
-        }
+    button {
+        position:absolute;
+        bottom:20px;
+        width:200px;
+        left:110px;
+        margin:0 10px;
     }
 }

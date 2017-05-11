@@ -1,10 +1,10 @@
+@import "reset.less";
 @import "compass.less";
 @import "menu.less";
-@import "newnote.less";
+@import "noteform.less";
 @import "landing.less";
-@import "reset.less";
-@import "instructions.less";
 @import "helpscreen.less";
+@import "explanation.less";
 
 @defaultFont:'Dosis', sans-serif;
 @stickySize:120px;
@@ -68,4 +68,35 @@ button:focus {
 
 a, u {
 	text-decoration:none !important;
+}
+
+textarea:focus {
+    outline:none;
+}
+
+button.ic-button {
+    width:130px;
+    margin:10px 5px;
+    height:30px;
+    font-size:14px;
+    color:@light;
+    background:@dark;
+    .hasTransition(0.5s);
+    border:1px solid @dark;
+}
+
+button.ic-button:hover {
+    color:@dark;
+    background:@light;
+}
+
+button.ic-close-window {
+    position:absolute;
+    background:transparent;
+    letter-spacing:15px;
+    top:0;
+    right:0;
+    font-size:25px;
+    cursor:pointer;
+    color:@light;
 }

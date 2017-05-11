@@ -3,13 +3,12 @@
 import React, { Component } from 'react';
 import _ from 'underscore';
 
-import Menu from './menu.jsx';
-import NoteForm from './newNote.jsx';
-import StickyNote from './sticky.jsx';
-import HelpScreen from './helpScreen.jsx';
-import Instructions from './instructions.jsx';
-
-// TODO: In menu.jsx, change current username to 'you'
+import Menu from './Menu.jsx';
+import NoteForm from './NoteForm.jsx';
+import StickyNote from './StickyNote.jsx';
+import Explanation from './Explanation.jsx';
+import HelpScreen from './HelpScreen.jsx';
+import { exportPrompt, quadrantsInfo } from '../utils'
 
 class Compass extends Component {
 	constructor(props, context) {
@@ -23,9 +22,8 @@ class Compass extends Component {
             username: this.props.username,
             users: {},
             showMenu: false,
+            showExplanation: false,
             showHelp: false,
-            showInstructions: false,
-            update: false,
         };
 
         let addNote = (newNote) => {
@@ -46,7 +44,7 @@ class Compass extends Component {
 	    this.socket = io();
         this.socket.on('add note', newNote => addNote(newNote));
         this.socket.on('user joined', updateUsers);
-        this.socket.on('user left', updateUsers); // TODO: handle this
+        this.socket.on('user left', updateUsers);
         this.socket.on('refresh notes', refreshNotes);
 
         // api events
@@ -60,11 +58,11 @@ class Compass extends Component {
 	    this.showEditForm = this.showEditForm.bind(this);
 	    this.closeForm = this.closeForm.bind(this);
 	    this.toggleMenu = this.toggleMenu.bind(this);
-	    this.toggleHelp = this.toggleHelp.bind(this);
+	    this.toggleExplain = this.toggleExplain.bind(this);
 	    this.center = this.center.bind(this);
 	    this.exportCompass = this.exportCompass.bind(this);
 	    this.showSavePrompt = this.showSavePrompt.bind(this);
-	    this.toggleInstructions = this.toggleInstructions.bind(this);
+	    this.toggleHelp = this.toggleHelp.bind(this);
 	}
 
 	componentDidMount() {
@@ -98,11 +96,11 @@ class Compass extends Component {
                 break;
             case 72:
                 e.preventDefault();
-                this.toggleInstructions();
+                this.toggleHelp();
                 break;
             case 87:
                 e.preventDefault();
-                this.toggleHelp();
+                this.toggleExplain();
                 break;
             case 77:
                 e.preventDefault();
@@ -115,23 +113,21 @@ class Compass extends Component {
         this.setState({showMenu: !this.state.showMenu});
     }
 
+    toggleExplain() {
+        this.setState({showExplanation: !this.state.showExplanation});
+    }
+
     toggleHelp() {
         this.setState({showHelp: !this.state.showHelp});
     }
 
-    toggleInstructions() {
-        this.setState({showInstructions: !this.state.showInstructions});
-    }
-
     validateText() {
         let text = $('#form-text').val();
-
         if (text === '') return false;
         if (text.length > 200) {
             alert('You can\'t fit that much on a post-it!');
             return false;
         }
-
         return text;
     }
 
@@ -196,26 +192,29 @@ class Compass extends Component {
         });
     }
 
-    showSavePrompt() {
-        let text = 'I see you want to save this compass as a PDF. You can:\n\n' +
-            '1. Click \'OK\' and I can try to create a pdf for you, but the image ' +
-            'quality may not be to your liking. Or\n\n' +
-            '2. Click \'Cancel\' and take a screenshot (recommended)';
-
-        if (confirm(text)) this.exportCompass();
+    renderQuadrant(q, i) {
+        return (
+            <div className="ic-quadrant" id={q.id}>
+                <h1>{q.id.toUpperCase()}</h1>
+                <h2>{q.prompt}</h2>
+            </div>
+        );
     }
 
-	render() {
-        let form;
+    showSavePrompt() {
+        if (confirm(exportPrompt)) this.exportCompass();
+    }
+
+    getForm() {
         if (this.state.newNote) {
-            form = <NoteForm
+            return <NoteForm
                 style={this.center(300,230)}
                 title={'Make a new post-it'}
                 make={this.apiMakeNote}
                 close={this.closeForm}
             />
         } else if (this.state.editNote) {
-            form = <NoteForm
+            return <NoteForm
                 style={this.center(300,230)}
                 title={'Edit this post-it'}
                 text={this.state.editNote.text}
@@ -223,50 +222,46 @@ class Compass extends Component {
                 close={this.closeForm}
             />
         }
+        return null;
+    }
 
-        let instructions;
-        if (this.state.showInstructions) {
-            instructions = <Instructions style={this.center(420,300)} close={this.toggleInstructions}/>
-        }
-
-        let helpScreen;
+    getHelpScreen() {
         if (this.state.showHelp)
-            helpScreen = <HelpScreen close={this.toggleHelp} />;
+            return <HelpScreen style={this.center(420,300)} close={this.toggleHelp}/>
+        return null;
+    }
 
+    getExplanation() {
+        if (this.state.showExplanation)
+            return <Explanation close={this.toggleExplain} />;
+        return null;
+    }
+
+	render() {
+        let form = this.getForm();
+        let helpScreen = this.getHelpScreen();
+        let explanation = this.getExplanation();
         let stickies = _.map(this.state.compass.notes, this.renderNote);
+        let quadrants = _.map(quadrantsInfo, this.renderQuadrant);
 
         return (
         <div id="compass">
             {stickies}
             {form}
-            {instructions}
             {helpScreen}
-            <div className="quadrant" id="observations">
-                <h1>OBSERVATIONS</h1>
-                <h2>What's happening? Why?</h2>
-            </div>
-            <div className="quadrant" id="principles">
-                <h1>PRINCIPLES</h1>
-                <h2>What matters most?</h2>
-            </div>
-            <div className="quadrant" id="ideas">
-                <h1>IDEAS</h1>
-                <h2>What could happen?</h2>
-            </div>
-            <div className="quadrant" id="experiments">
-                <h1>EXPERIMENTS</h1>
-                <h2>What's a way to try?</h2>
-            </div>
+            {explanation}
+            {quadrants}
             <div id="center" style={this.center(100,100)}>
                 {this.state.compass.center}
                 <button id="export" onClick={this.showSavePrompt}>Save as PDF</button>
             </div>
             <button id="show-menu" onClick={this.toggleMenu}>Show Menu</button>
-            <div id="horiz-line" style={{top: this.state.vh/2 - 2}}></div>
-            <div id="vert-line" style={{left: this.state.vw/2 - 2}}></div>
+            <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
+            <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
             <Menu
                 id={this.state.compass.id}
-                users={this.state.users}
+                users={this.state.users.usernameToColor}
+                you={this.state.username}
                 show={this.state.showMenu}
                 toggleMenu={this.toggleMenu}
             />

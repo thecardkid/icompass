@@ -6,8 +6,8 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
 
-import Compass from './compass.jsx';
-import Landing from './landing.jsx';
+import Compass from './Compass.jsx';
+import LandingPage from './LandingPage.jsx';
 
 class Index extends Component {
     constructor(props, context) {
@@ -23,7 +23,7 @@ class Index extends Component {
     render() {
         return (
             <Router history={browserHistory}>
-                <Route path='/' setCompass={this.setCompass} component={Landing}/>
+                <Route path='/' setCompass={this.setCompass} component={LandingPage}/>
                 <Route path='/compass' component={() => (<Compass compass={this.state.compass} username={this.state.username}/>)}/>
             </Router>
         );

@@ -1,4 +1,4 @@
-#menu {
+#ic-menu {
     position:absolute;
     .hasTransition(0.5s);
     width:200px;
@@ -7,49 +7,34 @@
     height:100vh;
     z-index:2;
 
-    div#menu-contents {
+    div#ic-menu-contents {
         margin:20px;
         margin-top:40px;
-
-        button#close-menu {
-            position:absolute;
-            height:20px;
-            width:20px;
-            font-size:20px;
-            top:0;
-            right:0;
-            background:transparent;
-            color:white;
-            cursor:pointer;
-        }
-
-        p.menu-action {
-            color:@blue;
-            cursor:pointer;
-        }
-
-        p#innovator {
-            bottom:40px;
-            position:absolute;
-
-            a {color:white}
-        }
-
-        p#creator {
-            position:absolute;
-            bottom:20px;
-
-            a {
-                color:white;
-            }
-        }
 
         h1 {
             font-size:40px;
             font-weight:700em;
         }
 
-        div.menu-list {
+        p#ic-menu-share {
+            color:@blue;
+            cursor:pointer;
+        }
+
+        div#ic-menu-credits {
+            position:absolute;
+            bottom:20px;
+
+            p {
+                height:20px;
+
+                a {
+                    color:@blue;
+                }
+            }
+        }
+
+        div.ic-menu-list {
             margin-top:40px;
 
             h2 {
@@ -67,7 +52,7 @@
                     white-space:pre;
                 }
 
-                span.keyboard {
+                span.ic-control-key {
                     font-family:monospace;
                     background:@light;
                     color:@dark;

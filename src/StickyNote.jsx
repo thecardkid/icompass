@@ -38,7 +38,7 @@ class StickyNote extends Component {
 
         return (
             <li style={style}
-                className="sticky"
+                className="ic-sticky-note"
                 draggable="true"
                 onClick={() => this.props.edit(this.props.note)}
                 id={n._id}

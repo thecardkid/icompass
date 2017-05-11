@@ -15,13 +15,14 @@ class Menu extends Component {
         super(props, context);
 
         this.copyCode = this.copyCode.bind(this);
+        this.renderUserColor = this.renderUserColor.bind(this);
     }
 
     renderUserColor(color, username) {
         return (
             <p key={username}>
                 <span style={{background: color}}>     </span>
-                {username}
+                {username === this.props.you ? 'You' : username}
             </p>
         );
     }
@@ -29,10 +30,10 @@ class Menu extends Component {
     renderControl(action, key) {
         return (
             <p key={'control'+key}>
-                <span className='keyboard'>{key}</span>
+                <span className='ic-control-key'>{key}</span>
                 {action}
             </p>
-        )
+        );
     }
 
     copyCode() {
@@ -51,27 +52,27 @@ class Menu extends Component {
         };
 
         return (
-            <div id="menu" style={style}>
-                <div id="menu-contents">
-                    <button id="close-menu" onClick={this.props.toggleMenu}>x</button>
+            <div id="ic-menu" style={style}>
+                <div id="ic-menu-contents">
+                    <button className="ic-close-window" onClick={this.props.toggleMenu}>x</button>
                     <h1>{this.props.id}</h1>
-                    <p className="menu-action" onClick={this.copyCode}>Share this code</p>
-                    <div className="menu-list">
+                    <p id="ic-menu-share" onClick={this.copyCode}>Share this code</p>
+                    <div className="ic-menu-list">
                         <h2>Controls</h2>
                         {controlList}
                     </div>
-                    <div className="menu-list">
+                    <div className="ic-menu-list">
                         <h2>Collaborators</h2>
                         {userList}
                     </div>
-                    <p id="innovator">
-                        Compass by
-                        <a href="http://innovatorscompass.org" target="_blank"> Ela Ben-Ur</a>
-                    </p>
-                    <p id="creator">
-                        App by
-                        <a href="http://hieuqn.com" target="_blank"> Hieu Nguyen</a>
-                    </p>
+                    <div id="ic-menu-credits">
+                        <p>Compass by
+                            <a href="http://innovatorscompass.org" target="_blank"> Ela Ben-Ur</a>
+                        </p>
+                        <p>App by
+                            <a href="http://hieuqn.com" target="_blank"> Hieu Nguyen</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         );
