@@ -122,7 +122,7 @@ class Compass extends Component {
     }
 
     validateText() {
-        let text = $('#form-text').val();
+        let text = $('#ic-form-text').val();
         if (text === '') return false;
         if (text.length > 200) {
             alert('You can\'t fit that much on a post-it!');
@@ -194,7 +194,7 @@ class Compass extends Component {
 
     renderQuadrant(q, i) {
         return (
-            <div className="ic-quadrant" id={q.id}>
+            <div key={q.id} className="ic-quadrant" id={q.id}>
                 <h1>{q.id.toUpperCase()}</h1>
                 <h2>{q.prompt}</h2>
             </div>
