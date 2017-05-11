@@ -9,6 +9,8 @@ import StickyNote from './sticky.jsx';
 import HelpScreen from './helpScreen.jsx';
 import Instructions from './instructions.jsx';
 
+// TODO: In menu.jsx, change current username to 'you'
+
 class Compass extends Component {
 	constructor(props, context) {
 	    super(props, context);
@@ -44,7 +46,7 @@ class Compass extends Component {
 	    this.socket = io();
         this.socket.on('add note', newNote => addNote(newNote));
         this.socket.on('user joined', updateUsers);
-        this.socket.on('user left', updateUsers);
+        this.socket.on('user left', updateUsers); // TODO: handle this
         this.socket.on('refresh notes', refreshNotes);
 
         // api events
@@ -71,7 +73,8 @@ class Compass extends Component {
         $(window).on('beforeunload', () => true);
 	    this.socket.emit('connect compass', {
 	        hashcode: this.state.compass.id,
-	        username: this.state.username
+	        username: this.state.username,
+	        manager: this.state.users
 	    });
 	}
 
@@ -138,7 +141,7 @@ class Compass extends Component {
 
         this.socket.emit('new note', {
             text: text,
-            user: this.state.username,
+            color: this.state.users.usernameToColor[this.state.username],
             x: 0.5,
             y: 0.5
         });

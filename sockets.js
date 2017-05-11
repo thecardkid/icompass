@@ -48,7 +48,7 @@ var socketObject = {
                 userManager[room].colors.splice(r, 1);
 
                 logger.debug('Manager after user joined', userManager);
-                io.sockets.in(room).emit('user joined', userManager[room].usernameToColor);
+                io.sockets.in(room).emit('user joined', userManager[room]);
             }); // connect compass
 
             client.on('disconnect', function(reason) {
@@ -63,24 +63,16 @@ var socketObject = {
                     delete userManager[room];
                 } else {
                     userManager[room].colors.push(c);
-                    io.sockets.in(room).emit('user left', userManager[room].usernameToColor);
+                    io.sockets.in(room).emit('user left', userManager[room]);
                 }
                 logger.debug('Manager after user left', userManager);
             }); // disconnect
 
-            client.on('new note', function(info) {
+            client.on('new note', function(newNote) {
                 Compass.findOne({id: room}, function(err, compass) {
                     if (err) logger.error('Error finding compass with ID', room, err);
 
                     if (!(userManager[room])) logger.debug('Creating a note for a room that does not exist!', info);
-                    var color = userManager[room].usernameToColor[info.user];
-
-                    var newNote = {
-                        color: color,
-                        text: info.text,
-                        x: info.x,
-                        y: info.y
-                    };
 
                     Compass.findByIdAndUpdate(
                         compass._id,
