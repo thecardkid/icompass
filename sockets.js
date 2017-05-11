@@ -72,7 +72,8 @@ var socketObject = {
                 Compass.findOne({id: room}, function(err, compass) {
                     if (err) logger.error('Error finding compass with ID', room, err);
 
-                    if (!(userManager[room])) logger.debug('Creating a note for a room that does not exist!', info);
+                    console.log(room, username);
+                    if (!(userManager[room])) logger.debug('Creating a note for a room that does not exist!', newNote);
 
                     Compass.findByIdAndUpdate(
                         compass._id,

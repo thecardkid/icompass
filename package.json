@@ -17,6 +17,7 @@
     "babel-preset-react": "^6.16.0",
     "chai": "^3.5.0",
     "mocha": "^3.3.0",
+    "nodemon": "^1.11.0",
     "serve": "^2.1.2",
     "webpack": "^1.14.0"
   },

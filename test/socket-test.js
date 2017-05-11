@@ -79,33 +79,8 @@ describe('socket backend operations', function() {
             });
         })
 
-        it('accept client-side manager if it can\'t find the room', function(done) {
-            var manager = {
-                usernameToColor: {
-                    'one': '#aabbcc',
-                    'two': '#ddeeff',
-                    'existing': '#223322'
-                },
-                colors: ['#111111', '#222222', '#333333']
-            };
-
-            clientExisting = connect();
-            clientExisting.on('connect', function() {
-                client2.emit('new note', {
-                    x: 0.5,
-                    y: 0.5,
-                    text: 'a mock note',
-                    color: '#223322',
-                    manager: manager
-                });
-
-                client.on('refresh users', function(users) {
-                    expect(users.usernameToColor).to.include.keys('one', 'two', 'existing');
-                    expect(users.colors).to.have.lengthOf(3);
-                    clientExisting.disconnect();
-                    done();
-                })
-            })
+        it('handles reconnection correctly', function(done) {
+            // test reconnection by issuing codes
         })
     })
 })
