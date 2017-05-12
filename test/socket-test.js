@@ -34,7 +34,7 @@ describe('socket backend operations', function() {
         done();
     })
 
-    describe('user joined events', function() {
+    describe('connection events', function() {
         it('return correct user manager for room creator', function(done) {
             client.on('user joined', function(users) {
                 expect(users.usernameToColor).to.include.keys(user1.username);

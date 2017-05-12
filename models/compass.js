@@ -10,7 +10,7 @@ var compassSchema = mongoose.Schema({
         text: String,
         x: Number,
         y: Number
-    }],
+    }]
 });
 
 module.exports = mongoose.model('Compass', compassSchema);
