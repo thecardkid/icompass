@@ -78,10 +78,6 @@ describe('socket backend operations', function() {
                 })
             });
         })
-
-        it('handles reconnection correctly', function(done) {
-            // test reconnection by issuing codes
-        })
     })
 })
 

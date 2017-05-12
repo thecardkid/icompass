@@ -49,6 +49,7 @@ class Compass extends Component {
 
         // api events
 	    this.apiEditNote = this.apiEditNote.bind(this);
+	    this.apiMoveNote = this.apiMoveNote.bind(this);
 	    this.apiMakeNote = this.apiMakeNote.bind(this);
 
 	    // user events
@@ -72,7 +73,7 @@ class Compass extends Component {
 	    this.socket.emit('connect compass', {
 	        hashcode: this.state.compass.id,
 	        username: this.state.username,
-	        manager: this.state.users
+	        compassId: this.state.compass._id
 	    });
 	}
 
@@ -144,14 +145,21 @@ class Compass extends Component {
         this.closeForm();
     }
 
+    apiMoveNote(event, n) {
+        let h = $('#'+n._id).height();
+        let note = JSON.parse(JSON.stringify(n));
+        note.x = event.clientX / this.state.vw;
+        note.y = (event.clientY - h) / this.state.vh;
+        this.socket.emit('move note', note);
+    }
+
     apiEditNote(id) {
         let text = this.validateText();
         if (!text) return;
 
-        this.socket.emit('edit note', {
-            noteId: this.state.editNote._id,
-            text: text
-        });
+        let note = JSON.parse(JSON.stringify(this.state.editNote));
+        note.text = text;
+        this.socket.emit('edit note', note);
         this.closeForm();
     }
 
@@ -171,7 +179,7 @@ class Compass extends Component {
                 w={this.state.vw}
                 h={this.state.vh}
                 edit={this.showEditForm}
-                socket={this.socket}
+                moveNote={this.apiMoveNote}
             />
         );
     }

@@ -25,8 +25,8 @@ var socketObject = {
             client.on('connect compass', handleConnectCompass); // connect compass
             client.on('disconnect', handleDisconnectCompass); // disconnect
             client.on('new note', handleMakeNote); // new note
-            client.on('move note', handleMoveNote); // move note
-            client.on('edit note', handleEditNote);
+            client.on('move note', handleUpdateNote); // move note
+            client.on('edit note', handleUpdateNote);
         });
     }
 }
@@ -34,8 +34,7 @@ var socketObject = {
 function handleConnectCompass(info) {
     client.room = info.hashcode;
     client.username = info.username;
-    client.token = info.token;
-    client.compassId = info._id;
+    client.compassId = info.compassId;
 
     client.join(client.room);
     logger.info(client.username, 'joined room', client.room);
@@ -64,10 +63,6 @@ function handleConnectCompass(info) {
 function handleDisconnectCompass(reason) {
     logger.info(client.username, 'left room', client.room, 'because', reason);
 
-    Compass.findOne({id: client.compassId}, function(err, compass) {
-
-    })
-
     var manager = userManager[client.room];
     if (!(manager)) return; // TODO log this
     var c = manager.usernameToColor[client.username];
@@ -86,93 +81,20 @@ function handleDisconnectCompass(reason) {
 }
 
 function handleMakeNote(newNote) {
-    Compass.findOne({id: client.room}, function(err, compass) {
-        if (err) logger.error('Error finding compass with ID', client.room, err);
+    Compass.addNote(client.compassId, newNote, function(newCompass) {
+        var last = newCompass.notes.length - 1;
 
-        console.log(client.room, client.username);
-        if (!(userManager[client.room])) logger.debug('Creating a note for a room that does not exist!', newNote);
-
-        Compass.findByIdAndUpdate(
-            compass._id,
-            {$push: {notes: newNote}},
-            {$safe: true, upsert: false, new: true},
-            function (err, newCompass) {
-                if (err) logger.error('Error updating compass with ID', client.room, err);
-
-                var last = newCompass.notes.length - 1;
-
-                logger.info(client.username, 'created a note');
-                logger.debug(client.username, 'created a note', newNote);
-                io.sockets.in(client.room).emit('add note', newCompass.notes[last]);
-            }
-        );
+        logger.info(client.username, 'created a note');
+        logger.debug(client.username, 'created a note', newNote);
+        io.sockets.in(client.room).emit('add note', newCompass.notes[last]);
     });
 }
 
-function handleMoveNote(info) {
-    Compass.findOne({id: client.room}, function(err, compass) {
-        if (err) logger.error('Error finding compass with ID', client.room, err);
-
-        if (!(userManager[client.room])) logger.debug('Moving a note for a room that does not exist', info);
-
-        var changed;
-        var newNotes = _.filter(compass.notes, function(e, i) {
-            if (e._id.toString() == info.noteId) {
-                changed = e;
-                return false;
-            }
-            return true;
-        });
-
-        changed.x = info.x;
-        changed.y = info.y;
-        newNotes.push(changed);
-
-        Compass.findByIdAndUpdate(
-            compass._id,
-            {$set: {notes: newNotes}},
-            {$safe: true, upsert: false, new: true},
-            function (err, newCompass) {
-                if (err) logger.error('Error updating compass with ID', client.room, err);
-
-                logger.info(client.username, 'moved a note');
-                logger.debug(client.username, 'moved a note', changed);
-                io.sockets.in(client.room).emit('refresh notes', newCompass.notes);
-            }
-        );
-    });
-}
-
-function handleEditNote(info) {
-    Compass.findOne({id: client.room}, function(err, compass) {
-        if (err) logger.error('Error finding compass with ID', client.room, err);
-
-        if (!(userManager[client.room])) logger.debug('Moving a note for a room that does not exist', info);
-
-        var changed;
-        var newNotes = _.filter(compass.notes, function(e, i) {
-            if (e._id.toString() == info.noteId) {
-                changed = e;
-                return false;
-            }
-            return true;
-        });
-
-        changed.text = info.text;
-        newNotes.push(changed);
-
-        Compass.findByIdAndUpdate(
-            compass._id,
-            {$set: {notes: newNotes}},
-            {$safe: true, upsert: false, new: true},
-            function (err, newCompass) {
-                if (err) logger.error('Error updating compass with ID', client.room, err);
-
-                logger.info(client.username, 'edited a note');
-                logger.debug(client.username, 'edited a note', changed);
-                io.sockets.in(client.room).emit('refresh notes', newCompass.notes);
-            }
-        );
+function handleUpdateNote(updatedNote) {
+    Compass.updateNote(client.compassId, updatedNote, function(c) {
+        logger.info(client.username, 'updated a note');
+        logger.debug(client.username, 'updated a note', updatedNote);
+        io.sockets.in(client.room).emit('refresh notes', c.notes);
     });
 }
 

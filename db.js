@@ -9,6 +9,7 @@ if (isDev) {
     mongoose.connect('mongodb://icompass:compass78@ds133311.mlab.com:33311/innovatorscompasshieu');
     console.log('Connected to Mongo Lab instance');
 }
+
 var connection = mongoose.connection;
 
 connection.on('error', console.error.bind(console, 'connection error:'));

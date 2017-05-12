@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
 
 class StickyNote extends Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.apiMoveNote = this.apiMoveNote.bind(this);
-    }
 
     shouldComponentUpdate(nextProps, nextState) {
         let thisNote = this.props.note,
@@ -20,15 +15,6 @@ class StickyNote extends Component {
         );
     }
 
-    apiMoveNote(event, id) {
-        let h = $('#'+id).height();
-        this.props.socket.emit('move note', {
-            noteId: id,
-            x: event.clientX / this.props.w,
-            y: (event.clientY - h) / this.props.h
-        });
-    }
-
     render() {
         let n = this.props.note;
         let style = {
@@ -40,9 +26,9 @@ class StickyNote extends Component {
             <li style={style}
                 className="ic-sticky-note"
                 draggable="true"
-                onClick={() => this.props.edit(this.props.note)}
+                onClick={() => this.props.edit(n)}
                 id={n._id}
-                onDragEnd={(e) => this.apiMoveNote(e, n._id)}>
+                onDragEnd={(e) => this.props.moveNote(e, n)}>
                 <a style={{background: n.color}}>
                     <p>{n.text}</p>
                 </a>
