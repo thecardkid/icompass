@@ -11,9 +11,10 @@ var options = {
 
 var client;
 var code = '1a2b3c4d';
-var user1 = {hashcode: code, username: 'Hieu', manager: {}};
-var user2 = {hashcode: code, username: 'Jordan', manager: {}};
-var user3 = {hashcode: code, username: 'Bam', manager: {}};
+var compassId = '1234567890';
+var user1 = {hashcode: code, username: 'Hieu', compassId: compassId};
+var user2 = {hashcode: code, username: 'Jordan', compassId: compassId};
+var user3 = {hashcode: code, username: 'Bam', compassId: compassId};
 
 function connect() {
     return io.connect(socketURL, options);
