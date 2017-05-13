@@ -14,38 +14,40 @@ class Compass extends Component {
 	constructor(props, context) {
 	    super(props, context);
 
-        this.state = {
+	    this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
             newNote: false,
             compass: this.props.compass,
             username: this.props.username,
             users: {},
-            showMenu: false,
+            showMenu: true,
             showExplanation: false,
             showHelp: false,
+            disconnected: false
         };
 
-        let addNote = (newNote) => {
-            let compass = this.state.compass;
-            compass.notes.push(newNote);
-            this.setState({compass: compass});
-        };
-
-        let refreshNotes = (newNotes) => {
-            let compass = this.state.compass;
-            compass.notes = newNotes;
-            this.setState({compass: compass});
-        }
-
-        let updateUsers = (newUsers) => this.setState({users: newUsers});
+	    this.updateNotes = this.updateNotes.bind(this);
+	    this.updateUsers = this.updateUsers.bind(this);
 
         // socket events
 	    this.socket = io();
-        this.socket.on('add note', newNote => addNote(newNote));
-        this.socket.on('user joined', updateUsers);
-        this.socket.on('user left', updateUsers);
-        this.socket.on('refresh notes', refreshNotes);
+        this.socket.on('update notes', this.updateNotes);
+        this.socket.on('update users', this.updateUsers);
+        this.socket.on('disconnect', () => {
+            alert('You have been disconnected');
+            this.setState({showMenu: true, disconnected: true})
+        });
+        this.socket.on('reconnect', () => {
+            alert('You have been reconnected');
+            this.socket.emit('reconnected', {
+                hashcode: this.state.compass.id,
+                compassId: this.state.compass._id,
+                username: this.state.username,
+                color: this.state.users.usernameToColor[this.state.username]
+            })
+            this.setState({disconnected: false});
+        });
 
         // api events
 	    this.apiEditNote = this.apiEditNote.bind(this);
@@ -76,6 +78,16 @@ class Compass extends Component {
 	        compassId: this.state.compass._id
 	    });
 	}
+
+    updateNotes(newNotes) {
+        let compass = this.state.compass;
+        compass.notes = newNotes;
+        this.setState({compass: compass});
+    }
+
+    updateUsers(newUsers) {
+        this.setState({users: newUsers});
+    }
 
     updateVw() {
         this.setState({
@@ -132,7 +144,12 @@ class Compass extends Component {
         return text;
     }
 
+    alertInvalidAction() {
+        alert('You are not connected to the server.');
+    }
+
     apiMakeNote() {
+        if (this.state.disconnected) return this.alertInvalidAction();
         let text = this.validateText();
         if (!text) return;
 
@@ -146,20 +163,22 @@ class Compass extends Component {
     }
 
     apiMoveNote(event, n) {
+        if (this.state.disconnected) return this.alertInvalidAction();
         let h = $('#'+n._id).height();
         let note = JSON.parse(JSON.stringify(n));
         note.x = event.clientX / this.state.vw;
         note.y = (event.clientY - h) / this.state.vh;
-        this.socket.emit('move note', note);
+        this.socket.emit('update note', note);
     }
 
     apiEditNote(id) {
+        if (this.state.disconnected) return this.alertInvalidAction();
         let text = this.validateText();
         if (!text) return;
 
         let note = JSON.parse(JSON.stringify(this.state.editNote));
         note.text = text;
-        this.socket.emit('edit note', note);
+        this.socket.emit('update note', note);
         this.closeForm();
     }
 
@@ -271,6 +290,7 @@ class Compass extends Component {
                 users={this.state.users.usernameToColor}
                 you={this.state.username}
                 show={this.state.showMenu}
+                disconnected={this.state.disconnected}
                 toggleMenu={this.toggleMenu}
             />
         </div>

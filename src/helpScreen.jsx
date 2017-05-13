@@ -22,7 +22,7 @@ class HelpScreen extends Component {
 
     render() {
         return (
-            <div style={this.props.style} id="help-screen">
+            <div style={this.props.style} className="ic-modal" id="help-screen">
                 <div id="contents">
                     <h1>Help page</h1>
                     <ul>

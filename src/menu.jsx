@@ -48,8 +48,12 @@ class Menu extends Component {
         let controlList = _.map(controls, this.renderControl);
 
         let style = {
-            left: this.props.show ? '-240px' : '0',
+            left: this.props.show ? '0' : '-240px',
         };
+
+        let connectionStatus = this.props.disconnected ?
+            <p style={{color:'red'}}>Disconnected</p> :
+            <p style={{color:'green'}}>Connected</p>;
 
         return (
             <div id="ic-menu" style={style}>
@@ -64,6 +68,10 @@ class Menu extends Component {
                     <div className="ic-menu-list">
                         <h2>Collaborators</h2>
                         {userList}
+                    </div>
+                    <div className="ic-menu-list">
+                        <h2>Status</h2>
+                        {connectionStatus}
                     </div>
                     <div id="ic-menu-credits">
                         <p>Compass by

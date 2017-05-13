@@ -10,7 +10,7 @@ class NoteForm extends Component {
 
     render() {
         return (
-            <div id="ic-note-form" style={this.props.style}>
+            <div className="ic-modal" id="ic-note-form" style={this.props.style}>
                 <div id="ic-form-contents">
                     <h1 id="ic-form-title">{this.props.title}</h1>
                     <textarea autoFocus id="ic-form-text" defaultValue={this.props.text || ''}/>

@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "webpack -d --watch",
     "build": "NODE_ENV=production webpack -p --config ./webpack.production.config.js",
-    "start": "node index.js",
+    "start": "nodemon compass-server.js",
     "test": "NODE_ENV=test mocha"
   },
   "author": "Hieu Nguyen",

@@ -73,9 +73,7 @@ class LandingPage extends Component {
             })
         })
         .then((response) => response.json())
-        .then((responseJson) => {
-            root.props.route.setCompass(responseJson.compass, username);
-        })
+        .then((responseJson) => root.props.route.setCompass(responseJson.compass, username))
         .catch((e) => console.error(e));
     }
 
