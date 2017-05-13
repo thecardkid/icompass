@@ -35,7 +35,7 @@ describe('socket connection events', function() {
     })
 
     it('return correct user manager for room creator', function(done) {
-        client.on('user joined', function(users) {
+        client.on('update users', function(users) {
             expect(users.usernameToColor).to.include.keys(user1.username);
             expect(users.colors).to.have.lengthOf(5);
             done();
@@ -53,7 +53,7 @@ describe('socket connection events', function() {
             client3.on('connect', function() {
                 client3.emit('connect compass', user3);
 
-                client3.on('user joined', function(users) {
+                client3.on('update users', function(users) {
                     expect(users.usernameToColor).to.include.keys(user1.username, user2.username, user3.username);
                     expect(users.colors).to.have.lengthOf(3);
                     client3.disconnect();
@@ -70,10 +70,13 @@ describe('socket connection events', function() {
             client2.emit('connect compass', user2);
             client2.disconnect();
 
-            client.on('user left', function(users) {
-                expect(users.usernameToColor).to.include.keys(user1.username);
-                expect(users.colors).to.have.lengthOf(5);
-                done();
+            var i = 0;
+            client.on('update users', function(users) {
+                if (i++ === 1) {
+                    expect(users.usernameToColor).to.include.keys(user1.username);
+                    expect(users.colors).to.have.lengthOf(5);
+                    done();
+                }
             })
         });
     })
@@ -85,7 +88,7 @@ describe('socket connection events', function() {
         client.emit('reconnected', recon);
 
         var i = 0;
-        client.on('user joined', function(users) {
+        client.on('update users', function(users) {
             if (i++ === 1) { // must wait for second user joined emission
                 expect(users.usernameToColor).to.include.keys(recon.username);
                 expect(users.usernameToColor[recon.username]).to.equal(recon.color);
