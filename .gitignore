@@ -4,4 +4,4 @@ compass.log
 public/bundle.js
 public/bundle.js.map
 .ctagsignore
-.tags
+tags
