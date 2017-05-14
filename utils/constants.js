@@ -8,3 +8,17 @@ module.exports.quadrantsInfo = [
     {id: 'experiments', prompt: 'What\'s a way to try?'}
 ];
 
+module.exports.helpTips = [
+    'Share your code to collaborate',
+    'Each user has a different sticky note color',
+    'Familiarize yourself with the CONTROLS in the menu',
+    'Click a sticky note to edit it',
+    'If keys stop working, hit Esc a few times'
+];
+
+module.exports.controls = {
+    'n': 'new post-it',
+    'm': 'toggle menu',
+    'w': 'what is this?',
+    'h': 'help page',
+};

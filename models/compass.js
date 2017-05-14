@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var logger = require('../logger.js');
+var logger = require('../utils/logger.js');
 
 var Schema = mongoose.Schema;
 

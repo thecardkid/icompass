@@ -30,8 +30,4 @@ class Index extends Component {
     }
 }
 
-function run() {
-    render(<Index/>, document.getElementById('container'));
-}
-
-$(window).ready(run);
+$(window).ready(() => render(<Index/>, document.getElementById('container')));

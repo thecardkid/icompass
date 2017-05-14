@@ -8,7 +8,7 @@ import NoteForm from './NoteForm.jsx';
 import StickyNote from './StickyNote.jsx';
 import Explanation from './Explanation.jsx';
 import HelpScreen from './HelpScreen.jsx';
-import { exportPrompt, quadrantsInfo } from '../utils'
+import { exportPrompt, quadrantsInfo } from '../utils/constants.js'
 
 class Compass extends Component {
 	constructor(props, context) {

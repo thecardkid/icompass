@@ -2,13 +2,7 @@
 
 import React, { Component } from 'react';
 import _ from 'underscore';
-
-const controls = {
-    'n': 'new post-it',
-    'm': 'toggle menu',
-    'w': 'what is this?',
-    'h': 'help page',
-};
+import { controls } from '../utils/constants.js';
 
 class Menu extends Component {
     constructor(props, context) {

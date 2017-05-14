@@ -1,9 +1,9 @@
 var socketIO = require('socket.io');
-var Compass = require('./models/compass');
+var Compass = require('../models/compass');
 var _ = require('underscore');
 var UserManager = require('./userManager.js');
 var io;
-var logger = require('./logger');
+var logger = require('./logger.js');
 
 var Manager = new UserManager();
 

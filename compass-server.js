@@ -4,8 +4,8 @@ const port = 8080;
 const app = express();
 
 var bodyParser = require('body-parser');
-var db = require('./db');
-var socket = require('./sockets');
+var db = require('./utils/db.js')
+var socket = require('./utils/sockets.js');
 var compass = require('./routes/compass');
 
 // serve static assets normally

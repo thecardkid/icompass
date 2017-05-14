@@ -4,10 +4,6 @@ import React, { Component } from 'react';
 import _ from 'underscore';
 
 class NoteForm extends Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     render() {
         return (
             <div className="ic-modal" id="ic-note-form" style={this.props.style}>

@@ -2,14 +2,7 @@
 
 import React, { Component } from 'react'
 import _ from 'underscore';
-
-const tips = [
-    'Share your code to collaborate',
-    'Each user has a different sticky note color',
-    'Familiarize yourself with the CONTROLS in the menu',
-    'Click a sticky note to edit it',
-    'If keys stop working, hit Esc a few times'
-];
+import { helpTips } from '../utils/constants.js';
 
 class HelpScreen extends Component {
     getListItem(item, i) {

@@ -1,7 +1,8 @@
 var router = require('express').Router();
-var sockets = require('../sockets');
-var Compass = require('../models/compass');
-var DefaultCompass = require('../models/defaultCompass');
+var sockets = require('../utils/sockets.js');
+var Compass = require('../models/compass.js');
+var logger = require('../utils/logger.js');
+var DefaultCompass = require('../models/defaultCompass.js');
 
 function generateUUID() {
     var d = new Date().getTime();
@@ -14,21 +15,23 @@ function generateUUID() {
 };
 
 router.post('/create', function(req, res, next) {
-    // Compute real hash for new workspace
     var hash = generateUUID();
     var newCompass = DefaultCompass;
     newCompass.id = hash;
     newCompass.center = req.body.center;
     Compass.create(newCompass, function (err, compass) {
-        if (err) return console.log(err);
-        console.log(compass);
+        if (err) return logger.error(err);
+
+        logger.debug('Successfully created compass', compass._id);
         res.json({hash: hash, compass: compass});
     });
 });
 
 router.post('/load', function(req, res, next) {
     Compass.findOne({'id': req.body.id}, function(err, compass) {
-        if (err) return console.error(err);
+        if (err) return logger.error(err);
+
+        logger.debug('Successfully loaded compass', compass._id);
         res.json({compass: compass});
     })
 });
