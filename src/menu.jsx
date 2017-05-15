@@ -8,7 +8,6 @@ class Menu extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.copyCode = this.copyCode.bind(this);
         this.renderUserColor = this.renderUserColor.bind(this);
     }
 
@@ -30,13 +29,6 @@ class Menu extends Component {
         );
     }
 
-    copyCode() {
-        if (window.navigator.platform === 'MacIntel')
-            window.prompt('Copy to clipboard: Cmd+C, Enter', this.props.id);
-        else
-            window.prompt("Copy to clipboard: Ctrl+C, Enter", this.props.id);
-    }
-
     render() {
         let userList = _.map(this.props.users, this.renderUserColor);
         let controlList = _.map(controls, this.renderControl);
@@ -53,8 +45,11 @@ class Menu extends Component {
             <div id="ic-menu" style={style}>
                 <div id="ic-menu-contents">
                     <button className="ic-close-window" onClick={this.props.toggleMenu}>x</button>
-                    <h1>{this.props.id}</h1>
-                    <p id="ic-menu-share" onClick={this.copyCode}>Share this code</p>
+                    <div className="ic-menu-list">
+                        <h2>Share</h2>
+                        <p><span className="code">{this.props.editCode}</span> edit</p>
+                        <p><span className="code">{this.props.viewCode}</span> view</p>
+                    </div>
                     <div className="ic-menu-list">
                         <h2>Controls</h2>
                         {controlList}

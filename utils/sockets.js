@@ -48,12 +48,6 @@ var socketObject = {
             })
 
 
-            client.on('message', function(msg) {
-                logger.debug(client.username, 'sent message:', msg, 'to room', client.room);
-                io.sockets.in(client.room).emit('message received', msg);
-            })
-
-
             client.on('new note', function(newNote) { // new note
                 Compass.addNote(client.compassId, newNote, function(newCompass) {
                     logger.info(client.username, 'created a note');

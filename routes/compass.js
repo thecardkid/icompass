@@ -3,6 +3,7 @@ var sockets = require('../utils/sockets.js');
 var Compass = require('../models/compass.js');
 var logger = require('../utils/logger.js');
 var DefaultCompass = require('../models/defaultCompass.js');
+var modes = require('../utils/constants.js').modes;
 
 function generateUUID() {
     var d = new Date().getTime();
@@ -17,22 +18,35 @@ function generateUUID() {
 router.post('/create', function(req, res, next) {
     var hash = generateUUID();
     var newCompass = DefaultCompass;
-    newCompass.id = hash;
+    newCompass.editCode = generateUUID();
+    newCompass.viewCode = generateUUID();
     newCompass.center = req.body.center;
     Compass.create(newCompass, function (err, compass) {
         if (err) return logger.error(err);
 
         logger.debug('Successfully created compass', compass._id);
-        res.json({hash: hash, compass: compass});
+        res.json({code: compass.edit, mode: modes.edit, compass: compass});
     });
 });
 
-router.post('/load', function(req, res, next) {
-    Compass.findOne({'id': req.body.id}, function(err, compass) {
+router.post('/find', function(req, res, next) {
+    Compass.findOne({'editCode': req.body.code}, function(err, compass) {
         if (err) return logger.error(err);
 
-        logger.debug('Successfully loaded compass', compass._id);
-        res.json({compass: compass});
+        if (compass === null) {
+            Compass.findOne({'viewCode': req.body.code}, function(err, compass) {
+                if (err) return logger.error(err);
+
+                var copy = JSON.parse(JSON.stringify(compass));
+                delete copy.editCode;
+                //TODO delete comment code
+                logger.debug('Found compass for viewing', compass._id);
+                res.json({code: req.body.code, mode: modes.view, compass: copy})
+            })
+        } else {
+            logger.debug('Found compass for editing', compass._id);
+            res.json({code: req.body.code, mode: modes.edit, compass: compass});
+        }
     })
 });
 

@@ -98,34 +98,5 @@ describe('socket connection events', function() {
             }
         })
     })
-
-    it('broadcast message to all users', function(done) {
-        client2 = connect();;
-
-        client2.on('connect', function() {
-            client2.emit('connect compass', user2);
-
-            client3 = connect();
-
-            client3.on('connect', function() {
-                client3.emit('connect compass', user3);
-                var msg = 'hello, world!';
-                var received = false;
-                client3.emit('message', msg);
-
-                client2.on('message received', function(msgReceived) {
-                    expect(msgReceived).to.equal(msg);
-                    if (received) done();
-                    else received = true;
-                })
-
-                client.on('message received', function(msgReceived) {
-                    expect(msgReceived).to.equal(msg);
-                    if (received) done();
-                    else received = true;
-                })
-            })
-        })
-    })
 })
 

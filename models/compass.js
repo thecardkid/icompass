@@ -4,7 +4,8 @@ var logger = require('../utils/logger.js');
 var Schema = mongoose.Schema;
 
 var compassSchema = mongoose.Schema({
-    id: {type: String},
+    editCode: String,
+    viewCode: String,
     center: String,
     notes: [{
         color: String,

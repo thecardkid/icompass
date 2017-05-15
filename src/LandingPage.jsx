@@ -8,19 +8,19 @@ class LandingPage extends Component {
         super(props, context);
 
         this.newCompass = this.newCompass.bind(this);
-        this.loadCompass = this.loadCompass.bind(this);
+        this.findCompass = this.findCompass.bind(this);
     }
 
-    validateId() {
-        let id = $('#compass-id').val();
-        if (!id) {
-            $('#validate-id').text('This is required');
+    validateCode() {
+        let code = $('#compass-code').val();
+        if (!code) {
+            $('#validate-code').text('This is required');
             return false;
-        } else if (id.length != 8) {
-            $('#validate-id').text('Not a valid ID');
+        } else if (code.length != 8) {
+            $('#validate-code').text('Not a valid code');
             return false;
         }
-        return id;
+        return code;
     }
 
     validateUsername() {
@@ -73,33 +73,33 @@ class LandingPage extends Component {
             })
         })
         .then((response) => response.json())
-        .then((responseJson) => root.props.route.setCompass(responseJson.compass, username))
+        .then((responseJson) => root.props.route.setCompass(responseJson, username))
         .catch((e) => console.error(e));
     }
 
-    loadCompass() {
+    findCompass() {
         this.clearErrors();
-        let id = this.validateId();
+        let code = this.validateCode();
         let username = this.validateUsername();
 
-        if (!id || !username) return;
+        if (!code || !username) return;
 
         let root = this;
-        fetch('/api/compass/load', {
+        fetch('/api/compass/find', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             credentials: 'same-origin',
-            body: JSON.stringify({'id': id})
+            body: JSON.stringify({'code': code})
         })
         .then((response) => response.json())
         .then((responseJson) => {
             if (!responseJson.compass)
-                $('#validate-id').text('Compass does not exist');
+                $('#validate-code').text('Compass does not exist');
             else
-                root.props.route.setCompass(responseJson.compass, username);
+                root.props.route.setCompass(responseJson, username);
         })
         .catch((e) => console.error(e));
     }
@@ -111,9 +111,9 @@ class LandingPage extends Component {
                     <table>
                         <tbody>
                             <tr>
-                                <td>Compass ID:</td>
-                                <td><input id="compass-id" type="text"/></td>
-                                <td id="validate-id"></td>
+                                <td>Compass Code:</td>
+                                <td><input id="compass-code" type="text"/></td>
+                                <td id="validate-code"></td>
                             </tr>
                             <tr>
                                 <td>Username:</td>
@@ -127,8 +127,8 @@ class LandingPage extends Component {
                             </tr>
                         </tbody>
                     </table>
-                    <button id="load-compass" onClick={this.loadCompass}>Find Compass</button>
-                    <button id="make-compass" onClick={this.newCompass}>Make Compass</button>
+                    <button onClick={this.findCompass}>Find Compass</button>
+                    <button onClick={this.newCompass}>Make Compass</button>
                 </div>
             </div>
         );

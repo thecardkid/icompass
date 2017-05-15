@@ -5,8 +5,10 @@ import css from 'style-loader!css-loader!less-loader!./../public/css/app.less';
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
+import { modes } from '../utils/constants.js';
 
-import Compass from './Compass.jsx';
+import CompassEdit from './CompassEdit.jsx';
+import CompassView from './CompassView.jsx';
 import LandingPage from './LandingPage.jsx';
 
 class Index extends Component {
@@ -15,8 +17,13 @@ class Index extends Component {
 
         this.state = {};
 
-        this.setCompass = (compass, username) => {
-            this.setState({compass: compass, username: username}, () => browserHistory.push('/compass'));
+        this.setCompass = (json, username) => {
+            this.setState({
+                compass: json.compass,
+                mode: json.mode,
+                code:json.code,
+                username: username
+            }, () => browserHistory.push('/compass'));
         }
     }
 
@@ -24,7 +31,13 @@ class Index extends Component {
         return (
             <Router history={browserHistory}>
                 <Route path='/' setCompass={this.setCompass} component={LandingPage}/>
-                <Route path='/compass' component={() => (<Compass compass={this.state.compass} username={this.state.username}/>)}/>
+                <Route path='/compass' component={() => {
+                    if (this.state.mode === modes.edit)
+                        return <CompassEdit compass={this.state.compass} username={this.state.username}/>
+                    else if (this.state.mode === modes.view) {
+                        return <CompassView compass={this.state.compass}/>
+                    }
+                }}/>
             </Router>
         );
     }

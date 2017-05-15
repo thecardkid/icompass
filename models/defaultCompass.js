@@ -1,5 +1,6 @@
 module.exports = {
-    id: null,
+    editCode: null,
+    viewCode: null,
     center: '',
     notes: []
 };

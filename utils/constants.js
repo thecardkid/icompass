@@ -22,3 +22,9 @@ module.exports.controls = {
     'w': 'what is this?',
     'h': 'help page',
 };
+
+module.exports.modes = {
+    edit: 0,
+    view: 1,
+};
+

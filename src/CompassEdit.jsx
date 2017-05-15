@@ -8,11 +8,11 @@ import NoteForm from './NoteForm.jsx';
 import StickyNote from './StickyNote.jsx';
 import Explanation from './Explanation.jsx';
 import HelpScreen from './HelpScreen.jsx';
-import Chat from './Chat.jsx';
+import Shared from './Shared.jsx';
 
 import { exportPrompt, quadrantsInfo } from '../utils/constants.js'
 
-class Compass extends Component {
+class CompassEdit extends Component {
 	constructor(props, context) {
 	    super(props, context);
 
@@ -46,6 +46,12 @@ class Compass extends Component {
 	    this.apiMoveNote = this.apiMoveNote.bind(this);
 	    this.apiMakeNote = this.apiMakeNote.bind(this);
 
+	    // Shared methods
+	    this.renderNote = Shared.renderNote.bind(this);
+	    this.center = Shared.center.bind(this);
+	    this.showSavePrompt = Shared.showSavePrompt.bind(this);
+	    this.exportCompass = Shared.exportCompass.bind(this);
+
 	    // user events
 	    this.updateVw = this.updateVw.bind(this);
 	    this.handleKey = this.handleKey.bind(this);
@@ -54,8 +60,6 @@ class Compass extends Component {
 	    this.closeForm = this.closeForm.bind(this);
 	    this.toggleMenu = this.toggleMenu.bind(this);
 	    this.toggleExplain = this.toggleExplain.bind(this);
-	    this.center = this.center.bind(this);
-	    this.exportCompass = this.exportCompass.bind(this);
 	    this.showSavePrompt = this.showSavePrompt.bind(this);
 	    this.toggleHelp = this.toggleHelp.bind(this);
 	}
@@ -63,23 +67,23 @@ class Compass extends Component {
 	componentDidMount() {
 	    $(window).on('resize', this.updateVw);
 	    $(window).on('keydown', this.handleKey);
-        $(window).on('beforeunload', () => true);
+        // $(window).on('beforeunload', () => true);
 	    this.socket.emit('connect compass', {
-	        hashcode: this.state.compass.id,
+	        code: this.state.code,
 	        username: this.state.username,
 	        compassId: this.state.compass._id
 	    });
 	}
 
     handleDisconnect() {
-        alert('You have been disconnected');
+        // alert('You have been disconnected');
         this.setState({showMenu: true, disconnected: true})
     }
 
     handleReconnect() {
-        alert('You have been reconnected');
+        // alert('You have been reconnected');
         this.socket.emit('reconnected', {
-            hashcode: this.state.compass.id,
+            code: this.state.compass.id,
             compassId: this.state.compass._id,
             username: this.state.username,
             color: this.state.users.usernameToColor[this.state.username]
@@ -203,48 +207,6 @@ class Compass extends Component {
         this.setState({editNote: note, newNote: false});
     }
 
-    renderNote(note, i) {
-        return (
-            <StickyNote key={note._id}
-                note={note}
-                i={i}
-                w={this.state.vw}
-                h={this.state.vh}
-                edit={this.showEditForm}
-                moveNote={this.apiMoveNote}
-            />
-        );
-    }
-
-    center(w, h) {
-        return {
-            top: (this.state.vh - h) / 2,
-            left: (this.state.vw - w) / 2
-        };
-    }
-
-    exportCompass() {
-        window.html2canvas(document.body).then((canvas) => {
-            let imgData = canvas.toDataURL('image/png');
-            let doc = new jsPDF('l', 'cm', 'a4');
-            doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
-            doc.save(this.state.compass.center + '-compass.pdf');
-        });
-    }
-
-    renderQuadrant(q, i) {
-        return (
-            <div key={q.id} className="ic-quadrant" id={q.id}>
-                <h1>{q.id.toUpperCase()}</h1>
-                <h2>{q.prompt}</h2>
-            </div>
-        );
-    }
-
-    showSavePrompt() {
-        if (confirm(exportPrompt)) this.exportCompass();
-    }
-
     getForm() {
         if (this.state.newNote) {
             return <NoteForm
@@ -282,7 +244,7 @@ class Compass extends Component {
         let helpScreen = this.getHelpScreen();
         let explanation = this.getExplanation();
         let stickies = _.map(this.state.compass.notes, this.renderNote);
-        let quadrants = _.map(quadrantsInfo, this.renderQuadrant);
+        let quadrants = _.map(quadrantsInfo, Shared.renderQuadrant);
 
         return (
         <div id="compass">
@@ -299,7 +261,8 @@ class Compass extends Component {
             <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
             <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
             <Menu
-                id={this.state.compass.id}
+                viewCode={this.state.compass.viewCode}
+                editCode={this.state.compass.editCode}
                 users={this.state.users.usernameToColor}
                 you={this.state.username}
                 show={this.state.showMenu}
@@ -311,5 +274,5 @@ class Compass extends Component {
 	}
 };
 
-export default Compass;
+export default CompassEdit;
 
