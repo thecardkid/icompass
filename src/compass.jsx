@@ -8,6 +8,8 @@ import NoteForm from './NoteForm.jsx';
 import StickyNote from './StickyNote.jsx';
 import Explanation from './Explanation.jsx';
 import HelpScreen from './HelpScreen.jsx';
+import Chat from './Chat.jsx';
+
 import { exportPrompt, quadrantsInfo } from '../utils/constants.js'
 
 class Compass extends Component {
@@ -29,25 +31,15 @@ class Compass extends Component {
 
 	    this.updateNotes = this.updateNotes.bind(this);
 	    this.updateUsers = this.updateUsers.bind(this);
+	    this.handleDisconnect = this.handleDisconnect.bind(this);
+	    this.handleReconnect = this.handleReconnect.bind(this);
 
         // socket events
 	    this.socket = io();
         this.socket.on('update notes', this.updateNotes);
         this.socket.on('update users', this.updateUsers);
-        this.socket.on('disconnect', () => {
-            alert('You have been disconnected');
-            this.setState({showMenu: true, disconnected: true})
-        });
-        this.socket.on('reconnect', () => {
-            alert('You have been reconnected');
-            this.socket.emit('reconnected', {
-                hashcode: this.state.compass.id,
-                compassId: this.state.compass._id,
-                username: this.state.username,
-                color: this.state.users.usernameToColor[this.state.username]
-            })
-            this.setState({disconnected: false});
-        });
+        this.socket.on('disconnect', this.handleDisconnect);
+        this.socket.on('reconnect', this.handleReconnect);
 
         // api events
 	    this.apiEditNote = this.apiEditNote.bind(this);
@@ -78,6 +70,22 @@ class Compass extends Component {
 	        compassId: this.state.compass._id
 	    });
 	}
+
+    handleDisconnect() {
+        alert('You have been disconnected');
+        this.setState({showMenu: true, disconnected: true})
+    }
+
+    handleReconnect() {
+        alert('You have been reconnected');
+        this.socket.emit('reconnected', {
+            hashcode: this.state.compass.id,
+            compassId: this.state.compass._id,
+            username: this.state.username,
+            color: this.state.users.usernameToColor[this.state.username]
+        })
+        this.setState({disconnected: false});
+    }
 
     updateNotes(newNotes) {
         let compass = this.state.compass;
