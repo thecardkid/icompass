@@ -162,16 +162,20 @@ class Compass extends Component {
         this.closeForm();
     }
 
-    apiMoveNote(event, n) {
+    apiMoveNote(event, n, i) {
         if (this.state.disconnected) return this.alertInvalidAction();
         let h = $('#'+n._id).height();
         let note = JSON.parse(JSON.stringify(n));
         note.x = event.clientX / this.state.vw;
         note.y = (event.clientY - h) / this.state.vh;
+
+        let compass = this.state.compass;
+        compass.notes[i] = note;
+        this.setState({compass: compass}); // positive update
         this.socket.emit('update note', note);
     }
 
-    apiEditNote(id) {
+    apiEditNote() {
         if (this.state.disconnected) return this.alertInvalidAction();
         let text = this.validateText();
         if (!text) return;
@@ -195,6 +199,7 @@ class Compass extends Component {
         return (
             <StickyNote key={note._id}
                 note={note}
+                i={i}
                 w={this.state.vw}
                 h={this.state.vh}
                 edit={this.showEditForm}

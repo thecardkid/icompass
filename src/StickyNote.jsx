@@ -28,7 +28,7 @@ class StickyNote extends Component {
                 draggable="true"
                 onClick={() => this.props.edit(n)}
                 id={n._id}
-                onDragEnd={(e) => this.props.moveNote(e, n)}>
+                onDragEnd={(e) => this.props.moveNote(e, n, this.props.i)}>
                 <a style={{background: n.color}}>
                     <p>{n.text}</p>
                 </a>

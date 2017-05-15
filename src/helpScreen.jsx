@@ -19,7 +19,7 @@ class HelpScreen extends Component {
                 <div id="contents">
                     <h1>Help page</h1>
                     <ul>
-                        {_.map(tips, this.getListItem)}
+                        {_.map(helpTips, this.getListItem)}
                     </ul>
                 </div>
                 <button className="ic-button" onClick={this.props.close}>Got it!</button>
