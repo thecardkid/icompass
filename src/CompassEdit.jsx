@@ -3,14 +3,17 @@
 import React, { Component } from 'react';
 import _ from 'underscore';
 
-import Menu from './Menu.jsx';
+import Sidebar from './Sidebar.jsx';
 import NoteForm from './NoteForm.jsx';
 import StickyNote from './StickyNote.jsx';
 import Explanation from './Explanation.jsx';
 import HelpScreen from './HelpScreen.jsx';
 import Shared from './Shared.jsx';
+import Chat from './Chat.jsx';
 
-import { exportPrompt, quadrantsInfo } from '../utils/constants.js'
+import { exportPrompt, quadrantsInfo, keys } from '../utils/constants.js';
+
+let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 
 class CompassEdit extends Component {
 	constructor(props, context) {
@@ -20,19 +23,24 @@ class CompassEdit extends Component {
             vw: window.innerWidth,
             vh: window.innerHeight,
             newNote: false,
+            editNote: false,
             compass: this.props.compass,
             username: this.props.username,
             users: {},
-            showMenu: true,
+            showSidebar: true,
+            showChat: true,
             showExplanation: false,
             showHelp: false,
-            disconnected: false
+            disconnected: false,
+            unread: false,
+            messages: []
         };
 
 	    this.updateNotes = this.updateNotes.bind(this);
 	    this.updateUsers = this.updateUsers.bind(this);
 	    this.handleDisconnect = this.handleDisconnect.bind(this);
 	    this.handleReconnect = this.handleReconnect.bind(this);
+	    this.updateMessages = this.updateMessages.bind(this);
 
         // socket events
 	    this.socket = io();
@@ -40,6 +48,7 @@ class CompassEdit extends Component {
         this.socket.on('update users', this.updateUsers);
         this.socket.on('disconnect', this.handleDisconnect);
         this.socket.on('reconnect', this.handleReconnect);
+        this.socket.on('new message', this.updateMessages);
 
         // api events
 	    this.apiEditNote = this.apiEditNote.bind(this);
@@ -54,36 +63,87 @@ class CompassEdit extends Component {
 
 	    // user events
 	    this.updateVw = this.updateVw.bind(this);
-	    this.handleKey = this.handleKey.bind(this);
+	    this.handleKeyDown = this.handleKeyDown.bind(this);
+	    this.handleKeyUp = this.handleKeyUp.bind(this);
 	    this.renderNote = this.renderNote.bind(this);
 	    this.showEditForm = this.showEditForm.bind(this);
 	    this.closeForm = this.closeForm.bind(this);
-	    this.toggleMenu = this.toggleMenu.bind(this);
+	    this.toggleSidebar = this.toggleSidebar.bind(this);
 	    this.toggleExplain = this.toggleExplain.bind(this);
-	    this.showSavePrompt = this.showSavePrompt.bind(this);
 	    this.toggleHelp = this.toggleHelp.bind(this);
+	    this.toggleChat = this.toggleChat.bind(this);
+
+        this.keypressHandler = {
+            78: () => this.setState({newNote: true, editNote: false}),
+            67: this.toggleChat,
+            72: this.toggleHelp,
+            83: this.toggleSidebar,
+            87: this.toggleExplain
+        };
 	}
 
 	componentDidMount() {
 	    $(window).on('resize', this.updateVw);
-	    $(window).on('keydown', this.handleKey);
+	    $(window).on('keydown', this.handleKeyDown);
+	    $(window).on('keyup', this.handleKeyUp);
         // $(window).on('beforeunload', () => true);
 	    this.socket.emit('connect compass', {
-	        code: this.state.code,
+	        code: this.state.compass.editCode,
 	        username: this.state.username,
 	        compassId: this.state.compass._id
 	    });
 	}
 
+    handleKeyDown(e) {
+        if (this.state.newNote || this.state.editNote) {
+            if (e.which === 27) this.closeForm();
+            return;
+        }
+
+        if (document.activeElement.id === 'message-text') return;
+
+        switch (e.which) {
+            case keys.N:
+            case keys.C:
+            case keys.H:
+            case keys.W:
+            case keys.S:
+                if (!modifier) {
+                    e.preventDefault();
+                    this.keypressHandler[e.which]();
+                }
+                break;
+            case keys.SHIFT:
+            case keys.CTRL:
+            case keys.ALT:
+            case keys.CMD:
+                modifier = true;
+                break;
+            default: break;
+        }
+    }
+
+    handleKeyUp(e) {
+        switch (e.which) {
+            case keys.SHIFT:
+            case keys.CTRL:
+            case keys.ALT:
+            case keys.CMD:
+                modifier = false;
+                break;
+            default: break;
+        }
+    }
+
     handleDisconnect() {
         // alert('You have been disconnected');
-        this.setState({showMenu: true, disconnected: true})
+        this.setState({showSidebar: true, disconnected: true})
     }
 
     handleReconnect() {
         // alert('You have been reconnected');
         this.socket.emit('reconnected', {
-            code: this.state.compass.id,
+            code: this.state.compass.editCode,
             compassId: this.state.compass._id,
             username: this.state.username,
             color: this.state.users.usernameToColor[this.state.username]
@@ -92,50 +152,34 @@ class CompassEdit extends Component {
     }
 
     updateNotes(newNotes) {
-        let compass = this.state.compass;
+        let { compass } = this.state;
         compass.notes = newNotes;
-        this.setState({compass: compass});
+        this.setState({ compass });
     }
 
-    updateUsers(newUsers) {
-        this.setState({users: newUsers});
+    updateUsers(users) {
+        this.setState({ users });
     }
 
-    updateVw() {
-        this.setState({
-            vw: window.innerWidth,
-            vh: window.innerHeight
+    updateMessages(newMessage) {
+        let { messages } = this.state;
+        messages.push(newMessage);
+
+        let unread = !this.state.showChat;
+        this.setState({messages, unread}, () => {
+            let outer = $('#messages-container');
+            let inner = $('#messages');
+            // scroll to bottom of messages div
+            outer.scrollTop(inner.outerHeight());
         });
     }
 
-    handleKey(e) {
-        if (this.state.newNote || this.state.editNote) {
-            if (e.which === 27) this.closeForm();
-            return;
-        }
-
-        switch (e.which) {
-            case 78:
-                e.preventDefault();
-                this.setState({newNote: true, editNote: false});
-                break;
-            case 72:
-                e.preventDefault();
-                this.toggleHelp();
-                break;
-            case 87:
-                e.preventDefault();
-                this.toggleExplain();
-                break;
-            case 77:
-                e.preventDefault();
-                this.toggleMenu();
-                break;
-        }
+    updateVw() {
+        this.setState({vw: window.innerWidth, vh: window.innerHeight});
     }
 
-    toggleMenu() {
-        this.setState({showMenu: !this.state.showMenu});
+    toggleSidebar() {
+        this.setState({showSidebar: !this.state.showSidebar});
     }
 
     toggleExplain() {
@@ -144,6 +188,10 @@ class CompassEdit extends Component {
 
     toggleHelp() {
         this.setState({showHelp: !this.state.showHelp});
+    }
+
+    toggleChat() {
+        this.setState({showChat: !this.state.showChat, unread: false});
     }
 
     validateText() {
@@ -183,7 +231,7 @@ class CompassEdit extends Component {
 
         let compass = this.state.compass;
         compass.notes[i] = note;
-        this.setState({compass: compass}); // positive update
+        this.setState({ compass }); // positive update
         this.socket.emit('update note', note);
     }
 
@@ -257,17 +305,24 @@ class CompassEdit extends Component {
                 {this.state.compass.center}
                 <button id="export" onClick={this.showSavePrompt}>Save as PDF</button>
             </div>
-            <button id="show-menu" onClick={this.toggleMenu}>Show Menu</button>
+            <button id="show-menu" onClick={this.toggleSidebar}>Show Sidebar</button>
             <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
             <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
-            <Menu
-                viewCode={this.state.compass.viewCode}
+            <Sidebar viewCode={this.state.compass.viewCode}
                 editCode={this.state.compass.editCode}
                 users={this.state.users.usernameToColor}
                 you={this.state.username}
-                show={this.state.showMenu}
+                show={this.state.showSidebar}
                 disconnected={this.state.disconnected}
-                toggleMenu={this.toggleMenu}
+                toggleSidebar={this.toggleSidebar}
+            />
+            <Chat messages={this.state.messages}
+                colorMap={this.state.users.usernameToColor}
+                username={this.state.username}
+                socket={this.socket}
+                unread={this.state.unread}
+                show={this.state.showChat}
+                toggle={this.toggleChat}
             />
         </div>
 		);

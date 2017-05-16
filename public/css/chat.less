@@ -1,0 +1,86 @@
+div#ic-chat {
+    width:400px;
+    height:275px;
+    position:absolute;
+    bottom:0;
+    right:30px;
+    background:@dark;
+    color:@dark;
+    .hasTransition(0.5s);
+
+    div#header-bar {
+        height:15px;
+        cursor:pointer;
+        background:@dark;
+    }
+
+    div#messages-container {
+        overflow:scroll;
+        height:190px;
+        border-bottom:10px solid @dark;
+    }
+
+    div#messages {
+        p#warning {
+            margin-top:10px;
+            font-size: 12px;
+            width:100%;
+            text-align:center;
+            height:15px;
+            line-height:15px;
+            color:grey
+        }
+
+        div.message {
+            height:45px;
+        }
+
+        div.sender {
+            margin-left:10px;
+            font-weight:bold;
+        }
+
+        div.bubble {
+            padding:10px;
+            margin-top:5px;
+            display:inline-block;
+            border-radius:5px;
+        }
+
+        div.mine {
+            text-align:right;
+            margin-right:20px;
+            float:right;
+        }
+
+        div.theirs {
+            text-align:left;
+            margin-left:10px;
+            float:left;
+        }
+
+        span {
+            font-weight:bold;
+        }
+    }
+
+    div#composer {
+        height:60px;
+
+        div {display:inline-block}
+
+        div#textbox {
+            position:absolute;
+            left:0;
+            width:100%;
+
+            textarea {
+                padding:3px;
+                width:92%;
+                height:45px;
+                margin-left:3%;
+                font-size:15px;
+            }
+        }
+    }
+}

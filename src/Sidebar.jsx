@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import _ from 'underscore';
 import { controls } from '../utils/constants.js';
 
-class Menu extends Component {
+class Sidebar extends Component {
     constructor(props, context) {
         super(props, context);
 
@@ -44,7 +44,7 @@ class Menu extends Component {
         return (
             <div id="ic-menu" style={style}>
                 <div id="ic-menu-contents">
-                    <button className="ic-close-window" onClick={this.props.toggleMenu}>x</button>
+                    <button className="ic-close-window" onClick={this.props.toggleSidebar}>x</button>
                     <div className="ic-menu-list">
                         <h2>Share</h2>
                         <p><span className="code">{this.props.editCode}</span> edit</p>
@@ -76,5 +76,5 @@ class Menu extends Component {
     }
 }
 
-export default Menu;
+export default Sidebar;
 

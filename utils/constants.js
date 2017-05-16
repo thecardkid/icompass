@@ -18,13 +18,27 @@ module.exports.helpTips = [
 
 module.exports.controls = {
     'n': 'new post-it',
-    'm': 'toggle menu',
+    's': 'toggle sidebar',
+    'c': 'toggle chat',
     'w': 'what is this?',
-    'h': 'help page',
+    'h': 'toggle help',
 };
 
 module.exports.modes = {
     edit: 0,
     view: 1,
+};
+
+module.exports.keys = {
+    N: 78,
+    C: 67,
+    H: 72,
+    W: 87,
+    S: 83,
+    SHIFT: 16,
+    CTRL: 17,
+    ALT: 18,
+    CMD: 91,
+    ENTER: 13,
 };
 

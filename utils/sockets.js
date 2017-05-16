@@ -13,7 +13,7 @@ var socketObject = {
 
         io.sockets.on('connection', function(client) {
             var joinRoom = function(data) {
-                client.room = data.hashcode;
+                client.room = data.code;
                 client.username = data.username;
                 client.compassId = data.compassId;
                 client.join(client.room);
@@ -45,6 +45,12 @@ var socketObject = {
                 var m = Manager.addUser(client.room, client.username, data.color);
                 logger.debug('Manager after user reconnected', m);
                 io.sockets.in(client.room).emit('update users', m);
+            })
+
+
+            client.on('message', function(msg) {
+                logger.debug(client.username, 'sent a message to', client.room);
+                io.sockets.in(client.room).emit('new message', msg);
             })
 
 
