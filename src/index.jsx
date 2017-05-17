@@ -5,7 +5,7 @@ import css from 'style-loader!css-loader!less-loader!./../public/css/app.less';
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
-import { modes } from '../utils/constants.js';
+import { MODES } from '../utils/constants.js';
 
 import CompassEdit from './CompassEdit.jsx';
 import CompassView from './CompassView.jsx';
@@ -32,7 +32,7 @@ class Index extends Component {
             <Router history={browserHistory}>
                 <Route path='/' setCompass={this.setCompass} component={LandingPage}/>
                 <Route path='/compass' component={() => {
-                    if (this.state.mode === modes.edit)
+                    if (this.state.mode === MODES.EDIT)
                         return <CompassEdit compass={this.state.compass} username={this.state.username}/>
                     else if (this.state.mode === modes.view) {
                         return <CompassView compass={this.state.compass}/>

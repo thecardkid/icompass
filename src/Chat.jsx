@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Message from './Message.jsx';
 import _ from 'underscore';
-import { keys } from '../utils/constants.js';
+import { KEYCODES, COLORS, PIXELS } from '../utils/constants.js';
 
 export default class Chat extends Component {
 
@@ -13,8 +13,10 @@ export default class Chat extends Component {
     }
 
     componentDidMount() {
-        $('#message-text').on('keydown', (e) => {
-            if (e.which === keys.ENTER) {
+        this.text = $('#message-text');
+
+        this.text.on('keydown', (e) => {
+            if (e.which === KEYCODES.ENTER) {
                 e.preventDefault();
                 this.sendMessage();
             }
@@ -22,15 +24,14 @@ export default class Chat extends Component {
     }
 
     sendMessage() {
-        let text = $('#message-text').val();
-
-        if (!text) return;
+        let content = this.text.val();
+        if (!content) return;
         this.props.socket.emit('message', {
             username: this.props.username,
-            text: text
+            text: content
         });
-        $('#message-text').val('');
-        $('#message-text').focus();
+
+        this.text.val('').focus();
     }
 
     renderMessage(m, i) {
@@ -47,8 +48,8 @@ export default class Chat extends Component {
     }
 
     render() {
-        let bg = this.props.unread ? '#C21A03' : '';
-        let bottom = this.props.show ? '0' : '-265px';
+        let bg = this.props.unread ? COLORS.RED : COLORS.DARK;
+        let bottom = this.props.show ? PIXELS.SHOW : PIXELS.HIDE_CHAT;
         let messages = _.map(this.props.messages, this.renderMessage);
 
         return (

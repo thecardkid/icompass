@@ -3,7 +3,7 @@ var sockets = require('../utils/sockets.js');
 var Compass = require('../models/compass.js');
 var logger = require('../utils/logger.js');
 var DefaultCompass = require('../models/defaultCompass.js');
-var modes = require('../utils/constants.js').modes;
+var MODES = require('../utils/constants.js').MODES;
 
 function generateUUID() {
     var d = new Date().getTime();
@@ -25,7 +25,7 @@ router.post('/create', function(req, res, next) {
         if (err) return logger.error(err);
 
         logger.debug('Successfully created compass', compass._id);
-        res.json({code: compass.edit, mode: modes.edit, compass: compass});
+        res.json({code: compass.edit, mode: MODES.EDIT, compass: compass});
     });
 });
 
@@ -41,11 +41,11 @@ router.post('/find', function(req, res, next) {
                 delete copy.editCode;
                 //TODO delete comment code
                 logger.debug('Found compass for viewing', compass._id);
-                res.json({code: req.body.code, mode: modes.view, compass: copy})
+                res.json({code: req.body.code, mode: MODES.VIEW, compass: copy})
             })
         } else {
             logger.debug('Found compass for editing', compass._id);
-            res.json({code: req.body.code, mode: modes.edit, compass: compass});
+            res.json({code: req.body.code, mode: MODES.EDIT, compass: compass});
         }
     })
 });

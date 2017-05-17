@@ -2,7 +2,7 @@ import React from 'react';
 
 import StickyNote from './StickyNote.jsx';
 
-import { exportPrompt } from '../utils/constants.js';
+import { EXPORT_PROMPT } from '../utils/constants.js';
 
 export default {
     renderNote(note, i) {
@@ -26,7 +26,7 @@ export default {
     },
 
     showSavePrompt() {
-        if (confirm(exportPrompt)) this.exportCompass();
+        if (confirm(EXPORT_PROMPT)) this.exportCompass();
     },
 
     exportCompass() {
@@ -48,6 +48,5 @@ export default {
             </div>
         );
     },
-
 }
 

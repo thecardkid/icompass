@@ -12,11 +12,10 @@ var UserManager = function() {
 }
 
 UserManager.prototype.getRoom = function(roomCode) {
-    if (roomCode in this) {
+    if (roomCode in this)
         return this[roomCode];
-    } else {
+    else
         return {usernameToColor: {}, colors: this.possibleColors.slice()};
-    }
 }
 
 UserManager.prototype.setRoom = function(roomCode, manager) {
@@ -57,9 +56,8 @@ UserManager.prototype.removeUser = function(roomCode, username) {
     var c = m.usernameToColor[username];
     delete m.usernameToColor[username];
 
-    if (_.isEmpty(m.usernameToColor)) {
+    if (_.isEmpty(m.usernameToColor))
         return this.deleteRoom(roomCode);
-    }
 
     m.colors.push(c);
     return this.setRoom(roomCode, m);

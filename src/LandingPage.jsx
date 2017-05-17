@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
+import { ERROR_MSG } from '../utils/constants.js';
 
 export default class LandingPage extends Component {
 
@@ -12,49 +13,59 @@ export default class LandingPage extends Component {
         this.findCompass = this.findCompass.bind(this);
     }
 
+    componentDidMount() {
+        this.eCode = $('#compass-code');
+        this.eUsername = $('#username');
+        this.eCenter = $('#compass-center');
+
+        this.vCode = $('#validate-code');
+        this.vUsername = $('#validate-username');
+        this.vCenter = $('#validate-center');
+    }
+
     validateCode() {
-        let code = $('#compass-code').val();
+        let code = this.eCode.val();
         if (!code) {
-            $('#validate-code').text('This is required');
+            this.vCode.text(ERROR_MSG.REQUIRED);
             return false;
         } else if (code.length != 8) {
-            $('#validate-code').text('Not a valid code');
+            this.vCode.text(ERROR_MSG.INVALID_CODE);
             return false;
         }
         return code;
     }
 
     validateUsername() {
-        let username = $('#username').val();
+        let username = this.eUsername.val();
         if (!username) {
-            $('#validate-username').text('This is required');
+            this.vUsername.text(ERROR_MSG.REQUIRED);
             return false;
         } else if (username.length > 15) {
-            $('#validate-username').text('Longer than 15 chars');
+            this.vUsername.text(ERROR_MSG.TEXT_TOO_LONG);
             return false;
         } else if (username.match(/\d+/g) != null) {
-            $('#validate-username').text('Cannot contain numbers');
+            this.vUsername.text(ERROR_MSG.HAS_NUMBER);
             return false;
         }
         return username;
     }
 
     validateCenter() {
-        let center = $('#compass-center').val();
+        let center = this.eCenter.val();
         if (!center) {
-            $('#validate-center').text('This is required');
+            this.vCenter.text(ERROR_MSG.REQUIRED);
             return false;
         } else if (center.length > 15) {
-            $('#validate-center').text('Longer than 15 chars');
+            this.vCenter.text(ERROR_MSG.TEXT_TOO_LONG);
             return false;
         }
         return center;
     }
 
     clearErrors() {
-        $('#validate-center').text('');
-        $('#validate-id').text('');
-        $('#validate-username').text('');
+        this.vCode.text('');
+        this.vCenter.text('');
+        this.vUsername.text('');
     }
 
     newCompass() {
@@ -72,9 +83,7 @@ export default class LandingPage extends Component {
                 'Content-Type': 'application/json',
             },
             credentials: 'same-origin',
-            body: JSON.stringify({
-                'center': center
-            })
+            body: JSON.stringify({'center': center})
         })
         .then((response) => response.json())
         .then((responseJson) => root.props.route.setCompass(responseJson, username))
@@ -101,7 +110,7 @@ export default class LandingPage extends Component {
         .then((response) => response.json())
         .then((responseJson) => {
             if (!responseJson.compass)
-                $('#validate-code').text('Compass does not exist');
+                this.vCode.text(ERROR_MSG.CANT_FIND);
             else
                 root.props.route.setCompass(responseJson, username);
         })

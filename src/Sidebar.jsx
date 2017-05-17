@@ -2,13 +2,13 @@
 
 import React, { Component } from 'react';
 import _ from 'underscore';
-import { controls } from '../utils/constants.js';
+import { CONTROLS, PIXELS, COLORS } from '../utils/constants.js';
 
 export default class Sidebar extends Component {
 
     constructor(props, context) {
         super(props, context);
-        this.controlList = _.map(controls, this.renderControl);
+        this.controlList = _.map(CONTROLS, this.renderControl);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -45,14 +45,10 @@ export default class Sidebar extends Component {
 
     render() {
         let userList = _.map(this.props.users, this.renderUserColor.bind(this));
-
-        let style = {
-            left: this.props.show ? '0' : '-240px',
-        };
-
+        let style = {left: this.props.show ? PIXELS.SHOW : PIXELS.HIDE_SIDEBAR};
         let connectionStatus = this.props.disconnected ?
-            <p style={{color:'red'}}>Disconnected</p> :
-            <p style={{color:'green'}}>Connected</p>;
+            <p style={{color:COLORS.RED}}>Disconnected</p> :
+            <p style={{color:COLORS.GREEN}}>Connected</p>;
 
         return (
             <div id="ic-menu" style={style}>

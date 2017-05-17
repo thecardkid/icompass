@@ -11,7 +11,7 @@ import HelpScreen from './HelpScreen.jsx';
 import Shared from './Shared.jsx';
 import Chat from './Chat.jsx';
 
-import { exportPrompt, quadrantsInfo, keys } from '../utils/constants.js';
+import { QUADRANTS_INFO, KEYCODES } from '../utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 
@@ -95,20 +95,20 @@ export default class CompassEdit extends Component {
         if (document.activeElement.id === 'message-text') return;
 
         switch (e.which) {
-            case keys.N:
-            case keys.C:
-            case keys.H:
-            case keys.W:
-            case keys.S:
+            case KEYCODES.N:
+            case KEYCODES.C:
+            case KEYCODES.H:
+            case KEYCODES.W:
+            case KEYCODES.S:
                 if (!modifier) {
                     e.preventDefault();
                     this.keypressHandler[e.which]();
                 }
                 break;
-            case keys.SHIFT:
-            case keys.CTRL:
-            case keys.ALT:
-            case keys.CMD:
+            case KEYCODES.SHIFT:
+            case KEYCODES.CTRL:
+            case KEYCODES.ALT:
+            case KEYCODES.CMD:
                 modifier = true;
                 break;
             default: break;
@@ -117,10 +117,10 @@ export default class CompassEdit extends Component {
 
     handleKeyUp(e) {
         switch (e.which) {
-            case keys.SHIFT:
-            case keys.CTRL:
-            case keys.ALT:
-            case keys.CMD:
+            case KEYCODES.SHIFT:
+            case KEYCODES.CTRL:
+            case KEYCODES.ALT:
+            case KEYCODES.CMD:
                 modifier = false;
                 break;
             default: break;
@@ -288,7 +288,7 @@ export default class CompassEdit extends Component {
         let helpScreen = this.getHelpScreen();
         let explanation = this.getExplanation();
         let stickies = _.map(this.state.compass.notes, this.renderNote);
-        let quadrants = _.map(quadrantsInfo, Shared.renderQuadrant);
+        let quadrants = _.map(QUADRANTS_INFO, Shared.renderQuadrant);
 
         return (
         <div id="compass">
