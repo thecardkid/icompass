@@ -5,3 +5,6 @@ public/bundle.js
 public/bundle.js.map
 .ctagsignore
 tags
+mocha.opts
+reports/
+bin/

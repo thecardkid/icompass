@@ -11,8 +11,8 @@ export default class NoteForm extends Component {
                 <div id="ic-form-contents">
                     <h1 id="ic-form-title">{this.props.title}</h1>
                     <textarea autoFocus id="ic-form-text" defaultValue={this.props.text || ''}/>
-                    <button className="ic-button" onClick={this.props.make}>ship it</button>
-                    <button className="ic-button" onClick={this.props.close}>never mind</button>
+                    <button name="ship" className="ic-button" onClick={this.props.make}>ship it</button>
+                    <button name="nvm" className="ic-button" onClick={this.props.close}>never mind</button>
                 </div>
             </div>
         );

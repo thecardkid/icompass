@@ -143,8 +143,8 @@ export default class LandingPage extends Component {
                             </tr>
                         </tbody>
                     </table>
-                    <button onClick={this.findCompass}>Find Compass</button>
-                    <button onClick={this.newCompass}>Make Compass</button>
+                    <button name="cFind" onClick={this.findCompass}>Find Compass</button>
+                    <button name="cMake" onClick={this.newCompass}>Make Compass</button>
                 </div>
             </div>
         );

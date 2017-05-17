@@ -1,4 +1,4 @@
-var UserManager = require('../utils/userManager.js');
+var UserManager = require('../../utils/userManager.js');
 var expect = require('chai').expect;
 
 var code = '1a2b3c4d';

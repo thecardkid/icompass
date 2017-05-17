@@ -51,27 +51,27 @@ export default class Sidebar extends Component {
             <p style={{color:COLORS.GREEN}}>Connected</p>;
 
         return (
-            <div id="ic-menu" style={style}>
-                <div id="ic-menu-contents">
-                    <button className="ic-close-window" onClick={this.props.toggleSidebar}>x</button>
-                    <div className="ic-menu-list">
+            <div id="ic-sidebar" style={style}>
+                <div id="ic-sidebar-contents">
+                    <button name="close-sidebar" className="ic-close-window" onClick={this.props.toggleSidebar}>x</button>
+                    <div className="ic-sidebar-list">
                         <h2>Share</h2>
                         <p><span className="code">{this.props.editCode}</span> edit</p>
                         <p><span className="code">{this.props.viewCode}</span> view</p>
                     </div>
-                    <div className="ic-menu-list">
+                    <div className="ic-sidebar-list">
                         <h2>Controls</h2>
                         {this.controlList}
                     </div>
-                    <div className="ic-menu-list">
+                    <div className="ic-sidebar-list">
                         <h2>Collaborators</h2>
                         {userList}
                     </div>
-                    <div className="ic-menu-list">
+                    <div className="ic-sidebar-list">
                         <h2>Status</h2>
                         {connectionStatus}
                     </div>
-                    <div className="ic-menu-list">
+                    <div className="ic-sidebar-list">
                         <h2>Credits</h2>
                         <p>Compass by
                             <a href="http://innovatorscompass.org" target="_blank"> Ela Ben-Ur</a>
