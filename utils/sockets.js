@@ -20,12 +20,14 @@ var socketObject = {
             }
 
             client.on('connect compass', function(data) {
+                var o = Manager.addUser(data.code, data.username);
+                data.username = o.newUser;
                 joinRoom(data);
                 logger.info(client.username, 'joined room', client.room);
 
-                var m = Manager.addUser(client.room, client.username);
-                logger.debug('Manager after user joined', m);
-                io.sockets.in(client.room).emit('update users', m);
+                logger.debug('Manager after user joined', o.manager);
+                client.emit('assigned name', o.newUser);
+                io.sockets.in(client.room).emit('update users', o.manager);
             });
 
 
@@ -42,9 +44,9 @@ var socketObject = {
                 joinRoom(data);
                 logger.info(client.username, 'rejoined room', client.room);
 
-                var m = Manager.addUser(client.room, client.username, data.color);
-                logger.debug('Manager after user reconnected', m);
-                io.sockets.in(client.room).emit('update users', m);
+                var o = Manager.addUser(client.room, client.username, data.color);
+                logger.debug('Manager after user reconnected', o.manager);
+                io.sockets.in(client.room).emit('update users', o.manager);
             })
 
 

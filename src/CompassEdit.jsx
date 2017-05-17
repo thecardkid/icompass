@@ -36,19 +36,14 @@ class CompassEdit extends Component {
             messages: []
         };
 
-	    this.updateNotes = this.updateNotes.bind(this);
-	    this.updateUsers = this.updateUsers.bind(this);
-	    this.handleDisconnect = this.handleDisconnect.bind(this);
-	    this.handleReconnect = this.handleReconnect.bind(this);
-	    this.updateMessages = this.updateMessages.bind(this);
-
         // socket events
 	    this.socket = io();
-        this.socket.on('update notes', this.updateNotes);
-        this.socket.on('update users', this.updateUsers);
-        this.socket.on('disconnect', this.handleDisconnect);
-        this.socket.on('reconnect', this.handleReconnect);
-        this.socket.on('new message', this.updateMessages);
+	    this.socket.on('assigned name', this.setUsername.bind(this));
+        this.socket.on('update notes', this.updateNotes.bind(this));
+        this.socket.on('update users', this.updateUsers.bind(this));
+        this.socket.on('disconnect', this.handleDisconnect.bind(this));
+        this.socket.on('reconnect', this.handleReconnect.bind(this));
+        this.socket.on('new message', this.updateMessages.bind(this));
 
         // api events
 	    this.apiEditNote = this.apiEditNote.bind(this);
@@ -62,10 +57,6 @@ class CompassEdit extends Component {
 	    this.exportCompass = Shared.exportCompass.bind(this);
 
 	    // user events
-	    this.updateVw = this.updateVw.bind(this);
-	    this.handleKeyDown = this.handleKeyDown.bind(this);
-	    this.handleKeyUp = this.handleKeyUp.bind(this);
-	    this.renderNote = this.renderNote.bind(this);
 	    this.showEditForm = this.showEditForm.bind(this);
 	    this.closeForm = this.closeForm.bind(this);
 	    this.toggleSidebar = this.toggleSidebar.bind(this);
@@ -83,9 +74,9 @@ class CompassEdit extends Component {
 	}
 
 	componentDidMount() {
-	    $(window).on('resize', this.updateVw);
-	    $(window).on('keydown', this.handleKeyDown);
-	    $(window).on('keyup', this.handleKeyUp);
+	    $(window).on('resize', this.updateWindowSize.bind(this));
+	    $(window).on('keydown', this.handleKeyDown.bind(this));
+	    $(window).on('keyup', this.handleKeyUp.bind(this));
         // $(window).on('beforeunload', () => true);
 	    this.socket.emit('connect compass', {
 	        code: this.state.compass.editCode,
@@ -161,6 +152,10 @@ class CompassEdit extends Component {
         this.setState({ users });
     }
 
+    setUsername(username) {
+        this.setState({ username });
+    }
+
     updateMessages(newMessage) {
         let { messages } = this.state;
         messages.push(newMessage);
@@ -174,7 +169,7 @@ class CompassEdit extends Component {
         });
     }
 
-    updateVw() {
+    updateWindowSize() {
         this.setState({vw: window.innerWidth, vh: window.innerHeight});
     }
 

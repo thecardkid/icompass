@@ -11,9 +11,9 @@ var options = {
 var client;
 var code = '1a2b3c4d';
 var compassId = '1234567890';
-var user1 = {hashcode: code, username: 'Hieu', compassId: compassId};
-var user2 = {hashcode: code, username: 'Jordan', compassId: compassId};
-var user3 = {hashcode: code, username: 'Bam', compassId: compassId};
+var user1 = {code: code, username: 'Hieu', compassId: compassId};
+var user2 = {code: code, username: 'Jordan', compassId: compassId};
+var user3 = {code: code, username: 'Bam', compassId: compassId};
 
 function connect() {
     return io.connect(socketURL, options);
@@ -43,7 +43,7 @@ describe('socket connection events', function() {
     })
 
     it('return correct user manager for successive user joins', function(done) {
-        client2 = connect();;
+        client2 = connect();
 
         client2.on('connect', function() {
             client2.emit('connect compass', user2);
@@ -60,6 +60,20 @@ describe('socket connection events', function() {
                     client2.disconnect();
                     done();
                 })
+            })
+        })
+    })
+
+    it('return correct name when user with duplicate name joins', function(done) {
+        client2 = connect();
+
+        client2.on('connect', function() {
+            client2.emit('connect compass', user1);
+
+            client2.on('assigned name', function(username) {
+                expect(username).to.equal(user1.username+'2');
+                client2.disconnect();
+                done();
             })
         })
     })

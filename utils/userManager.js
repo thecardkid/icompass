@@ -27,9 +27,9 @@ UserManager.prototype.addUser = function(roomCode, username, color) {
     var m = this.getRoom(roomCode);
 
     var u = username;
-    var inc = 2;
+    var suffix = 2;
     while (u in m.usernameToColor)
-        u = username + (inc++);
+        u = username + (suffix++);
 
     var c = color;
     if (!c) {
@@ -40,7 +40,10 @@ UserManager.prototype.addUser = function(roomCode, username, color) {
     m.usernameToColor[u] = c;
     m.colors = _.without(m.colors, c);
 
-    return this.setRoom(roomCode, m);
+    return {
+        manager: this.setRoom(roomCode, m),
+        newUser: u
+    };
 }
 
 UserManager.prototype.deleteRoom = function(roomCode) {

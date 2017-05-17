@@ -21,26 +21,29 @@ describe('user manager', function() {
     })
 
     it('add user without an assigned color to a room', function() {
-        var m = this.manager.addUser(code, username);
-        expect(m.usernameToColor).to.have.keys(username);
-        expect(m.colors).to.have.lengthOf(5);
+        var o = this.manager.addUser(code, username);
+        expect(o.manager.usernameToColor).to.have.keys(username);
+        expect(o.manager.colors).to.have.lengthOf(5);
+        expect(o.newUser).to.equal(username);
     })
 
     it('add user with an assigned color to a room', function() {
         var color = this.manager.possibleColors[2];
 
-        var m = this.manager.addUser(code, username, color);
-        expect(m.usernameToColor).to.have.keys(username);
-        expect(m.usernameToColor[username]).to.equal(color);
-        expect(m.colors).to.not.have.members([color]);
+        var o = this.manager.addUser(code, username, color);
+        expect(o.manager.usernameToColor).to.have.keys(username);
+        expect(o.manager.usernameToColor[username]).to.equal(color);
+        expect(o.manager.colors).to.not.have.members([color]);
+        expect(o.newUser).to.equal(username);
     })
 
     it('prevent duplicate usernames', function() {
         this.manager.addUser(code, username);
         this.manager.addUser(code, username);
-        var m = this.manager.addUser(code, username);
-        expect(m.usernameToColor).to.have.keys(username, username+'2', username+'3');
-        expect(m.colors).to.have.length(3);
+        var o = this.manager.addUser(code, username);
+        expect(o.manager.usernameToColor).to.have.keys(username, username+'2', username+'3');
+        expect(o.manager.colors).to.have.length(3);
+        expect(o.newUser).to.equal(username+'3');
     })
 
     it('remove a user', function() {

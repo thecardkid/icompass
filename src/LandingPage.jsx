@@ -31,6 +31,9 @@ class LandingPage extends Component {
         } else if (username.length > 15) {
             $('#validate-username').text('Longer than 15 chars');
             return false;
+        } else if (username.match(/\d+/g) != null) {
+            $('#validate-username').text('Cannot contain numbers');
+            return false;
         }
         return username;
     }
