@@ -6,7 +6,7 @@ import _ from 'underscore';
 import StickyNote from './StickyNote.jsx';
 import Shared from './Shared.jsx';
 
-import { quadrantsInfo } from '../utils/constants.js'
+import { QUADRANTS_INFO, PROMPTS } from '../utils/constants.js'
 
 export default class CompassView extends Component {
 
@@ -24,26 +24,28 @@ export default class CompassView extends Component {
         this.center = Shared.center.bind(this);
         this.showSavePrompt = Shared.showSavePrompt.bind(this);
         this.exportCompass = Shared.exportCompass.bind(this);
+        this.getCompassStructure = Shared.getCompassStructure.bind(this);
     }
 
     componentDidMount() {
-        alert('IMPORTANT\n\nYou are in view-only mode. You can\'t make or see changes. To see an updated version of the compass, you\'ll have to log back in.');
+        alert(PROMPTS.VIEW_ONLY);
+        $(window).on('resize', this.updateWindowSize.bind(this));
+    }
+
+    updateWindowSize() {
+        this.setState({vw: window.innerWidth, vh: window.innerHeight});
     }
 
     render() {
         let stickies = _.map(this.state.compass.notes, this.renderNote);
-        let quadrants = _.map(quadrantsInfo, Shared.renderQuadrant);
+        let quadrants = _.map(QUADRANTS_INFO, Shared.renderQuadrant);
+        let structure = this.getCompassStructure(this.state.compass.center);
 
         return (
             <div id="compass">
                 {stickies}
                 {quadrants}
-                <div id="center" style={this.center(100,100)}>
-                    {this.state.compass.center}
-                    <button id="export" onClick={this.showSavePrompt}>Save as PDF</button>
-                </div>
-                <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
-                <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
+                {structure}
             </div>
         );
     }

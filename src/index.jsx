@@ -34,7 +34,7 @@ class Index extends Component {
                 <Route path='/compass' component={() => {
                     if (this.state.mode === MODES.EDIT)
                         return <CompassEdit compass={this.state.compass} username={this.state.username}/>
-                    else if (this.state.mode === modes.view) {
+                    else if (this.state.mode === MODES.VIEW) {
                         return <CompassView compass={this.state.compass}/>
                     }
                 }}/>

@@ -11,7 +11,7 @@ import HelpScreen from './HelpScreen.jsx';
 import Shared from './Shared.jsx';
 import Chat from './Chat.jsx';
 
-import { QUADRANTS_INFO, KEYCODES } from '../utils/constants.js';
+import { QUADRANTS_INFO, KEYCODES, PROMPTS } from '../utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 
@@ -56,6 +56,7 @@ export default class CompassEdit extends Component {
 	    this.center = Shared.center.bind(this);
 	    this.showSavePrompt = Shared.showSavePrompt.bind(this);
 	    this.exportCompass = Shared.exportCompass.bind(this);
+	    this.getCompassStructure = Shared.getCompassStructure.bind(this);
 
 	    // user events
 	    this.showEditForm = this.showEditForm.bind(this);
@@ -78,7 +79,6 @@ export default class CompassEdit extends Component {
 	    $(window).on('resize', this.updateWindowSize.bind(this));
 	    $(window).on('keydown', this.handleKeyDown.bind(this));
 	    $(window).on('keyup', this.handleKeyUp.bind(this));
-        // $(window).on('beforeunload', () => true);
 	    this.socket.emit('connect compass', {
 	        code: this.state.compass.editCode,
 	        username: this.state.username,
@@ -128,12 +128,10 @@ export default class CompassEdit extends Component {
     }
 
     handleDisconnect() {
-        // alert('You have been disconnected');
         this.setState({showSidebar: true, disconnected: true})
     }
 
     handleReconnect() {
-        // alert('You have been reconnected');
         this.socket.emit('reconnected', {
             code: this.state.compass.editCode,
             compassId: this.state.compass._id,
@@ -194,14 +192,15 @@ export default class CompassEdit extends Component {
         let text = $('#ic-form-text').val();
         if (text === '') return false;
         if (text.length > 200) {
-            alert('You can\'t fit that much on a post-it!');
+            alert(PROMPTS.POST_IT_TOO_LONG);
             return false;
         }
         return text;
     }
 
     alertInvalidAction() {
-        alert('You are not connected to the server.');
+        alert(PROMPTS.NOT_CONNECTED);
+        this.setState({showSidebar: true});
     }
 
     apiMakeNote() {
@@ -289,6 +288,7 @@ export default class CompassEdit extends Component {
         let explanation = this.getExplanation();
         let stickies = _.map(this.state.compass.notes, this.renderNote);
         let quadrants = _.map(QUADRANTS_INFO, Shared.renderQuadrant);
+        let structure = this.getCompassStructure(this.state.compass.center);
 
         return (
         <div id="compass">
@@ -297,13 +297,8 @@ export default class CompassEdit extends Component {
             {helpScreen}
             {explanation}
             {quadrants}
-            <div id="center" style={this.center(100,100)}>
-                {this.state.compass.center}
-                <button id="export" onClick={this.showSavePrompt}>Save as PDF</button>
-            </div>
+            {structure}
             <button id="show-menu" onClick={this.toggleSidebar}>Show Sidebar</button>
-            <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
-            <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
             <Sidebar viewCode={this.state.compass.viewCode}
                 editCode={this.state.compass.editCode}
                 users={this.state.users.usernameToColor}

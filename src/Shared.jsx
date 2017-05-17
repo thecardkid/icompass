@@ -2,7 +2,7 @@ import React from 'react';
 
 import StickyNote from './StickyNote.jsx';
 
-import { EXPORT_PROMPT } from '../utils/constants.js';
+import { PROMPTS } from '../utils/constants.js';
 
 export default {
     renderNote(note, i) {
@@ -26,7 +26,7 @@ export default {
     },
 
     showSavePrompt() {
-        if (confirm(EXPORT_PROMPT)) this.exportCompass();
+        if (confirm(PROMPTS.EXPORT)) this.exportCompass();
     },
 
     exportCompass() {
@@ -45,6 +45,19 @@ export default {
             <div key={q.id} className="ic-quadrant" id={q.id}>
                 <h1>{q.id.toUpperCase()}</h1>
                 <h2>{q.prompt}</h2>
+            </div>
+        );
+    },
+
+    getCompassStructure(text) {
+        return (
+            <div>
+                <div id="center" style={this.center(100,100)}>
+                    {text}
+                    <button id="export" onClick={this.showSavePrompt}>Save as PDF</button>
+                </div>
+                <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
+                <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
             </div>
         );
     },

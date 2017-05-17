@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
-import { ERROR_MSG } from '../utils/constants.js';
+import { ERROR_MSG, PROMPTS } from '../utils/constants.js';
 
 export default class LandingPage extends Component {
 
@@ -86,7 +86,10 @@ export default class LandingPage extends Component {
             body: JSON.stringify({'center': center})
         })
         .then((response) => response.json())
-        .then((responseJson) => root.props.route.setCompass(responseJson, username))
+        .then((responseJson) => {
+            alert(PROMPTS.REMEMBER_CODE);
+            root.props.route.setCompass(responseJson, username)
+        })
         .catch((e) => console.error(e));
     }
 
