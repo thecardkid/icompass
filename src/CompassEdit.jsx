@@ -110,6 +110,7 @@ export default class CompassEdit extends Component {
             case KEYCODES.ALT:
             case KEYCODES.CMD:
                 modifier = true;
+                setTimeout(() => modifier = false, 5000);
                 break;
             default: break;
         }
@@ -307,6 +308,7 @@ export default class CompassEdit extends Component {
                 disconnected={this.state.disconnected}
                 toggleSidebar={this.toggleSidebar}
             />
+            <button id="show-chat" onClick={this.toggleChat}>Show Chat</button>
             <Chat messages={this.state.messages}
                 colorMap={this.state.users.usernameToColor}
                 username={this.state.username}
