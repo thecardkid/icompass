@@ -1,3 +1,6 @@
+
+var editCode, viewCode;
+
 module.exports = {
     'creating compass' : function(browser) {
         browser
@@ -12,6 +15,20 @@ module.exports = {
         .pause(500)
         .assert.elementPresent('#ic-sidebar')
             .assert.cssProperty('#ic-sidebar', 'left', '0px')
+        .assert.elementPresent('span[name=edit-code]')
+            .getText('span[name=edit-code]', function(result) {
+                this.assert.equal(typeof result, "object");
+                this.assert.equal(result.status, 0);
+                this.assert.equal(result.value.length, 8);
+                editCode = result.value;
+            })
+        .assert.elementPresent('span[name=view-code]')
+            .getText('span[name=view-code]', function(result) {
+                this.assert.equal(typeof result, "object");
+                this.assert.equal(result.status, 0);
+                this.assert.equal(result.value.length, 8);
+                editCode = result.value;
+            })
         .assert.elementPresent('#ic-chat')
             .assert.cssProperty('#ic-chat', 'bottom', '0px')
         .assert.elementPresent('#center')
@@ -66,4 +83,16 @@ module.exports = {
         .assert.containsText('.bubble', 'Hello world!')
         .end();
     }
+//
+    // 'can find compass': function(browser) {
+        // browser
+        // .url('http://localhost:8080')
+        // .waitForElementVisible('body', 1000)
+        // .assert.title('The Innovators\' Compass')
+        // .setValue('input[id=username]', 'Hieu')
+        // .setValue('input[id=compass-center]', 'DSA')
+        // .click('button[name=cMake]')
+        // .pause(500)
+        // .end();
+    // }
 }
