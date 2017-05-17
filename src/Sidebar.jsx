@@ -62,7 +62,8 @@ class Sidebar extends Component {
                         <h2>Status</h2>
                         {connectionStatus}
                     </div>
-                    <div id="ic-menu-credits">
+                    <div className="ic-menu-list">
+                        <h2>Credits</h2>
                         <p>Compass by
                             <a href="http://innovatorscompass.org" target="_blank"> Ela Ben-Ur</a>
                         </p>
