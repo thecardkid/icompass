@@ -21,6 +21,8 @@ export default class LandingPage extends Component {
         this.vCode = $('#validate-code');
         this.vUsername = $('#validate-username');
         this.vCenter = $('#validate-center');
+
+        this.props.socket.on('compass null', () => this.vCode.text(ERROR_MSG.CANT_FIND));
     }
 
     validateCode() {
@@ -76,21 +78,10 @@ export default class LandingPage extends Component {
         if (!username || !center) return;
 
         let root = this;
-        fetch('/api/compass/create', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({'center': center})
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            alert(PROMPTS.REMEMBER_CODE);
-            root.props.route.setCompass(responseJson, username)
-        })
-        .catch((e) => console.error(e));
+        this.props.socket.emit('create compass', {
+            center: center,
+            username: username
+        });
     }
 
     findCompass() {
@@ -101,23 +92,10 @@ export default class LandingPage extends Component {
         if (!code || !username) return;
 
         let root = this;
-        fetch('/api/compass/find', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({'code': code})
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            if (!responseJson.compass)
-                this.vCode.text(ERROR_MSG.CANT_FIND);
-            else
-                root.props.route.setCompass(responseJson, username);
-        })
-        .catch((e) => console.error(e));
+        this.props.socket.emit('find compass', {
+            code: code,
+            username: username
+        });
     }
 
     render() {

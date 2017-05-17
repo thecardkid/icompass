@@ -16,21 +16,22 @@ class Index extends Component {
         super(props, context);
 
         this.state = {};
+        this.socket = io();
 
-        this.setCompass = (json, username) => {
+        this.socket.on('compass ready', (data) => {
             this.setState({
-                compass: json.compass,
-                mode: json.mode,
-                code:json.code,
-                username: username
+                compass: data.compass,
+                mode: data.mode,
+                code:data.code,
+                username: data.username
             }, () => browserHistory.push('/compass'));
-        }
+        })
     }
 
     render() {
         return (
             <Router history={browserHistory}>
-                <Route path='/' setCompass={this.setCompass} component={LandingPage}/>
+                <Route path='/' component={() => <LandingPage socket={this.socket} />}/>
                 <Route path='/compass' component={() => {
                     if (this.state.mode === MODES.EDIT)
                         return <CompassEdit compass={this.state.compass} username={this.state.username}/>

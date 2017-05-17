@@ -6,7 +6,6 @@ const app = express();
 var bodyParser = require('body-parser');
 var db = require('./utils/db.js')
 var socket = require('./utils/sockets.js');
-var compass = require('./routes/compass');
 
 // serve static assets normally
 app.use(express.static(__dirname + '/public'));
@@ -17,8 +16,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.get('/', function (request, response) {
 	response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
-
-app.use('/api/compass/', compass);
 
 var server = app.listen(port, function() {
     console.log("Listening on port:", port);

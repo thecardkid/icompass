@@ -4,6 +4,7 @@ var _ = require('underscore');
 var UserManager = require('./userManager.js');
 var io;
 var logger = require('./logger.js');
+var MODES = require('./constants.js').MODES;
 
 var Manager = new UserManager();
 
@@ -18,6 +19,33 @@ var socketObject = {
                 client.compassId = data.compassId;
                 client.join(client.room);
             }
+
+
+            client.on('create compass', function(data) {
+                Compass.makeCompass(data.center, function(compass) {
+                    client.emit('compass ready', {
+                        code: compass.edit,
+                        mode: MODES.EDIT,
+                        compass: compass,
+                        username: data.username
+                    });
+                });
+            });
+
+
+            client.on('find compass', function(data) {
+                Compass.findCode(data.code, function(compass, mode) {
+                    if (compass === null) return client.emit('compass null');
+
+                    client.emit('compass ready', {
+                        code: data.code,
+                        mode: mode,
+                        compass: compass,
+                        username: data.username
+                    });
+                });
+            });
+
 
             client.on('connect compass', function(data) {
                 var o = Manager.addUser(data.code, data.username);
