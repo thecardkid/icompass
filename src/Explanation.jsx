@@ -2,7 +2,8 @@
 
 import React, { Component } from 'react';
 
-class Explanation extends Component {
+export default class Explanation extends Component {
+
     shouldComponentUpdate(nextProps, nextState) {
         return false;
     }
@@ -49,4 +50,3 @@ class Explanation extends Component {
     }
 }
 
-export default Explanation;

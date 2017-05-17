@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
-class Message extends Component {
+export default class Message extends Component {
+
     shouldComponentUpdate(nextProps, nextState) {
         return false;
     }
@@ -16,4 +17,3 @@ class Message extends Component {
     }
 }
 
-export default Message;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class StickyNote extends Component {
+export default class StickyNote extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         let thisNote = this.props.note,
@@ -37,4 +37,3 @@ class StickyNote extends Component {
     }
 }
 
-export default StickyNote;

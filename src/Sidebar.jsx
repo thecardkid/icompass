@@ -4,11 +4,25 @@ import React, { Component } from 'react';
 import _ from 'underscore';
 import { controls } from '../utils/constants.js';
 
-class Sidebar extends Component {
+export default class Sidebar extends Component {
+
     constructor(props, context) {
         super(props, context);
+        this.controlList = _.map(controls, this.renderControl);
+    }
 
-        this.renderUserColor = this.renderUserColor.bind(this);
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.users !== nextProps.users)
+            return true;
+
+        if (this.props.users)
+            if (this.props.users.length !== nextProps.users.length)
+                return true;
+
+        return (
+            this.props.disconnected !== nextProps.disconnected ||
+            this.props.show !== nextProps.show
+        );
     }
 
     renderUserColor(color, username) {
@@ -30,8 +44,7 @@ class Sidebar extends Component {
     }
 
     render() {
-        let userList = _.map(this.props.users, this.renderUserColor);
-        let controlList = _.map(controls, this.renderControl);
+        let userList = _.map(this.props.users, this.renderUserColor.bind(this));
 
         let style = {
             left: this.props.show ? '0' : '-240px',
@@ -52,7 +65,7 @@ class Sidebar extends Component {
                     </div>
                     <div className="ic-menu-list">
                         <h2>Controls</h2>
-                        {controlList}
+                        {this.controlList}
                     </div>
                     <div className="ic-menu-list">
                         <h2>Collaborators</h2>
@@ -76,6 +89,4 @@ class Sidebar extends Component {
         );
     }
 }
-
-export default Sidebar;
 

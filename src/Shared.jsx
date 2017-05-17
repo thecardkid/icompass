@@ -4,7 +4,7 @@ import StickyNote from './StickyNote.jsx';
 
 import { exportPrompt } from '../utils/constants.js';
 
-var Shared = {
+export default {
     renderNote(note, i) {
         return (
             <StickyNote key={note._id}
@@ -51,4 +51,3 @@ var Shared = {
 
 }
 
-export default Shared;

@@ -8,7 +8,7 @@ import Shared from './Shared.jsx';
 
 import { quadrantsInfo } from '../utils/constants.js'
 
-class CompassView extends Component {
+export default class CompassView extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -49,4 +49,3 @@ class CompassView extends Component {
     }
 }
 
-export default CompassView;

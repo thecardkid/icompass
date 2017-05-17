@@ -15,7 +15,8 @@ import { exportPrompt, quadrantsInfo, keys } from '../utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 
-class CompassEdit extends Component {
+export default class CompassEdit extends Component {
+
 	constructor(props, context) {
 	    super(props, context);
 
@@ -323,6 +324,4 @@ class CompassEdit extends Component {
 		);
 	}
 };
-
-export default CompassEdit;
 

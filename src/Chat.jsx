@@ -3,7 +3,8 @@ import Message from './Message.jsx';
 import _ from 'underscore';
 import { keys } from '../utils/constants.js';
 
-class Chat extends Component {
+export default class Chat extends Component {
+
     constructor(props, context) {
         super(props, context);
 
@@ -70,4 +71,3 @@ class Chat extends Component {
     }
 }
 
-export default Chat;

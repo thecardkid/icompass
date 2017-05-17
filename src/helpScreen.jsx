@@ -4,7 +4,8 @@ import React, { Component } from 'react'
 import _ from 'underscore';
 import { helpTips } from '../utils/constants.js';
 
-class HelpScreen extends Component {
+export default class HelpScreen extends Component {
+
     getListItem(item, i) {
         return (
             <li key={'tip'+i}>
@@ -28,4 +29,3 @@ class HelpScreen extends Component {
     }
 }
 
-export default HelpScreen;

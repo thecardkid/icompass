@@ -3,7 +3,8 @@
 import React, { Component } from 'react';
 import _ from 'underscore';
 
-class NoteForm extends Component {
+export default class NoteForm extends Component {
+
     render() {
         return (
             <div className="ic-modal" id="ic-note-form" style={this.props.style}>
@@ -17,6 +18,4 @@ class NoteForm extends Component {
         );
     }
 }
-
-export default NoteForm;
 

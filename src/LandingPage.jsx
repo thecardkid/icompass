@@ -3,7 +3,8 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 
-class LandingPage extends Component {
+export default class LandingPage extends Component {
+
     constructor(props, context) {
         super(props, context);
 
@@ -137,6 +138,4 @@ class LandingPage extends Component {
         );
     }
 }
-
-export default LandingPage;
 
