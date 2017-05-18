@@ -1,8 +1,9 @@
 import React from 'react';
 
 import StickyNote from './StickyNote.jsx';
+import _ from 'underscore';
 
-import { PROMPTS } from '../utils/constants.js';
+import { PROMPTS, QUADRANTS_INFO } from '../utils/constants.js';
 
 export default {
     renderNote(note, i) {
@@ -59,6 +60,7 @@ export default {
                 <div id="center" style={this.center(100,100)}>
                     <p style={{marginTop: top}}>{text}</p>
                 </div>
+                {_.map(QUADRANTS_INFO, this.renderQuadrant)}
                 <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
                 <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
             </div>

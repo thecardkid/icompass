@@ -21,6 +21,7 @@ var compassSchema = mongoose.Schema({
     notes: [{
         color: String,
         text: String,
+        doodle: String,
         x: Number,
         y: Number
     }]

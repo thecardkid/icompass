@@ -22,6 +22,7 @@ export default class CompassView extends Component {
         // Shared methods
         this.renderNote = Shared.renderNote.bind(this);
         this.center = Shared.center.bind(this);
+        this.renderQuadrant = Shared.renderQuadrant;
         this.getCompassStructure = Shared.getCompassStructure.bind(this);
     }
 

@@ -31,6 +31,7 @@ module.exports.MODES = {
 module.exports.KEYCODES = {
     N: 78,
     C: 67,
+    D: 68,
     H: 72,
     W: 87,
     S: 83,
@@ -60,6 +61,7 @@ module.exports.ERROR_MSG = {
 
 module.exports.CONTROLS = {
     'n': 'new post-it',
+    'd': 'new doodle',
     's': 'toggle sidebar',
     'c': 'toggle chat',
     'w': 'what is this?',
@@ -73,4 +75,10 @@ module.exports.PIXELS = {
 };
 
 module.exports.EMAIL_RE = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+module.exports.DRAGGABLE_RESTRICTIONS = {
+    restriction: "parent",
+    endOnly: true,
+    elementRect: {top:0, left:0, bottom:1, right:1}
+};
 
