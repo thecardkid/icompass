@@ -24,7 +24,7 @@ export default class LandingPage extends Component {
         this.vCenter = $('#validate-center');
         this.vEmail = $('#validate-email');
 
-        this.props.socket.on('compass null', () => this.vCode.text(ERROR_MSG.CANT_FIND));
+        this.props.route.socket.on('compass null', () => this.vCode.text(ERROR_MSG.CANT_FIND));
     }
 
     validateCode() {
@@ -93,8 +93,8 @@ export default class LandingPage extends Component {
 
         if (!username || !center || email === 1) return;
 
-        let root = this;
-        this.props.socket.emit('create compass', {
+        console.log('creating compass');
+        this.props.route.socket.emit('create compass', {
             center: center,
             username: username,
             email: email
@@ -108,8 +108,7 @@ export default class LandingPage extends Component {
 
         if (!code || !username) return;
 
-        let root = this;
-        this.props.socket.emit('find compass', {
+        this.props.route.socket.emit('find compass', {
             code: code,
             username: username
         });
@@ -122,12 +121,12 @@ export default class LandingPage extends Component {
                     <table><tbody>
                         <tr>
                             <td>Compass Code:</td>
-                            <td><input id="compass-code" type="text"/></td>
+                            <td><input id="compass-code" type="text" defaultValue={this.props.params.code}/></td>
                             <td id="validate-code"></td>
                         </tr>
                         <tr>
                             <td>Username:</td>
-                            <td><input id="username" type="text"/></td>
+                            <td><input id="username" type="text" defaultValue={this.props.params.username}/></td>
                             <td id="validate-username"></td>
                         </tr>
                         <tr>

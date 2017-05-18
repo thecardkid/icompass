@@ -10,6 +10,8 @@ var MODES = require('./constants.js').MODES;
 var Manager = new UserManager();
 var Mail = new Mailer();
 
+const HOST = (process.env.NODE_ENV === 'production') ? 'http://icompass.hieuqn.com/' : 'http://localhost:8080/'
+
 module.exports = {
     socketServer: function(server) {
         io = socketIO.listen(server);
@@ -22,9 +24,13 @@ module.exports = {
                 client.join(client.room);
             };
 
-            var sendMail = function(editCode, viewCode, email) {
-                var text = 'Edit code: ' + editCode + '\nView code: ' + viewCode;
-                Mail.sendMessage(text, email, function(status) {
+            var sendMail = function(compass, data) {
+                var text = 'Edit code: ' + compass.editCode +
+                    '\nView code: ' + compass.viewCode + '\n\n' +
+                    'Visit this link for a pre-filled form: ' +
+                    HOST + compass.editCode + '/' + data.username;
+
+                Mail.sendMessage(text, data.email, function(status) {
                     if (status) client.emit('mail sent');
                     else client.emit('mail not sent');
                 });
@@ -34,7 +40,7 @@ module.exports = {
             client.on('create compass', function(data) {
                 Compass.makeCompass(data.center, function(compass) {
                     if (data.email)
-                        sendMail(compass.editCode, compass.viewCode, data.email);
+                        sendMail(compass, data);
                     client.emit('compass ready', {
                         code: compass.edit,
                         mode: MODES.EDIT,

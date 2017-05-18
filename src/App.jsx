@@ -11,11 +11,11 @@ import CompassEdit from './CompassEdit.jsx';
 import CompassView from './CompassView.jsx';
 import LandingPage from './LandingPage.jsx';
 
-class Index extends Component {
+class App extends Component {
     constructor(props, context) {
         super(props, context);
+        console.log('app');
 
-        this.state = {};
         this.socket = io();
 
         this.socket.on('compass ready', (data) => {
@@ -34,17 +34,18 @@ class Index extends Component {
     render() {
         return (
             <Router history={browserHistory}>
-                <Route path='/' component={() => <LandingPage socket={this.socket} />}/>
+                <Route path='/' socket={this.socket} component={LandingPage} />
+                <Route path='/:code/:username' socket={this.socket} component={LandingPage} />
                 <Route path='/compass' component={() => {
                     if (this.state.mode === MODES.EDIT)
-                        return <CompassEdit compass={this.state.compass} username={this.state.username} socket={this.socket}/>
+                        return <CompassEdit compass={this.state.compass} username={this.state.username} socket={this.socket} />
                     else if (this.state.mode === MODES.VIEW) {
-                        return <CompassView compass={this.state.compass}/>
+                        return <CompassView compass={this.state.compass} />
                     }
-                }}/>
+                }} />
             </Router>
         );
     }
 }
 
-$(window).ready(() => render(<Index/>, document.getElementById('container')));
+$(window).ready(() => render(<App />, document.getElementById('container')));
