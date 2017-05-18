@@ -35,7 +35,7 @@ export default {
                 let imgData = canvas.toDataURL('image/png');
                 let doc = new jsPDF('l', 'cm', 'a4');
                 doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
-                doc.save(this.state.compass.center + '-compass.pdf');
+                doc.save('compass.pdf');
             });
         });
     },

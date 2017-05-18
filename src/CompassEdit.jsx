@@ -54,8 +54,6 @@ export default class CompassEdit extends Component {
 	    // Shared methods
 	    this.renderNote = Shared.renderNote.bind(this);
 	    this.center = Shared.center.bind(this);
-	    this.showSavePrompt = Shared.showSavePrompt.bind(this);
-	    this.exportCompass = Shared.exportCompass.bind(this);
 	    this.getCompassStructure = Shared.getCompassStructure.bind(this);
 
 	    // user events

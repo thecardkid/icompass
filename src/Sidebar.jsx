@@ -4,11 +4,15 @@ import React, { Component } from 'react';
 import _ from 'underscore';
 import { CONTROLS, PIXELS, COLORS } from '../utils/constants.js';
 
+import Shared from './Shared.jsx';
+
 export default class Sidebar extends Component {
 
     constructor(props, context) {
         super(props, context);
         this.controlList = _.map(CONTROLS, this.renderControl);
+        this.showSavePrompt = Shared.showSavePrompt.bind(this);
+        this.exportCompass = Shared.exportCompass.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -70,6 +74,10 @@ export default class Sidebar extends Component {
                     <div className="ic-sidebar-list">
                         <h2>Status</h2>
                         {connectionStatus}
+                    </div>
+                    <div className="ic-sidebar-list">
+                        <h2>Actions</h2>
+                        <button className="ic-action" onClick={this.showSavePrompt}>Export to PDF</button>
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Credits</h2>
