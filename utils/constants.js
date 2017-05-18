@@ -49,7 +49,9 @@ module.exports.COLORS = {
 module.exports.ERROR_MSG = {
     REQUIRED: 'This is required',
     INVALID_CODE: 'Not a valid code',
-    TEXT_TOO_LONG: 'Longer than 15 chars',
+    TEXT_TOO_LONG: function(len) {
+        return 'Longer than ' + len + ' chars';
+    },
     HAS_NUMBER: 'Cannot contain numbers',
     CANT_FIND: 'Compass does not exist',
 };

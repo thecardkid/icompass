@@ -43,7 +43,7 @@ export default class LandingPage extends Component {
             this.vUsername.text(ERROR_MSG.REQUIRED);
             return false;
         } else if (username.length > 15) {
-            this.vUsername.text(ERROR_MSG.TEXT_TOO_LONG);
+            this.vUsername.text(ERROR_MSG.TEXT_TOO_LONG(15));
             return false;
         } else if (username.match(/\d+/g) != null) {
             this.vUsername.text(ERROR_MSG.HAS_NUMBER);
@@ -57,8 +57,8 @@ export default class LandingPage extends Component {
         if (!center) {
             this.vCenter.text(ERROR_MSG.REQUIRED);
             return false;
-        } else if (center.length > 15) {
-            this.vCenter.text(ERROR_MSG.TEXT_TOO_LONG);
+        } else if (center.length > 30) {
+            this.vCenter.text(ERROR_MSG.TEXT_TOO_LONG(30));
             return false;
         }
         return center;

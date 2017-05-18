@@ -50,11 +50,14 @@ export default {
     },
 
     getCompassStructure(text) {
+        let lines = Math.ceil(text.length / 11),
+            textHeight = 13 * lines,
+            top = (100 - textHeight) / 2;
+
         return (
             <div>
                 <div id="center" style={this.center(100,100)}>
-                    {text}
-                    <button id="export" onClick={this.showSavePrompt}>Save as PDF</button>
+                    <p style={{marginTop: top}}>{text}</p>
                 </div>
                 <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
                 <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
