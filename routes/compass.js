@@ -37,6 +37,8 @@ router.post('/find', function(req, res, next) {
             Compass.findOne({'viewCode': req.body.code}, function(err, compass) {
                 if (err) return logger.error(err);
 
+                if (compass === null) return res.json({compass: compass});
+
                 var copy = JSON.parse(JSON.stringify(compass));
                 delete copy.editCode;
                 //TODO delete comment code

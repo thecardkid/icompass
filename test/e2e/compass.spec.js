@@ -1,5 +1,9 @@
 
+var CONSTANTS = require('../../utils/constants.js');
+var ERROR_MSG = CONSTANTS.ERROR_MSG;
+var PROMPTS = CONSTANTS.PROMPTS;
 var editCode, viewCode;
+var wrongCode = '11223344';
 
 module.exports = {
     'creating compass' : function(browser) {
@@ -11,28 +15,28 @@ module.exports = {
         .setValue('input[id=compass-center]', 'DSA')
         .click('button[name=cMake]')
         .pause(500)
+        .getAlertText(function(result) {
+            this.assert.equal(typeof result, "object");
+            this.assert.equal(result.status, 0);
+            this.assert.equal(result.value, PROMPTS.REMEMBER_CODE);
+        })
         .acceptAlert()
         .pause(500)
-        .assert.elementPresent('#ic-sidebar')
-            .assert.cssProperty('#ic-sidebar', 'left', '0px')
-        .assert.elementPresent('span[name=edit-code]')
-            .getText('span[name=edit-code]', function(result) {
-                this.assert.equal(typeof result, "object");
-                this.assert.equal(result.status, 0);
-                this.assert.equal(result.value.length, 8);
-                editCode = result.value;
-            })
-        .assert.elementPresent('span[name=view-code]')
-            .getText('span[name=view-code]', function(result) {
-                this.assert.equal(typeof result, "object");
-                this.assert.equal(result.status, 0);
-                this.assert.equal(result.value.length, 8);
-                editCode = result.value;
-            })
-        .assert.elementPresent('#ic-chat')
-            .assert.cssProperty('#ic-chat', 'bottom', '0px')
-        .assert.elementPresent('#center')
-            .assert.containsText('#center', 'DSA')
+        .assert.cssProperty('#ic-sidebar', 'left', '0px')
+        .getText('span[name=edit-code]', function(result) {
+            this.assert.equal(typeof result, "object");
+            this.assert.equal(result.status, 0);
+            this.assert.equal(result.value.length, 8);
+            editCode = result.value;
+        })
+        .getText('span[name=view-code]', function(result) {
+            this.assert.equal(typeof result, "object");
+            this.assert.equal(result.status, 0);
+            this.assert.equal(result.value.length, 8);
+            viewCode = result.value;
+        })
+        .assert.cssProperty('#ic-chat', 'bottom', '0px')
+        .assert.containsText('#center', 'DSA')
         .assert.elementPresent('#vline')
         .assert.elementPresent('#hline')
     },
@@ -73,7 +77,7 @@ module.exports = {
         .assert.containsText('.ic-sticky-note', 'A principle')
     },
 
-    'chat sends message': function(browser) {
+    'chat events': function(browser) {
         browser
         .keys('c').pause(500)
         .assert.cssProperty('#ic-chat', 'bottom', '0px')
@@ -81,18 +85,73 @@ module.exports = {
         .keys(browser.Keys.ENTER)
         .waitForElementVisible('.bubble', 500)
         .assert.containsText('.bubble', 'Hello world!')
+    },
+
+    'error messages': function(browser) {
+        browser
+        .url('http://localhost:8080')
+        .waitForElementVisible('body', 1000)
+        .click('button[name=cFind]')
+        .pause(500)
+        .assert.containsText('#validate-code', ERROR_MSG.REQUIRED)
+        .assert.containsText('#validate-username', ERROR_MSG.REQUIRED)
+            .click('button[name=cMake]')
+            .pause(500)
+            .assert.containsText('#validate-code', '')
+            .assert.containsText('#validate-username', ERROR_MSG.REQUIRED)
+            .assert.containsText('#validate-center', ERROR_MSG.REQUIRED)
+        .setValue('input[id=compass-code]', editCode+'8')
+        .setValue('input[id=username]', 'Hieu3')
+        .click('button[name=cFind]')
+        .pause(500)
+        .assert.containsText('#validate-code', ERROR_MSG.INVALID_CODE)
+        .assert.containsText('#validate-username', ERROR_MSG.HAS_NUMBER)
+            .clearValue('input[id=compass-code]')
+            .setValue('input[id=compass-code]', wrongCode)
+            .clearValue('input[id=username]')
+            .setValue('input[id=username]', 'Hieu')
+            .click('button[name=cFind]')
+            .pause(1000)
+            .assert.containsText('#validate-code', ERROR_MSG.CANT_FIND)
+        .clearValue('input[id=compass-code]')
+        .setValue('input[id=compass-code]', editCode)
+        .clearValue('input[id=username]')
+        .setValue('input[id=username]', 'HieuHieuHieuHieuHieu')
+        .click('button[name=cFind]')
+        .pause(500)
+        .assert.containsText('#validate-username', ERROR_MSG.TEXT_TOO_LONG)
+    },
+
+    'compass edit mode': function(browser) {
+        browser
+        .clearValue('input[id=username]')
+        .setValue('input[id=username]', 'Hieu')
+        .click('button[name=cFind]')
+        .pause(500)
+        .waitForElementVisible('.ic-sticky-note', 500)
+        .assert.containsText('.ic-sticky-note', 'A principle')
+        .assert.cssProperty('#ic-sidebar', 'left', '0px')
+        .assert.cssProperty('#ic-chat', 'bottom', '0px')
+    },
+
+    'compass view-only mode': function(browser) {
+        browser
+        .url('http://localhost:8080')
+        .waitForElementVisible('body', 1000)
+        .setValue('input[id=compass-code]', viewCode)
+        .setValue('input[id=username]', 'Professor')
+        .click('button[name=cFind]')
+        .pause(500)
+        .getAlertText(function(result) {
+            this.assert.equal(typeof result, "object");
+            this.assert.equal(result.status, 0);
+            this.assert.equal(result.value, PROMPTS.VIEW_ONLY);
+        })
+        .acceptAlert()
+        .pause(500)
+        .assert.elementNotPresent('#ic-chat')
+        .assert.elementNotPresent('#ic-sidebar')
+        .assert.containsText('.ic-sticky-note', 'A principle')
         .end();
     }
-//
-    // 'can find compass': function(browser) {
-        // browser
-        // .url('http://localhost:8080')
-        // .waitForElementVisible('body', 1000)
-        // .assert.title('The Innovators\' Compass')
-        // .setValue('input[id=username]', 'Hieu')
-        // .setValue('input[id=compass-center]', 'DSA')
-        // .click('button[name=cMake]')
-        // .pause(500)
-        // .end();
-    // }
 }
