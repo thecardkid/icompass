@@ -11,7 +11,7 @@ import HelpScreen from './HelpScreen.jsx';
 import Shared from './Shared.jsx';
 import Chat from './Chat.jsx';
 
-import { QUADRANTS_INFO, KEYCODES, PROMPTS } from '../utils/constants.js';
+import { QUADRANTS_INFO, KEYCODES, PROMPTS, COLORS } from '../utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 
@@ -34,14 +34,18 @@ export default class CompassEdit extends Component {
             showHelp: false,
             disconnected: false,
             unread: false,
-            messages: []
+            messages: [{
+                info: true,
+                text: 'These messages will be cleared when you log out'
+            }]
         };
 
         // socket events
 	    this.socket = this.props.socket;
 	    this.socket.on('assigned name', this.setUsername.bind(this));
         this.socket.on('update notes', this.updateNotes.bind(this));
-        this.socket.on('update users', this.updateUsers.bind(this));
+        this.socket.on('user joined', this.handleUserJoined.bind(this));
+        this.socket.on('user left', this.handleUserLeft.bind(this));
         this.socket.on('disconnect', this.handleDisconnect.bind(this));
         this.socket.on('reconnect', this.handleReconnect.bind(this));
         this.socket.on('new message', this.updateMessages.bind(this));
@@ -144,6 +148,24 @@ export default class CompassEdit extends Component {
         let { compass } = this.state;
         compass.notes = newNotes;
         this.setState({ compass });
+    }
+
+    handleUserJoined(data) {
+        let { messages } = this.state;
+        messages.push({
+            info: true,
+            text: data.joined + ' joined'
+        });
+        this.setState({users: data.users, messages: messages});
+    }
+
+    handleUserLeft(data) {
+        let { messages } = this.state;
+        messages.push({
+            info: true,
+            text: data.left + ' left'
+        });
+        this.setState({users: data.users, messages: messages});
     }
 
     updateUsers(users) {
@@ -306,14 +328,13 @@ export default class CompassEdit extends Component {
                 disconnected={this.state.disconnected}
                 toggleSidebar={this.toggleSidebar}
             />
-            <button id="show-chat" onClick={this.toggleChat}>Show Chat</button>
+            <button id="show-chat" onClick={this.toggleChat} style={{background: this.state.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
             <Chat messages={this.state.messages}
                 colorMap={this.state.users.usernameToColor}
                 username={this.state.username}
                 socket={this.socket}
-                unread={this.state.unread}
                 show={this.state.showChat}
-                toggle={this.toggleChat}
+                toggleChat={this.toggleChat}
             />
         </div>
 		);

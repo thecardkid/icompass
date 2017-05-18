@@ -35,9 +35,10 @@ describe('socket connection events', () => {
     })
 
     it('return correct user manager for room creator', (done) => {
-        client.on('update users', (users) => {
-            expect(users.usernameToColor).to.include.keys(user1.username);
-            expect(users.colors).to.have.lengthOf(5);
+        client.on('user joined', (data) => {
+            expect(data.users.usernameToColor).to.include.keys(user1.username);
+            expect(data.users.colors).to.have.lengthOf(5);
+            expect(data.joined).to.equal(user1.username);
             done();
         })
     })
@@ -53,9 +54,10 @@ describe('socket connection events', () => {
             client3.on('connect', () => {
                 client3.emit('connect compass', user3);
 
-                client3.on('update users', (users) => {
-                    expect(users.usernameToColor).to.include.keys(user1.username, user2.username, user3.username);
-                    expect(users.colors).to.have.lengthOf(3);
+                client3.on('user joined', (data) => {
+                    expect(data.users.usernameToColor).to.include.keys(user1.username, user2.username, user3.username);
+                    expect(data.users.colors).to.have.lengthOf(3);
+                    expect(data.joined).to.equal(user3.username);
                     client3.disconnect();
                     client2.disconnect();
                     done();
@@ -84,13 +86,11 @@ describe('socket connection events', () => {
             client2.emit('connect compass', user2);
             client2.disconnect();
 
-            let i = 0;
-            client.on('update users', (users) => {
-                if (i++ === 1) {
-                    expect(users.usernameToColor).to.include.keys(user1.username);
-                    expect(users.colors).to.have.lengthOf(5);
-                    done();
-                }
+            client.on('user left', (data) => {
+                expect(data.users.usernameToColor).to.include.keys(user1.username);
+                expect(data.users.colors).to.have.lengthOf(5);
+                expect(data.left).to.equal(user2.username);
+                done();
             })
         });
     })
@@ -102,12 +102,12 @@ describe('socket connection events', () => {
         client.emit('reconnected', recon);
 
         let i = 0;
-        client.on('update users', function(users) {
+        client.on('user joined', function(data) {
             if (i++ === 1) { // must wait for second user joined emission
-                expect(users.usernameToColor).to.include.keys(recon.username);
-                expect(users.usernameToColor[recon.username]).to.equal(recon.color);
-                expect(users.colors).to.have.length(5);
-                expect(users.colors).to.not.have.members([recon.color]);
+                expect(data.users.usernameToColor).to.include.keys(recon.username);
+                expect(data.users.usernameToColor[recon.username]).to.equal(recon.color);
+                expect(data.users.colors).to.have.length(5);
+                expect(data.users.colors).to.not.have.members([recon.color]);
                 done();
             }
         })

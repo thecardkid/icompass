@@ -1,6 +1,6 @@
 div#ic-chat {
     width:400px;
-    height:275px;
+    height:260px;
     position:absolute;
     bottom:0;
     right:30px;
@@ -9,12 +9,6 @@ div#ic-chat {
     .hasTransition(0.5s);
     z-index:2;
 
-    div#header-bar {
-        height:15px;
-        cursor:pointer;
-        background:@dark;
-    }
-
     div#messages-container {
         overflow:scroll;
         height:190px;
@@ -22,7 +16,7 @@ div#ic-chat {
     }
 
     div#messages {
-        p#warning {
+        p.ic-chat-info {
             margin-top:10px;
             font-size: 12px;
             width:100%;

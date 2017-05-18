@@ -73,7 +73,7 @@ module.exports = {
 
                 logger.debug('Manager after user joined', o.manager);
                 client.emit('assigned name', o.newUser);
-                io.sockets.in(client.room).emit('update users', o.manager);
+                io.sockets.in(client.room).emit('user joined', {users: o.manager, joined: client.username});
             });
 
 
@@ -82,7 +82,7 @@ module.exports = {
 
                 var m = Manager.removeUser(client.room, client.username);
                 logger.debug('Manager after user left', m);
-                io.sockets.in(client.room).emit('update users', m);
+                io.sockets.in(client.room).emit('user left', {users: m, left: client.username});
             });
 
 
@@ -92,11 +92,7 @@ module.exports = {
 
                 var o = Manager.addUser(client.room, client.username, data.color);
                 logger.debug('Manager after user reconnected', o.manager);
-                io.sockets.in(client.room).emit('update users', o.manager);
-            });
-
-
-            client.on('send mail', function(data) {
+                io.sockets.in(client.room).emit('user joined', {users: o.manager, joined: client.username});
             });
 
 

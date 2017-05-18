@@ -35,6 +35,9 @@ export default class Chat extends Component {
     }
 
     renderMessage(m, i) {
+        if (m.info)
+            return <p key={'msg'+i} className="ic-chat-info">{m.text}</p>
+
         let type = (m.username === this.props.username) ?
             'bubble mine' : 'bubble theirs';
 
@@ -54,11 +57,9 @@ export default class Chat extends Component {
 
         return (
             <div id="ic-chat" style={{bottom: bottom}}>
-                <div id="header-bar" style={{background:bg}} onClick={this.props.toggle}>
-                </div>
+                <button className="ic-close-window" onClick={this.props.toggleChat}>x</button>
                 <div id="messages-container">
                     <div id="messages">
-                        <p id="warning">These messages will be cleared when you log out</p>
                         {messages}
                     </div>
                 </div>
