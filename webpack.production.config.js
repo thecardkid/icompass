@@ -6,7 +6,7 @@ var APP_DIR = path.resolve(__dirname, 'src/');
 
 var config = {
     devtool: 'cheap-module-source-map',
-	entry: APP_DIR + '/index.jsx',
+	entry: APP_DIR + '/App.jsx',
 	output: {
 		path: BUILD_DIR,
 		filename: 'bundle.js'
