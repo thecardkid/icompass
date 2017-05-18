@@ -81,7 +81,10 @@ compassSchema.statics.findCode = function(code, cb) {
             root.findOne({viewCode: code}, function(err, compassView) {
                 if (err) logger.error('Could not find compass for viewing', code, err);
 
-                if (!compassView) cb(null, null);
+                if (!compassView) {
+                    cb(null, null);
+                    return;
+                }
 
                 logger.debug('Found compass for viewing', compassView._id);
                 var copy = JSON.parse(JSON.stringify(compassView));

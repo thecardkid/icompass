@@ -29,6 +29,7 @@ var socketObject = {
                         compass: compass,
                         username: data.username
                     });
+                    client.emit('new compass');
                 });
             });
 

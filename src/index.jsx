@@ -5,7 +5,7 @@ import css from 'style-loader!css-loader!less-loader!./../public/css/app.less';
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
-import { MODES } from '../utils/constants.js';
+import { MODES, PROMPTS } from '../utils/constants.js';
 
 import CompassEdit from './CompassEdit.jsx';
 import CompassView from './CompassView.jsx';
@@ -25,7 +25,9 @@ class Index extends Component {
                 code:data.code,
                 username: data.username
             }, () => browserHistory.push('/compass'));
-        })
+        });
+
+        this.socket.on('new compass', () => alert(PROMPTS.REMEMBER_CODE));
     }
 
     render() {
