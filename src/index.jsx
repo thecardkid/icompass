@@ -27,7 +27,8 @@ class Index extends Component {
             }, () => browserHistory.push('/compass'));
         });
 
-        this.socket.on('new compass', () => alert(PROMPTS.REMEMBER_CODE));
+        this.socket.on('mail sent', () => alert(PROMPTS.EMAIL_SENT));
+        this.socket.on('mail not sent', () => alert(PROMPTS.EMAIL_NOT_SENT));
     }
 
     render() {
@@ -36,7 +37,7 @@ class Index extends Component {
                 <Route path='/' component={() => <LandingPage socket={this.socket} />}/>
                 <Route path='/compass' component={() => {
                     if (this.state.mode === MODES.EDIT)
-                        return <CompassEdit compass={this.state.compass} username={this.state.username}/>
+                        return <CompassEdit compass={this.state.compass} username={this.state.username} socket={this.socket}/>
                     else if (this.state.mode === MODES.VIEW) {
                         return <CompassView compass={this.state.compass}/>
                     }

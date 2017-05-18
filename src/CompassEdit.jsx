@@ -38,7 +38,7 @@ export default class CompassEdit extends Component {
         };
 
         // socket events
-	    this.socket = io();
+	    this.socket = this.props.socket;
 	    this.socket.on('assigned name', this.setUsername.bind(this));
         this.socket.on('update notes', this.updateNotes.bind(this));
         this.socket.on('update users', this.updateUsers.bind(this));

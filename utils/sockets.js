@@ -2,13 +2,15 @@ var socketIO = require('socket.io');
 var Compass = require('../models/compass.js');
 var _ = require('underscore');
 var UserManager = require('./userManager.js');
+var Mailer = require('./mailer.js');
 var io;
 var logger = require('./logger.js');
 var MODES = require('./constants.js').MODES;
 
 var Manager = new UserManager();
+var Mail = new Mailer();
 
-var socketObject = {
+module.exports = {
     socketServer: function(server) {
         io = socketIO.listen(server);
 
@@ -18,18 +20,27 @@ var socketObject = {
                 client.username = data.username;
                 client.compassId = data.compassId;
                 client.join(client.room);
-            }
+            };
+
+            var sendMail = function(editCode, viewCode, email) {
+                var text = 'Edit code: ' + editCode + '\nView code: ' + viewCode;
+                Mail.sendMessage(text, email, function(status) {
+                    if (status) client.emit('mail sent');
+                    else client.emit('mail not sent');
+                });
+            };
 
 
             client.on('create compass', function(data) {
                 Compass.makeCompass(data.center, function(compass) {
+                    if (data.email)
+                        sendMail(compass.editCode, compass.viewCode, data.email);
                     client.emit('compass ready', {
                         code: compass.edit,
                         mode: MODES.EDIT,
                         compass: compass,
                         username: data.username
                     });
-                    client.emit('new compass');
                 });
             });
 
@@ -76,13 +87,17 @@ var socketObject = {
                 var o = Manager.addUser(client.room, client.username, data.color);
                 logger.debug('Manager after user reconnected', o.manager);
                 io.sockets.in(client.room).emit('update users', o.manager);
-            })
+            });
+
+
+            client.on('send mail', function(data) {
+            });
 
 
             client.on('message', function(msg) {
                 logger.debug(client.username, 'sent a message to', client.room);
                 io.sockets.in(client.room).emit('new message', msg);
-            })
+            });
 
 
             client.on('new note', function(newNote) { // new note
@@ -106,10 +121,8 @@ var socketObject = {
             /* WARNING: Testing purposes only */
             client.on('fake disconnect', function(data) {
                 Manager.removeUser(client.room, client.username);
-            })
+            });
         });
     }
 }
-
-module.exports = socketObject;
 

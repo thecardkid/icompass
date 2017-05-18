@@ -4,7 +4,8 @@ module.exports.PROMPTS = {
     VIEW_ONLY: 'IMPORTANT\n\nYou are in view-only mode. You can\'t make or see changes. To see an updated version of the compass, you\'ll have to log back in.',
     POST_IT_TOO_LONG: 'You can\'t fit that much on a post-it!',
     NOT_CONNECTED: 'You are not connected to the server',
-    REMEMBER_CODE: 'Make sure you have the compass code written down somewhere, or it\'ll be lost for ever'
+    EMAIL_SENT: 'An email has been sent to you. Expect it in 5-10 minutes',
+    EMAIL_NOT_SENT: 'I ran into an issue sending you the email. Please note down your codes manually somewhere. Thanks'
 };
 
 module.exports.QUADRANTS_INFO = [
@@ -54,6 +55,7 @@ module.exports.ERROR_MSG = {
     },
     HAS_NUMBER: 'Cannot contain numbers',
     CANT_FIND: 'Compass does not exist',
+    INVALID_EMAIL: 'Invalid email'
 };
 
 module.exports.CONTROLS = {
@@ -69,4 +71,6 @@ module.exports.PIXELS = {
     HIDE_SIDEBAR: '-240px',
     HIDE_CHAT: '-265px',
 };
+
+module.exports.EMAIL_RE = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 

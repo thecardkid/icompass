@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
-import { ERROR_MSG, PROMPTS } from '../utils/constants.js';
+import { ERROR_MSG, PROMPTS, EMAIL_RE } from '../utils/constants.js';
 
 export default class LandingPage extends Component {
 
@@ -17,10 +17,12 @@ export default class LandingPage extends Component {
         this.eCode = $('#compass-code');
         this.eUsername = $('#username');
         this.eCenter = $('#compass-center');
+        this.eEmail = $('#email');
 
         this.vCode = $('#validate-code');
         this.vUsername = $('#validate-username');
         this.vCenter = $('#validate-center');
+        this.vEmail = $('#validate-email');
 
         this.props.socket.on('compass null', () => this.vCode.text(ERROR_MSG.CANT_FIND));
     }
@@ -64,23 +66,38 @@ export default class LandingPage extends Component {
         return center;
     }
 
+    validateEmail() {
+        let email = this.eEmail.val();
+        if (!email) return 0;
+
+        if (EMAIL_RE.test(email)) {
+            return email;
+        } else {
+            this.vEmail.text(ERROR_MSG.INVALID_EMAIL);
+            return 1;
+        }
+    }
+
     clearErrors() {
         this.vCode.text('');
         this.vCenter.text('');
         this.vUsername.text('');
+        this.vEmail.text('');
     }
 
     newCompass() {
         this.clearErrors();
         let username = this.validateUsername();
         let center = this.validateCenter();
+        let email = this.validateEmail();
 
-        if (!username || !center) return;
+        if (!username || !center || email === 1) return;
 
         let root = this;
         this.props.socket.emit('create compass', {
             center: center,
-            username: username
+            username: username,
+            email: email
         });
     }
 
@@ -102,25 +119,28 @@ export default class LandingPage extends Component {
         return (
             <div id="landing">
                 <div id="form">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Compass Code:</td>
-                                <td><input id="compass-code" type="text"/></td>
-                                <td id="validate-code"></td>
-                            </tr>
-                            <tr>
-                                <td>Username:</td>
-                                <td><input id="username" type="text"/></td>
-                                <td id="validate-username"></td>
-                            </tr>
-                            <tr>
-                                <td>Centered on:</td>
-                                <td><input id="compass-center" type="text"/></td>
-                                <td id="validate-center"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <table><tbody>
+                        <tr>
+                            <td>Compass Code:</td>
+                            <td><input id="compass-code" type="text"/></td>
+                            <td id="validate-code"></td>
+                        </tr>
+                        <tr>
+                            <td>Username:</td>
+                            <td><input id="username" type="text"/></td>
+                            <td id="validate-username"></td>
+                        </tr>
+                        <tr>
+                            <td>Centered on:</td>
+                            <td><input id="compass-center" type="text"/></td>
+                            <td id="validate-center"></td>
+                        </tr>
+                        <tr>
+                            <td>Email me my codes:</td>
+                            <td><input id="email" type="text"/></td>
+                            <td id="validate-email"></td>
+                        </tr>
+                    </tbody></table>
                     <button name="cFind" onClick={this.findCompass}>Find Compass</button>
                     <button name="cMake" onClick={this.newCompass}>Make Compass</button>
                 </div>

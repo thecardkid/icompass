@@ -11,16 +11,9 @@ module.exports = {
         .url('http://localhost:8080')
         .waitForElementVisible('body', 1000)
         .assert.title('The Innovators\' Compass')
-        .setValue('input[id=username]', 'Hieu')
-        .setValue('input[id=compass-center]', 'DSA')
+        .setValue('#username', 'Hieu')
+        .setValue('#compass-center', 'DSA')
         .click('button[name=cMake]')
-        .pause(500)
-        .getAlertText(function(result) {
-            this.assert.equal(typeof result, "object");
-            this.assert.equal(result.status, 0);
-            this.assert.equal(result.value, PROMPTS.REMEMBER_CODE);
-        })
-        .acceptAlert()
         .pause(500)
         .assert.cssProperty('#ic-sidebar', 'left', '0px')
         .getText('span[name=edit-code]', function(result) {
@@ -70,8 +63,8 @@ module.exports = {
         // edit sticky
         .click('.ic-sticky-note')
         .pause(500)
-        .clearValue('textarea[id=ic-form-text]')
-        .setValue('textarea[id=ic-form-text]', 'A principle')
+        .clearValue('#ic-form-text')
+        .setValue('#ic-form-text', 'A principle')
         .click('button[name=ship]')
         .pause(500)
         .assert.containsText('.ic-sticky-note', 'A principle')
@@ -81,7 +74,7 @@ module.exports = {
         browser
         .keys('c').pause(500)
         .assert.cssProperty('#ic-chat', 'bottom', '0px')
-        .setValue('textarea[id=message-text]', 'Hello world!')
+        .setValue('#message-text', 'Hello world!')
         .keys(browser.Keys.ENTER)
         .waitForElementVisible('.bubble', 500)
         .assert.containsText('.bubble', 'Hello world!')
@@ -91,41 +84,68 @@ module.exports = {
         browser
         .url('http://localhost:8080')
         .waitForElementVisible('body', 1000)
+
+        // find: empty args
         .click('button[name=cFind]')
         .pause(500)
         .assert.containsText('#validate-code', ERROR_MSG.REQUIRED)
         .assert.containsText('#validate-username', ERROR_MSG.REQUIRED)
-            .click('button[name=cMake]')
-            .pause(500)
-            .assert.containsText('#validate-code', '')
-            .assert.containsText('#validate-username', ERROR_MSG.REQUIRED)
-            .assert.containsText('#validate-center', ERROR_MSG.REQUIRED)
-        .setValue('input[id=compass-code]', editCode+'8')
-        .setValue('input[id=username]', 'Hieu3')
+
+        // make: empty args
+        .click('button[name=cMake]')
+        .pause(500)
+        .assert.containsText('#validate-code', '')
+        .assert.containsText('#validate-username', ERROR_MSG.REQUIRED)
+        .assert.containsText('#validate-center', ERROR_MSG.REQUIRED)
+
+        // make: invalid email
+        .setValue('#email', 'hieumaster')
+        .click('button[name=cMake]')
+        .assert.containsText('#validate-email', ERROR_MSG.INVALID_EMAIL)
+        .clearValue('#email')
+
+        // make: center too long
+        .setValue('#username', 'Hieu')
+        .setValue('#compass-center', 'This is a string that hopefully will be longer than 30 characters')
+        .click('button[name=cMake]')
+        .pause(500)
+        .assert.containsText('#validate-center', ERROR_MSG.TEXT_TOO_LONG(30))
+        .clearValue('#username')
+        .clearValue('#compass-center')
+
+        // find: number in username, code too long
+        .setValue('#compass-code', editCode+'8')
+        .setValue('#username', 'Hieu3')
         .click('button[name=cFind]')
         .pause(500)
         .assert.containsText('#validate-code', ERROR_MSG.INVALID_CODE)
         .assert.containsText('#validate-username', ERROR_MSG.HAS_NUMBER)
-            .clearValue('input[id=compass-code]')
-            .setValue('input[id=compass-code]', wrongCode)
-            .clearValue('input[id=username]')
-            .setValue('input[id=username]', 'Hieu')
-            .click('button[name=cFind]')
-            .pause(1000)
-            .assert.containsText('#validate-code', ERROR_MSG.CANT_FIND)
-        .clearValue('input[id=compass-code]')
-        .setValue('input[id=compass-code]', editCode)
-        .clearValue('input[id=username]')
-        .setValue('input[id=username]', 'HieuHieuHieuHieuHieu')
+        .clearValue('#compass-code')
+        .clearValue('#username')
+
+        // find: server can't find compass
+        .setValue('#compass-code', wrongCode)
+        .setValue('#username', 'Hieu')
+        .click('button[name=cFind]')
+        .pause(1000)
+        .assert.containsText('#validate-code', ERROR_MSG.CANT_FIND)
+        .clearValue('#compass-code')
+        .clearValue('#username')
+
+        // find: username too long
+        .setValue('#compass-code', editCode)
+        .setValue('#username', 'HieuHieuHieuHieuHieu')
         .click('button[name=cFind]')
         .pause(500)
-        .assert.containsText('#validate-username', ERROR_MSG.TEXT_TOO_LONG)
+        .assert.containsText('#validate-username', ERROR_MSG.TEXT_TOO_LONG(15))
+        .clearValue('#compass-code')
+        .clearValue('#username')
     },
 
     'compass edit mode': function(browser) {
         browser
-        .clearValue('input[id=username]')
-        .setValue('input[id=username]', 'Hieu')
+        .setValue('#compass-code', editCode)
+        .setValue('#username', 'Hieu')
         .click('button[name=cFind]')
         .pause(500)
         .waitForElementVisible('.ic-sticky-note', 500)
@@ -138,8 +158,8 @@ module.exports = {
         browser
         .url('http://localhost:8080')
         .waitForElementVisible('body', 1000)
-        .setValue('input[id=compass-code]', viewCode)
-        .setValue('input[id=username]', 'Professor')
+        .setValue('#compass-code', viewCode)
+        .setValue('#username', 'Professor')
         .click('button[name=cFind]')
         .pause(500)
         .getAlertText(function(result) {
