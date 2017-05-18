@@ -56,8 +56,8 @@ export default class Sidebar extends Component {
                     <button name="close-sidebar" className="ic-close-window" onClick={this.props.toggleSidebar}>x</button>
                     <div className="ic-sidebar-list">
                         <h2>Share</h2>
-                        <p><span className="code">{this.props.editCode}</span> edit</p>
-                        <p><span className="code">{this.props.viewCode}</span> view</p>
+                        <p><span name="edit-code" className="code">{this.props.editCode}</span> edit</p>
+                        <p><span name="view-code" className="code">{this.props.viewCode}</span> view</p>
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Controls</h2>
