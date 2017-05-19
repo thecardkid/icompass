@@ -13,6 +13,7 @@ export default class Sidebar extends Component {
         this.controlList = _.map(CONTROLS, this.renderControl);
         this.showSavePrompt = Shared.showSavePrompt.bind(this);
         this.exportCompass = Shared.exportCompass.bind(this);
+        this.confirmDelete = this.confirmDelete.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -51,6 +52,10 @@ export default class Sidebar extends Component {
         alert(PROMPTS.THIS_SUCKS);
     }
 
+    confirmDelete() {
+        if (confirm(PROMPTS.CONFIRM_DELETE)) this.props.destroy();
+    }
+
     render() {
         let userList = _.map(this.props.users, this.renderUserColor.bind(this));
         let style = {left: this.props.show ? PIXELS.SHOW : PIXELS.HIDE_SIDEBAR};
@@ -83,7 +88,7 @@ export default class Sidebar extends Component {
                         <h2>Actions</h2>
                         <button className="ic-action" onClick={this.showSavePrompt}>Export to PDF</button>
                         <button name="sucks" className="ic-action" onClick={this.notifyMe}>This sucks</button>
-                        <button name="destroyer" className="ic-action dangerous" onClick={this.props.destroy}>Delete Compass</button>
+                        <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>Delete Compass</button>
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Credits</h2>
