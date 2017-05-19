@@ -6,7 +6,8 @@ module.exports.PROMPTS = {
     NOT_CONNECTED: 'You are not connected to the server',
     EMAIL_SENT: 'An email has been sent to you. Expect it in 5-10 minutes',
     EMAIL_NOT_SENT: 'I ran into an issue sending you the email. Please note down your codes manually somewhere. Thanks',
-    COMPASS_DELETED: 'This compass has been deleted. You will be redirected to the sign in page. Thanks for keeping the database clean!'
+    COMPASS_DELETED: 'This compass has been deleted. You will be redirected to the sign in page. Thanks for keeping the database clean!',
+    THIS_SUCKS: 'Hey! I see you\'re not satisfied with this app as it is.\n\n1. If you\'re a dev, check out the app at https://github.com/thecardkid/innovators-compass, and feel free to open a PR\n\n2. If you would like to report a bug or request a new feature, email innovatorscompass@yahoo.com'
 };
 
 module.exports.QUADRANTS_INFO = [

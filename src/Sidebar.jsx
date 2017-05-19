@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import _ from 'underscore';
-import { CONTROLS, PIXELS, COLORS } from '../utils/constants.js';
+import { PROMPTS, CONTROLS, PIXELS, COLORS } from '../utils/constants.js';
 
 import Shared from './Shared.jsx';
 
@@ -47,6 +47,10 @@ export default class Sidebar extends Component {
         );
     }
 
+    notifyMe() {
+        alert(PROMPTS.THIS_SUCKS);
+    }
+
     render() {
         let userList = _.map(this.props.users, this.renderUserColor.bind(this));
         let style = {left: this.props.show ? PIXELS.SHOW : PIXELS.HIDE_SIDEBAR};
@@ -78,6 +82,7 @@ export default class Sidebar extends Component {
                     <div className="ic-sidebar-list">
                         <h2>Actions</h2>
                         <button className="ic-action" onClick={this.showSavePrompt}>Export to PDF</button>
+                        <button name="sucks" className="ic-action" onClick={this.notifyMe}>This sucks</button>
                         <button name="destroyer" className="ic-action dangerous" onClick={this.props.destroy}>Delete Compass</button>
                     </div>
                     <div className="ic-sidebar-list">
