@@ -63,6 +63,7 @@ export default class CompassEdit extends Component {
 	    this.emitNewNote = Helper.emitNewNote.bind(this);
 	    this.emitNewDoodle = Helper.emitNewDoodle.bind(this);
 	    this.emitDeleteCompass = Helper.emitDeleteCompass.bind(this);
+	    this.emitDeleteNote = Helper.emitDeleteNote.bind(this);
 
 	    // Shared methods
 	    this.renderNote = Shared.renderNote.bind(this);
@@ -196,6 +197,7 @@ export default class CompassEdit extends Component {
 
     showEditForm(note) {
         if (drag) return drag = false;
+        if (note.doodle) return;
         this.setState({editNote: note, newNote: false, doodleNote: false});
     }
 

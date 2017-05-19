@@ -61,6 +61,10 @@ export default {
         this.socket.emit('delete compass', this.state.compass._id);
     },
 
+    emitDeleteNote(noteId) {
+        this.socket.emit('delete note', noteId);
+    },
+
     handleDisconnect() {
         this.setState({showSidebar: true, disconnected: true})
     },

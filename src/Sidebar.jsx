@@ -53,7 +53,8 @@ export default class Sidebar extends Component {
     }
 
     confirmDelete() {
-        if (confirm(PROMPTS.CONFIRM_DELETE)) this.props.destroy();
+        if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS))
+            this.props.destroy();
     }
 
     render() {

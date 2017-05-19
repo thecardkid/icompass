@@ -3,6 +3,7 @@ var logger = require('../utils/logger.js');
 var MODES = require('../utils/constants.js').MODES;
 var DefaultCompass = require('../models/defaultCompass.js');
 var Schema = mongoose.Schema;
+var _ = require('underscore');
 
 function generateUUID() {
     var d = new Date().getTime();
@@ -98,6 +99,22 @@ compassSchema.statics.findCode = function(code, cb) {
             cb(compassEdit, MODES.EDIT);
         }
     })
+}
+
+compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
+    this.findOne({_id: compassId}, function(err, c) {
+        if (err) logger.error('Could not find compass to delete note', compassId, noteId, err);
+
+        c.notes = _.filter(c.notes, function(e) {
+            return e._id.toString() !== noteId;
+        });
+
+        c.save(function(err, updatedCompass) {
+            if (err) logger.error('Could not delete note', compassId, noteId, err);
+
+            cb(updatedCompass.notes);
+        });
+    });
 }
 
 module.exports = mongoose.model('Compass', compassSchema);

@@ -66,7 +66,6 @@ module.exports = {
 
 
             client.on('delete compass', function(id) {
-                console.log('deleting', client.compassId, id);
                 if (client.compassId !== id) return;
 
                 Compass.remove({_id: id}, function(err) {
@@ -74,6 +73,13 @@ module.exports = {
 
                     logger.info(client.username, 'deleted compass', id);
                     io.sockets.in(client.room).emit('compass deleted');
+                });
+            });
+
+
+            client.on('delete note', function(noteId) {
+                Compass.deleteNote(client.compassId, noteId, function(notes) {
+                    io.sockets.in(client.room).emit('update notes', notes);
                 });
             });
 

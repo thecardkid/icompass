@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { PROMPTS } from '../utils/constants.js';
 
 export default class StickyNote extends Component {
 
@@ -13,6 +14,11 @@ export default class StickyNote extends Component {
             this.props.w !== nextProps.w ||
             this.props.h !== nextProps.h
         );
+    }
+
+    confirmDelete() {
+        if (confirm(PROMPTS.CONFIRM_DELETE_NOTE))
+            this.props.destroy(this.props.note._id);
     }
 
     render() {
@@ -47,6 +53,7 @@ export default class StickyNote extends Component {
                 onClick={() => this.props.edit(n)}
                 id={'note'+this.props.i}
                 height={n.doodle ? '100px' : ''}>
+                    <button className='ic-close-window' onClick={this.confirmDelete.bind(this)}>x</button>
                     {contents}
             </li>
         );
