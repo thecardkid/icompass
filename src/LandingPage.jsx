@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import { ERROR_MSG, PROMPTS, EMAIL_RE } from '../utils/constants.js';
 
 export default class LandingPage extends Component {
@@ -141,6 +141,9 @@ export default class LandingPage extends Component {
                     </tbody></table>
                     <button name="cFind" onClick={this.findCompass}>Find Compass</button>
                     <button name="cMake" onClick={this.newCompass}>Make Compass</button>
+                    <div id="ic-tour-start">
+                        <Link to='/tutorial'>First timer? Take the tour</Link>
+                    </div>
                 </div>
             </div>
         );
