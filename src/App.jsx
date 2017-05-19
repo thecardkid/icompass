@@ -14,7 +14,6 @@ import LandingPage from './LandingPage.jsx';
 class App extends Component {
     constructor(props, context) {
         super(props, context);
-        console.log('app');
 
         this.socket = io();
 

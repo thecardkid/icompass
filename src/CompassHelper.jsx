@@ -1,6 +1,7 @@
 'use strict';
 
-import { KEYCODES } from '../utils/constants.js';
+import { browserHistory } from 'react-router';
+import { PROMPTS, KEYCODES } from '../utils/constants.js';
 
 export default {
     emitNewNote() {
@@ -56,6 +57,10 @@ export default {
         this.closeForm();
     },
 
+    emitDeleteCompass() {
+        this.socket.emit('delete compass', this.state.compass._id);
+    },
+
     handleDisconnect() {
         this.setState({showSidebar: true, disconnected: true})
     },
@@ -68,6 +73,11 @@ export default {
             color: this.state.users.usernameToColor[this.state.username]
         })
         this.setState({disconnected: false});
+    },
+
+    handleCompassDeleted() {
+        alert(PROMPTS.COMPASS_DELETED);
+        browserHistory.push('/');
     },
 
     updateNotes(newNotes) {

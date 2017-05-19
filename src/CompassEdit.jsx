@@ -47,7 +47,7 @@ export default class CompassEdit extends Component {
         };
 
         // socket handler events
-	    this.socket = this.props.socket;
+	    this.socket = io();
 	    this.socket.on('assigned name', Helper.setUsername.bind(this));
         this.socket.on('update notes', Helper.updateNotes.bind(this));
         this.socket.on('user joined', Helper.handleUserJoined.bind(this));
@@ -55,12 +55,14 @@ export default class CompassEdit extends Component {
         this.socket.on('disconnect', Helper.handleDisconnect.bind(this));
         this.socket.on('reconnect', Helper.handleReconnect.bind(this));
         this.socket.on('new message', Helper.updateMessages.bind(this));
+        this.socket.on('compass deleted', Helper.handleCompassDeleted.bind(this));
 
         // socket emit events
 	    this.emitEditNote = Helper.emitEditNote.bind(this);
 	    this.emitDragNote = Helper.emitDragNote.bind(this);
 	    this.emitNewNote = Helper.emitNewNote.bind(this);
 	    this.emitNewDoodle = Helper.emitNewDoodle.bind(this);
+	    this.emitDeleteCompass = Helper.emitDeleteCompass.bind(this);
 
 	    // Shared methods
 	    this.renderNote = Shared.renderNote.bind(this);
@@ -111,6 +113,10 @@ export default class CompassEdit extends Component {
             onend: this.emitDragNote
         });
 	}
+
+    componentWillUnmount() {
+        this.socket.disconnect();
+    }
 
     setTranslation(target, x, y) {
         // translate the element
@@ -264,6 +270,7 @@ export default class CompassEdit extends Component {
                 show={this.state.showSidebar}
                 disconnected={this.state.disconnected}
                 toggleSidebar={this.toggleSidebar}
+                destroy={this.emitDeleteCompass}
             />
         );
     }

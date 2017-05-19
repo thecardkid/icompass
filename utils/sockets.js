@@ -65,6 +65,19 @@ module.exports = {
             });
 
 
+            client.on('delete compass', function(id) {
+                console.log('deleting', client.compassId, id);
+                if (client.compassId !== id) return;
+
+                Compass.remove({_id: id}, function(err) {
+                    if (err) return logger.error(err);
+
+                    logger.info(client.username, 'deleted compass', id);
+                    io.sockets.in(client.room).emit('compass deleted');
+                });
+            });
+
+
             client.on('connect compass', function(data) {
                 var o = Manager.addUser(data.code, data.username);
                 data.username = o.newUser;

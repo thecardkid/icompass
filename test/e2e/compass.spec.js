@@ -32,6 +32,11 @@ module.exports = {
         .assert.containsText('#center', 'DSA')
         .assert.elementPresent('#vline')
         .assert.elementPresent('#hline')
+        .assert.containsText('#observations', 'What\'s happening? Why?')
+        .assert.containsText('#principles', 'What matters most?')
+        .assert.containsText('#ideas', 'What could happen?')
+        .assert.containsText('#experiments', 'What\'s a way to try?')
+        // assert more things about the view
     },
 
     'keystrokes': function(browser) {
@@ -142,22 +147,8 @@ module.exports = {
         .clearValue('#username')
     },
 
-    'compass edit mode': function(browser) {
-        browser
-        .setValue('#compass-code', editCode)
-        .setValue('#username', 'Hieu')
-        .click('button[name=cFind]')
-        .pause(500)
-        .waitForElementVisible('.ic-sticky-note', 500)
-        .assert.containsText('.ic-sticky-note', 'A principle')
-        .assert.cssProperty('#ic-sidebar', 'left', '0px')
-        .assert.cssProperty('#ic-chat', 'bottom', '0px')
-    },
-
     'compass view-only mode': function(browser) {
         browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body', 1000)
         .setValue('#compass-code', viewCode)
         .setValue('#username', 'Professor')
         .click('button[name=cFind]')
@@ -172,6 +163,35 @@ module.exports = {
         .assert.elementNotPresent('#ic-chat')
         .assert.elementNotPresent('#ic-sidebar')
         .assert.containsText('.ic-sticky-note', 'A principle')
+    },
+
+    'compass edit mode': function(browser) {
+        browser
+        .url('http://localhost:8080')
+        .waitForElementVisible('body', 1000)
+        .setValue('#compass-code', editCode)
+        .setValue('#username', 'Hieu')
+        .click('button[name=cFind]')
+        .pause(500)
+        .waitForElementVisible('.ic-sticky-note', 500)
+        .assert.containsText('.ic-sticky-note', 'A principle')
+        .assert.cssProperty('#ic-sidebar', 'left', '0px')
+        .assert.cssProperty('#ic-chat', 'bottom', '0px')
+    },
+
+    'can delete compass': function(browser) {
+        browser
+        .assert.elementPresent('button[name=destroyer]')
+        .click('button[name=destroyer]')
+        .pause(500)
+        .getAlertText(function(result) {
+            this.assert.equal(typeof result, 'object');
+            this.assert.equal(result.status, 0);
+            this.assert.equal(result.value, PROMPTS.COMPASS_DELETED);
+        })
+        .acceptAlert()
+        .assert.elementNotPresent('#compass')
+        .assert.elementPresent('#compass-code')
         .end();
     }
 }

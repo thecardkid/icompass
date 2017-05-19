@@ -93,7 +93,6 @@ export default class LandingPage extends Component {
 
         if (!username || !center || email === 1) return;
 
-        console.log('creating compass');
         this.props.route.socket.emit('create compass', {
             center: center,
             username: username,

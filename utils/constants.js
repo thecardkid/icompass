@@ -5,7 +5,8 @@ module.exports.PROMPTS = {
     POST_IT_TOO_LONG: 'You can\'t fit that much on a post-it!',
     NOT_CONNECTED: 'You are not connected to the server',
     EMAIL_SENT: 'An email has been sent to you. Expect it in 5-10 minutes',
-    EMAIL_NOT_SENT: 'I ran into an issue sending you the email. Please note down your codes manually somewhere. Thanks'
+    EMAIL_NOT_SENT: 'I ran into an issue sending you the email. Please note down your codes manually somewhere. Thanks',
+    COMPASS_DELETED: 'This compass has been deleted. You will be redirected to the sign in page. Thanks for keeping the database clean!'
 };
 
 module.exports.QUADRANTS_INFO = [
