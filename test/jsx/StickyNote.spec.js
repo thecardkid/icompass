@@ -13,7 +13,7 @@ test('StickyNote component renders the sticky correctly', () => {
     );
 
     const li = wrapper.find('.ic-sticky-note');
-    expect(li.text()).toBe('Hello');
+    expect(li.text()).toBe('xHello');
 });
 
 test('StickyNote component passes note to edit when clicked', () => {
