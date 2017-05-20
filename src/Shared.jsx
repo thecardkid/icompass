@@ -22,8 +22,8 @@ export default {
 
     center(w, h) {
         return {
-            top: (this.state.vh - h) / 2,
-            left: (this.state.vw - w) / 2
+            top: Math.max((this.state.vh - h) / 2, 0),
+            left: Math.max((this.state.vw - w) / 2, 0)
         };
     },
 

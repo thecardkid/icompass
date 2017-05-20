@@ -208,7 +208,7 @@ export default class CompassEdit extends Component {
     validateText() {
         let text = $('#ic-form-text').val();
         if (text === '') return false;
-        if (text.length > 200) {
+        if (text.length > 300) {
             alert(PROMPTS.POST_IT_TOO_LONG);
             return false;
         }
