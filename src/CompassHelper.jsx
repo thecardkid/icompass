@@ -1,7 +1,7 @@
 'use strict';
 
 import { browserHistory } from 'react-router';
-import { PROMPTS, KEYCODES } from '../utils/constants.js';
+import { PROMPTS, KEYCODES, REGEX } from '../utils/constants.js';
 
 export default {
     emitNewNote() {
@@ -9,8 +9,11 @@ export default {
         let text = this.validateText();
         if (!text) return;
 
+        let isImage = REGEX.URL.test(text) && confirm(PROMPTS.CONFIRM_IMAGE_LINK);
+
         this.socket.emit('new note', {
             text: text,
+            isImage: isImage,
             doodle: null,
             color: this.state.users.usernameToColor[this.state.username],
             x: 0.5,
@@ -42,6 +45,9 @@ export default {
 
         let note = JSON.parse(JSON.stringify(this.state.editNote));
         note.text = text;
+
+        note.isImage = REGEX.URL.test(text) && confirm(PROMPTS.CONFIRM_IMAGE_LINK);
+
         this.socket.emit('update note', note);
         this.closeForm();
     },

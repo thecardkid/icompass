@@ -17,14 +17,10 @@ module.exports = {
         .pause(500)
         .assert.cssProperty('#ic-sidebar', 'left', '0px')
         .getText('span[name=edit-code]', function(result) {
-            this.assert.equal(typeof result, "object");
-            this.assert.equal(result.status, 0);
             this.assert.equal(result.value.length, 8);
             editCode = result.value;
         })
         .getText('span[name=view-code]', function(result) {
-            this.assert.equal(typeof result, "object");
-            this.assert.equal(result.status, 0);
             this.assert.equal(result.value.length, 8);
             viewCode = result.value;
         })
@@ -61,7 +57,7 @@ module.exports = {
         // reopen form and submit sticky
         .keys('n')
         .assert.elementNotPresent('ic-sticky-note')
-        .setValue('textarea[id=ic-form-text]', 'An observation')
+        .setValue('#ic-form-text', 'An observation')
         .click('button[name=ship]')
         .waitForElementVisible('.ic-sticky-note', 500)
         .assert.containsText('.ic-sticky-note', 'An observation')
@@ -73,6 +69,28 @@ module.exports = {
         .click('button[name=ship]')
         .pause(500)
         .assert.containsText('.ic-sticky-note', 'A principle')
+        // create image sticky
+        .keys('n')
+        .assert.elementNotPresent('a.ic-img')
+        .setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg')
+        .click('button[name=ship]')
+        .getAlertText(function(result) {
+            this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
+        })
+        .acceptAlert()
+        .pause(500)
+        .assert.elementPresent('a.ic-img')
+        // edit image
+        .click('a.ic-img')
+        .pause(500)
+        .assert.elementPresent('#ic-form-text')
+        .click('button[name=ship]')
+        .getAlertText(function(result) {
+            this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
+        })
+        .dismissAlert()
+        .pause(500)
+        .assert.elementNotPresent('a.ic-img')
     },
 
     'chat events': function(browser) {
@@ -154,8 +172,6 @@ module.exports = {
         .click('button[name=cFind]')
         .pause(500)
         .getAlertText(function(result) {
-            this.assert.equal(typeof result, "object");
-            this.assert.equal(result.status, 0);
             this.assert.equal(result.value, PROMPTS.VIEW_ONLY);
         })
         .acceptAlert()
@@ -185,8 +201,11 @@ module.exports = {
         .click('button[name=destroyer]')
         .pause(500)
         .getAlertText(function(result) {
-            this.assert.equal(typeof result, 'object');
-            this.assert.equal(result.status, 0);
+            this.assert.equal(result.value, PROMPTS.CONFIRM_DELETE_COMPASS);
+        })
+        .acceptAlert()
+        .pause(500)
+        .getAlertText(function(result) {
             this.assert.equal(result.value, PROMPTS.COMPASS_DELETED);
         })
         .acceptAlert()

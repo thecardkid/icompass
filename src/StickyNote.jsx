@@ -11,12 +11,14 @@ export default class StickyNote extends Component {
             thisNote.x !== nextNote.x ||
             thisNote.y !== nextNote.y ||
             thisNote.text !== nextNote.text ||
+            thisNote.isImage !== nextNote.isImage ||
             this.props.w !== nextProps.w ||
             this.props.h !== nextProps.h
         );
     }
 
-    confirmDelete() {
+    confirmDelete(e) {
+        e.stopPropagation();
         if (confirm(PROMPTS.CONFIRM_DELETE_NOTE))
             this.props.destroy(this.props.note._id);
     }
@@ -29,13 +31,14 @@ export default class StickyNote extends Component {
         };
 
         let contents;
-        if (n.doodle) {
+        if (n.doodle || n.isImage) {
             let s = {
-                background: n.color, padding: 0
+                background: n.color,
+                padding: n.isImage ? '3px' : '0',
             };
             contents = (
-                <a style={s}>
-                    <img src={n.doodle} width="164px"/>
+                <a className="ic-img" style={s}>
+                    <img src={n.doodle || n.text} width="164px"/>
                 </a>
             )
         } else {
@@ -49,7 +52,6 @@ export default class StickyNote extends Component {
         return (
             <li style={style}
                 className="ic-sticky-note draggable"
-                // draggable="true"
                 onClick={() => this.props.edit(n)}
                 id={'note'+this.props.i}
                 height={n.doodle ? '100px' : ''}>

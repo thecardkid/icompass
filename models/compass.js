@@ -23,6 +23,7 @@ var compassSchema = mongoose.Schema({
         color: String,
         text: String,
         doodle: String,
+        isImage: Boolean,
         x: Number,
         y: Number
     }]
@@ -49,6 +50,7 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
             note = c.notes[i];
             if (note._id.toString() === updatedNote._id) {
                 note.text = updatedNote.text;
+                note.isImage = updatedNote.isImage;
                 note.x = updatedNote.x;
                 note.y = updatedNote.y;
             }
