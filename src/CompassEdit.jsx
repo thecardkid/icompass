@@ -145,7 +145,7 @@ export default class CompassEdit extends Component {
     }
 
     handleKeyDown(e) {
-        if (this.state.newNote || this.state.editNote) {
+        if (this.state.newNote || this.state.editNote || this.state.doodleNote) {
             if (e.which === 27) this.closeForm();
             return;
         }

@@ -66,7 +66,7 @@ export default class Sidebar extends Component {
 
         return (
             <div id="ic-sidebar" style={style}>
-                <div id="ic-sidebar-contents">
+                <div id="ic-sidebar-scroll"><div id="ic-sidebar-contents">
                     <button name="close-sidebar" className="ic-close-window" onClick={this.props.toggleSidebar}>x</button>
                     <div className="ic-sidebar-list">
                         <h2>Share</h2>
@@ -100,7 +100,7 @@ export default class Sidebar extends Component {
                             <a href="http://hieuqn.com" target="_blank"> Hieu Nguyen</a>
                         </p>
                     </div>
-                </div>
+                </div></div>
             </div>
         );
     }
