@@ -3,6 +3,7 @@ var logger = require('../utils/logger.js');
 var MODES = require('../utils/constants.js').MODES;
 var DefaultCompass = require('../models/defaultCompass.js');
 var Schema = mongoose.Schema;
+var _ = require('underscore');
 
 function generateUUID() {
     var d = new Date().getTime();
@@ -22,6 +23,7 @@ var compassSchema = mongoose.Schema({
         color: String,
         text: String,
         doodle: String,
+        isImage: Boolean,
         x: Number,
         y: Number
     }]
@@ -48,6 +50,7 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
             note = c.notes[i];
             if (note._id.toString() === updatedNote._id) {
                 note.text = updatedNote.text;
+                note.isImage = updatedNote.isImage;
                 note.x = updatedNote.x;
                 note.y = updatedNote.y;
             }
@@ -98,6 +101,22 @@ compassSchema.statics.findCode = function(code, cb) {
             cb(compassEdit, MODES.EDIT);
         }
     })
+}
+
+compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
+    this.findOne({_id: compassId}, function(err, c) {
+        if (err) logger.error('Could not find compass to delete note', compassId, noteId, err);
+
+        c.notes = _.filter(c.notes, function(e) {
+            return e._id.toString() !== noteId;
+        });
+
+        c.save(function(err, updatedCompass) {
+            if (err) logger.error('Could not delete note', compassId, noteId, err);
+
+            cb(updatedCompass.notes);
+        });
+    });
 }
 
 module.exports = mongoose.model('Compass', compassSchema);

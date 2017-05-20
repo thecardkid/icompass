@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { browserHistory, Link } from 'react-router';
-import { ERROR_MSG, PROMPTS, EMAIL_RE } from '../utils/constants.js';
+import { ERROR_MSG, PROMPTS, REGEX } from '../utils/constants.js';
 
 export default class LandingPage extends Component {
 
@@ -70,7 +70,7 @@ export default class LandingPage extends Component {
         let email = this.eEmail.val();
         if (!email) return 0;
 
-        if (EMAIL_RE.test(email)) {
+        if (REGEX.EMAIL.test(email)) {
             return email;
         } else {
             this.vEmail.text(ERROR_MSG.INVALID_EMAIL);

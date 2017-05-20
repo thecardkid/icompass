@@ -3,6 +3,7 @@
     height:100vh;
     overflow:hidden;
     position:absolute;
+    cursor:default;
 
     li.ic-sticky-note {
         max-height:155px;
@@ -26,9 +27,19 @@
                 font-family:"Reenie Beanie", arial, sans-serif;
                 font-size:20px;
             }
-        } // a
+        }
 
-    } // li
+        button {
+            display:none;
+            font-size:15px;
+            letter-spacing:5px;
+            color:@red;
+        }
+    }
+
+    li:hover button {
+        display:block;
+    }
 }
 
 .ic-quadrant {

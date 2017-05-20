@@ -6,7 +6,9 @@ module.exports.PROMPTS = {
     NOT_CONNECTED: 'You are not connected to the server',
     EMAIL_SENT: 'An email has been sent to you. Expect it in 5-10 minutes',
     EMAIL_NOT_SENT: 'I ran into an issue sending you the email. Please note down your codes manually somewhere. Thanks',
-    CONFIRM_DELETE: 'Are you sure you want to delete this compass?',
+    CONFIRM_IMAGE_LINK: 'Is this an image you want to import?',
+    CONFIRM_DELETE_COMPASS: 'Are you sure you want to delete this compass?',
+    CONFIRM_DELETE_NOTE: 'Delete this note?',
     COMPASS_DELETED: 'This compass has been deleted. You will be redirected to the sign in page. Thanks for keeping the database clean!',
     THIS_SUCKS: 'Hey! I see you\'re not satisfied with this app as it is.\n\n1. If you\'re a dev, check out the app at https://github.com/thecardkid/innovators-compass, and feel free to open a PR\n\n2. If you would like to report a bug or request a new feature, email innovatorscompass@yahoo.com'
 };
@@ -77,7 +79,10 @@ module.exports.PIXELS = {
     HIDE_CHAT: '-265px',
 };
 
-module.exports.EMAIL_RE = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+module.exports.REGEX = {
+    URL: /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/i,
+    EMAIL: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+};
 
 module.exports.DRAGGABLE_RESTRICTIONS = {
     restriction: "parent",

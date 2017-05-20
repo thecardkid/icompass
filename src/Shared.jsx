@@ -14,7 +14,7 @@ export default {
                 w={this.state.vw}
                 h={this.state.vh}
                 edit={this.showEditForm}
-                moveNote={this.apiMoveNote}
+                destroy={this.emitDeleteNote}
             />
         );
     },
