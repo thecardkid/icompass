@@ -4,13 +4,26 @@ import React, { Component } from 'react';
 import { browserHistory, Link } from 'react-router';
 import { ERROR_MSG, PROMPTS, REGEX } from '../utils/constants.js';
 
+import Shared from './Shared.jsx';
+
+const LOGIN_TYPE = {
+    MAKE: 0,
+    FIND: 1
+};
+
 export default class LandingPage extends Component {
 
     constructor(props, context) {
         super(props, context);
 
+        this.state = {loginType: null, vw: window.innerWidth, vh: window.innerHeight};
+
+        this.center = Shared.center.bind(this);
         this.newCompass = this.newCompass.bind(this);
         this.findCompass = this.findCompass.bind(this);
+        this.setLoginType = this.setLoginType.bind(this);
+        this.getFirst = this.getFirst.bind(this);
+        this.getSecond = this.getSecond.bind(this);
     }
 
     componentDidMount() {
@@ -25,6 +38,8 @@ export default class LandingPage extends Component {
         this.vEmail = $('#validate-email');
 
         this.props.route.socket.on('compass null', () => this.vCode.text(ERROR_MSG.CANT_FIND));
+
+        $(window).on('resize', () => this.setState({vw: window.innerWidth, vh: window.innerHeight}));
     }
 
     validateCode() {
@@ -113,38 +128,41 @@ export default class LandingPage extends Component {
         });
     }
 
+    setLoginType(type) {
+        this.setState({loginType: type});
+    }
+
+    getFirst() {
+        return (
+            <div className="section">
+                <h1>1. Are you finding or making a compass?</h1>
+                <button className="ic-button" name="find" onClick={() => this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
+                <button className="ic-button" name="make" onClick={() => this.setLoginType(LOGIN_TYPE.MAKE)}>making</button>
+            </div>
+        );
+    }
+
+    getSecond() {
+        if (this.state.loginType === LOGIN_TYPE.FIND) {
+            return (
+                <div className="section">
+                    <h1>2. Finding</h1>
+                </div>
+            )
+        } else if (this.state.loginType === LOGIN_TYPE.MAKE) {
+            return (
+                <div className="section">
+                    <h1>2. Making a compass</h1>
+                </div>
+            )
+        }
+    }
+
     render() {
         return (
-            <div id="landing">
-                <div id="form">
-                    <table><tbody>
-                        <tr>
-                            <td>Compass Code:</td>
-                            <td><input id="compass-code" type="text" defaultValue={this.props.params.code}/></td>
-                            <td id="validate-code"></td>
-                        </tr>
-                        <tr>
-                            <td>Username:</td>
-                            <td><input id="username" type="text" defaultValue={this.props.params.username}/></td>
-                            <td id="validate-username"></td>
-                        </tr>
-                        <tr>
-                            <td>Centered on:</td>
-                            <td><input id="compass-center" type="text"/></td>
-                            <td id="validate-center"></td>
-                        </tr>
-                        <tr>
-                            <td>Email me my codes:</td>
-                            <td><input id="email" type="text"/></td>
-                            <td id="validate-email"></td>
-                        </tr>
-                    </tbody></table>
-                    <button name="cFind" onClick={this.findCompass}>Find Compass</button>
-                    <button name="cMake" onClick={this.newCompass}>Make Compass</button>
-                    <div id="ic-tour-start">
-                        <Link to='/tutorial'>First timer? Take the tour</Link>
-                    </div>
-                </div>
+            <div id="ic-landing" style={this.center(600,500)}>
+                {this.getFirst()}
+                {this.getSecond()}
             </div>
         );
     }

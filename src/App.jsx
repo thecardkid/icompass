@@ -18,6 +18,7 @@ class App extends Component {
 
         this.socket = io();
 
+        // TODO: change this to a cb passed to landing
         this.socket.on('compass ready', (data) => {
             this.setState({
                 compass: data.compass,
