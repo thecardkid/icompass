@@ -94,11 +94,11 @@ compassSchema.statics.findCode = function(code, cb) {
                 var copy = JSON.parse(JSON.stringify(compassView));
                 delete copy.editCode;
                 // TODO delete comment code
-                cb(copy, MODES.VIEW);
+                cb(copy, copy.viewCode, MODES.VIEW);
             });
         } else {
             logger.debug('Found compass for editing', compassEdit._id);
-            cb(compassEdit, MODES.EDIT);
+            cb(compassEdit, compassEdit.editCode, MODES.EDIT);
         }
     })
 }

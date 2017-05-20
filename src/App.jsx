@@ -19,25 +19,12 @@ class App extends Component {
         this.state = {data: {}};
     }
 
-    onReady(data) {
-        this.setState({ data }, () => {
-            if (data.mode === MODES.VIEW)
-                browserHistory.push('/compass/view/'+data.code);
-            if (data.mode === MODES.EDIT)
-                browserHistory.push('/compass/edit/'+data.code+'/'+data.username);
-        });
-    }
-
     render() {
         return (
             <Router history={browserHistory}>
-                <Route path='/' ready={this.onReady.bind(this)} component={LandingPage} />
-                <Route path='/compass/edit/:code/:username' component={() => {
-                    return <CompassEdit data={this.state.data} />
-                }} />
-                <Route path='/compass/view/:code' component={() => {
-                    return <CompassView compass={this.state.data.compass} />
-                }} />
+                <Route path='/' component={LandingPage} />
+                <Route path='/compass/edit/:code/:username' component={CompassEdit} />
+                <Route path='/compass/view/:code/:username' component={CompassView} />
                 <Route path='/tutorial' socket={this.socket} component={Tutorial} />
             </Router>
         );

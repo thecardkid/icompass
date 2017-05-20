@@ -16,8 +16,15 @@ export default class CompassView extends Component {
         this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
-            compass: this.props.route.compass,
         };
+
+        this.socket = io();
+        this.socket.emit('find compass view', {
+            code: this.props.params.code,
+            username: this.props.params.username
+        });
+
+        this.socket.on('compass found', (compass) => this.setState({ compass }));
 
         // Shared methods
         this.renderNote = Shared.renderNote.bind(this);
@@ -27,7 +34,6 @@ export default class CompassView extends Component {
     }
 
     componentDidMount() {
-        alert(PROMPTS.VIEW_ONLY);
         $(window).on('resize', this.updateWindowSize.bind(this));
     }
 
@@ -36,6 +42,8 @@ export default class CompassView extends Component {
     }
 
     render() {
+        if (!this.state.compass) return <div id="compass"></div>
+
         let stickies = _.map(this.state.compass.notes, this.renderNote);
         let quadrants = _.map(QUADRANTS_INFO, Shared.renderQuadrant);
         let structure = this.getCompassStructure(this.state.compass.center);

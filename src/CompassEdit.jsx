@@ -23,6 +23,7 @@ export default class CompassEdit extends Component {
 
 	constructor(props, context) {
 	    super(props, context);
+	    this.socket = io();
 
 	    this.state = {
             vw: window.innerWidth,
@@ -31,8 +32,6 @@ export default class CompassEdit extends Component {
             editNote: false,
             dragNote: false,
             doodleNote: false,
-            compass: this.props.data.compass,
-            username: this.props.data.username,
             users: {},
             showSidebar: true,
             showChat: true,
@@ -46,8 +45,19 @@ export default class CompassEdit extends Component {
             }]
         };
 
-        // socket handler events
-	    this.socket = io();
+        this.socket.emit('find compass edit', {
+            code: this.props.params.code,
+            username: this.props.params.username
+        });
+
+        this.socket.on('compass found', (data) => {
+            this.setState({
+                compass: data.compass,
+                username: data.username
+            });
+        });
+
+       // socket handler events
 	    this.socket.on('assigned name', Helper.setUsername.bind(this));
         this.socket.on('update notes', Helper.updateNotes.bind(this));
         this.socket.on('user joined', Helper.handleUserJoined.bind(this));
@@ -95,11 +105,6 @@ export default class CompassEdit extends Component {
 	    $(window).on('resize', this.updateWindowSize.bind(this));
 	    $(window).on('keydown', this.handleKeyDown.bind(this));
 	    $(window).on('keyup', this.handleKeyUp.bind(this));
-	    this.socket.emit('connect compass', {
-	        code: this.state.compass.editCode,
-	        username: this.state.username,
-	        compassId: this.state.compass._id
-	    });
 
         // set up draggable sticky notes
 	    interact('.draggable').draggable({
@@ -290,6 +295,9 @@ export default class CompassEdit extends Component {
     }
 
 	render() {
+	    if (!this.state.compass)
+	        return <div id="compass"></div>
+
         return (
             <div id="compass">
                 {this.getStickies()}

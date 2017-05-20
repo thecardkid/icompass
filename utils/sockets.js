@@ -41,22 +41,19 @@ module.exports = {
             client.on('create compass', function(data) {
                 Compass.makeCompass(data.center, function(compass) {
                     client.emit('compass ready', {
+                        success: compass ? true : false,
                         code: compass.editCode,
-                        mode: MODES.EDIT,
-                        compass: compass,
-                        username: data.username
                     });
                 });
             });
 
 
             client.on('find compass', function(data) {
-                Compass.findCode(data.code, function(compass, mode) {
+                Compass.findCode(data.code, function(compass, code, mode) {
                     client.emit('compass ready', {
-                        code: data.code,
+                        success: compass ? true : false,
+                        code: code,
                         mode: mode,
-                        compass: compass,
-                        username: data.username
                     });
                 });
             });
@@ -82,16 +79,30 @@ module.exports = {
             });
 
 
-            client.on('connect compass', function(data) {
-                var o = Manager.addUser(data.code, data.username);
-                data.username = o.newUser;
-                joinRoom(data);
-                logger.info(client.username, 'joined room', client.room);
+            client.on('find compass edit', function(data) {
+                Compass.findCode(data.code, function(compass) {
+                    var o = Manager.addUser(data.code, data.username);
+                    data.username = o.newUser;
+                    data.compassId = compass._id;
+                    joinRoom(data);
+                    logger.info(client.username, 'joined room', client.room);
 
-                logger.debug('Manager after user joined', o.manager);
-                client.emit('assigned name', o.newUser);
-                io.sockets.in(client.room).emit('user joined', {users: o.manager, joined: client.username});
+                    logger.debug('Manager after user joined', o.manager);
+                    client.emit('compass found', {
+                        compass: compass,
+                        username: client.username
+                    })
+                    io.sockets.in(client.room).emit('user joined', {users: o.manager, joined: client.username});
+                });
             });
+
+
+            client.on('find compass view', function(data) {
+                Compass.findCode(data.code, function(compass) {
+                    logger.info('request to view compass successful', compass._id);
+                    client.emit('compass found', compass);
+                })
+            })
 
 
             client.on('disconnect', function(reason) {

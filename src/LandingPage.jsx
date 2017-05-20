@@ -32,7 +32,7 @@ export default class LandingPage extends Component {
 
         this.socket.on('mail sent', () => alert(PROMPTS.EMAIL_SENT));
         this.socket.on('mail not sent', () => alert(PROMPTS.EMAIL_NOT_SENT));
-        this.socket.on('compass ready', (data) => this.setState({data: data}));
+        this.socket.on('compass ready', (data) => this.setState({ data }));
     }
 
     componentDidMount() {
@@ -209,28 +209,32 @@ export default class LandingPage extends Component {
 
         if (email !== null) {
             this.socket.emit('send mail', {
-                editCode: d.compass.editCode,
-                viewCode: d.compass.viewCode,
+                editCode: d.code,
                 username: this.state.username,
                 email: email
             });
         }
 
-        this.props.route.ready(d);
+        switch(this.state.loginType) {
+            case LOGIN_TYPE.MAKE:
+                return browserHistory.push('/compass/edit/'+d.code+'/'+this.state.username);
+            case LOGIN_TYPE.FIND:
+                return browserHistory.push('/compass/'+d.mode+'/'+d.code+'/'+this.state.username);
+        }
     }
 
     getThird() {
         if (typeof this.state.data !== 'object' || this.state.data === null) return;
 
         // 3 cases: 1. null, 2. find or view code, 3. new compass -> ask for email
-        if (this.state.data.compass === null)
+        let d = this.state.data;
+        if (!d.success)
             return this.getNullNotification();
 
-        let c = this.state.data.compass;
         if (this.state.loginType === LOGIN_TYPE.MAKE) {
             return (
                 <div className="section third">
-                    <h1>{c.editCode}</h1>
+                    <h1>{d.code}</h1>
                     <h2>This is your compass code. If you would like to email me this to you, enter your email below. Your email will not be saved.</h2>
                     <input id="email" type="text" />
                     <button className="ic-button" onClick={this.toWorkspace}>to workspace</button>
@@ -240,7 +244,7 @@ export default class LandingPage extends Component {
 
         return (
             <div className="section third">
-                <h1>{this.state.data.mode} access</h1>
+                <h1>{d.mode} access</h1>
                 <h2>You will be logged in as {this.state.username}</h2>
                 <button className="ic-button" onClick={this.toWorkspace}>to workspace</button>
             </div>
