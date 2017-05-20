@@ -13,14 +13,6 @@ import LandingPage from './LandingPage.jsx';
 import Tutorial from './Tutorial.jsx';
 
 class App extends Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.socket = io();
-
-        this.socket.on('mail sent', () => alert(PROMPTS.EMAIL_SENT));
-        this.socket.on('mail not sent', () => alert(PROMPTS.EMAIL_NOT_SENT));
-    }
 
     onReady(data) {
         this.setState({
@@ -34,7 +26,7 @@ class App extends Component {
     render() {
         return (
             <Router history={browserHistory}>
-                <Route path='/' socket={this.socket} component={LandingPage} />
+                <Route path='/' ready={this.onReady.bind(this)} component={LandingPage} />
                 <Route path='/:code/:username' socket={this.socket} component={LandingPage} />
                 <Route path='/compass' component={() => {
                     if (this.state.mode === MODES.EDIT)

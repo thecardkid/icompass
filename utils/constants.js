@@ -29,8 +29,8 @@ module.exports.HELP_TIPS = [
 ];
 
 module.exports.MODES = {
-    EDIT: 0,
-    VIEW: 1,
+    EDIT: 'editing',
+    VIEW: 'view only',
 };
 
 module.exports.KEYCODES = {
