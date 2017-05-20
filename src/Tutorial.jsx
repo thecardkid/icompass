@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Draggable from 'react-draggable';
 import { browserHistory } from 'react-router';
 
 import DefaultCompass from '../models/defaultCompass.js';
@@ -10,7 +11,15 @@ const STEPS = [
     {
         header: 'Welcome to iCompass',
         text: 'In this tutorial, we\'ll cover a few things to help you make informed decisions as you design and iterate!',
-        prep: () => $('#ic-sidebar').css('z-index', 4)
+        prep: () => $('#ic-tutorial-cover').css('background', 'rgba(255,255,255,0)')
+    },
+    {
+        header: 'Your workspace',
+        text: 'This tutorial is not for the compass itself, but for this tool. Feel free to drag this blurb around so you can see everything.',
+        prep: () => {
+            $('#ic-tutorial-cover').css('background', 'rgba(255,255,255,0.7)')
+            $('#ic-sidebar').css('z-index', 3);
+        }
     },
     {
         header: 'The Sidebar',
@@ -43,11 +52,11 @@ const STEPS = [
         prep: (root) => root.showOnly(5)
     },
     {
-        header: 'People who made stuff',
-        text: 'Check us out',
+        header: 'People who made Stuff',
+        text: 'Do check us out!',
         prep: () => {
             $('#ic-sidebar').css('z-index', 2);
-            $('#ic-chat').css('z-index', 4);
+            $('#ic-chat').css('z-index', 3);
         }
     },
     {
@@ -110,14 +119,17 @@ export default class Tutorial extends Component {
     render() {
         return (
             <div id="ic-tutorial">
-                <div id="ic-tutorial-cover"></div>
-                <div id="ic-tutorial-text" style={this.center(300,200)}>
-                    <h1>{STEPS[this.state.i].header}</h1>
-                    <h3>{STEPS[this.state.i].text}</h3>
-                    <button className="ic-button" onClick={this.next}>
-                        {this.state.i === STEPS.length-1 ? 'finish' : 'next'}
-                    </button>
-                </div>
+                <div className="ic-screen" id="ic-tutorial-cover"></div>
+                <div className="ic-screen" id="ic-tutorial-prevent"></div>
+                <Draggable>
+                    <div id="ic-tutorial-text" style={this.center(300,200)}>
+                        <h1>{STEPS[this.state.i].header}</h1>
+                        <h3>{STEPS[this.state.i].text}</h3>
+                        <button className="ic-button" onClick={this.next}>
+                            {this.state.i === STEPS.length-1 ? 'finish' : 'next'}
+                        </button>
+                    </div>
+                </Draggable>
                 <CompassEdit compass={this.compass} username={'sandbox'} />
             </div>
         );
