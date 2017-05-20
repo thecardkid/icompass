@@ -23,31 +23,39 @@ export default class StickyNote extends Component {
             this.props.destroy(this.props.note._id);
     }
 
+    getContents(n) {
+        if (n.doodle || n.isImage) {
+            let s = {
+                background: n.color,
+                padding: n.isImage ? '3px' : '0',
+            };
+            return (
+                <a className="ic-img" style={s}>
+                    <img src={n.doodle || n.text} width="164px"/>
+                </a>
+            )
+        } else {
+            return (
+                <a style={{background: n.color}}>
+                    <p>{n.text}</p>
+                </a>
+            );
+        }
+    }
+
+    getX(u) {
+        if (u)
+            return <button className='ic-close-window' onClick={this.confirmDelete.bind(this)}>x</button>
+    }
+
     render() {
         let n = this.props.note;
         let style = {
             left: n.x * this.props.w,
             top: n.y * this.props.h
         };
-
-        let contents;
-        if (n.doodle || n.isImage) {
-            let s = {
-                background: n.color,
-                padding: n.isImage ? '3px' : '0',
-            };
-            contents = (
-                <a className="ic-img" style={s}>
-                    <img src={n.doodle || n.text} width="164px"/>
-                </a>
-            )
-        } else {
-            contents = (
-                <a style={{background: n.color}}>
-                    <p>{n.text}</p>
-                </a>
-            );
-        }
+        let contents = this.getContents(n);
+        let x = this.getX(this.props.u);
 
         return (
             <li style={style}
@@ -55,8 +63,8 @@ export default class StickyNote extends Component {
                 onClick={() => this.props.edit(n)}
                 id={'note'+this.props.i}
                 height={n.doodle ? '100px' : ''}>
-                    <button className='ic-close-window' onClick={this.confirmDelete.bind(this)}>x</button>
-                    {contents}
+                {x}
+                {contents}
             </li>
         );
     }

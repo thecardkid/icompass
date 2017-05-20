@@ -10,7 +10,7 @@ module.exports.PROMPTS = {
     CONFIRM_DELETE_COMPASS: 'Are you sure you want to delete this compass?',
     CONFIRM_DELETE_NOTE: 'Delete this note?',
     COMPASS_DELETED: 'This compass has been deleted. You will be redirected to the sign in page. Thanks for keeping the database clean!',
-    THIS_SUCKS: 'Hey! I see you\'re not satisfied with this app as it is.\n\n1. If you\'re a dev, check out the app at https://github.com/thecardkid/innovators-compass, and feel free to open a PR\n\n2. If you would like to report a bug or request a new feature, email innovatorscompass@yahoo.com'
+    THIS_SUCKS: 'Hi there, Hieu here!\n\n1. If you would like to report a bug or request a new feature, go to <https://github.com/thecardkid/innovators-compass/issues> and click "New issue". If new feature, please be detailed; if bug, please list the steps to reproduce to bug\n\n2. If you\'re a dev, feel free to open a Pull Request'
 };
 
 module.exports.QUADRANTS_INFO = [
@@ -65,7 +65,7 @@ module.exports.ERROR_MSG = {
 };
 
 module.exports.CONTROLS = {
-    'n': 'new post-it',
+    'n': 'new note',
     'd': 'new doodle',
     's': 'toggle sidebar',
     'c': 'toggle chat',

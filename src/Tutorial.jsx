@@ -10,15 +10,23 @@ import Shared from './Shared.jsx';
 const STEPS = [
     {
         header: 'Welcome to iCompass',
-        text: 'In this tutorial, we\'ll cover a few things to help you make informed decisions as you design and iterate!',
-        prep: () => $('#ic-tutorial-cover').css('background', 'rgba(255,255,255,0)')
+        text: 'In this short tour, we\'ll cover a few things to help you make informed decisions about this workspace',
+        prep: () => $('#ic-tutorial-cover').fadeOut()
     },
     {
         header: 'Your workspace',
-        text: 'This tutorial is not for the compass itself, but for this tool. Feel free to drag this blurb around so you can see everything.',
+        text: 'This tutorial is not for the compass itself, but for this app. Feel free to drag this blurb around so you can see everything.',
         prep: () => {
-            $('#ic-tutorial-cover').css('background', 'rgba(255,255,255,0.7)')
-            $('#ic-sidebar').css('z-index', 3);
+            $('#ic-sidebar').css('left', '-240px');
+            $('#ic-chat').css('bottom', '-265px');
+        }
+    },
+    {
+        header: 'The compass',
+        text: 'This is the compass structure that you know and love. In the middle is the people group - you will be asked to fill this out when you make a compass.',
+        prep: () => {
+            $('#ic-tutorial-cover').fadeIn();
+            $('#ic-sidebar').css({'left': '0px', 'z-index': 3});
         }
     },
     {
@@ -38,7 +46,7 @@ const STEPS = [
     },
     {
         header: 'Active users',
-        text: 'Each person in your current compass session is listed here, associated with a unique color. This is the color of any stickies they make, and their chat bubble',
+        text: 'Each person in your current compass session is listed here, associated with a unique color. This is the color of stickies they make and their chat bubble',
         prep: (root) => root.showOnly(3)
     },
     {
@@ -47,25 +55,23 @@ const STEPS = [
         prep: (root) => root.showOnly(4)
     },
     {
-        header: 'Things you can do',
-        text: 'Save a PDF or report a bug',
+        header: 'Reduce',
+        text: 'Since I have no money, I would appreciate if you could clean up server space by deleting a compass you know you won\'t need again! You can also save a pdf or send me your complaints',
         prep: (root) => root.showOnly(5)
     },
     {
-        header: 'People who made Stuff',
+        header: 'People who made this Stuff',
         text: 'Do check us out!',
         prep: () => {
-            $('#ic-sidebar').css('z-index', 2);
-            $('#ic-chat').css('z-index', 3);
+            $('#ic-sidebar').css('left', '-240px');
+            $('#ic-chat').css({'bottom': '0px', 'z-index': 3});
         }
     },
     {
         header: 'Chat',
         text: 'Send messages to anyone who is online. Messages are cleared when you log out',
         prep: () => {
-            $('#ic-sidebar').css('left', '-240px');
-            $('#ic-chat').css('z-index', 2)
-            $('#ic-chat').css('bottom', '-265px');
+            $('#ic-chat').css('bottom', '-265px')
             $('#show-chat').css('z-index', 4);
             $('#show-sidebar').css('z-index', 4);
         }
@@ -83,7 +89,7 @@ export default class Tutorial extends Component {
         this.state = {vw: window.innerWidth, vh: window.innerHeight, i: 0};
 
         this.compass = DefaultCompass;
-        this.compass.center = 'Tutorial';
+        this.compass.center = 'Your People Group';
         this.compass.editCode = '1s5a2nd0';
         this.compass.viewCode = 'd147bo5x';
 
@@ -102,7 +108,7 @@ export default class Tutorial extends Component {
         let opacity;
         for (let i=0; i<this.lists.length; i++) {
             opacity = i === x ? 1 : 0.1;
-            $(this.lists[i]).css('opacity', opacity);
+            $(this.lists[i]).fadeTo('slow', opacity);
         }
     }
 

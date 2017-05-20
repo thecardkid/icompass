@@ -15,6 +15,7 @@ export default {
                 h={this.state.vh}
                 edit={this.showEditForm}
                 destroy={this.emitDeleteNote}
+                u={this.state.username}
             />
         );
     },
