@@ -24,73 +24,74 @@ export default class LandingPage extends Component {
         this.setLoginType = this.setLoginType.bind(this);
         this.getFirst = this.getFirst.bind(this);
         this.getSecond = this.getSecond.bind(this);
+        this.validateFindInput = this.validateFindInput.bind(this);
+        this.validateMakeInput = this.validateMakeInput.bind(this);
     }
 
     componentDidMount() {
-        this.eCode = $('#compass-code');
-        this.eUsername = $('#username');
-        this.eCenter = $('#compass-center');
-        this.eEmail = $('#email');
-
-        this.vCode = $('#validate-code');
-        this.vUsername = $('#validate-username');
-        this.vCenter = $('#validate-center');
-        this.vEmail = $('#validate-email');
-
-        this.props.route.socket.on('compass null', () => this.vCode.text(ERROR_MSG.CANT_FIND));
+        this.props.route.socket.on('compass ready', (data) => this.setState({data: data}));
 
         $(window).on('resize', () => this.setState({vw: window.innerWidth, vh: window.innerHeight}));
     }
 
     validateCode() {
-        let code = this.eCode.val();
-        if (!code) {
-            this.vCode.text(ERROR_MSG.REQUIRED);
-            return false;
-        } else if (code.length != 8) {
-            this.vCode.text(ERROR_MSG.INVALID_CODE);
+        let code = $('#compass-code').val(),
+            error;
+        if (!code)
+            error = ERROR_MSG.REQUIRED('A code');
+        else if (code.length != 8)
+            error = ERROR_MSG.INVALID('Your code');
+
+        if (error) {
+            $('#error-message').text(error);
             return false;
         }
+
         return code;
     }
 
     validateUsername() {
-        let username = this.eUsername.val();
-        if (!username) {
-            this.vUsername.text(ERROR_MSG.REQUIRED);
-            return false;
-        } else if (username.length > 15) {
-            this.vUsername.text(ERROR_MSG.TEXT_TOO_LONG(15));
-            return false;
-        } else if (username.match(/\d+/g) != null) {
-            this.vUsername.text(ERROR_MSG.HAS_NUMBER);
+        let username = $('#username').val(),
+            error;
+
+        if (!username)
+            error = ERROR_MSG.REQUIRED('Username');
+        else if (username.length > 15)
+            error = ERROR_MSG.TEXT_TOO_LONG('Username', 15);
+        else if (username.match(/\d+/g) != null)
+            error = ERROR_MSG.UNAME_HAS_NUMBER;
+
+        if (error) {
+            $('#error-message').text(error);
             return false;
         }
+
         return username;
     }
 
     validateCenter() {
-        let center = this.eCenter.val();
-        if (!center) {
-            this.vCenter.text(ERROR_MSG.REQUIRED);
-            return false;
-        } else if (center.length > 30) {
-            this.vCenter.text(ERROR_MSG.TEXT_TOO_LONG(30));
+        let center = $('#compass-center').val(),
+            error;
+
+        if (!center)
+            error = ERROR_MSG.REQUIRED('People group');
+        else if (center.length > 30)
+            error = ERROR_MSG.TEXT_TOO_LONG('People group', 30);
+
+        if (error) {
+            $('#error-message').text(error);
             return false;
         }
+
         return center;
     }
 
-    validateEmail() {
-        let email = this.eEmail.val();
+    validateEmail(email) {
+        // let email = this.eEmail.val();
         if (!email) return 0;
 
-        if (REGEX.EMAIL.test(email)) {
-            return email;
-        } else {
-            this.vEmail.text(ERROR_MSG.INVALID_EMAIL);
-            return 1;
-        }
+        if (!REGEX.EMAIL.test(email))
+            return ERROR_MSG.INVALID('Email');
     }
 
     clearErrors() {
@@ -100,28 +101,14 @@ export default class LandingPage extends Component {
         this.vEmail.text('');
     }
 
-    newCompass() {
-        this.clearErrors();
-        let username = this.validateUsername();
-        let center = this.validateCenter();
-        let email = this.validateEmail();
-
-        if (!username || !center || email === 1) return;
-
+    newCompass(center, username) {
         this.props.route.socket.emit('create compass', {
             center: center,
             username: username,
-            email: email
         });
     }
 
-    findCompass() {
-        this.clearErrors();
-        let code = this.validateCode();
-        let username = this.validateUsername();
-
-        if (!code || !username) return;
-
+    findCompass(code, username) {
         this.props.route.socket.emit('find compass', {
             code: code,
             username: username
@@ -130,6 +117,26 @@ export default class LandingPage extends Component {
 
     setLoginType(type) {
         this.setState({loginType: type});
+    }
+
+    validateFindInput() {
+        $('#error-message').text('');
+        let code = this.validateCode();
+        let username = this.validateUsername();
+
+        if (!code || !username) return;
+
+        this.findCompass(code, username);
+    }
+
+    validateMakeInput() {
+        $('#error-message').text('');
+        let center = this.validateCenter();
+        let username = this.validateUsername();
+
+        if (!center || !username) return;
+
+        this.newCompass(center, username);
     }
 
     getFirst() {
@@ -143,20 +150,32 @@ export default class LandingPage extends Component {
     }
 
     getSecond() {
+        if (typeof this.state.loginType !== 'number') return;
+
+        let firstPrompt, inputId, cb;
+
         if (this.state.loginType === LOGIN_TYPE.FIND) {
-            return (
-                <div className="section">
-                    <h1>2. Finding</h1>
-                </div>
-            )
-        } else if (this.state.loginType === LOGIN_TYPE.MAKE) {
-            return (
-                <div className="section">
-                    <h1>2. Making a compass</h1>
-                </div>
-            )
+            firstPrompt = 'What is the code you were given?';
+            inputId = 'compass-code';
+            cb = this.validateFindInput;
+        } else {
+            firstPrompt = 'Whom is your people group?';
+            inputId = 'compass-center';
+            cb = this.validateMakeInput;
         }
-    }
+
+        return (
+            <div className="section">
+                <h1>2. I need some details</h1>
+                <div className="prompt">{firstPrompt}</div>
+                <div className="response"><input id={inputId} /></div>
+                <div className="prompt">Your name (how others will see you)</div>
+                <div className="response"><input id="username" /></div>
+                <div id="error-message"></div>
+                <button className="ic-button" onClick={cb}>let's go</button>
+            </div>
+        )
+   }
 
     render() {
         return (

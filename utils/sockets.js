@@ -24,23 +24,22 @@ module.exports = {
                 client.join(client.room);
             };
 
-            var sendMail = function(compass, data) {
-                var text = 'Edit code: ' + compass.editCode +
-                    '\nView code: ' + compass.viewCode + '\n\n' +
+
+            client.on('send mail', function(data) {
+                var text = 'Edit code: ' + data.editCode +
+                    '\nView code: ' + data.viewCode + '\n\n' +
                     'Visit this link for a pre-filled form: ' +
-                    HOST + compass.editCode + '/' + data.username;
+                    HOST + data.editCode + '/' + data.username;
 
                 Mail.sendMessage(text, data.email, function(status) {
                     if (status) client.emit('mail sent');
                     else client.emit('mail not sent');
                 });
-            };
+            })
 
 
             client.on('create compass', function(data) {
                 Compass.makeCompass(data.center, function(compass) {
-                    if (data.email)
-                        sendMail(compass, data);
                     client.emit('compass ready', {
                         code: compass.edit,
                         mode: MODES.EDIT,
@@ -53,8 +52,6 @@ module.exports = {
 
             client.on('find compass', function(data) {
                 Compass.findCode(data.code, function(compass, mode) {
-                    if (compass === null) return client.emit('compass null');
-
                     client.emit('compass ready', {
                         code: data.code,
                         mode: mode,

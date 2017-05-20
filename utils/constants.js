@@ -54,14 +54,17 @@ module.exports.COLORS = {
 }
 
 module.exports.ERROR_MSG = {
-    REQUIRED: 'This is required',
-    INVALID_CODE: 'Not a valid code',
-    TEXT_TOO_LONG: function(len) {
-        return 'Longer than ' + len + ' chars';
+    REQUIRED: function(prop) {
+        return prop + ' is required';
     },
-    HAS_NUMBER: 'Cannot contain numbers',
+    INVALID: function(prop) {
+        return prop + ' is not valid';
+    },
+    TEXT_TOO_LONG: function(prop, len) {
+        return prop + ' cannot be longer than ' + len + ' chars';
+    },
+    UNAME_HAS_NUMBER: 'Username cannot contain numbers',
     CANT_FIND: 'Compass does not exist',
-    INVALID_EMAIL: 'Invalid email'
 };
 
 module.exports.CONTROLS = {

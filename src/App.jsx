@@ -18,18 +18,17 @@ class App extends Component {
 
         this.socket = io();
 
-        // TODO: change this to a cb passed to landing
-        this.socket.on('compass ready', (data) => {
-            this.setState({
-                compass: data.compass,
-                mode: data.mode,
-                code:data.code,
-                username: data.username
-            }, () => browserHistory.push('/compass'));
-        });
-
         this.socket.on('mail sent', () => alert(PROMPTS.EMAIL_SENT));
         this.socket.on('mail not sent', () => alert(PROMPTS.EMAIL_NOT_SENT));
+    }
+
+    onReady(data) {
+        this.setState({
+            compass: data.compass,
+            mode: data.mode,
+            code:data.code,
+            username: data.username
+        }, () => browserHistory.push('/compass'));
     }
 
     render() {
