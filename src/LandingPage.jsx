@@ -205,7 +205,9 @@ export default class LandingPage extends Component {
         let email = this.validateEmail();
         let d = this.state.data;
 
-        if (email !== false && email !== null) {
+        if (email === false) return;
+
+        if (email !== null) {
             this.socket.emit('send mail', {
                 editCode: d.compass.editCode,
                 viewCode: d.compass.viewCode,
@@ -214,7 +216,7 @@ export default class LandingPage extends Component {
             });
         }
 
-        this.props.route.ready(this.state.data);
+        this.props.route.ready(d);
     }
 
     getThird() {

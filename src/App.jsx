@@ -14,26 +14,29 @@ import Tutorial from './Tutorial.jsx';
 
 class App extends Component {
 
+    constructor(props, context) {
+        super(props, context);
+        this.state = {data: {}};
+    }
+
     onReady(data) {
-        this.setState({
-            compass: data.compass,
-            mode: data.mode,
-            code:data.code,
-            username: data.username
-        }, () => browserHistory.push('/compass'));
+        this.setState({ data }, () => {
+            if (data.mode === MODES.VIEW)
+                browserHistory.push('/compass/view/'+data.code);
+            if (data.mode === MODES.EDIT)
+                browserHistory.push('/compass/edit/'+data.code+'/'+data.username);
+        });
     }
 
     render() {
         return (
             <Router history={browserHistory}>
                 <Route path='/' ready={this.onReady.bind(this)} component={LandingPage} />
-                <Route path='/:code/:username' socket={this.socket} component={LandingPage} />
-                <Route path='/compass' component={() => {
-                    if (this.state.mode === MODES.EDIT)
-                        return <CompassEdit compass={this.state.compass} username={this.state.username} />
-                    else if (this.state.mode === MODES.VIEW) {
-                        return <CompassView compass={this.state.compass} />
-                    }
+                <Route path='/compass/edit/:code/:username' component={() => {
+                    return <CompassEdit data={this.state.data} />
+                }} />
+                <Route path='/compass/view/:code' component={() => {
+                    return <CompassView compass={this.state.data.compass} />
                 }} />
                 <Route path='/tutorial' socket={this.socket} component={Tutorial} />
             </Router>

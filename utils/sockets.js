@@ -41,7 +41,7 @@ module.exports = {
             client.on('create compass', function(data) {
                 Compass.makeCompass(data.center, function(compass) {
                     client.emit('compass ready', {
-                        code: compass.edit,
+                        code: compass.editCode,
                         mode: MODES.EDIT,
                         compass: compass,
                         username: data.username

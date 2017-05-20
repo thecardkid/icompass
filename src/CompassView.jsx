@@ -16,7 +16,7 @@ export default class CompassView extends Component {
         this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
-            compass: this.props.compass,
+            compass: this.props.route.compass,
         };
 
         // Shared methods
