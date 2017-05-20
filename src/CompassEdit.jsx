@@ -297,7 +297,7 @@ export default class CompassEdit extends Component {
                 {this.getHelpScreen()}
                 {this.getExplanation()}
                 {this.getCompassStructure(this.state.compass.center)}
-                <button id="show-menu" onClick={this.toggleSidebar}>Show Sidebar</button>
+                <button id="show-sidebar" onClick={this.toggleSidebar}>Show Sidebar</button>
                 {this.getSidebar()}
                 <button id="show-chat" onClick={this.toggleChat} style={{background: this.state.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
                 {this.getChat()}
