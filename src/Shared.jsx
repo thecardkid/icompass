@@ -27,7 +27,7 @@ export default {
         };
     },
 
-    renderQuadrant(q, i) {
+    renderQuadrant(q) {
         return (
             <div key={q.id} className="ic-quadrant" id={q.id}>
                 <h1>{q.id.toUpperCase()}</h1>
@@ -63,5 +63,5 @@ export default {
             username: data.username
         });
     }
-}
+};
 

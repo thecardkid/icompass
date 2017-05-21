@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import Message from './Message.jsx';
 import _ from 'underscore';
-import { KEYCODES, COLORS, PIXELS } from '../utils/constants.js';
+import { KEYCODES, PIXELS } from '../utils/constants.js';
 
 export default class Chat extends Component {
 
@@ -36,10 +36,9 @@ export default class Chat extends Component {
 
     renderMessage(m, i) {
         if (m.info)
-            return <p key={'msg'+i} className="ic-chat-info">{m.text}</p>
+            return <p key={'msg'+i} className="ic-chat-info">{m.text}</p>;
 
-        let type = (m.username === this.props.username) ?
-            'bubble mine' : 'bubble theirs';
+        let type = (m.username === this.props.username) ? 'bubble mine' : 'bubble theirs';
 
         return (
             <Message key={'msg'+i}
@@ -51,7 +50,6 @@ export default class Chat extends Component {
     }
 
     render() {
-        let bg = this.props.unread ? COLORS.RED : COLORS.DARK;
         let bottom = this.props.show ? PIXELS.SHOW : PIXELS.HIDE_CHAT;
         let messages = _.map(this.props.messages, this.renderMessage);
 

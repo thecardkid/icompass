@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var logger = require('../utils/logger.js');
 var MODES = require('../utils/constants.js').MODES;
 var DefaultCompass = require('../models/defaultCompass.js');
-var Schema = mongoose.Schema;
 var _ = require('underscore');
 
 function generateUUID() {
@@ -13,7 +12,7 @@ function generateUUID() {
         return (c=='x' ? r : (r&0x3|0x8)).toString(16);
     });
     return uuid;
-};
+}
 
 var compassSchema = mongoose.Schema({
     editCode: String,
@@ -39,11 +38,11 @@ compassSchema.statics.addNote = function(id, newNote, cb) {
             cb(compass);
         }
     );
-}
+};
 
 compassSchema.statics.updateNote = function(id, updatedNote, cb) {
     this.findOne({_id: id}, function(err, c) {
-        if (err) logger.error('Could not find compass to update note', id, updateNote, err);
+        if (err) logger.error('Could not find compass to update note', id, updatedNote, err);
 
         var note;
         for (var i=0; i<c.notes.length; i++) {
@@ -59,9 +58,9 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
         c.save(function(err, updatedCompass) {
             if (err) logger.error('Could not update note in compass', id, updatedNote, err);
             cb(updatedCompass);
-        })
-    })
-}
+        });
+    });
+};
 
 compassSchema.statics.makeCompass = function(center, cb) {
     var newCompass = DefaultCompass;
@@ -74,7 +73,7 @@ compassSchema.statics.makeCompass = function(center, cb) {
         logger.debug('Created compass with center', center, compass._id);
         cb(compass);
     });
-}
+};
 
 compassSchema.statics.findByEditCode = function(code, cb) {
     this.findOne({editCode: code}, function(err, c) {
@@ -83,7 +82,7 @@ compassSchema.statics.findByEditCode = function(code, cb) {
         if (c !== null) logger.debug('Found compass for editing', c._id);
         cb(c);
     });
-}
+};
 
 compassSchema.statics.findByViewCode = function(code, cb) {
     this.findOne({viewCode: code}, function(err, c) {
@@ -96,7 +95,7 @@ compassSchema.statics.findByViewCode = function(code, cb) {
         delete copy.editCode; // TODO delete comment code
         cb(copy);
     });
-}
+};
 
 compassSchema.statics.findCode = function(code, cb) {
     var schema = this;
@@ -113,8 +112,8 @@ compassSchema.statics.findCode = function(code, cb) {
         } else {
             cb(compassEdit, MODES.EDIT);
         }
-    })
-}
+    });
+};
 
 compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
     this.findOne({_id: compassId}, function(err, c) {
@@ -130,7 +129,7 @@ compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
             cb(updatedCompass.notes);
         });
     });
-}
+};
 
 module.exports = mongoose.model('Compass', compassSchema);
 

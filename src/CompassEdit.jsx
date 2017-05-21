@@ -15,16 +15,16 @@ import DoodleForm from './DoodleForm.jsx';
 import Validator from './Validator.jsx';
 import Helper from './CompassHelper.jsx';
 
-import { QUADRANTS_INFO, KEYCODES, PROMPTS, COLORS } from '../utils/constants.js';
+import { PROMPTS, COLORS } from '../utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 let drag = false;
 
 export default class CompassEdit extends Component {
 
-	constructor(props, context) {
-	    super(props, context);
-	    this.socket = io();
+    constructor(props, context) {
+        super(props, context);
+        this.socket = io();
 
         if (!this.props.compass) {
             this.validateParams(this.props);
@@ -35,7 +35,7 @@ export default class CompassEdit extends Component {
             });
         }
 
-	    this.state = {
+        this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
             compass: this.props.compass,
@@ -60,7 +60,7 @@ export default class CompassEdit extends Component {
         this.socket.on('compass found', Shared.handleCompassFound.bind(this));
 
        // socket handler events
-	    this.socket.on('assigned name', Helper.setUsername.bind(this));
+        this.socket.on('assigned name', Helper.setUsername.bind(this));
         this.socket.on('update notes', Helper.updateNotes.bind(this));
         this.socket.on('user joined', Helper.handleUserJoined.bind(this));
         this.socket.on('user left', Helper.handleUserLeft.bind(this));
@@ -70,33 +70,33 @@ export default class CompassEdit extends Component {
         this.socket.on('compass deleted', Helper.handleCompassDeleted.bind(this));
 
         // socket emit events
-	    this.emitEditNote = Helper.emitEditNote.bind(this);
-	    this.emitDragNote = Helper.emitDragNote.bind(this);
-	    this.emitNewNote = Helper.emitNewNote.bind(this);
-	    this.emitNewDoodle = Helper.emitNewDoodle.bind(this);
-	    this.emitDeleteCompass = Helper.emitDeleteCompass.bind(this);
-	    this.emitDeleteNote = Helper.emitDeleteNote.bind(this);
+        this.emitEditNote = Helper.emitEditNote.bind(this);
+        this.emitDragNote = Helper.emitDragNote.bind(this);
+        this.emitNewNote = Helper.emitNewNote.bind(this);
+        this.emitNewDoodle = Helper.emitNewDoodle.bind(this);
+        this.emitDeleteCompass = Helper.emitDeleteCompass.bind(this);
+        this.emitDeleteNote = Helper.emitDeleteNote.bind(this);
 
-	    // Shared methods
-	    this.renderNote = Shared.renderNote.bind(this);
-	    this.center = Shared.center.bind(this);
-	    this.getCompassStructure = Shared.getCompassStructure.bind(this);
+        // Shared methods
+        this.renderNote = Shared.renderNote.bind(this);
+        this.center = Shared.center.bind(this);
+        this.getCompassStructure = Shared.getCompassStructure.bind(this);
 
-	    // user events
-	    this.showEditForm = this.showEditForm.bind(this);
-	    this.showDoodleForm = this.showDoodleForm.bind(this);
-	    this.closeForm = this.closeForm.bind(this);
-	    this.showNewNote = this.showNewNote.bind(this);
-	    this.toggleSidebar = this.toggleSidebar.bind(this);
-	    this.toggleExplain = this.toggleExplain.bind(this);
-	    this.toggleHelp = this.toggleHelp.bind(this);
-	    this.toggleChat = this.toggleChat.bind(this);
-	    this.renderQuadrant = Shared.renderQuadrant;
+        // user events
+        this.showEditForm = this.showEditForm.bind(this);
+        this.showDoodleForm = this.showDoodleForm.bind(this);
+        this.closeForm = this.closeForm.bind(this);
+        this.showNewNote = this.showNewNote.bind(this);
+        this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.toggleExplain = this.toggleExplain.bind(this);
+        this.toggleHelp = this.toggleHelp.bind(this);
+        this.toggleChat = this.toggleChat.bind(this);
+        this.renderQuadrant = Shared.renderQuadrant;
 
-	    // window listeners
-	    this.updateWindowSize = this.updateWindowSize.bind(this);
-	    this.handleKeyDown = this.handleKeyDown.bind(this);
-	    this.handleKeyUp = this.handleKeyUp.bind(this);
+        // window listeners
+        this.updateWindowSize = this.updateWindowSize.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
 
         this.keypressHandler = {
             78: this.showNewNote,
@@ -105,7 +105,7 @@ export default class CompassEdit extends Component {
             83: this.toggleSidebar,
             87: this.toggleExplain
         };
-	}
+    }
 
     validateParams(props) {
         let validCode = Validator.validateCompassCode(props.params.code);
@@ -121,15 +121,15 @@ export default class CompassEdit extends Component {
         }
     }
 
-	componentDidMount() {
-	    $(window).on('resize', this.updateWindowSize);
-	    $(window).on('keydown', this.handleKeyDown);
-	    $(window).on('keyup', this.handleKeyUp);
+    componentDidMount() {
+        $(window).on('resize', this.updateWindowSize);
+        $(window).on('keydown', this.handleKeyDown);
+        $(window).on('keyup', this.handleKeyUp);
 
         // set up draggable sticky notes
-	    interact('.draggable').draggable({
+        interact('.draggable').draggable({
             restrict: {
-                restriction: "parent",
+                restriction: 'parent',
                 endOnly: true,
                 elementRect: {top:0, left:0, bottom:1, right:1}
             },
@@ -138,7 +138,7 @@ export default class CompassEdit extends Component {
             onmove: this.dragTarget.bind(this),
             onend: this.emitDragNote
         });
-	}
+    }
 
     componentWillUnmount() {
         this.socket.disconnect();
@@ -245,7 +245,7 @@ export default class CompassEdit extends Component {
                 title={'Make a new post-it'}
                 make={this.emitNewNote}
                 close={this.closeForm}
-            />
+            />;
         } else if (this.state.editNote && drag === false) {
             return <NoteForm
                 style={this.center(300,230)}
@@ -253,14 +253,14 @@ export default class CompassEdit extends Component {
                 text={this.state.editNote.text}
                 make={this.emitEditNote}
                 close={this.closeForm}
-            />
+            />;
         } else if (this.state.doodleNote) {
             return <DoodleForm
                 style={this.center(450, 345)}
                 bg={this.state.users.usernameToColor[this.state.username]}
                 close={this.closeForm}
                 save={this.emitNewDoodle}
-            />
+            />;
         }
         return null;
     }
@@ -301,9 +301,9 @@ export default class CompassEdit extends Component {
         );
     }
 
-	render() {
-	    if (!this.state.compass)
-	        return <div id="compass"></div>
+    render() {
+        if (!this.state.compass)
+            return <div id="compass"></div>;
 
         return (
             <div id="compass">
@@ -316,7 +316,7 @@ export default class CompassEdit extends Component {
                 <button id="show-chat" onClick={this.toggleChat} style={{background: this.state.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
                 {this.getChat()}
             </div>
-		);
-	}
-};
+        );
+    }
+}
 

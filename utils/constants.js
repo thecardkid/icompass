@@ -41,7 +41,7 @@ module.exports.COLORS = {
     RED: '#C21A03',
     GREEN: 'green',
     DARK: '#343434'
-}
+};
 
 module.exports.ERROR_MSG = {
     REQUIRED: function(prop) {
@@ -79,7 +79,7 @@ module.exports.REGEX = {
 };
 
 module.exports.DRAGGABLE_RESTRICTIONS = {
-    restriction: "parent",
+    restriction: 'parent',
     endOnly: true,
     elementRect: {top:0, left:0, bottom:1, right:1}
 };

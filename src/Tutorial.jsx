@@ -63,7 +63,7 @@ const STEPS = [
         text: 'Press "d" to make a doodle, if you\'re more visual. The more doodles in a compass, the more lag there might be, though.',
         prep: (root) => {
             $('#ic-tutorial-cover').fadeIn();
-            $('button[name=nvm]').click()
+            $('button[name=nvm]').click();
             root.showOnly(2);
         }
     },
@@ -94,7 +94,7 @@ const STEPS = [
         header: 'Chat',
         text: 'Send messages to anyone who is online. Messages are cleared when you log out',
         prep: () => {
-            $('#ic-chat').css('bottom', '-265px')
+            $('#ic-chat').css('bottom', '-265px');
             $('#show-chat').css('z-index', 4);
             $('#show-sidebar').css('z-index', 4);
         }

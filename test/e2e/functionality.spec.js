@@ -13,7 +13,7 @@ module.exports = {
         .click('button[name=go]')
         .waitForElementVisible('.third', 1000)
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
+        .waitForElementVisible('#ic-sidebar', 1000);
     },
 
     'renders correctly': function(browser) {
@@ -36,7 +36,7 @@ module.exports = {
             .assert.containsText('#ideas h2', 'What could happen?')
         .assert.elementPresent('#experiments')
             .assert.containsText('#experiments h1', 'EXPERIMENTS')
-            .assert.containsText('#experiments h2', 'What\'s a way to try?')
+            .assert.containsText('#experiments h2', 'What\'s a way to try?');
     },
 
     'key bindings': function(browser) {
@@ -56,7 +56,7 @@ module.exports = {
         .keys(['d'])
         .assert.elementPresent('#ic-doodle-form')
         .click('button[name=nvm]')
-        .assert.elementNotPresent('#ic-doodle-form')
+        .assert.elementNotPresent('#ic-doodle-form');
     },
 
     'note events': function(browser) {
@@ -113,7 +113,7 @@ module.exports = {
         .moveToElement('#note1', 10, 10, function() {
             browser
             .mouseButtonDown(0, function() {
-                browser.moveTo(null,-300,-300)
+                browser.moveTo(null,-300,-300);
             })
             .mouseButtonUp(0, function() {
                 browser.getCssProperty('#note1', 'top', function(result) {
@@ -122,9 +122,9 @@ module.exports = {
                         newLeft = Number(result.value.substring(0,result.value.length-2));
                         this.assert.equal(top - newTop, 300);
                         this.assert.equal(left - newLeft, 300);
-                    })
-                })
-            })
+                    });
+                });
+            });
         })
         // delete note
         .moveToElement('#note1', 184, 10, function() {
@@ -140,8 +140,8 @@ module.exports = {
             .pause(500)
             .acceptAlert()
             .pause(1000)
-            .assert.elementNotPresent('#note1')
-        })
+            .assert.elementNotPresent('#note1');
+        });
     },
 
     'chat events': function(browser) {
@@ -152,7 +152,7 @@ module.exports = {
         .keys(browser.Keys.ENTER)
         .waitForElementVisible('.bubble', 500)
         .assert.containsText('.bubble', 'Hello world!')
-        .assert.cssClassPresent('.bubble', 'mine')
+        .assert.cssClassPresent('.bubble', 'mine');
     },
 
     'cleanup': function(browser) {
@@ -163,8 +163,8 @@ module.exports = {
         .acceptAlert()
         .pause(500)
         .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/')
+            this.assert.equal(result.value, 'http://localhost:8080/');
         })
         .end();
     }
-}
+};

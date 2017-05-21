@@ -10,7 +10,7 @@ module.exports = {
         .waitForElementVisible('body', 1000)
         .assert.title('The Innovators\' Compass')
         .assert.elementPresent('button[name=find]')
-        .assert.elementPresent('button[name=make]')
+        .assert.elementPresent('button[name=make]');
     },
 
     'make path': function(browser) {
@@ -19,7 +19,7 @@ module.exports = {
         .pause(500)
         .assert.containsText('div.prompt', 'Whom is your people group?')
         .assert.elementPresent('#compass-center')
-        .assert.elementPresent('#username')
+        .assert.elementPresent('#username');
     },
 
     'make path errors': function(browser) {
@@ -30,7 +30,7 @@ module.exports = {
         .setValue('#compass-center', 'This is a really long people group that will hopefully exceed char limit')
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.TEXT_TOO_LONG('People group', 30))
-        .clearValue('#compass-center')
+        .clearValue('#compass-center');
     },
 
     'make successful': function(browser) {
@@ -44,7 +44,7 @@ module.exports = {
             code = result.value;
         })
         .assert.elementPresent('#email')
-        .assert.elementPresent('button[name=to-workspace]')
+        .assert.elementPresent('button[name=to-workspace]');
     },
 
     'find path': function(browser) {
@@ -53,7 +53,7 @@ module.exports = {
         .pause(500)
         .assert.containsText('div.prompt', 'What is the code you were given?')
         .assert.elementPresent('#compass-code')
-        .assert.elementPresent('#username')
+        .assert.elementPresent('#username');
     },
 
     'find path errors': function(browser) {
@@ -78,7 +78,7 @@ module.exports = {
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.TEXT_TOO_LONG('Username', 15))
         .clearValue('#username')
-        .clearValue('#compass-code')
+        .clearValue('#compass-code');
     },
 
     'find successful': function(browser) {
@@ -98,8 +98,8 @@ module.exports = {
         .acceptAlert()
         .pause(500)
         .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/')
+            this.assert.equal(result.value, 'http://localhost:8080/');
         })
         .end();
     }
-}
+};

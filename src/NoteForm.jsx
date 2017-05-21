@@ -1,7 +1,6 @@
 'use strict';
 
 import React, { Component } from 'react';
-import _ from 'underscore';
 
 export default class NoteForm extends Component {
 

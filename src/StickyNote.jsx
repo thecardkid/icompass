@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { PROMPTS } from '../utils/constants.js';
 
 export default class StickyNote extends Component {
@@ -33,7 +33,7 @@ export default class StickyNote extends Component {
                 <a className="ic-img" style={s}>
                     <img src={n.doodle || n.text} width="164px"/>
                 </a>
-            )
+            );
         } else {
             return (
                 <a style={{background: n.color}}>
@@ -45,7 +45,7 @@ export default class StickyNote extends Component {
 
     getX(u) {
         if (u)
-            return <button className='ic-close-window' onClick={this.confirmDelete.bind(this)}>x</button>
+            return <button className='ic-close-window' onClick={this.confirmDelete.bind(this)}>x</button>;
     }
 
     render() {

@@ -5,7 +5,6 @@ import css from 'style-loader!css-loader!less-loader!./../public/css/app.less';
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
-import { MODES, PROMPTS } from '../utils/constants.js';
 
 import CompassEdit from './CompassEdit.jsx';
 import CompassView from './CompassView.jsx';

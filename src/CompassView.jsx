@@ -1,13 +1,13 @@
 'use strict';
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import StickyNote from './StickyNote.jsx';
 import Shared from './Shared.jsx';
 
-import { QUADRANTS_INFO, PROMPTS } from '../utils/constants.js'
+import { QUADRANTS_INFO } from '../utils/constants.js';
 
 export default class CompassView extends Component {
 
@@ -43,7 +43,7 @@ export default class CompassView extends Component {
     }
 
     render() {
-        if (!this.state.compass) return <div id="compass"></div>
+        if (!this.state.compass) return <div id="compass"></div>;
 
         let stickies = _.map(this.state.compass.notes, this.renderNote);
         let quadrants = _.map(QUADRANTS_INFO, Shared.renderQuadrant);

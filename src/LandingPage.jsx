@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { browserHistory, Link } from 'react-router';
-import { ERROR_MSG, PROMPTS, REGEX } from '../utils/constants.js';
+import { ERROR_MSG, PROMPTS } from '../utils/constants.js';
 
 import Shared from './Shared.jsx';
 import Validator from './Validator.jsx';
@@ -128,7 +128,7 @@ export default class LandingPage extends Component {
                 <div id="error-message"></div>
                 <button className="ic-button" name="go" onClick={cb}>let's go</button>
             </div>
-        )
+        );
     }
 
     getNullNotification() {
@@ -188,7 +188,7 @@ export default class LandingPage extends Component {
                 <h2>You will be logged in as {this.state.username}</h2>
                 <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
             </div>
-        )
+        );
     }
 
     render() {

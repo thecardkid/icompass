@@ -1,5 +1,4 @@
 
-var PROMPTS = require('../../utils/constants.js').PROMPTS;
 var editCode, viewCode;
 
 module.exports = {
@@ -13,7 +12,7 @@ module.exports = {
         .click('button[name=go]')
         .waitForElementVisible('.third', 1000)
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
+        .waitForElementVisible('#ic-sidebar', 1000);
     },
 
     'retrieve codes': function(browser) {
@@ -28,7 +27,7 @@ module.exports = {
         })
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/compass/edit/'+editCode+'/sandbox');
-        })
+        });
     },
 
     'view-only access from url': function(browser) {
@@ -41,7 +40,7 @@ module.exports = {
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
         .assert.elementNotPresent('#show-chat')
-        .assert.elementNotPresent('#show-sidebar')
+        .assert.elementNotPresent('#show-sidebar');
     },
 
     'view-only from login page': function(browser) {
@@ -63,7 +62,7 @@ module.exports = {
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
         .assert.elementNotPresent('#show-chat')
-        .assert.elementNotPresent('#show-sidebar')
+        .assert.elementNotPresent('#show-sidebar');
     },
 
     'url with bad params is rejected': function(browser) {
@@ -71,7 +70,7 @@ module.exports = {
         .url('http://localhost:8080/compass/edit/' + editCode.substring(1,5) + '/,,,')
         .pause(2000)
         .getAlertText(function(result) {
-            this.assert.equal(result.value.indexOf('There was a problem with your login info') > -1, true)
+            this.assert.equal(result.value.indexOf('There was a problem with your login info') > -1, true);
             this.assert.equal(result.value.indexOf('Your code is not valid') > -1, true);
             this.assert.equal(result.value.indexOf('Username can only contain a-zA-Z') > -1, true);
         })
@@ -79,8 +78,8 @@ module.exports = {
         .pause(500)
         .assert.elementPresent('#ic-landing')
         .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/')
-        })
+            this.assert.equal(result.value, 'http://localhost:8080/');
+        });
     },
 
     'view url with wrong editCode is rejected': function(browser) {
@@ -94,8 +93,8 @@ module.exports = {
         .pause(1000)
         .assert.elementPresent('#ic-landing')
         .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/')
-        })
+            this.assert.equal(result.value, 'http://localhost:8080/');
+        });
     },
 
     'edit access from url': function(browser) {
@@ -115,11 +114,11 @@ module.exports = {
         .acceptAlert()
         .pause(500)
         .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/')
+            this.assert.equal(result.value, 'http://localhost:8080/');
         })
         .end();
     }
-}
+};
 
 
 

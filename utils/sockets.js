@@ -1,16 +1,13 @@
 var socketIO = require('socket.io');
 var Compass = require('../models/compass.js');
-var _ = require('underscore');
 var UserManager = require('./userManager.js');
 var Mailer = require('./mailer.js');
 var io;
 var logger = require('./logger.js');
-var MODES = require('./constants.js').MODES;
-
 var Manager = new UserManager();
 var Mail = new Mailer();
 
-const HOST = (process.env.NODE_ENV === 'production') ? 'http://icompass.hieuqn.com/' : 'http://localhost:8080/'
+const HOST = (process.env.NODE_ENV === 'production') ? 'http://icompass.hieuqn.com/' : 'http://localhost:8080/';
 
 module.exports = {
     socketServer: function(server) {
@@ -34,7 +31,7 @@ module.exports = {
                     if (status) client.emit('mail sent');
                     else client.emit('mail not sent');
                 });
-            })
+            });
 
 
             client.on('create compass', function(data) {
@@ -105,8 +102,8 @@ module.exports = {
                         compass: compass,
                         username: data.username
                     });
-                })
-            })
+                });
+            });
 
 
             client.on('disconnect', function(reason) {
@@ -155,10 +152,10 @@ module.exports = {
 
 
             /* WARNING: Testing purposes only */
-            client.on('fake disconnect', function(data) {
+            client.on('fake disconnect', function() {
                 Manager.removeUser(client.room, client.username);
             });
         });
     }
-}
+};
 

@@ -1,7 +1,6 @@
 'use strict';
 
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
 let paint = false;
 
@@ -44,7 +43,7 @@ export default class DoodleForm extends Component {
         if (paint) this.addClick(e, true);
     }
 
-    stopDraw(e) {
+    stopDraw() {
         paint = false;
     }
 
@@ -52,24 +51,24 @@ export default class DoodleForm extends Component {
         if (!this.canvas) return;
 
         const ctx = this.refs.canvas.getContext('2d');
-		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		ctx.strokeStyle = "#000";
-		ctx.lineJoin = "round";
-		ctx.lineWidth = 5;
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.strokeStyle = '#000';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 5;
 
-		let { x, y, drag } = this.state;
+        let { x, y, drag } = this.state;
 
-		for(var i=0; i < x.length; i++) {
-			ctx.beginPath();
-			if (drag[i] && i) {
+        for(var i=0; i < x.length; i++) {
+            ctx.beginPath();
+            if (drag[i] && i) {
                 ctx.moveTo(x[i-1], y[i-1]);
-			} else {
+            } else {
                 ctx.moveTo(x[i]-1, y[i]);
-			}
-			ctx.lineTo(x[i], y[i]);
-			ctx.closePath();
-			ctx.stroke();
-		}
+            }
+            ctx.lineTo(x[i], y[i]);
+            ctx.closePath();
+            ctx.stroke();
+        }
     }
 
     makeDoodle() {
