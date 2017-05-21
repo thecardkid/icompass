@@ -20,6 +20,7 @@ export default class Socket {
         this.emitDeleteNote = this.emitDeleteNote.bind(this);
         this.emitMessage = this.emitMessage.bind(this);
         this.emitFindCompassEdit = this.emitFindCompassEdit.bind(this);
+        this.emitFindCompassView = this.emitFindCompassView.bind(this);
 
         this.handleDisconnect = this.handleDisconnect.bind(this);
         this.handleReconnect = this.handleReconnect.bind(this);
@@ -140,6 +141,13 @@ export default class Socket {
         });
     }
 
+    emitFindCompassView() {
+        this.socket.emit('find compass view', {
+            code: this.component.props.params.code,
+            username: this.component.props.params.username
+        });
+    }
+
     handleCompassFound(data) {
         if (data.compass === null) {
             alert(PROMPTS.COMPASS_NOT_FOUND);
@@ -147,7 +155,8 @@ export default class Socket {
         }
         this.component.setState({
             compass: data.compass,
-            username: data.username
+            username: data.username,
+            mode: data.mode
         });
     }
 

@@ -15,7 +15,7 @@ export default {
                 h={this.state.vh}
                 edit={this.showEditForm}
                 destroy={this.socket.emitDeleteNote}
-                u={this.state.username}
+                mode={this.state.mode}
             />
         );
     },
@@ -51,17 +51,6 @@ export default {
                 <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
             </div>
         );
-    },
-
-    handleCompassFound(data) {
-        if (data.compass === null) {
-            alert(PROMPTS.COMPASS_NOT_FOUND);
-            this.browserHistory.push('/');
-        }
-        this.setState({
-            compass: data.compass,
-            username: data.username
-        });
     }
 };
 

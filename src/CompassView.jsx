@@ -1,11 +1,11 @@
 'use strict';
 
 import React, { Component } from 'react';
-import SocketIOClient from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
+import Socket from './Socket.jsx';
 import Shared from './Shared.jsx';
 
 import { QUADRANTS_INFO } from '../utils/constants.js';
@@ -15,18 +15,13 @@ export default class CompassView extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.socket = SocketIOClient();
-        this.socket.emit('find compass view', {
-            code: this.props.params.code,
-            username: this.props.params.username
-        });
-        this.browserHistory = browserHistory;
+        this.socket = new Socket(this);
+        this.socket.emitFindCompassView();
 
         this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
         };
-        this.socket.on('compass found', Shared.handleCompassFound.bind(this));
 
         // Shared methods
         this.renderNote = Shared.renderNote.bind(this);

@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { PROMPTS } from '../utils/constants.js';
+import { PROMPTS, MODES } from '../utils/constants.js';
 
 export default class StickyNote extends Component {
+
+    constructor(props, context) {
+        super(props, context);
+
+        this.confirmDelete = this.confirmDelete.bind(this);
+        this.getContents = this.getContents.bind(this);
+        this.getX = this.getX.bind(this);
+        this.edit = this.edit.bind(this);
+        this.hasEditingRights = this.props.mode === MODES.EDIT;
+    }
 
     shouldComponentUpdate(nextProps) {
         let thisNote = this.props.note,
@@ -24,7 +34,8 @@ export default class StickyNote extends Component {
             this.props.destroy(this.props.note._id);
     }
 
-    getContents(n) {
+    getContents() {
+        let n = this.props.note;
         if (n.doodle || n.isImage) {
             let s = {
                 background: n.color,
@@ -44,26 +55,33 @@ export default class StickyNote extends Component {
         }
     }
 
-    getX(u) {
-        if (u)
-            return <button className='ic-close-window' onClick={this.confirmDelete.bind(this)}>x</button>;
+    getX() {
+        if (this.hasEditingRights)
+            return <button className='ic-close-window' onClick={this.confirmDelete}>x</button>;
+    }
+
+    edit() {
+        if (this.hasEditingRights)
+            this.props.edit(this.props.note);
     }
 
     render() {
-        let n = this.props.note;
-        let style = {
-            left: n.x * this.props.w,
-            top: n.y * this.props.h
-        };
-        let contents = this.getContents(n);
-        let x = this.getX(this.props.u);
+        let n = this.props.note,
+            contents = this.getContents(),
+            x = this.getX(),
+            noteId = 'note'+this.props.i,
+            height = n.doodle ? '100px' : null,
+            style = {
+                left: n.x * this.props.w,
+                top: n.y * this.props.h
+            };
 
         return (
             <li style={style}
                 className="ic-sticky-note draggable"
-                onClick={() => this.props.edit(n)}
-                id={'note'+this.props.i}
-                height={n.doodle ? '100px' : ''}>
+                onClick={this.edit}
+                id={noteId}
+                height={height}>
                 {x}
                 {contents}
             </li>
@@ -76,8 +94,8 @@ StickyNote.propTypes = {
     i: PropTypes.number.isRequired,
     w: PropTypes.number.isRequired,
     h: PropTypes.number.isRequired,
-    edit: PropTypes.func.isRequired,
+    edit: PropTypes.func,
     destroy: PropTypes.func.isRequired,
-    u: PropTypes.string
+    mode: PropTypes.string.isRequired
 };
 

@@ -6,6 +6,7 @@ var io;
 var logger = require('./logger.js');
 var Manager = new UserManager();
 var Mail = new Mailer();
+var MODES = require('./constants.js').MODES;
 
 const HOST = (process.env.NODE_ENV === 'production') ? 'http://icompass.hieuqn.com/' : 'http://localhost:8080/';
 
@@ -89,7 +90,8 @@ module.exports = {
 
                     client.emit('compass found', {
                         compass: compass,
-                        username: client.username || data.username
+                        username: client.username || data.username,
+                        mode: MODES.EDIT
                     });
                 });
             });
@@ -100,7 +102,8 @@ module.exports = {
                     if (compass !== null) logger.info('request to view compass successful', compass._id);
                     client.emit('compass found', {
                         compass: compass,
-                        username: data.username
+                        username: data.username,
+                        mode: MODES.VIEW
                     });
                 });
             });
