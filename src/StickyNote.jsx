@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { PROMPTS } from '../utils/constants.js';
 
 export default class StickyNote extends Component {
@@ -69,4 +70,14 @@ export default class StickyNote extends Component {
         );
     }
 }
+
+StickyNote.propTypes = {
+    note: PropTypes.object.isRequired,
+    i: PropTypes.number.isRequired,
+    w: PropTypes.number.isRequired,
+    h: PropTypes.number.isRequired,
+    edit: PropTypes.func.isRequired,
+    destroy: PropTypes.func.isRequired,
+    u: PropTypes.string
+};
 

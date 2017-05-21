@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 let paint = false;
 
@@ -108,4 +109,11 @@ export default class DoodleForm extends Component {
         );
     }
 }
+
+DoodleForm.propTypes = {
+    save: PropTypes.func.isRequired,
+    style: PropTypes.object.isRequired,
+    bg: PropTypes.string.isRequired,
+    close: PropTypes.func.isRequired
+};
 

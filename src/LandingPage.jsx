@@ -126,7 +126,7 @@ export default class LandingPage extends Component {
                 <div className="prompt">Your name (how others will see you)</div>
                 <div className="response"><input id="username" /></div>
                 <div id="error-message"></div>
-                <button className="ic-button" name="go" onClick={cb}>let's go</button>
+                <button className="ic-button" name="go" onClick={cb}>let&apos;s go</button>
             </div>
         );
     }
@@ -135,7 +135,7 @@ export default class LandingPage extends Component {
         return (
             <div className="section third">
                 <h1>Sorry!</h1>
-                <h2>I couldn't find your compass. Do you have the right code?</h2>
+                <h2>I couldn&apos;t find your compass. Do you have the right code?</h2>
             </div>
         );
     }

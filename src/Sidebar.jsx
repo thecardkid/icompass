@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'underscore';
 import { PROMPTS, CONTROLS, PIXELS, COLORS } from '../utils/constants.js';
 
@@ -119,4 +120,15 @@ export default class Sidebar extends Component {
         );
     }
 }
+
+Sidebar.propTypes = {
+    users: PropTypes.object.isRequired,
+    disconnected: PropTypes.bool.isRequired,
+    editCode: PropTypes.string.isRequired,
+    viewCode: PropTypes.string.isRequired,
+    you: PropTypes.string.isRequired,
+    show: PropTypes.bool.isRequired,
+    destroy: PropTypes.func.isRequired,
+    toggleSidebar: PropTypes.func.isRequired
+};
 

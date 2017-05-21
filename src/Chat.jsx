@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Message from './Message.jsx';
 import _ from 'underscore';
 import { KEYCODES, PIXELS } from '../utils/constants.js';
@@ -70,4 +71,13 @@ export default class Chat extends Component {
         );
     }
 }
+
+Chat.propTypes = {
+    socket: PropTypes.object.isRequired,
+    username: PropTypes.string.isRequired,
+    colorMap: PropTypes.object.isRequired,
+    toggleChat: PropTypes.func.isRequired,
+    messages: PropTypes.array.isRequired,
+    show: PropTypes.bool.isRequired
+};
 

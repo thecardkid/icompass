@@ -1,10 +1,10 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
-import StickyNote from './StickyNote.jsx';
 import Shared from './Shared.jsx';
 
 import { QUADRANTS_INFO } from '../utils/constants.js';
@@ -58,4 +58,8 @@ export default class CompassView extends Component {
         );
     }
 }
+
+CompassView.propTypes = {
+    params: PropTypes.object.isRequired
+};
 

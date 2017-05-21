@@ -1,7 +1,7 @@
 'use strict';
 
 import { browserHistory } from 'react-router';
-import { PROMPTS, KEYCODES, REGEX } from '../utils/constants.js';
+import { PROMPTS, KEYCODES } from '../utils/constants.js';
 
 import Validator from './Validator.jsx';
 
@@ -66,7 +66,7 @@ export default {
         this.closeForm();
     },
 
-    emitNewDoodle(x, y, drag) {
+    emitNewDoodle() {
         if (this.state.disconnected) return this.alertInvalidAction();
 
         this.socket.emit('new note', {
@@ -88,7 +88,7 @@ export default {
     },
 
     handleDisconnect() {
-        this.setState({showSidebar: true, disconnected: true})
+        this.setState({showSidebar: true, disconnected: true});
     },
 
     handleReconnect() {
@@ -97,7 +97,7 @@ export default {
             compassId: this.state.compass._id,
             username: this.state.username,
             color: this.state.users.usernameToColor[this.state.username]
-        })
+        });
         this.setState({disconnected: false});
     },
 
@@ -166,4 +166,4 @@ export default {
             k === KEYCODES.CTRL ||
             k === KEYCODES.CMD;
     }
-}
+};

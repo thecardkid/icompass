@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class NoteForm extends Component {
 
@@ -17,4 +18,12 @@ export default class NoteForm extends Component {
         );
     }
 }
+
+NoteForm.propTypes = {
+    style: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
+    text: PropTypes.string,
+    make: PropTypes.func.isRequired,
+    close: PropTypes.func.isRequired
+};
 

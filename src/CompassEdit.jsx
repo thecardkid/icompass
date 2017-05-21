@@ -1,12 +1,12 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import Sidebar from './Sidebar.jsx';
 import NoteForm from './NoteForm.jsx';
-import StickyNote from './StickyNote.jsx';
 import Explanation from './Explanation.jsx';
 import Shared from './Shared.jsx';
 import Chat from './Chat.jsx';
@@ -319,4 +319,11 @@ export default class CompassEdit extends Component {
         );
     }
 }
+
+CompassEdit.propTypes = {
+    params: PropTypes.object,
+    compass: PropTypes.object,
+    username: PropTypes.string,
+    users: PropTypes.object
+};
 
