@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import Sidebar from './Sidebar.jsx';
@@ -12,6 +13,7 @@ import Shared from './Shared.jsx';
 import Chat from './Chat.jsx';
 import DoodleForm from './DoodleForm.jsx';
 
+import Validator from './Validator.jsx';
 import Helper from './CompassHelper.jsx';
 
 import { QUADRANTS_INFO, KEYCODES, PROMPTS, COLORS } from '../utils/constants.js';
@@ -45,12 +47,30 @@ export default class CompassEdit extends Component {
             }]
         };
 
+        let validCode = Validator.validateCompassCode(this.props.params.code);
+        let validUsername = Validator.validateUsername(this.props.params.username);
+
+        if (!validCode[0] || !validUsername[0]) {
+            let err = 'There was a problem with your login info:\n\n';
+
+            if (!validCode[0]) err += validCode[1] + '\n\n';
+            if (!validUsername[0]) err += validUsername[1] + '\n\n';
+
+            err += 'You will now be directed to the login page';
+            alert(err);
+            browserHistory.push('/');
+        }
+
         this.socket.emit('find compass edit', {
             code: this.props.params.code,
             username: this.props.params.username
         });
 
         this.socket.on('compass found', (data) => {
+            if (data.compass === null) {
+                alert('I couldn\'t find your compass. Please check your code. You will now be directed to the login page');
+                browserHistory.push('/');
+            }
             this.setState({
                 compass: data.compass,
                 username: data.username
@@ -208,16 +228,6 @@ export default class CompassEdit extends Component {
 
     showDoodleForm() {
         this.setState({editNote: false, newNote: false, doodleNote: true});
-    }
-
-    validateText() {
-        let text = $('#ic-form-text').val();
-        if (text === '') return false;
-        if (text.length > 300) {
-            alert(PROMPTS.POST_IT_TOO_LONG);
-            return false;
-        }
-        return text;
     }
 
     alertInvalidAction() {

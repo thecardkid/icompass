@@ -3,13 +3,20 @@
 import { browserHistory } from 'react-router';
 import { PROMPTS, KEYCODES, REGEX } from '../utils/constants.js';
 
+import Validator from './Validator.jsx';
+
 export default {
     emitNewNote() {
         if (this.state.disconnected) return this.alertInvalidAction();
-        let text = this.validateText();
+        let text = $('#ic-form-text').val();
         if (!text) return;
+        let validText = Validator.validateStickyText(text);
+        let isImage;
 
-        let isImage = REGEX.URL.test(text) && confirm(PROMPTS.CONFIRM_IMAGE_LINK);
+        if (validText[0])
+            isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
+        else
+            if (!validText[1]) return alert(PROMPTS.POST_IT_TOO_LONG);
 
         this.socket.emit('new note', {
             text: text,
@@ -40,14 +47,19 @@ export default {
 
     emitEditNote() {
         if (this.state.disconnected) return this.alertInvalidAction();
-        let text = this.validateText();
+        let text = $('#ic-form-text').val();
         if (!text) return;
+        let validText = Validator.validateStickyText(text);
+        let isImage;
+
+        if (validText[0])
+            isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
+        else
+            if (!validText[1]) return alert(PROMPTS.POST_IT_TOO_LONG);
 
         let note = JSON.parse(JSON.stringify(this.state.editNote));
         note.text = text;
-
-        note.isImage = REGEX.URL.test(text) && confirm(PROMPTS.CONFIRM_IMAGE_LINK);
-
+        note.isImage = isImage;
         this.socket.emit('update note', note);
         this.closeForm();
     },

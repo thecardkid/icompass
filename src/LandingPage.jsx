@@ -5,6 +5,7 @@ import { browserHistory, Link } from 'react-router';
 import { ERROR_MSG, PROMPTS, REGEX } from '../utils/constants.js';
 
 import Shared from './Shared.jsx';
+import Validator from './Validator.jsx';
 
 const LOGIN_TYPE = {
     MAKE: 0,
@@ -47,70 +48,6 @@ export default class LandingPage extends Component {
         this.setState({vw: window.innerWidth, vh: window.innerHeight});
     }
 
-    validateCode() {
-        let code = $('#compass-code').val(),
-            error;
-        if (!code)
-            error = ERROR_MSG.REQUIRED('A code');
-        else if (code.length != 8)
-            error = ERROR_MSG.INVALID('Your code');
-
-        if (error) {
-            $('#error-message').text(error);
-            return false;
-        }
-
-        return code;
-    }
-
-    validateUsername() {
-        let username = $('#username').val(),
-            error;
-
-        if (!username)
-            error = ERROR_MSG.REQUIRED('Username');
-        else if (username.length > 15)
-            error = ERROR_MSG.TEXT_TOO_LONG('Username', 15);
-        else if (username.match(/\d+/g) != null)
-            error = ERROR_MSG.UNAME_HAS_NUMBER;
-
-        if (error) {
-            $('#error-message').text(error);
-            return false;
-        }
-
-        return username;
-    }
-
-    validateCenter() {
-        let center = $('#compass-center').val(),
-            error;
-
-        if (!center)
-            error = ERROR_MSG.REQUIRED('People group');
-        else if (center.length > 30)
-            error = ERROR_MSG.TEXT_TOO_LONG('People group', 30);
-
-        if (error) {
-            $('#error-message').text(error);
-            return false;
-        }
-
-        return center;
-    }
-
-    validateEmail() {
-        let email = $('#email').val();
-        if (!email) return null;
-
-        if (!REGEX.EMAIL.test(email)) {
-            alert(ERROR_MSG.INVALID('Email'));
-            return false;
-        }
-
-        return email;
-    }
-
     newCompass(center, username) {
         this.socket.emit('create compass', {
             center: center,
@@ -136,22 +73,24 @@ export default class LandingPage extends Component {
 
     validateFindInput() {
         $('#error-message').text('');
-        let code = this.validateCode();
-        let username = this.validateUsername();
+        let code = Validator.validateCompassCode($('#compass-code').val());
+        let username = Validator.validateUsername($('#username').val());
 
-        if (!code || !username) return;
+        if (!code[0]) return $('#error-message').text(code[1]);
+        if (!username[0]) return $('#error-message').text(username[1]);
 
-        this.findCompass(code, username);
+        this.findCompass(code[1], username[1]);
     }
 
     validateMakeInput() {
         $('#error-message').text('');
-        let center = this.validateCenter();
-        let username = this.validateUsername();
+        let center = Validator.validateCenter($('#compass-center').val());
+        let username = Validator.validateUsername($('#username').val());
 
-        if (!center || !username) return;
+        if (!center[0]) return $('#error-message').text(center[1]);
+        if (!username[0]) return $('#error-message').text(username[1]);
 
-        this.newCompass(center, username);
+        this.newCompass(center[1], username[1]);
     }
 
     getFirst() {
@@ -202,12 +141,13 @@ export default class LandingPage extends Component {
     }
 
     toWorkspace() {
-        let email = this.validateEmail();
+        let email = $('#email').val();
+        let valid = Validator.validateEmail(email);
         let d = this.state.data;
 
-        if (email === false) return;
+        if (email && !valid[0]) return alert(ERROR_MSG.INVALID('Email'));
 
-        if (email !== null) {
+        if (email && valid[0]) {
             this.socket.emit('send mail', {
                 editCode: d.code,
                 username: this.state.username,

@@ -62,7 +62,7 @@ module.exports.ERROR_MSG = {
     TEXT_TOO_LONG: function(prop, len) {
         return prop + ' cannot be longer than ' + len + ' chars';
     },
-    UNAME_HAS_NUMBER: 'Username cannot contain numbers',
+    UNAME_HAS_NON_CHAR: 'Username can only contain a-zA-Z',
     CANT_FIND: 'Compass does not exist',
 };
 
@@ -82,6 +82,8 @@ module.exports.PIXELS = {
 };
 
 module.exports.REGEX = {
+    HAS_WHITESPACE: /\s/g,
+    CHAR_ONLY: /[^a-zA-Z]+/,
     URL: /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/i,
     EMAIL: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 };

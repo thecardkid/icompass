@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import StickyNote from './StickyNote.jsx';
@@ -24,7 +25,13 @@ export default class CompassView extends Component {
             username: this.props.params.username
         });
 
-        this.socket.on('compass found', (compass) => this.setState({ compass }));
+        this.socket.on('compass found', (data) => {
+            if (data.compass === null) {
+                alert('I couldn\'t find your compass. Please check your code. You will now be directed to the login page');
+                browserHistory.push('/');
+            }
+            this.setState({compass: data.compass});
+        });
 
         // Shared methods
         this.renderNote = Shared.renderNote.bind(this);

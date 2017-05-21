@@ -76,29 +76,42 @@ compassSchema.statics.makeCompass = function(center, cb) {
     });
 }
 
-compassSchema.statics.findCode = function(code, cb) {
-    var root = this;
-    root.findOne({editCode: code}, function(err, compassEdit) {
+compassSchema.statics.findByEditCode = function(code, cb) {
+    this.findOne({editCode: code}, function(err, c) {
         if (err) logger.error('Could not find compass for editing', code, err);
 
-        if (!compassEdit) {
-            root.findOne({viewCode: code}, function(err, compassView) {
-                if (err) logger.error('Could not find compass for viewing', code, err);
+        if (c !== null) logger.debug('Found compass for editing', c._id);
+        cb(c);
+    });
+}
 
-                if (!compassView) {
+compassSchema.statics.findByViewCode = function(code, cb) {
+    this.findOne({viewCode: code}, function(err, c) {
+        if (err) logger.error('Could not find compass for viewing', code, err);
+
+        if (c === null) return cb(null);
+
+        logger.debug('Found compass for viewing', c._id);
+        var copy = JSON.parse(JSON.stringify(c));
+        delete copy.editCode; // TODO delete comment code
+        cb(copy);
+    });
+}
+
+compassSchema.statics.findCode = function(code, cb) {
+    var schema = this;
+    schema.findByEditCode(code, function(compassEdit) {
+        if (compassEdit === null) {
+            schema.findByViewCode(code, function(compassView) {
+                if (compassView === null) {
                     cb(null, null);
                     return;
                 }
 
-                logger.debug('Found compass for viewing', compassView._id);
-                var copy = JSON.parse(JSON.stringify(compassView));
-                delete copy.editCode;
-                // TODO delete comment code
-                cb(copy, copy.viewCode, MODES.VIEW);
+                cb(compassView, MODES.VIEW);
             });
         } else {
-            logger.debug('Found compass for editing', compassEdit._id);
-            cb(compassEdit, compassEdit.editCode, MODES.EDIT);
+            cb(compassEdit, MODES.EDIT);
         }
     })
 }

@@ -1,7 +1,6 @@
 
 var CONSTANTS = require('../../utils/constants.js');
 var ERROR_MSG = CONSTANTS.ERROR_MSG;
-var PROMPTS = CONSTANTS.PROMPTS;
 var code;
 
 module.exports = {
@@ -25,7 +24,7 @@ module.exports = {
 
     'make path errors': function(browser) {
         browser
-        .setValue('#username', 'Sandbox')
+        .setValue('#username', 'sandbox')
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.REQUIRED('People group'))
         .setValue('#compass-center', 'This is a really long people group that will hopefully exceed char limit')
@@ -61,7 +60,7 @@ module.exports = {
         browser
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.REQUIRED('Username'))
-        .setValue('#username', 'Sandbox')
+        .setValue('#username', 'sandbox')
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.REQUIRED('A code'))
         .setValue('#compass-code', '1234567')
@@ -72,7 +71,7 @@ module.exports = {
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NUMBER)
         .clearValue('#username')
-        .setValue('#username', 'SandboxSandboxSandboxSandboxSandboxSandbox')
+        .setValue('#username', 'sandboxsandboxsandboxsandboxsandboxsandbox')
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.TEXT_TOO_LONG('Username', 15))
         .clearValue('#username')
@@ -82,11 +81,11 @@ module.exports = {
     'find successful': function(browser) {
         browser
         .setValue('#compass-code', code)
-        .setValue('#username', 'Sandbox')
+        .setValue('#username', 'sandbox')
         .click('button[name=go]')
         .waitForElementVisible('.third', 50000)
         .assert.containsText('.third h1', 'edit access')
-        .assert.containsText('.third h2', 'You will be logged in as Sandbox')
+        .assert.containsText('.third h2', 'You will be logged in as sandbox')
         .assert.elementPresent('button[name=to-workspace]')
         .click('button[name=to-workspace]')
         .waitForElementVisible('#ic-sidebar', 1000)
@@ -100,5 +99,4 @@ module.exports = {
         })
         .end();
     }
-
 }

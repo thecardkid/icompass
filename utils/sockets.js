@@ -26,10 +26,9 @@ module.exports = {
 
 
             client.on('send mail', function(data) {
-                var text = 'Edit code: ' + data.editCode +
-                    '\nView code: ' + data.viewCode + '\n\n' +
-                    'Visit this link for a pre-filled form: ' +
-                    HOST + data.editCode + '/' + data.username;
+                var text = 'Your compass code: ' + data.editCode + '\n\n'
+                    + 'Or access it directly via this link ' +
+                    HOST + 'compass/edit/' + data.editCode + '/' + data.username;
 
                 Mail.sendMessage(text, data.email, function(status) {
                     if (status) client.emit('mail sent');
@@ -49,10 +48,10 @@ module.exports = {
 
 
             client.on('find compass', function(data) {
-                Compass.findCode(data.code, function(compass, code, mode) {
+                Compass.findCode(data.code, function(compass, mode) {
                     client.emit('compass ready', {
                         success: compass ? true : false,
-                        code: code,
+                        code: data.code,
                         mode: mode,
                     });
                 });
@@ -80,27 +79,32 @@ module.exports = {
 
 
             client.on('find compass edit', function(data) {
-                Compass.findCode(data.code, function(compass) {
-                    var o = Manager.addUser(data.code, data.username);
-                    data.username = o.newUser;
-                    data.compassId = compass._id.toString();
-                    joinRoom(data);
-                    logger.info(client.username, 'joined room', client.room);
+                Compass.findByEditCode(data.code, function(compass) {
+                    if (compass !== null) {
+                        var o = Manager.addUser(data.code, data.username);
+                        data.username = o.newUser;
+                        data.compassId = compass._id.toString();
+                        joinRoom(data);
+                        logger.info(client.username, 'joined room', client.room);
+                        logger.debug('Manager after user joined', o.manager);
+                        io.sockets.in(client.room).emit('user joined', {users: o.manager, joined: client.username});
+                    }
 
-                    logger.debug('Manager after user joined', o.manager);
                     client.emit('compass found', {
                         compass: compass,
-                        username: client.username
-                    })
-                    io.sockets.in(client.room).emit('user joined', {users: o.manager, joined: client.username});
+                        username: client.username || data.username
+                    });
                 });
             });
 
 
             client.on('find compass view', function(data) {
-                Compass.findCode(data.code, function(compass) {
-                    logger.info('request to view compass successful', compass._id);
-                    client.emit('compass found', compass);
+                Compass.findByViewCode(data.code, function(compass) {
+                    if (compass !== null) logger.info('request to view compass successful', compass._id);
+                    client.emit('compass found', {
+                        compass: compass,
+                        username: data.username
+                    });
                 })
             })
 
