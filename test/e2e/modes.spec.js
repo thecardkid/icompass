@@ -68,10 +68,12 @@ module.exports = {
 
     'url with bad params is rejected': function(browser) {
         browser
-        .url('http://localhost:8080/compass/edit/' + editCode.substring(1,5) + '/sandbox2')
-        .pause(500)
+        .url('http://localhost:8080/compass/edit/' + editCode.substring(1,5) + '/,,,')
+        .pause(2000)
         .getAlertText(function(result) {
-            this.assert.equal(result.value.indexOf('There was a problem with your login info'), 0)
+            this.assert.equal(result.value.indexOf('There was a problem with your login info') > -1, true)
+            this.assert.equal(result.value.indexOf('Your code is not valid') > -1, true);
+            this.assert.equal(result.value.indexOf('Username can only contain a-zA-Z') > -1, true);
         })
         .acceptAlert()
         .pause(500)
@@ -84,7 +86,7 @@ module.exports = {
     'view url with wrong editCode is rejected': function(browser) {
         browser
         .url('http://localhost:8080/compass/view/'+editCode+'/sandbox')
-        .pause(500)
+        .pause(2000)
         .getAlertText(function(result) {
             this.assert.equal(result.value.indexOf('I couldn\'t find your compass'), 0);
         })
