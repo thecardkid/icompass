@@ -108,7 +108,6 @@ module.exports = {
             top = Number(result.value.substring(0,result.value.length-2));
         })
         .getCssProperty('#note1', 'left', function(result) {
-            console.log('left', result);
             left = Number(result.value.substring(0,result.value.length-2));
         })
         .moveToElement('#note1', 10, 10, function() {

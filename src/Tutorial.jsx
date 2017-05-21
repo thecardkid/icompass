@@ -131,7 +131,7 @@ export default class Tutorial extends Component {
                     <div id="ic-tutorial-text" style={this.center(300,200)}>
                         <h1>{STEPS[this.state.i].header}</h1>
                         <h3>{STEPS[this.state.i].text}</h3>
-                        <button className="ic-button" onClick={this.next}>
+                        <button name="next-step" className="ic-button" onClick={this.next}>
                             {this.state.i === STEPS.length-1 ? 'finish' : 'next'}
                         </button>
                     </div>
