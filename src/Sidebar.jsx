@@ -15,7 +15,7 @@ export default class Sidebar extends Component {
         this.confirmDelete = this.confirmDelete.bind(this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         if (this.props.users !== nextProps.users)
             return true;
 
@@ -103,16 +103,16 @@ export default class Sidebar extends Component {
                         <h2>Actions</h2>
                         <button className="ic-action" onClick={this.showSavePrompt}>Export to PDF</button>
                         <button name="sucks" className="ic-action" onClick={this.notifyMe}>This sucks</button>
-                        <button name="tutorial" className="ic-action"><a href="/tutorial" target="_blank">Tutorial</a></button>
+                        <button name="tutorial" className="ic-action"><a href="/tutorial" target="_blank" rel="noopener noreferrer">Tutorial</a></button>
                         <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>Delete Compass</button>
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Credits</h2>
                         <p>Compass by
-                            <a href="http://innovatorscompass.org" target="_blank"> Ela Ben-Ur</a>
+                            <a href="http://innovatorscompass.org" target="_blank" rel="noopener noreferrer"> Ela Ben-Ur</a>
                         </p>
                         <p>App by
-                            <a href="http://hieuqn.com" target="_blank"> Hieu Nguyen</a>
+                            <a href="http://hieuqn.com" target="_blank" rel="noopener noreferrer"> Hieu Nguyen</a>
                         </p>
                     </div>
                 </div></div>

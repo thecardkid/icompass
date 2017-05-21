@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default class Message extends Component {
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate() {
         return false;
     }
 

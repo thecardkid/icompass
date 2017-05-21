@@ -4,7 +4,7 @@ import { PROMPTS } from '../utils/constants.js';
 
 export default class StickyNote extends Component {
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         let thisNote = this.props.note,
             nextNote = nextProps.note;
 
