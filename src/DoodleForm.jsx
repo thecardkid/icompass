@@ -15,14 +15,12 @@ export default class DoodleForm extends Component {
         this.draw = this.draw.bind(this);
         this.drawCanvas = this.drawCanvas.bind(this);
         this.makeDoodle = this.makeDoodle.bind(this);
+        this.clearCanvas = this.clearCanvas.bind(this);
     }
 
     componentDidMount() {
         this.canvas = $('#ic-doodle');
-        this.state = {
-            x: [], y: [], drag: []
-        };
-
+        this.state = {x: [], y: [], drag: []};
     }
 
     componentDidUpdate() {
@@ -75,8 +73,13 @@ export default class DoodleForm extends Component {
     }
 
     makeDoodle() {
+        if (this.state.x.length === 0) return;
         let { x, y, drag } = this.state;
         this.props.save(x, y, drag);
+    }
+
+    clearCanvas() {
+        this.setState({x: [], y: [], drag: []});
     }
 
     render() {
@@ -97,6 +100,7 @@ export default class DoodleForm extends Component {
                         style={{background:this.props.bg}}>
                     </canvas>
                     <div id="ic-doodle-toolbar">
+                        <button className="ic-button" onClick={this.clearCanvas}>clear</button>
                         <button name="ship" className="ic-button" onClick={this.makeDoodle}>ship it</button>
                         <button name="nvm" className="ic-button" onClick={this.props.close}>never mind</button>
                     </div>
