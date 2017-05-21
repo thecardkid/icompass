@@ -36,6 +36,7 @@ module.exports = {
 
         browser
         .assert.elementPresent('#ic-landing')
+        .end();
     }
 }
 
