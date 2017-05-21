@@ -8,7 +8,6 @@ import Sidebar from './Sidebar.jsx';
 import NoteForm from './NoteForm.jsx';
 import StickyNote from './StickyNote.jsx';
 import Explanation from './Explanation.jsx';
-import HelpScreen from './HelpScreen.jsx';
 import Shared from './Shared.jsx';
 import Chat from './Chat.jsx';
 import DoodleForm from './DoodleForm.jsx';
@@ -103,7 +102,6 @@ export default class CompassEdit extends Component {
             78: this.showNewNote,
             67: this.toggleChat,
             68: this.showDoodleForm,
-            72: this.toggleHelp,
             83: this.toggleSidebar,
             87: this.toggleExplain
         };
@@ -267,12 +265,6 @@ export default class CompassEdit extends Component {
         return null;
     }
 
-    getHelpScreen() {
-        if (this.state.showHelp)
-            return <HelpScreen style={this.center(420,300)} close={this.toggleHelp}/>
-        return null;
-    }
-
     getExplanation() {
         if (this.state.showExplanation)
             return <Explanation close={this.toggleExplain} />;
@@ -317,7 +309,6 @@ export default class CompassEdit extends Component {
             <div id="compass">
                 {this.getStickies()}
                 {this.getForm()}
-                {this.getHelpScreen()}
                 {this.getExplanation()}
                 {this.getCompassStructure(this.state.compass.center)}
                 <button id="show-sidebar" onClick={this.toggleSidebar}>Show Sidebar</button>

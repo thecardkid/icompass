@@ -151,7 +151,6 @@ export default {
         return k === KEYCODES.N ||
             k === KEYCODES.D ||
             k === KEYCODES.C ||
-            k === KEYCODES.H ||
             k === KEYCODES.W ||
             k === KEYCODES.S ||
             k === KEYCODES.D;

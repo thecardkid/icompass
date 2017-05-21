@@ -19,14 +19,6 @@ module.exports.QUADRANTS_INFO = [
     {id: 'experiments', prompt: 'What\'s a way to try?'}
 ];
 
-module.exports.HELP_TIPS = [
-    'Share your code to collaborate',
-    'Each user has a different sticky note color',
-    'Familiarize yourself with the CONTROLS in the menu',
-    'Click a sticky note to edit it',
-    'If keys stop working, hit Esc a few times'
-];
-
 module.exports.MODES = {
     EDIT: 'edit',
     VIEW: 'view',
@@ -36,7 +28,6 @@ module.exports.KEYCODES = {
     N: 78,
     C: 67,
     D: 68,
-    H: 72,
     W: 87,
     S: 83,
     SHIFT: 16,
@@ -72,7 +63,6 @@ module.exports.CONTROLS = {
     's': 'toggle sidebar',
     'c': 'toggle chat',
     'w': 'what is this?',
-    'h': 'toggle help',
 };
 
 module.exports.PIXELS = {
