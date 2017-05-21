@@ -1,5 +1,6 @@
 
 var originalTranslation;
+var STEPS = 16;
 
 module.exports = {
     'creates successfully': function(browser) {
@@ -30,8 +31,8 @@ module.exports = {
     },
 
     'exits correctly': function(browser) {
-        for (var i=0; i<12; i++) {
-            browser.click('button[name=next-step]').pause(1000)
+        for (var i=0; i<STEPS; i++) {
+            browser.click('button[name=next-step]').pause(500)
         }
 
         browser

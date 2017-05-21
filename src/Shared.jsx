@@ -27,21 +27,6 @@ export default {
         };
     },
 
-    showSavePrompt() {
-        if (confirm(PROMPTS.EXPORT)) this.exportCompass();
-    },
-
-    exportCompass() {
-        this.setState({showSidebar: false, showChat: false}, () => {
-            window.html2canvas(document.body).then((canvas) => {
-                let imgData = canvas.toDataURL('image/png');
-                let doc = new jsPDF('l', 'cm', 'a4');
-                doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
-                doc.save('compass.pdf');
-            });
-        });
-    },
-
     renderQuadrant(q, i) {
         return (
             <div key={q.id} className="ic-quadrant" id={q.id}>

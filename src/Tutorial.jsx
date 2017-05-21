@@ -7,6 +7,10 @@ import DefaultCompass from '../models/defaultCompass.js';
 import CompassEdit from './CompassEdit.jsx';
 import Shared from './Shared.jsx';
 
+const USERS = {
+    usernameToColor: {'sandbox': '#CCFFFF'}
+};
+
 const STEPS = [
     {
         header: 'Welcome to iCompass',
@@ -42,7 +46,26 @@ const STEPS = [
     {
         header: 'Key bindings',
         text: 'Each of these keys is associated with a special action. For example, press "s" twice to toggle the sidebar',
-        prep: (root) => root.showOnly(2)
+        prep: () => $('#ic-tutorial-cover').fadeOut()
+    },
+    {
+        header: 'Creating notes',
+        text: 'Press "n" to bring up the new note form. You can put up to 300 characters in a note. Drag this blurb to see the from.',
+        prep: () => $('#ic-form-text').val('https://s-media-cache-ak0.pinimg.com/736x/73/de/32/73de32f9e5a0db66ec7805bb7cb3f807.jpg')
+    },
+    {
+        header: 'Linking images',
+        text: 'If you enter a hyperlink, I can import that image for you',
+        prep: () => $('button[name=nvm]').click()
+    },
+    {
+        header: 'Doodling',
+        text: 'Press "d" to make a doodle, if you\'re more visual. The more doodles in a compass, the more lag there might be, though.',
+        prep: (root) => {
+            $('#ic-tutorial-cover').fadeIn();
+            $('button[name=nvm]').click()
+            root.showOnly(2);
+        }
     },
     {
         header: 'Active users',
@@ -56,7 +79,7 @@ const STEPS = [
     },
     {
         header: 'Reduce',
-        text: 'Since I have no money, I would appreciate if you could clean up server space by deleting a compass you know you won\'t need again! You can also save a pdf or send me your complaints',
+        text: 'I would appreciate if you could clean up server space by deleting a compass you know you won\'t need again! You can also save a pdf, send me your complaints, or see this tutorial again',
         prep: (root) => root.showOnly(5)
     },
     {
@@ -79,6 +102,11 @@ const STEPS = [
     {
         header: 'Buttons',
         text: 'If you forget the key bindings "s" for sidebar and "c" for chat, use these buttons to get them back',
+        prep: () => {}
+    },
+    {
+        header: 'That\'s it!',
+        text: 'You\'re ready to try out the real thing :)'
     }
 ];
 
@@ -136,7 +164,7 @@ export default class Tutorial extends Component {
                         </button>
                     </div>
                 </Draggable>
-                <CompassEdit compass={this.compass} username={'sandbox'} />
+                <CompassEdit compass={this.compass} username={'sandbox'} users={USERS} />
             </div>
         );
     }

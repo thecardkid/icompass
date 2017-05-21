@@ -45,7 +45,7 @@ export default class CompassEdit extends Component {
             editNote: false,
             dragNote: false,
             doodleNote: false,
-            users: {},
+            users: this.props.users || {},
             showSidebar: true,
             showChat: true,
             showExplanation: false,

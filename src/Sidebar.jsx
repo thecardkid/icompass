@@ -4,15 +4,13 @@ import React, { Component } from 'react';
 import _ from 'underscore';
 import { PROMPTS, CONTROLS, PIXELS, COLORS } from '../utils/constants.js';
 
-import Shared from './Shared.jsx';
-
 export default class Sidebar extends Component {
 
     constructor(props, context) {
         super(props, context);
         this.controlList = _.map(CONTROLS, this.renderControl);
-        this.showSavePrompt = Shared.showSavePrompt.bind(this);
-        this.exportCompass = Shared.exportCompass.bind(this);
+        this.showSavePrompt = this.showSavePrompt.bind(this);
+        this.exportCompass = this.exportCompass.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
     }
 
@@ -52,6 +50,21 @@ export default class Sidebar extends Component {
         alert(PROMPTS.THIS_SUCKS);
     }
 
+    showSavePrompt() {
+        if (confirm(PROMPTS.EXPORT)) this.exportCompass();
+    }
+
+    exportCompass() {
+        this.setState({showSidebar: false, showChat: false}, () => {
+            window.html2canvas(document.body).then((canvas) => {
+                let imgData = canvas.toDataURL('image/png');
+                let doc = new jsPDF('l', 'cm', 'a4');
+                doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
+                doc.save('compass.pdf');
+            });
+        });
+    }
+
     confirmDelete() {
         if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS))
             this.props.destroy();
@@ -88,8 +101,9 @@ export default class Sidebar extends Component {
                     <div className="ic-sidebar-list">
                         <h2>Actions</h2>
                         <button className="ic-action" onClick={this.showSavePrompt}>Export to PDF</button>
-                        <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>Delete Compass</button>
                         <button name="sucks" className="ic-action" onClick={this.notifyMe}>This sucks</button>
+                        <button name="tutorial" className="ic-action"><a href="/tutorial" target="_blank">Tutorial</a></button>
+                        <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>Delete Compass</button>
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Credits</h2>
