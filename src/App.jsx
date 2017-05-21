@@ -11,6 +11,7 @@ import CompassEdit from './CompassEdit.jsx';
 import CompassView from './CompassView.jsx';
 import LandingPage from './LandingPage.jsx';
 import Tutorial from './Tutorial.jsx';
+import NotFound from './NotFound.jsx';
 
 class App extends Component {
 
@@ -25,7 +26,8 @@ class App extends Component {
                 <Route path='/' component={LandingPage} />
                 <Route path='/compass/edit/:code/:username' component={CompassEdit} />
                 <Route path='/compass/view/:code/:username' component={CompassView} />
-                <Route path='/tutorial' socket={this.socket} component={Tutorial} />
+                <Route path='/tutorial' component={Tutorial} />
+                <Route path='*' component={NotFound} />
             </Router>
         );
     }

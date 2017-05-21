@@ -120,7 +120,7 @@ export default class LandingPage extends Component {
 
         return (
             <div className="section">
-                <h1>I need some details</h1>
+                <h1>I need some info</h1>
                 <div className="prompt">{firstPrompt}</div>
                 <div className="response"><input id={inputId} /></div>
                 <div className="prompt">Your name (how others will see you)</div>
