@@ -137,6 +137,7 @@ module.exports = {
             client.on('new note', function(newNote) { // new note
                 Compass.addNote(client.compassId, newNote, function(newCompass) {
                     logger.info(client.username, 'created a note', newNote._id);
+                    delete newNote.doodle;
                     logger.debug(client.username, 'created a note', newNote);
                     io.sockets.in(client.room).emit('update notes', newCompass.notes);
                 });
@@ -146,6 +147,7 @@ module.exports = {
             client.on('update note', function(updatedNote) {
                 Compass.updateNote(client.compassId, updatedNote, function(c) {
                     logger.info(client.username, 'updated a note', updatedNote._id);
+                    delete updatedNote.doodle;
                     logger.debug(client.username, 'updated a note', updatedNote);
                     io.sockets.in(client.room).emit('update notes', c.notes);
                 });

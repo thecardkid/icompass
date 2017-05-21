@@ -8,6 +8,7 @@ import Validator from './Validator.jsx';
 export default {
     emitNewNote() {
         if (this.state.disconnected) return this.alertInvalidAction();
+
         let text = $('#ic-form-text').val();
         if (!text) return;
         let validText = Validator.validateStickyText(text);
@@ -47,6 +48,7 @@ export default {
 
     emitEditNote() {
         if (this.state.disconnected) return this.alertInvalidAction();
+
         let text = $('#ic-form-text').val();
         if (!text) return;
         let validText = Validator.validateStickyText(text);
@@ -65,6 +67,8 @@ export default {
     },
 
     emitNewDoodle(x, y, drag) {
+        if (this.state.disconnected) return this.alertInvalidAction();
+
         this.socket.emit('new note', {
             text: null,
             doodle: document.getElementById('ic-doodle').toDataURL(),
