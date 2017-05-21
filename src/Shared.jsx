@@ -67,5 +67,16 @@ export default {
             </div>
         );
     },
+
+    handleCompassFound(data) {
+        if (data.compass === null) {
+            alert(PROMPTS.COMPASS_NOT_FOUND);
+            this.browserHistory.push('/');
+        }
+        this.setState({
+            compass: data.compass,
+            username: data.username
+        });
+    }
 }
 

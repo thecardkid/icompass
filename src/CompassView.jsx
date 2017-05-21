@@ -14,24 +14,18 @@ export default class CompassView extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.state = {
-            vw: window.innerWidth,
-            vh: window.innerHeight,
-        };
-
         this.socket = io();
         this.socket.emit('find compass view', {
             code: this.props.params.code,
             username: this.props.params.username
         });
+        this.browserHistory = browserHistory;
 
-        this.socket.on('compass found', (data) => {
-            if (data.compass === null) {
-                alert('I couldn\'t find your compass. Please check your code. You will now be directed to the login page');
-                browserHistory.push('/');
-            }
-            this.setState({compass: data.compass});
-        });
+        this.state = {
+            vw: window.innerWidth,
+            vh: window.innerHeight,
+        };
+        this.socket.on('compass found', Shared.handleCompassFound.bind(this));
 
         // Shared methods
         this.renderNote = Shared.renderNote.bind(this);

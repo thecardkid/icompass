@@ -91,7 +91,7 @@ module.exports = {
             this.assert.equal(result.value.indexOf('I couldn\'t find your compass'), 0);
         })
         .acceptAlert()
-        .pause(500)
+        .pause(1000)
         .assert.elementPresent('#ic-landing')
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/')

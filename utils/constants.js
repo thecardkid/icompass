@@ -2,12 +2,12 @@
 module.exports.PROMPTS = {
     EXPORT: 'I see you want to save this compass as a PDF. You can:\n\n1. Click \'OK\' and I can try to create a pdf for you, but the image quality may not be to your liking. Or\n\n2. Click \'Cancel\' and take a screenshot (recommended)',
     POST_IT_TOO_LONG: 'You can\'t fit that much on a post-it!',
-    NOT_CONNECTED: 'You are not connected to the server',
     EMAIL_SENT: 'An email has been sent to you. Expect it in 5-10 minutes',
     EMAIL_NOT_SENT: 'I ran into an issue sending you the email. Please note down your codes manually somewhere. Thanks',
     CONFIRM_IMAGE_LINK: 'Is this an image you want to import?',
     CONFIRM_DELETE_COMPASS: 'Are you sure you want to delete this compass?',
     CONFIRM_DELETE_NOTE: 'Delete this note?',
+    COMPASS_NOT_FOUND: 'I couldn\'t find your compass. Please check the code you provided. The permissions (edit/view) and the code might not match.\n\nYou will now be directed to the login page',
     COMPASS_DELETED: 'This compass has been deleted. You will be redirected to the sign in page. Thanks for keeping the database clean!',
     THIS_SUCKS: 'Hi there, Hieu here!\n\n1. If you would like to report a bug or request a new feature, go to <https://github.com/thecardkid/innovators-compass/issues> and click "New issue". If new feature, please be detailed; if bug, please list the steps to reproduce to bug\n\n2. If you\'re a dev, feel free to open a Pull Request'
 };

@@ -26,6 +26,12 @@ export default class CompassEdit extends Component {
 	constructor(props, context) {
 	    super(props, context);
 	    this.socket = io();
+        this.validateParams(this.props);
+        this.browserHistory = browserHistory;
+        this.socket.emit('find compass edit', {
+            code: this.props.params.code,
+            username: this.props.params.username
+        });
 
 	    this.state = {
             vw: window.innerWidth,
@@ -47,35 +53,7 @@ export default class CompassEdit extends Component {
             }]
         };
 
-        let validCode = Validator.validateCompassCode(this.props.params.code);
-        let validUsername = Validator.validateUsername(this.props.params.username);
-
-        if (!validCode[0] || !validUsername[0]) {
-            let err = 'There was a problem with your login info:\n\n';
-
-            if (!validCode[0]) err += validCode[1] + '\n\n';
-            if (!validUsername[0]) err += validUsername[1] + '\n\n';
-
-            err += 'You will now be directed to the login page';
-            alert(err);
-            browserHistory.push('/');
-        }
-
-        this.socket.emit('find compass edit', {
-            code: this.props.params.code,
-            username: this.props.params.username
-        });
-
-        this.socket.on('compass found', (data) => {
-            if (data.compass === null) {
-                alert('I couldn\'t find your compass. Please check your code. You will now be directed to the login page');
-                browserHistory.push('/');
-            }
-            this.setState({
-                compass: data.compass,
-                username: data.username
-            });
-        });
+        this.socket.on('compass found', Shared.handleCompassFound.bind(this));
 
        // socket handler events
 	    this.socket.on('assigned name', Helper.setUsername.bind(this));
@@ -120,6 +98,20 @@ export default class CompassEdit extends Component {
             87: this.toggleExplain
         };
 	}
+
+    validateParams(props) {
+        let validCode = Validator.validateCompassCode(props.params.code);
+        let validUsername = Validator.validateUsername(props.params.username);
+
+        if (!validCode[0] || !validUsername[0]) {
+            let err = 'There was a problem with your login info:\n\n';
+            if (!validCode[0]) err += validCode[1] + '\n\n';
+            if (!validUsername[0]) err += validUsername[1] + '\n\n';
+            err += 'You will now be directed to the login page';
+            alert(err);
+            browserHistory.push('/');
+        }
+    }
 
 	componentDidMount() {
 	    $(window).on('resize', this.updateWindowSize.bind(this));
