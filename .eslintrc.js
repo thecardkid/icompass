@@ -1,10 +1,16 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es6": true
+        "node": true,
+        "jquery": true,
+        "mocha": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
     "parserOptions": {
+        "ecmaVersion": 6,
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
