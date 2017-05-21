@@ -25,13 +25,7 @@ export default class Chat extends Component {
     }
 
     sendMessage() {
-        let content = this.text.val();
-        if (!content) return;
-        this.props.socket.emit('message', {
-            username: this.props.username,
-            text: content
-        });
-
+        this.props.emitMessage();
         this.text.val('').focus();
     }
 
@@ -78,6 +72,7 @@ Chat.propTypes = {
     colorMap: PropTypes.object.isRequired,
     toggleChat: PropTypes.func.isRequired,
     messages: PropTypes.array.isRequired,
-    show: PropTypes.bool.isRequired
+    show: PropTypes.bool.isRequired,
+    emitMessage: PropTypes.func.isRequired
 };
 

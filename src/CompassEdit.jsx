@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
-import SocketIOClient from 'socket.io-client';
 import _ from 'underscore';
 
 import Sidebar from './Sidebar.jsx';
@@ -14,9 +13,9 @@ import Chat from './Chat.jsx';
 import DoodleForm from './DoodleForm.jsx';
 
 import Validator from './Validator.jsx';
-import Helper from './CompassHelper.jsx';
+import Socket from './Socket.jsx';
 
-import { PROMPTS, COLORS } from '../utils/constants.js';
+import { PROMPTS, KEYCODES, COLORS } from '../utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 let drag = false;
@@ -25,15 +24,12 @@ export default class CompassEdit extends Component {
 
     constructor(props, context) {
         super(props, context);
-        this.socket = SocketIOClient();
+        this.socket = new Socket(this);
 
         if (!this.props.compass) {
             this.validateParams(this.props);
             this.browserHistory = browserHistory;
-            this.socket.emit('find compass edit', {
-                code: this.props.params.code,
-                username: this.props.params.username
-            });
+            this.socket.emitFindCompassEdit();
         }
 
         this.state = {
@@ -57,26 +53,6 @@ export default class CompassEdit extends Component {
                 text: 'These messages will be cleared when you log out'
             }]
         };
-
-        this.socket.on('compass found', Shared.handleCompassFound.bind(this));
-
-       // socket handler events
-        this.socket.on('assigned name', Helper.setUsername.bind(this));
-        this.socket.on('update notes', Helper.updateNotes.bind(this));
-        this.socket.on('user joined', Helper.handleUserJoined.bind(this));
-        this.socket.on('user left', Helper.handleUserLeft.bind(this));
-        this.socket.on('disconnect', Helper.handleDisconnect.bind(this));
-        this.socket.on('reconnect', Helper.handleReconnect.bind(this));
-        this.socket.on('new message', Helper.updateMessages.bind(this));
-        this.socket.on('compass deleted', Helper.handleCompassDeleted.bind(this));
-
-        // socket emit events
-        this.emitEditNote = Helper.emitEditNote.bind(this);
-        this.emitDragNote = Helper.emitDragNote.bind(this);
-        this.emitNewNote = Helper.emitNewNote.bind(this);
-        this.emitNewDoodle = Helper.emitNewDoodle.bind(this);
-        this.emitDeleteCompass = Helper.emitDeleteCompass.bind(this);
-        this.emitDeleteNote = Helper.emitDeleteNote.bind(this);
 
         // Shared methods
         this.renderNote = Shared.renderNote.bind(this);
@@ -137,7 +113,7 @@ export default class CompassEdit extends Component {
             autoScroll: true,
             onstart: this.beginDrag.bind(this),
             onmove: this.dragTarget.bind(this),
-            onend: this.emitDragNote
+            onend: this.socket.emitDragNote
         });
     }
 
@@ -173,6 +149,22 @@ export default class CompassEdit extends Component {
         this.setTranslation(e.target, x, y);
     }
 
+    isControlKey(k) {
+        return k === KEYCODES.N ||
+            k === KEYCODES.D ||
+            k === KEYCODES.C ||
+            k === KEYCODES.W ||
+            k === KEYCODES.S ||
+            k === KEYCODES.D;
+    }
+
+    isModifierKey(k) {
+        return k === KEYCODES.SHIFT ||
+            k === KEYCODES.ALT ||
+            k === KEYCODES.CTRL ||
+            k === KEYCODES.CMD;
+    }
+
     handleKeyDown(e) {
         if (this.state.newNote || this.state.editNote || this.state.doodleNote) {
             if (e.which === 27) this.closeForm();
@@ -181,17 +173,17 @@ export default class CompassEdit extends Component {
 
         if (document.activeElement.id === 'message-text') return;
 
-        if (Helper.isControlKey(e.which) && !modifier) {
+        if (this.isControlKey(e.which) && !modifier) {
             e.preventDefault();
             this.keypressHandler[e.which]();
-        } else if (Helper.isModifierKey(e.which)) {
+        } else if (this.isModifierKey(e.which)) {
             modifier = true;
             setTimeout(() => modifier = false, 5000);
         }
     }
 
     handleKeyUp(e) {
-        if (Helper.isModifierKey(e.which))
+        if (this.isModifierKey(e.which))
             modifier = false;
     }
 
@@ -244,7 +236,7 @@ export default class CompassEdit extends Component {
             return <NoteForm
                 style={this.center(300,230)}
                 title={'Make a new post-it'}
-                make={this.emitNewNote}
+                make={this.socket.emitNewNote}
                 close={this.closeForm}
             />;
         } else if (this.state.editNote && drag === false) {
@@ -252,7 +244,7 @@ export default class CompassEdit extends Component {
                 style={this.center(300,230)}
                 title={'Edit this post-it'}
                 text={this.state.editNote.text}
-                make={this.emitEditNote}
+                make={this.socket.emitEditNote}
                 close={this.closeForm}
             />;
         } else if (this.state.doodleNote) {
@@ -260,7 +252,7 @@ export default class CompassEdit extends Component {
                 style={this.center(450, 345)}
                 bg={this.state.users.usernameToColor[this.state.username]}
                 close={this.closeForm}
-                save={this.emitNewDoodle}
+                save={this.socket.emitNewDoodle}
             />;
         }
         return null;
@@ -285,7 +277,7 @@ export default class CompassEdit extends Component {
                 show={this.state.showSidebar}
                 disconnected={this.state.disconnected}
                 toggleSidebar={this.toggleSidebar}
-                destroy={this.emitDeleteCompass}
+                destroy={this.socket.emitDeleteCompass}
             />
         );
     }
@@ -298,6 +290,7 @@ export default class CompassEdit extends Component {
                 socket={this.socket}
                 show={this.state.showChat}
                 toggleChat={this.toggleChat}
+                emitMessage={this.socket.emitMessage}
             />
         );
     }

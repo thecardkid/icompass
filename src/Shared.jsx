@@ -14,7 +14,7 @@ export default {
                 w={this.state.vw}
                 h={this.state.vh}
                 edit={this.showEditForm}
-                destroy={this.emitDeleteNote}
+                destroy={this.socket.emitDeleteNote}
                 u={this.state.username}
             />
         );
