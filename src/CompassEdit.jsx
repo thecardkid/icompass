@@ -94,6 +94,11 @@ export default class CompassEdit extends Component {
 	    this.toggleChat = this.toggleChat.bind(this);
 	    this.renderQuadrant = Shared.renderQuadrant;
 
+	    // window listeners
+	    this.updateWindowSize = this.updateWindowSize.bind(this);
+	    this.handleKeyDown = this.handleKeyDown.bind(this);
+	    this.handleKeyUp = this.handleKeyUp.bind(this);
+
         this.keypressHandler = {
             78: this.showNewNote,
             67: this.toggleChat,
@@ -119,9 +124,9 @@ export default class CompassEdit extends Component {
     }
 
 	componentDidMount() {
-	    $(window).on('resize', this.updateWindowSize.bind(this));
-	    $(window).on('keydown', this.handleKeyDown.bind(this));
-	    $(window).on('keyup', this.handleKeyUp.bind(this));
+	    $(window).on('resize', this.updateWindowSize);
+	    $(window).on('keydown', this.handleKeyDown);
+	    $(window).on('keyup', this.handleKeyUp);
 
         // set up draggable sticky notes
 	    interact('.draggable').draggable({
@@ -139,6 +144,9 @@ export default class CompassEdit extends Component {
 
     componentWillUnmount() {
         this.socket.disconnect();
+        $(window).off('resize', this.updateWindowSize);
+        $(window).off('keydown', this.handleKeyDown);
+        $(window).off('keyup', this.handleKeyUp);
     }
 
     setTranslation(target, x, y) {
