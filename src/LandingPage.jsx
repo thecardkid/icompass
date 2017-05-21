@@ -194,6 +194,7 @@ export default class LandingPage extends Component {
     render() {
         return (
             <div id="ic-landing" style={this.center(600,550)}>
+                <div id="ic-tour"><Link to="/tutorial">First timer? Take the tour!</Link></div>
                 {this.getFirst()}
                 {this.getSecond()}
                 {this.getThird()}

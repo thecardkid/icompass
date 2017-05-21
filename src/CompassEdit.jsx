@@ -26,16 +26,21 @@ export default class CompassEdit extends Component {
 	constructor(props, context) {
 	    super(props, context);
 	    this.socket = io();
-        this.validateParams(this.props);
-        this.browserHistory = browserHistory;
-        this.socket.emit('find compass edit', {
-            code: this.props.params.code,
-            username: this.props.params.username
-        });
+
+        if (!this.props.compass) {
+            this.validateParams(this.props);
+            this.browserHistory = browserHistory;
+            this.socket.emit('find compass edit', {
+                code: this.props.params.code,
+                username: this.props.params.username
+            });
+        }
 
 	    this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
+            compass: this.props.compass,
+            username: this.props.username,
             newNote: false,
             editNote: false,
             dragNote: false,
