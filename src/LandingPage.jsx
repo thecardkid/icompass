@@ -187,7 +187,7 @@ export default class LandingPage extends Component {
                 <div className="prompt">Your name (how others will see you)</div>
                 <div className="response"><input id="username" /></div>
                 <div id="error-message"></div>
-                <button className="ic-button" onClick={cb}>let's go</button>
+                <button className="ic-button" name="go" onClick={cb}>let's go</button>
             </div>
         )
     }
@@ -237,7 +237,7 @@ export default class LandingPage extends Component {
                     <h1>{d.code}</h1>
                     <h2>This is your compass code. If you would like to email me this to you, enter your email below. Your email will not be saved.</h2>
                     <input id="email" type="text" />
-                    <button className="ic-button" onClick={this.toWorkspace}>to workspace</button>
+                    <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
                 </div>
             );
         }
@@ -246,7 +246,7 @@ export default class LandingPage extends Component {
             <div className="section third">
                 <h1>{d.mode} access</h1>
                 <h2>You will be logged in as {this.state.username}</h2>
-                <button className="ic-button" onClick={this.toWorkspace}>to workspace</button>
+                <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
             </div>
         )
     }

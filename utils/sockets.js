@@ -83,7 +83,7 @@ module.exports = {
                 Compass.findCode(data.code, function(compass) {
                     var o = Manager.addUser(data.code, data.username);
                     data.username = o.newUser;
-                    data.compassId = compass._id;
+                    data.compassId = compass._id.toString();
                     joinRoom(data);
                     logger.info(client.username, 'joined room', client.room);
 
