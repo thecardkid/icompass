@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import SocketIOClient from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
@@ -14,7 +15,7 @@ export default class CompassView extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.socket = io();
+        this.socket = SocketIOClient();
         this.socket.emit('find compass view', {
             code: this.props.params.code,
             username: this.props.params.username

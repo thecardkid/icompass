@@ -56,13 +56,11 @@ export default class Sidebar extends Component {
     }
 
     exportCompass() {
-        this.setState({showSidebar: false, showChat: false}, () => {
-            window.html2canvas(document.body).then((canvas) => {
-                let imgData = canvas.toDataURL('image/png');
-                let doc = new jsPDF('l', 'cm', 'a4');
-                doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
-                doc.save('compass.pdf');
-            });
+        window.html2canvas(document.body).then((canvas) => {
+            let imgData = canvas.toDataURL('image/png');
+            let doc = new jsPDF('l', 'cm', 'a4');
+            doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
+            doc.save('compass.pdf');
         });
     }
 

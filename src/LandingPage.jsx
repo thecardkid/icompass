@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import SocketIOClient from 'socket.io-client';
 import { browserHistory, Link } from 'react-router';
 import { ERROR_MSG, PROMPTS } from '../utils/constants.js';
 
@@ -17,7 +18,7 @@ export default class LandingPage extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.socket = io();
+        this.socket = SocketIOClient();
         this.state = {loginType: null, vw: window.innerWidth, vh: window.innerHeight};
 
         this.center = Shared.center.bind(this);

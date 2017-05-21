@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
+import SocketIOClient from 'socket.io-client';
 import _ from 'underscore';
 
 import Sidebar from './Sidebar.jsx';
@@ -24,7 +25,7 @@ export default class CompassEdit extends Component {
 
     constructor(props, context) {
         super(props, context);
-        this.socket = io();
+        this.socket = SocketIOClient();
 
         if (!this.props.compass) {
             this.validateParams(this.props);
