@@ -59,17 +59,20 @@ module.exports = {
     'find path errors': function(browser) {
         browser
         .click('button[name=go]')
-        .assert.containsText('#error-message', ERROR_MSG.REQUIRED('Username'))
-        .setValue('#username', 'sandbox')
-        .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.REQUIRED('A code'))
         .setValue('#compass-code', '1234567')
         .click('button[name=go]')
         .assert.containsText('#error-message', ERROR_MSG.INVALID('Your code'))
         .setValue('#compass-code', '8') //append to current
-        .setValue('#username', '5') //append
         .click('button[name=go]')
-        .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NUMBER)
+        .assert.containsText('#error-message', ERROR_MSG.REQUIRED('Username'))
+        .setValue('#username', 'sandbox5')
+        .click('button[name=go]')
+        .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NON_CHAR)
+        .clearValue('#username')
+        .setValue('#username', ',,,###')
+        .click('button[name=go]')
+        .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NON_CHAR)
         .clearValue('#username')
         .setValue('#username', 'sandboxsandboxsandboxsandboxsandboxsandbox')
         .click('button[name=go]')
