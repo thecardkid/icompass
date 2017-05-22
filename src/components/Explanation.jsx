@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 
 export default class Explanation extends Component {
@@ -43,7 +44,7 @@ export default class Explanation extends Component {
                         Explore anything on your mind or to-do list. Do it alone or with others. On paper, tablet or in your head. You&pos;ll see more and more ways to navigate new challenges.
                     </p>
                     <p id="footnote">
-                        More at <a target="_blank" href="http://innovatorscompass.org" rel="noopener noreferrer"><span>innovatorscompass.org</span></a>
+                        More at <Link target="_blank" to="http://innovatorscompass.org" rel="noopener noreferrer"><span>innovatorscompass.org</span></Link>
                     </p>
                 </div>
             </div>

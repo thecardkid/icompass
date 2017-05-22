@@ -15,7 +15,7 @@ import Validator from 'JsxUtils/Validator.jsx';
 import Socket from 'JsxUtils/Socket.jsx';
 import Shared from 'JsxUtils/Shared.jsx';
 
-import { PROMPTS, KEYCODES, COLORS } from 'Utils/constants.js';
+import { KEYCODES, COLORS } from 'Utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 let drag = false;
