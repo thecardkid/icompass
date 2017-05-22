@@ -10,12 +10,14 @@ export default {
         return (
             <StickyNote key={note._id}
                 note={note}
+                focusedNote={this.state.focusedNote}
                 i={i}
                 w={this.state.vw}
                 h={this.state.vh}
                 edit={this.showEditForm}
                 destroy={this.socket.emitDeleteNote}
                 mode={this.state.mode}
+                focusOn={this.focusOnNote}
             />
         );
     },

@@ -12,6 +12,7 @@ export default class StickyNote extends Component {
         this.getContents = this.getContents.bind(this);
         this.getX = this.getX.bind(this);
         this.edit = this.edit.bind(this);
+        this.focus = this.focus.bind(this);
         this.hasEditingRights = this.props.mode === MODES.EDIT;
     }
 
@@ -26,7 +27,8 @@ export default class StickyNote extends Component {
             thisNote.isImage !== nextNote.isImage ||
             this.props.w !== nextProps.w ||
             this.props.h !== nextProps.h ||
-            this.props.i !== nextProps.i
+            this.props.i !== nextProps.i ||
+            this.props.focusedNote !== nextProps.focusedNote
         );
     }
 
@@ -45,7 +47,7 @@ export default class StickyNote extends Component {
             };
             return (
                 <a className="ic-img" style={s}>
-                    <img src={n.doodle || n.text} width="164px"/>
+                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width="164px"/>
                 </a>
             );
         } else {
@@ -67,6 +69,10 @@ export default class StickyNote extends Component {
             this.props.edit(this.props.note);
     }
 
+    focus() {
+        this.props.focusOn(this.props.i);
+    }
+
     render() {
         let n = this.props.note,
             contents = this.getContents(),
@@ -75,13 +81,15 @@ export default class StickyNote extends Component {
             height = n.doodle ? '100px' : null,
             style = {
                 left: n.x * this.props.w,
-                top: n.y * this.props.h
+                top: n.y * this.props.h,
+                zIndex: this.props.i === this.props.focusedNote ? 1 : 0
             };
 
         return (
             <li style={style}
                 className="ic-sticky-note draggable"
-                onClick={this.edit}
+                onClick={this.focus}
+                onDoubleClick={this.edit}
                 id={noteId}
                 height={height}>
                 {x}
@@ -98,6 +106,8 @@ StickyNote.propTypes = {
     h: PropTypes.number.isRequired,
     edit: PropTypes.func,
     destroy: PropTypes.func.isRequired,
-    mode: PropTypes.string.isRequired
+    mode: PropTypes.string.isRequired,
+    focusedNote: PropTypes.number.isRequired,
+    focusOn: PropTypes.func.isRequired
 };
 

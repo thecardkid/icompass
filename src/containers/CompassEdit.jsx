@@ -36,6 +36,7 @@ export default class CompassEdit extends Component {
             vh: window.innerHeight,
             compass: this.props.compass,
             username: this.props.username,
+            focusedNote: -1,
             newNote: false,
             editNote: false,
             dragNote: false,
@@ -67,6 +68,7 @@ export default class CompassEdit extends Component {
         this.toggleHelp = this.toggleHelp.bind(this);
         this.toggleChat = this.toggleChat.bind(this);
         this.renderQuadrant = Shared.renderQuadrant;
+        this.focusOnNote = this.focusOnNote.bind(this);
 
         // window listeners
         this.updateWindowSize = this.updateWindowSize.bind(this);
@@ -222,6 +224,10 @@ export default class CompassEdit extends Component {
 
     showDoodleForm() {
         this.setState({editNote: false, newNote: false, doodleNote: true});
+    }
+
+    focusOnNote(i) {
+        this.setState({focusedNote: i});
     }
 
     getForm() {

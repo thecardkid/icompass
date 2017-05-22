@@ -74,7 +74,9 @@ module.exports = {
         .waitForElementVisible('.ic-sticky-note', 500)
         .assert.containsText('.ic-sticky-note', 'An observation')
         // edit sticky
-        .click('.ic-sticky-note')
+        .moveToElement('.ic-sticky-note', 5, 5, function() {
+            browser.doubleClick();
+        })
         .pause(500)
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', 'A principle')
@@ -93,7 +95,9 @@ module.exports = {
         .pause(500)
         .assert.elementPresent('a.ic-img')
         // edit image
-        .click('a.ic-img')
+        .moveToElement('a.ic-img', 50, 50, function() {
+            browser.doubleClick();
+        })
         .pause(500)
         .assert.elementPresent('#ic-form-text')
         .click('button[name=ship]')
@@ -127,7 +131,7 @@ module.exports = {
             });
         })
         // delete note
-        .moveToElement('#note1', 184, 10, function() {
+        .moveToElement('#note1', 164, 10, function() {
             browser
             .mouseButtonClick(0)
             .pause(500)

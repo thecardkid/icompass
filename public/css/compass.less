@@ -11,7 +11,7 @@
         float:left;
         cursor:pointer;
         position:absolute;
-        z-index:1;
+        z-index:0;
 
         a {
             text-decoration:none;
@@ -19,13 +19,13 @@
             display:block;
             background:#ffc;
             max-width:164px;
-            padding:15px;
+            padding:5px;
             .boxshadow(3px, 7px, rgba(33,33,33,0.7));
             .wordwrap;
 
             p {
-                font-family:"Reenie Beanie", arial, sans-serif;
-                font-size:20px;
+                font-family:"Shadows Into Light Two", arial, sans-serif;
+                font-size:15px;
             }
         }
 
@@ -47,6 +47,7 @@
     text-align:center;
     position:absolute;
     width:50vw;
+    z-index:-1;
 
     h1 {
         letter-spacing:5px;
@@ -83,7 +84,7 @@
     background:@dark;
     color:@light;
     text-align:center;
-    z-index:2;
+    z-index:-1;
 
     p {
         width:90%;
@@ -113,13 +114,13 @@
     height:4px;
     background:@dark;
     position:absolute;
-    z-index:-1;
+    z-index:-2;
 }
 
 #vline {
     width:4px;
     height:100vh;
-    z-index:-1;
+    z-index:-2;
     background:@dark;
     position:absolute;
 }

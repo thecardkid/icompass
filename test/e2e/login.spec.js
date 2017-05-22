@@ -16,7 +16,7 @@ module.exports = {
         browser
         .click('button[name=make]')
         .pause(500)
-        .assert.containsText('div.prompt', 'Whom is your people group?')
+        .assert.containsText('div.prompt', 'Who are the PEOPLE involved, at the center of your compass?')
         .assert.elementPresent('#compass-center')
         .assert.elementPresent('#username');
     },
