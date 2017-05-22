@@ -1,16 +1,16 @@
 'use strict';
 
-import css from 'style-loader!css-loader!less-loader!./../public/css/app.less';
+import css from 'style-loader!css-loader!less-loader!./../../public/css/app.less';
 
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
 
-import CompassEdit from './CompassEdit.jsx';
-import CompassView from './CompassView.jsx';
-import LandingPage from './LandingPage.jsx';
-import Tutorial from './Tutorial.jsx';
-import NotFound from './NotFound.jsx';
+import CompassEdit from 'Containers/CompassEdit.jsx';
+import CompassView from 'Containers/CompassView.jsx';
+import LandingPage from 'Containers/LandingPage.jsx';
+import Tutorial from 'Containers/Tutorial.jsx';
+import NotFound from 'Containers/NotFound.jsx';
 
 class App extends Component {
 

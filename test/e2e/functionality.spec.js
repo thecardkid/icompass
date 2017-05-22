@@ -139,7 +139,7 @@ module.exports = {
             .mouseButtonClick(0)
             .pause(500)
             .acceptAlert()
-            .pause(1000)
+            .pause(2000)
             .assert.elementNotPresent('#note1');
         });
     },

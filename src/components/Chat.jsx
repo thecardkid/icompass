@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Message from './Message.jsx';
 import _ from 'underscore';
-import { KEYCODES, PIXELS } from '../utils/constants.js';
+
+import Message from 'Components/Message.jsx';
+
+import { KEYCODES, PIXELS } from 'Utils/constants.js';
 
 export default class Chat extends Component {
 

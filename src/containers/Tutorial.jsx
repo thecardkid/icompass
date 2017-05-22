@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import Draggable from 'react-draggable';
 import { browserHistory } from 'react-router';
 
-import DefaultCompass from '../models/defaultCompass.js';
+import CompassEdit from 'Containers/CompassEdit.jsx';
+import Shared from 'JsxUtils/Shared.jsx';
 
-import CompassEdit from './CompassEdit.jsx';
-import Shared from './Shared.jsx';
+import DefaultCompass from 'Models/defaultCompass.js';
 
-const USERS = {
-    usernameToColor: {'sandbox': '#CCFFFF'}
-};
-
+const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}};
 const STEPS = [
     {
         header: 'Welcome to iCompass',

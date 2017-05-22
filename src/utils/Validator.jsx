@@ -1,4 +1,5 @@
-import { ERROR_MSG, REGEX } from '../utils/constants.js';
+
+import { ERROR_MSG, REGEX } from 'Utils/constants.js';
 
 export default {
     validateCompassCode(code) {

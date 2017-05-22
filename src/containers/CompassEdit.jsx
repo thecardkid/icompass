@@ -5,17 +5,17 @@ import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
-import Sidebar from './Sidebar.jsx';
-import NoteForm from './NoteForm.jsx';
-import Explanation from './Explanation.jsx';
-import Shared from './Shared.jsx';
-import Chat from './Chat.jsx';
-import DoodleForm from './DoodleForm.jsx';
+import Sidebar from 'Components/Sidebar.jsx';
+import NoteForm from 'Components/NoteForm.jsx';
+import Explanation from 'Components/Explanation.jsx';
+import Chat from 'Components/Chat.jsx';
+import DoodleForm from 'Components/DoodleForm.jsx';
 
-import Validator from './Validator.jsx';
-import Socket from './Socket.jsx';
+import Validator from 'JsxUtils/Validator.jsx';
+import Socket from 'JsxUtils/Socket.jsx';
+import Shared from 'JsxUtils/Shared.jsx';
 
-import { PROMPTS, KEYCODES, COLORS } from '../utils/constants.js';
+import { PROMPTS, KEYCODES, COLORS } from 'Utils/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 let drag = false;

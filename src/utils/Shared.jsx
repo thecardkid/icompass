@@ -1,9 +1,9 @@
 import React from 'react';
 
-import StickyNote from './StickyNote.jsx';
+import StickyNote from 'Components/StickyNote.jsx';
 import _ from 'underscore';
 
-import { PROMPTS, QUADRANTS_INFO } from '../utils/constants.js';
+import { PROMPTS, QUADRANTS_INFO } from 'Utils/constants.js';
 
 export default {
     renderNote(note, i) {
