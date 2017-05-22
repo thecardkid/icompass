@@ -28,7 +28,6 @@ export default class CompassEdit extends Component {
 
         if (!this.props.compass) {
             this.validateParams(this.props);
-            this.browserHistory = browserHistory;
             this.socket.emitFindCompassEdit();
         }
 

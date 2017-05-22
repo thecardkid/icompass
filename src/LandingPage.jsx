@@ -6,6 +6,7 @@ import { browserHistory, Link } from 'react-router';
 import { ERROR_MSG, PROMPTS } from '../utils/constants.js';
 
 import Shared from './Shared.jsx';
+import Socket from './Socket.jsx';
 import Validator from './Validator.jsx';
 
 const LOGIN_TYPE = {
@@ -18,12 +19,10 @@ export default class LandingPage extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.socket = SocketIOClient();
+        this.socket = new Socket(this);
         this.state = {loginType: null, vw: window.innerWidth, vh: window.innerHeight};
 
         this.center = Shared.center.bind(this);
-        this.newCompass = this.newCompass.bind(this);
-        this.findCompass = this.findCompass.bind(this);
         this.setLoginType = this.setLoginType.bind(this);
         this.getFirst = this.getFirst.bind(this);
         this.getSecond = this.getSecond.bind(this);
@@ -31,14 +30,11 @@ export default class LandingPage extends Component {
         this.validateFindInput = this.validateFindInput.bind(this);
         this.validateMakeInput = this.validateMakeInput.bind(this);
         this.toWorkspace = this.toWorkspace.bind(this);
-
-        this.socket.on('mail sent', () => alert(PROMPTS.EMAIL_SENT));
-        this.socket.on('mail not sent', () => alert(PROMPTS.EMAIL_NOT_SENT));
-        this.socket.on('compass ready', (data) => this.setState({ data }));
+        this.updateWindowSize = this.updateWindowSize.bind(this);
     }
 
     componentDidMount() {
-        $(window).on('resize', this.updateWindowSize.bind(this));
+        $(window).on('resize', this.updateWindowSize);
     }
 
     componentWillUnmount() {
@@ -47,22 +43,6 @@ export default class LandingPage extends Component {
 
     updateWindowSize() {
         this.setState({vw: window.innerWidth, vh: window.innerHeight});
-    }
-
-    newCompass(center, username) {
-        this.socket.emit('create compass', {
-            center: center,
-            username: username,
-        });
-        this.setState({ username });
-    }
-
-    findCompass(code, username) {
-        this.socket.emit('find compass', {
-            code: code,
-            username: username
-        });
-        this.setState({ username });
     }
 
     setLoginType(type) {
@@ -80,7 +60,8 @@ export default class LandingPage extends Component {
         if (!code[0]) return $('#error-message').text(code[1]);
         if (!username[0]) return $('#error-message').text(username[1]);
 
-        this.findCompass(code[1], username[1]);
+        this.setState({username: username[1]});
+        this.socket.emitFindCompass(code[1], username[1]);
     }
 
     validateMakeInput() {
@@ -91,7 +72,8 @@ export default class LandingPage extends Component {
         if (!center[0]) return $('#error-message').text(center[1]);
         if (!username[0]) return $('#error-message').text(username[1]);
 
-        this.newCompass(center[1], username[1]);
+        this.setState({username: username[1]});
+        this.socket.emitCreateCompass(center[1], username[1]);
     }
 
     getFirst() {
@@ -148,13 +130,7 @@ export default class LandingPage extends Component {
 
         if (email && !valid[0]) return alert(ERROR_MSG.INVALID('Email'));
 
-        if (email && valid[0]) {
-            this.socket.emit('send mail', {
-                editCode: d.code,
-                username: this.state.username,
-                email: email
-            });
-        }
+        if (email && valid[0]) this.socket.emitSendMail(d.code, this.state.username, email);
 
         switch(this.state.loginType) {
             case LOGIN_TYPE.MAKE:

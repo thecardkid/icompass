@@ -11,6 +11,8 @@ export default class Socket {
         this.component = component;
         this.socket = new SocketIOClient();
 
+        this.disconnect = this.disconnect.bind(this);
+
         // socket event emitters
         this.emitNewNote = this.emitNewNote.bind(this);
         this.emitDragNote = this.emitDragNote.bind(this);
@@ -21,6 +23,9 @@ export default class Socket {
         this.emitMessage = this.emitMessage.bind(this);
         this.emitFindCompassEdit = this.emitFindCompassEdit.bind(this);
         this.emitFindCompassView = this.emitFindCompassView.bind(this);
+        this.emitCreateCompass = this.emitCreateCompass.bind(this);
+        this.emitFindCompass = this.emitFindCompass.bind(this);
+        this.emitSendMail = this.emitSendMail.bind(this);
 
         this.handleDisconnect = this.handleDisconnect.bind(this);
         this.handleReconnect = this.handleReconnect.bind(this);
@@ -31,6 +36,8 @@ export default class Socket {
         this.handleUpdateUsers = this.handleUpdateUsers.bind(this);
         this.handleUpdateMessages = this.handleUpdateMessages.bind(this);
         this.handleCompassFound = this.handleCompassFound.bind(this);
+        this.handleMailStatus = this.handleMailStatus.bind(this);
+        this.handleCompassReady = this.handleCompassReady.bind(this);
 
         // socket event handlers
         this.socket.on('update notes', this.handleUpdateNotes);
@@ -41,6 +48,12 @@ export default class Socket {
         this.socket.on('new message', this.handleUpdateMessages);
         this.socket.on('compass deleted', this.handleCompassDeleted);
         this.socket.on('compass found', this.handleCompassFound);
+        this.socket.on('mail status', this.handleMailStatus);
+        this.socket.on('compass ready', this.handleCompassReady);
+    }
+
+    disconnect() {
+        return this.socket.disconnect();
     }
 
     emitNewNote() {
@@ -134,6 +147,22 @@ export default class Socket {
         });
     }
 
+    emitCreateCompass(center, username) {
+        this.socket.emit('create compass', { center, username });
+    }
+
+    emitFindCompass(code, username) {
+        this.socket.emit('find compass', { code, username });
+    }
+
+    emitSendMail(code, username, receiverEmail) {
+        this.socket.emit('send mail', {
+            editCode: code,
+            username: username,
+            email: receiverEmail
+        });
+    }
+
     emitFindCompassEdit() {
         this.socket.emit('find compass edit', {
             code: this.component.props.params.code,
@@ -218,5 +247,14 @@ export default class Socket {
             // scroll to bottom of messages div
             outer.scrollTop(inner.outerHeight());
         });
+    }
+
+    handleMailStatus(status) {
+        if (status) alert(PROMPTS.EMAIL_SENT);
+        else alert(PROMPTS.EMAIL_NOT_SENT);
+    }
+
+    handleCompassReady(data) {
+        this.component.setState({ data });
     }
 };

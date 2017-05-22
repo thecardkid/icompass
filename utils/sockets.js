@@ -29,8 +29,7 @@ module.exports = {
                     HOST + 'compass/edit/' + data.editCode + '/' + data.username;
 
                 Mail.sendMessage(text, data.email, function(status) {
-                    if (status) client.emit('mail sent');
-                    else client.emit('mail not sent');
+                    client.emit('mail status', status);
                 });
             });
 
