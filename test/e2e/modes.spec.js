@@ -9,7 +9,7 @@ module.exports = {
         .click('button[name=make]')
         .setValue('#compass-center', 'nightwatchjs')
         .setValue('#username', 'sandbox')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .waitForElementVisible('.third', 1000)
         .click('button[name=to-workspace]')
         .waitForElementVisible('#ic-sidebar', 1000);
@@ -50,7 +50,7 @@ module.exports = {
         .click('button[name=find]')
         .setValue('#compass-code', viewCode)
         .setValue('#username', 'sandbox')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .waitForElementVisible('.third', 1000)
         .assert.containsText('.third h1', 'view access')
         .assert.containsText('.third h2', 'You will be logged in as sandbox')

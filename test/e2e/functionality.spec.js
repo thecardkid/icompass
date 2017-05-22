@@ -1,5 +1,5 @@
 
-var PROMPTS = require('../../utils/constants.js').PROMPTS;
+var PROMPTS = require('../../lib/constants.js').PROMPTS;
 var top, left, newTop, newLeft;
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
         .click('button[name=make]')
         .setValue('#compass-center', 'nightwatchjs')
         .setValue('#username', 'sandbox')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .waitForElementVisible('.third', 1000)
         .click('button[name=to-workspace]')
         .waitForElementVisible('#ic-sidebar', 1000);

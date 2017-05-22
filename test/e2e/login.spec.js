@@ -1,6 +1,5 @@
 
-var CONSTANTS = require('../../utils/constants.js');
-var ERROR_MSG = CONSTANTS.ERROR_MSG;
+var ERROR_MSG = require('../../lib/constants.js').ERROR_MSG;
 var code;
 
 module.exports = {
@@ -25,10 +24,10 @@ module.exports = {
     'make path errors': function(browser) {
         browser
         .setValue('#username', 'sandbox')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.REQUIRED('People group'))
         .setValue('#compass-center', 'This is a really long people group that will hopefully exceed char limit')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.TEXT_TOO_LONG('People group', 30))
         .clearValue('#compass-center');
     },
@@ -37,7 +36,7 @@ module.exports = {
         browser
         .clearValue('#compass-center')
         .setValue('#compass-center', 'nightwatchjs')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .waitForElementVisible('.third', 1000)
         .getText('.third h1', function(result) {
             this.assert.equal(result.value.length, 8);
@@ -58,24 +57,24 @@ module.exports = {
 
     'find path errors': function(browser) {
         browser
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.REQUIRED('A code'))
         .setValue('#compass-code', '1234567')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.INVALID('Your code'))
         .setValue('#compass-code', '8') //append to current
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.REQUIRED('Username'))
         .setValue('#username', 'sandbox5')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NON_CHAR)
         .clearValue('#username')
         .setValue('#username', ',,,###')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NON_CHAR)
         .clearValue('#username')
         .setValue('#username', 'sandboxsandboxsandboxsandboxsandboxsandbox')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .assert.containsText('#error-message', ERROR_MSG.TEXT_TOO_LONG('Username', 15))
         .clearValue('#username')
         .clearValue('#compass-code');
@@ -85,7 +84,7 @@ module.exports = {
         browser
         .setValue('#compass-code', code)
         .setValue('#username', 'sandbox')
-        .click('button[name=go]')
+        .click('button[name=next]')
         .waitForElementVisible('.third', 50000)
         .assert.containsText('.third h1', 'edit access')
         .assert.containsText('.third h2', 'You will be logged in as sandbox')

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-var logger = require('../utils/logger.js');
-var MODES = require('../utils/constants.js').MODES;
-var DefaultCompass = require('../models/defaultCompass.js');
+var logger = require('../lib/logger.js');
+var MODES = require('../lib/constants.js').MODES;
+var DefaultCompass = require('./defaultCompass.js');
 var _ = require('underscore');
 
 function generateUUID() {

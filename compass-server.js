@@ -4,9 +4,9 @@ const port = 8080;
 const app = express();
 
 var bodyParser = require('body-parser');
-var db = require('./utils/db.js');
-var socket = require('./utils/sockets.js');
-var logger = require('./utils/logger.js');
+var db = require('./lib/db.js');
+var socket = require('./lib/sockets.js');
+var logger = require('./lib/logger.js');
 
 // serve static assets normally
 app.use(express.static(__dirname + '/public'));
