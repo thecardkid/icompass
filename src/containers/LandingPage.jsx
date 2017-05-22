@@ -98,7 +98,7 @@ export default class LandingPage extends Component {
             inputId = 'compass-code';
             cb = this.validateFindInput;
         } else {
-            firstPrompt = 'Whom is your people group?';
+            firstPrompt = 'Who are the PEOPLE involved, at the center of your compass?';
             inputId = 'compass-center';
             cb = this.validateMakeInput;
         }

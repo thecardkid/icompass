@@ -101,7 +101,7 @@ export default class Sidebar extends Component {
                     <div className="ic-sidebar-list">
                         <h2>Actions</h2>
                         <button className="ic-action" onClick={this.showSavePrompt}>Export to PDF</button>
-                        <button name="sucks" className="ic-action" onClick={this.notifyMe}>This sucks</button>
+                        <button name="sucks" className="ic-action" onClick={this.notifyMe}>Feedback</button>
                         <button name="tutorial" className="ic-action"><a href="/tutorial" target="_blank" rel="noopener noreferrer">Tutorial</a></button>
                         <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>Delete Compass</button>
                     </div>
