@@ -11,11 +11,11 @@ import Explanation from 'Components/Explanation.jsx';
 import Chat from 'Components/Chat.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 
-import Validator from 'JsxUtils/Validator.jsx';
-import Socket from 'JsxUtils/Socket.jsx';
-import Shared from 'JsxUtils/Shared.jsx';
+import Validator from 'Utils/Validator.jsx';
+import Socket from 'Utils/Socket.jsx';
+import Shared from 'Utils/Shared.jsx';
 
-import { KEYCODES, COLORS } from 'Utils/constants.js';
+import { KEYCODES, COLORS } from 'Lib/constants.js';
 
 let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 let drag = false;

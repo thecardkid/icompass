@@ -4,10 +4,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
-import Socket from 'JsxUtils/Socket.jsx';
-import Shared from 'JsxUtils/Shared.jsx';
+import Socket from 'Utils/Socket.jsx';
+import Shared from 'Utils/Shared.jsx';
 
-import { QUADRANTS_INFO } from 'Utils/constants.js';
+import { QUADRANTS_INFO } from 'Lib/constants.js';
 
 export default class CompassView extends Component {
 

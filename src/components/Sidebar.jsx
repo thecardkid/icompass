@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
-import { PROMPTS, CONTROLS, PIXELS, COLORS } from 'Utils/constants.js';
+import { PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants.js';
 
 export default class Sidebar extends Component {
 

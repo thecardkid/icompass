@@ -3,11 +3,11 @@
 import React, { Component } from 'react';
 import { browserHistory, Link } from 'react-router';
 
-import Shared from 'JsxUtils/Shared.jsx';
-import Socket from 'JsxUtils/Socket.jsx';
-import Validator from 'JsxUtils/Validator.jsx';
+import Shared from 'Utils/Shared.jsx';
+import Socket from 'Utils/Socket.jsx';
+import Validator from 'Utils/Validator.jsx';
 
-import { ERROR_MSG } from 'Utils/constants.js';
+import { ERROR_MSG } from 'Lib/constants.js';
 
 const LOGIN_TYPE = {
     MAKE: 0,

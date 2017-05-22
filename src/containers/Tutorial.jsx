@@ -3,7 +3,7 @@ import Draggable from 'react-draggable';
 import { browserHistory } from 'react-router';
 
 import CompassEdit from 'Containers/CompassEdit.jsx';
-import Shared from 'JsxUtils/Shared.jsx';
+import Shared from 'Utils/Shared.jsx';
 
 import DefaultCompass from 'Models/defaultCompass.js';
 

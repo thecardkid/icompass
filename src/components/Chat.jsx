@@ -4,7 +4,7 @@ import _ from 'underscore';
 
 import Message from 'Components/Message.jsx';
 
-import { KEYCODES, PIXELS } from 'Utils/constants.js';
+import { KEYCODES, PIXELS } from 'Lib/constants.js';
 
 export default class Chat extends Component {
 

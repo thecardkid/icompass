@@ -3,9 +3,9 @@
 import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 
-import Validator from 'JsxUtils/Validator.jsx';
+import Validator from 'Utils/Validator.jsx';
 
-import { PROMPTS } from 'Utils/constants.js';
+import { PROMPTS } from 'Lib/constants.js';
 
 export default class Socket {
     constructor(component) {
