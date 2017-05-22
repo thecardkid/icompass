@@ -17,7 +17,7 @@ div#ic-chat {
     }
 
     div#messages {
-        p.ic-chat-info {
+        div.ic-chat-info {
             margin-top:10px;
             font-size: 12px;
             width:100%;
@@ -28,7 +28,7 @@ div#ic-chat {
         }
 
         div.message {
-            height:45px;
+            overflow:auto;
         }
 
         div.sender {
@@ -41,16 +41,19 @@ div#ic-chat {
             margin-top:5px;
             display:inline-block;
             border-radius:5px;
+
+            p {
+                max-width:310px;
+                text-align:left;
+            }
         }
 
         div.mine {
-            text-align:right;
             margin-right:40px;
             float:right;
         }
 
         div.theirs {
-            text-align:left;
             margin-left:10px;
             float:left;
         }

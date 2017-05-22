@@ -33,7 +33,7 @@ export default class Chat extends Component {
 
     renderMessage(m, i) {
         if (m.info)
-            return <p key={'msg'+i} className="ic-chat-info">{m.text}</p>;
+            return <div key={'msg'+i} className="ic-chat-info">{m.text}</div>;
 
         let type = (m.username === this.props.username) ? 'bubble mine' : 'bubble theirs';
 
