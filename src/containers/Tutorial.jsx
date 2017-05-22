@@ -27,7 +27,7 @@ const STEPS = [
         text: 'This is the compass structure that you know and love. In the middle is the people group - you will be asked to fill this out when you make a compass.',
         prep: () => {
             $('#ic-tutorial-cover').fadeIn();
-            $('#ic-sidebar').css({'left': '0px', 'z-index': 3});
+            $('#ic-sidebar').css({'left': '0px', 'z-index': 4});
         }
     },
     {
@@ -54,6 +54,11 @@ const STEPS = [
         header: 'Linking images',
         text: 'If you enter a hyperlink, I can import that image for you',
         prep: () => $('button[name=nvm]').click()
+    },
+    {
+        header: 'Clicking on notes',
+        text: 'Click once to bring a note to the foreground, twice to edit its contents.',
+        prep: () => {}
     },
     {
         header: 'Doodling',
@@ -84,7 +89,7 @@ const STEPS = [
         text: 'Do check us out!',
         prep: () => {
             $('#ic-sidebar').css('left', '-240px');
-            $('#ic-chat').css({'bottom': '0px', 'z-index': 3});
+            $('#ic-chat').css({'bottom': '0px', 'z-index': 4});
         }
     },
     {
