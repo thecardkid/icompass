@@ -68,6 +68,7 @@ export default class CompassEdit extends Component {
         this.toggleHelp = this.toggleHelp.bind(this);
         this.toggleChat = this.toggleChat.bind(this);
         this.renderQuadrant = Shared.renderQuadrant;
+        this.exportCompass = this.exportCompass.bind(this);
         this.focusOnNote = this.focusOnNote.bind(this);
 
         // window listeners
@@ -230,6 +231,17 @@ export default class CompassEdit extends Component {
         this.setState({focusedNote: i});
     }
 
+    exportCompass() {
+        this.setState({showChat: false, showSidebar: false}, () => {
+            window.html2canvas(document.body).then((canvas) => {
+                let imgData = canvas.toDataURL('image/png');
+                let doc = new jsPDF('l', 'cm', 'a4');
+                doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
+                doc.save('compass.pdf');
+            });
+        });
+    }
+
     getForm() {
         if (this.state.newNote) {
             return <NoteForm
@@ -277,6 +289,7 @@ export default class CompassEdit extends Component {
                 disconnected={this.socket.socket.disconnected}
                 toggleSidebar={this.toggleSidebar}
                 destroy={this.socket.emitDeleteCompass}
+                exportCompass={this.exportCompass}
             />
         );
     }

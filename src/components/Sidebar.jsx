@@ -12,7 +12,6 @@ export default class Sidebar extends Component {
         super(props, context);
         this.controlList = _.map(CONTROLS, this.renderControl);
         this.showSavePrompt = this.showSavePrompt.bind(this);
-        this.exportCompass = this.exportCompass.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
     }
 
@@ -53,16 +52,7 @@ export default class Sidebar extends Component {
     }
 
     showSavePrompt() {
-        if (confirm(PROMPTS.EXPORT)) this.exportCompass();
-    }
-
-    exportCompass() {
-        window.html2canvas(document.body).then((canvas) => {
-            let imgData = canvas.toDataURL('image/png');
-            let doc = new jsPDF('l', 'cm', 'a4');
-            doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
-            doc.save('compass.pdf');
-        });
+        if (confirm(PROMPTS.EXPORT)) this.props.exportCompass();
     }
 
     confirmDelete() {
@@ -128,6 +118,7 @@ Sidebar.propTypes = {
     you: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     destroy: PropTypes.func.isRequired,
-    toggleSidebar: PropTypes.func.isRequired
+    toggleSidebar: PropTypes.func.isRequired,
+    exportCompass: PropTypes.func.isRequired
 };
 
