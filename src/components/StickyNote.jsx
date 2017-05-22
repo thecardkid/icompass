@@ -25,7 +25,8 @@ export default class StickyNote extends Component {
             thisNote.text !== nextNote.text ||
             thisNote.isImage !== nextNote.isImage ||
             this.props.w !== nextProps.w ||
-            this.props.h !== nextProps.h
+            this.props.h !== nextProps.h ||
+            this.props.i !== nextProps.i
         );
     }
 
