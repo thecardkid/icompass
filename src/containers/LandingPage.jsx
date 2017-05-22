@@ -132,7 +132,7 @@ export default class LandingPage extends Component {
 
         if (email && !valid[0]) return alert(ERROR_MSG.INVALID('Email'));
 
-        if (email && valid[0]) this.socket.emitSendMail(d.code, this.state.username, email);
+        if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, this.state.username, email);
 
         switch(this.state.loginType) {
         case LOGIN_TYPE.MAKE:
