@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import Socket from 'JsxUtils/Socket.jsx';

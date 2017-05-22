@@ -59,7 +59,7 @@ module.exports = {
         .assert.elementNotPresent('#ic-doodle-form');
     },
 
-    'note events': function(browser) {
+    'text note events': function(browser) {
         browser
         // open and close form
         .keys(['n'])
@@ -141,6 +141,28 @@ module.exports = {
             .acceptAlert()
             .pause(2000)
             .assert.elementNotPresent('#note1');
+        });
+    },
+
+    'doodle events': function(browser) {
+        browser
+        .keys('d')
+        .pause(500)
+        .assert.elementPresent('#ic-doodle-form')
+        .click('button[name=ship]')
+        .assert.elementPresent('#ic-doodle-form')
+        .moveToElement('#ic-doodle', 155, 75, function() {
+            browser
+            .mouseButtonDown(0, function() {
+                browser.moveTo(null ,100, 100);
+            })
+            .mouseButtonUp(0);
+        })
+        .pause(1000)
+        .click('button[name=ship]')
+        .waitForElementVisible('#note1', 1000)
+        .getAttribute('#note1 .ic-img img', 'src', function(result) {
+            this.assert.equal(result.value.indexOf('data:image/png;base64'), 0);
         });
     },
 

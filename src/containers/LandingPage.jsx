@@ -1,14 +1,13 @@
 'use strict';
 
 import React, { Component } from 'react';
-import SocketIOClient from 'socket.io-client';
 import { browserHistory, Link } from 'react-router';
 
 import Shared from 'JsxUtils/Shared.jsx';
 import Socket from 'JsxUtils/Socket.jsx';
 import Validator from 'JsxUtils/Validator.jsx';
 
-import { ERROR_MSG, PROMPTS } from 'Utils/constants.js';
+import { ERROR_MSG } from 'Utils/constants.js';
 
 const LOGIN_TYPE = {
     MAKE: 0,
@@ -32,6 +31,8 @@ export default class LandingPage extends Component {
         this.validateMakeInput = this.validateMakeInput.bind(this);
         this.toWorkspace = this.toWorkspace.bind(this);
         this.updateWindowSize = this.updateWindowSize.bind(this);
+        this.getMakeSuccessNotification = this.getMakeSuccessNotification.bind(this);
+        this.getFindSuccessNotification = this.getFindSuccessNotification.bind(this);
     }
 
     componentDidMount() {
@@ -134,39 +135,45 @@ export default class LandingPage extends Component {
         if (email && valid[0]) this.socket.emitSendMail(d.code, this.state.username, email);
 
         switch(this.state.loginType) {
-            case LOGIN_TYPE.MAKE:
-                return browserHistory.push('/compass/edit/'+d.code+'/'+this.state.username);
-            case LOGIN_TYPE.FIND:
-                return browserHistory.push('/compass/'+d.mode+'/'+d.code+'/'+this.state.username);
+        case LOGIN_TYPE.MAKE:
+            return browserHistory.push('/compass/edit/'+d.code+'/'+this.state.username);
+        case LOGIN_TYPE.FIND:
+            return browserHistory.push('/compass/'+d.mode+'/'+d.code+'/'+this.state.username);
         }
+    }
+
+    getMakeSuccessNotification(code) {
+        return (
+            <div className="section third">
+                <h1>{code}</h1>
+                <h2>This is your compass code. If you would like to email me this to you, enter your email below. Your email will not be saved.</h2>
+                <input id="email" type="text" />
+                <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
+            </div>
+        );
+    }
+
+    getFindSuccessNotification(mode) {
+        return (
+            <div className="section third">
+                <h1>{mode} access</h1>
+                <h2>You will be logged in as {this.state.username}</h2>
+                <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
+            </div>
+        );
     }
 
     getThird() {
         if (typeof this.state.data !== 'object' || this.state.data === null) return;
 
-        // 3 cases: 1. null, 2. find or view code, 3. new compass -> ask for email
-        let d = this.state.data;
-        if (!d.success)
+        if (!this.state.data.success)
             return this.getNullNotification();
 
-        if (this.state.loginType === LOGIN_TYPE.MAKE) {
-            return (
-                <div className="section third">
-                    <h1>{d.code}</h1>
-                    <h2>This is your compass code. If you would like to email me this to you, enter your email below. Your email will not be saved.</h2>
-                    <input id="email" type="text" />
-                    <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
-                </div>
-            );
-        }
+        if (this.state.loginType === LOGIN_TYPE.MAKE)
+            return this.getMakeSuccessNotification(this.state.data.code);
 
-        return (
-            <div className="section third">
-                <h1>{d.mode} access</h1>
-                <h2>You will be logged in as {this.state.username}</h2>
-                <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
-            </div>
-        );
+        if (this.state.loginType === LOGIN_TYPE.FIND)
+            return this.getFindSuccessNotification(this.state.data.mode);
     }
 
     render() {

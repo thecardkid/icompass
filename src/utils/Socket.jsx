@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 
 import Validator from 'JsxUtils/Validator.jsx';
 
-import { PROMPTS, KEYCODES } from 'Utils/constants.js';
+import { PROMPTS } from 'Utils/constants.js';
 
 export default class Socket {
     constructor(component) {
@@ -258,4 +258,4 @@ export default class Socket {
     handleCompassReady(data) {
         this.component.setState({ data });
     }
-};
+}
