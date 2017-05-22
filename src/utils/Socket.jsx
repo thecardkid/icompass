@@ -57,8 +57,12 @@ export default class Socket {
         return this.socket.disconnect();
     }
 
+    alertInvalidAction() {
+        alert(PROMPTS.NOT_CONNECTED);
+    }
+
     emitNewNote() {
-        if (this.component.state.disconnected) return this.component.alertInvalidAction();
+        if (this.socket.disconnected) return this.alertInvalidAction();
 
         let text = $('#ic-form-text').val();
         if (!text) return;
@@ -82,7 +86,8 @@ export default class Socket {
     }
 
     emitDragNote(event) {
-        if (this.component.state.disconnected) return this.component.alertInvalidAction();
+        this.component.setTranslation(event.target, 0, 0);
+        if (this.socket.disconnected) return this.alertInvalidAction();
 
         let compass = this.component.state.compass;
         let i = this.component.state.dragNote;
@@ -90,15 +95,13 @@ export default class Socket {
         note.x += event.dx / this.component.state.vw;
         note.y += event.dy / this.component.state.vh;
 
-        this.component.setTranslation(event.target, 0, 0);
-
         compass.notes[i] = note;
         this.component.setState({ compass }); // positive update
         this.socket.emit('update note', note);
     }
 
     emitEditNote() {
-        if (this.component.state.disconnected) return this.component.alertInvalidAction();
+        if (this.socket.disconnected) return this.alertInvalidAction();
 
         let text = $('#ic-form-text').val();
         if (!text) return;
@@ -118,7 +121,7 @@ export default class Socket {
     }
 
     emitNewDoodle() {
-        if (this.component.state.disconnected) return this.component.alertInvalidAction();
+        if (this.socket.disconnected) return this.alertInvalidAction();
 
         this.socket.emit('new note', {
             text: null,
@@ -131,14 +134,20 @@ export default class Socket {
     }
 
     emitDeleteCompass() {
+        if (this.socket.disconnected) return this.alertInvalidAction();
+
         this.socket.emit('delete compass', this.component.state.compass._id);
     }
 
     emitDeleteNote(noteId) {
+        if (this.socket.disconnected) return this.alertInvalidAction();
+
         this.socket.emit('delete note', noteId);
     }
 
     emitMessage() {
+        if (this.socket.disconnected) return this.alertInvalidAction();
+
         let text = $('#message-text').val();
         if (!text) return;
 
@@ -149,14 +158,17 @@ export default class Socket {
     }
 
     emitCreateCompass(center, username) {
+        if (this.socket.disconnected) return this.alertInvalidAction();
         this.socket.emit('create compass', { center, username });
     }
 
     emitFindCompass(code, username) {
+        if (this.socket.disconnected) return this.alertInvalidAction();
         this.socket.emit('find compass', { code, username });
     }
 
     emitSendMail(code, username, receiverEmail) {
+        if (this.socket.disconnected) return this.alertInvalidAction();
         this.socket.emit('send mail', {
             editCode: code,
             username: username,

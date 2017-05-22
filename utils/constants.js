@@ -1,6 +1,7 @@
 
 module.exports.PROMPTS = {
     EXPORT: 'I see you want to save this compass as a PDF. You can:\n\n1. Click \'OK\' and I can try to create a pdf for you, but the image quality may not be to your liking. Or\n\n2. Click \'Cancel\' and take a screenshot (recommended)',
+    NOT_CONNECTED: 'You are not connected to the server',
     POST_IT_TOO_LONG: 'You can\'t fit that much on a post-it!',
     EMAIL_SENT: 'An email has been sent to you. Expect it in 5-10 minutes',
     EMAIL_NOT_SENT: 'I ran into an issue sending you the email. Please note down your codes manually somewhere. Thanks',

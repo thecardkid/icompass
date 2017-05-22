@@ -45,7 +45,6 @@ export default class CompassEdit extends Component {
             showChat: true,
             showExplanation: false,
             showHelp: false,
-            disconnected: false,
             unread: false,
             messages: [{
                 info: true,
@@ -225,11 +224,6 @@ export default class CompassEdit extends Component {
         this.setState({editNote: false, newNote: false, doodleNote: true});
     }
 
-    alertInvalidAction() {
-        alert(PROMPTS.NOT_CONNECTED);
-        this.setState({showSidebar: true});
-    }
-
     getForm() {
         if (this.state.newNote) {
             return <NoteForm
@@ -274,7 +268,7 @@ export default class CompassEdit extends Component {
                 users={this.state.users.usernameToColor}
                 you={this.state.username}
                 show={this.state.showSidebar}
-                disconnected={this.state.disconnected}
+                disconnected={this.socket.socket.disconnected}
                 toggleSidebar={this.toggleSidebar}
                 destroy={this.socket.emitDeleteCompass}
             />
