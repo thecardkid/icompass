@@ -34,6 +34,7 @@ Actions are bound to keys help with productivity:
 ## Stickies
 The sticky note look is in the spirit of how I learnt and used the compass:
 
+- **Compact mode** (top right corner) will set a max height for stickies and make images smaller, making it easier for you to see stickies.
 - Stickies can carry up to 300 characters.
 - You can link to images.
 - You can create doodles. A small doodle is roughly 12000 characters, so they *may* cause some lag.
