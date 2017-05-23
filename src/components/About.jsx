@@ -12,7 +12,7 @@ export default class Explanation extends Component {
 
     render() {
         return (
-            <div id="explanation">
+            <div id="ic-about">
                 <button className="ic-close-window" onClick={this.props.close}>x</button>
                 <div id="text">
                     <h1>Innovators&apos; Compass</h1>

@@ -7,7 +7,7 @@ import _ from 'underscore';
 
 import Sidebar from 'Components/Sidebar.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
-import Explanation from 'Components/Explanation.jsx';
+import About from 'Components/About.jsx';
 import Chat from 'Components/Chat.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 
@@ -44,7 +44,7 @@ export default class CompassEdit extends Component {
             users: this.props.users || {},
             showSidebar: true,
             showChat: true,
-            showExplanation: false,
+            showAbout: false,
             showHelp: false,
             unread: false,
             compact: false,
@@ -65,7 +65,7 @@ export default class CompassEdit extends Component {
         this.closeForm = this.closeForm.bind(this);
         this.showNewNote = this.showNewNote.bind(this);
         this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.toggleExplain = this.toggleExplain.bind(this);
+        this.toggleAbout = this.toggleAbout.bind(this);
         this.toggleHelp = this.toggleHelp.bind(this);
         this.toggleChat = this.toggleChat.bind(this);
         this.toggleCompactMode = this.toggleCompactMode.bind(this);
@@ -83,7 +83,7 @@ export default class CompassEdit extends Component {
             67: this.toggleChat,
             68: this.showDoodleForm,
             83: this.toggleSidebar,
-            87: this.toggleExplain
+            65: this.toggleAbout
         };
     }
 
@@ -156,7 +156,7 @@ export default class CompassEdit extends Component {
         return k === KEYCODES.N ||
             k === KEYCODES.D ||
             k === KEYCODES.C ||
-            k === KEYCODES.W ||
+            k === KEYCODES.A ||
             k === KEYCODES.S ||
             k === KEYCODES.D;
     }
@@ -198,8 +198,8 @@ export default class CompassEdit extends Component {
         this.setState({showSidebar: !this.state.showSidebar});
     }
 
-    toggleExplain() {
-        this.setState({showExplanation: !this.state.showExplanation});
+    toggleAbout() {
+        this.setState({showAbout: !this.state.showAbout});
     }
 
     toggleHelp() {
@@ -275,9 +275,9 @@ export default class CompassEdit extends Component {
         return null;
     }
 
-    getExplanation() {
-        if (this.state.showExplanation)
-            return <Explanation close={this.toggleExplain} />;
+    getAbout() {
+        if (this.state.showAbout)
+            return <About close={this.toggleAbout} />;
         return null;
     }
 
@@ -321,7 +321,7 @@ export default class CompassEdit extends Component {
             <div id="compass">
                 {this.getStickies()}
                 {this.getForm()}
-                {this.getExplanation()}
+                {this.getAbout()}
                 {this.getCompassStructure(this.state.compass.center)}
                 <button className="ic-corner-btn" id="ic-compact" onClick={this.toggleCompactMode}>Compact</button>
                 <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.toggleSidebar}>Show Sidebar</button>

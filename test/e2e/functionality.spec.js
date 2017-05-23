@@ -42,12 +42,12 @@ module.exports = {
 
     'key bindings': function(browser) {
         browser
-        .keys(['s', 'c', 'w'])
+        .keys(['s', 'c', 'a'])
         .pause(500)
         .assert.cssProperty('#ic-sidebar', 'left', '-240px')
         .assert.cssProperty('#ic-chat', 'bottom', '-265px')
-        .assert.elementPresent('#explanation')
-        .keys(['w', 's'])
+        .assert.elementPresent('#ic-about')
+        .keys(['a', 's'])
         .keys(['n'])
         .assert.elementPresent('#ic-note-form')
         .click('button[name=ship]')
