@@ -10,6 +10,7 @@ import NoteForm from 'Components/NoteForm.jsx';
 import About from 'Components/About.jsx';
 import Chat from 'Components/Chat.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
+import Feedback from 'Components/Feedback.jsx';
 
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
@@ -46,6 +47,7 @@ export default class CompassEdit extends Component {
             showChat: true,
             showAbout: false,
             showHelp: false,
+            showFeedback: false,
             unread: false,
             compact: false,
             messages: [{
@@ -69,6 +71,7 @@ export default class CompassEdit extends Component {
         this.toggleHelp = this.toggleHelp.bind(this);
         this.toggleChat = this.toggleChat.bind(this);
         this.toggleCompactMode = this.toggleCompactMode.bind(this);
+        this.toggleFeedback = this.toggleFeedback.bind(this);
         this.renderQuadrant = Shared.renderQuadrant;
         this.exportCompass = this.exportCompass.bind(this);
         this.focusOnNote = this.focusOnNote.bind(this);
@@ -214,6 +217,10 @@ export default class CompassEdit extends Component {
         this.setState({compact: !this.state.compact});
     }
 
+    toggleFeedback() {
+        this.setState({showFeedback: !this.state.showFeedback});
+    }
+
     closeForm() {
         $('#form-text').val('');
         this.setState({newNote: false, editNote: false, doodleNote: false});
@@ -294,6 +301,7 @@ export default class CompassEdit extends Component {
                 show={this.state.showSidebar}
                 disconnected={this.socket.socket.disconnected}
                 toggleSidebar={this.toggleSidebar}
+                toggleFeedback={this.toggleFeedback}
                 destroy={this.socket.emitDeleteCompass}
                 exportCompass={this.exportCompass}
             />
@@ -313,12 +321,17 @@ export default class CompassEdit extends Component {
         );
     }
 
+    getFeedback() {
+        if (this.state.showFeedback) return <Feedback style={this.center(400,200)} close={this.toggleFeedback}/>;
+    }
+
     render() {
         if (!this.state.compass)
             return <div id="compass"></div>;
 
         return (
             <div id="compass">
+                {this.getFeedback()}
                 {this.getStickies()}
                 {this.getForm()}
                 {this.getAbout()}

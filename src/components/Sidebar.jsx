@@ -49,10 +49,6 @@ export default class Sidebar extends Component {
         );
     }
 
-    notifyMe() {
-        alert(PROMPTS.THIS_SUCKS);
-    }
-
     showSavePrompt() {
         if (confirm(PROMPTS.EXPORT)) this.props.exportCompass();
     }
@@ -98,7 +94,7 @@ export default class Sidebar extends Component {
                     <div className="ic-sidebar-list">
                         <h2>Actions</h2>
                         <button className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
-                        <button name="sucks" className="ic-action" onClick={this.notifyMe}>feedback</button>
+                        <button name="sucks" className="ic-action" onClick={this.props.toggleFeedback}>feedback</button>
                         <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">tutorial</Link></button>
                         <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>tweet this</button>
                         <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>delete compass</button>
@@ -134,6 +130,7 @@ Sidebar.propTypes = {
     show: PropTypes.bool.isRequired,
     destroy: PropTypes.func.isRequired,
     toggleSidebar: PropTypes.func.isRequired,
-    exportCompass: PropTypes.func.isRequired
+    exportCompass: PropTypes.func.isRequired,
+    toggleFeedback: PropTypes.func.isRequired
 };
 
