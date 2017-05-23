@@ -5,9 +5,7 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
-import { PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants.js';
-
-const TWEET = "https://twitter.com/home?status=Check%20out%20my%20compass%3A%20http%3A//icompass.hieuqn.com/compass/view/";
+import { VERSION, TWEET, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants.js';
 
 export default class Sidebar extends Component {
 
@@ -112,6 +110,13 @@ export default class Sidebar extends Component {
                         </p>
                         <p>app by
                             <Link href="http://hieuqn.com" target="_blank" rel="noopener noreferrer"> Hieu Nguyen</Link>
+                        </p>
+                    </div>
+                    <div className="ic-sidebar-list">
+                        <h2>Version</h2>
+                        <p>iCompass {VERSION}</p>
+                        <p>
+                            <Link to="https://github.com/thecardkid/innovators-compass/releases" target="_blank" rel="noopener noreferrer">changelog</Link>
                         </p>
                     </div>
                 </div></div>
