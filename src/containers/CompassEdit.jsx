@@ -47,6 +47,7 @@ export default class CompassEdit extends Component {
             showExplanation: false,
             showHelp: false,
             unread: false,
+            compact: false,
             messages: [{
                 info: true,
                 text: 'These messages will be cleared when you log out'
@@ -67,6 +68,7 @@ export default class CompassEdit extends Component {
         this.toggleExplain = this.toggleExplain.bind(this);
         this.toggleHelp = this.toggleHelp.bind(this);
         this.toggleChat = this.toggleChat.bind(this);
+        this.toggleCompactMode = this.toggleCompactMode.bind(this);
         this.renderQuadrant = Shared.renderQuadrant;
         this.exportCompass = this.exportCompass.bind(this);
         this.focusOnNote = this.focusOnNote.bind(this);
@@ -208,6 +210,10 @@ export default class CompassEdit extends Component {
         this.setState({showChat: !this.state.showChat, unread: false});
     }
 
+    toggleCompactMode() {
+        this.setState({compact: !this.state.compact});
+    }
+
     closeForm() {
         $('#form-text').val('');
         this.setState({newNote: false, editNote: false, doodleNote: false});
@@ -317,9 +323,10 @@ export default class CompassEdit extends Component {
                 {this.getForm()}
                 {this.getExplanation()}
                 {this.getCompassStructure(this.state.compass.center)}
-                <button id="show-sidebar" onClick={this.toggleSidebar}>Show Sidebar</button>
+                <button className="ic-corner-btn" id="ic-compact" onClick={this.toggleCompactMode}>Compact</button>
+                <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.toggleSidebar}>Show Sidebar</button>
                 {this.getSidebar()}
-                <button id="show-chat" onClick={this.toggleChat} style={{background: this.state.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
+                <button className="ic-corner-btn" id="ic-show-chat" onClick={this.toggleChat} style={{background: this.state.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
                 {this.getChat()}
             </div>
         );

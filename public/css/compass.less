@@ -6,7 +6,6 @@
     cursor:default;
 
     li.ic-sticky-note {
-        max-height:155px;
         list-style:none;
         float:left;
         cursor:pointer;
@@ -18,8 +17,8 @@
             color:black;
             display:block;
             background:#ffc;
-            max-width:164px;
-            padding:5px;
+            max-width:160px;
+            padding:8px;
             .boxshadow(3px, 7px, rgba(33,33,33,0.7));
             .wordwrap;
 
@@ -93,20 +92,26 @@
     }
 }
 
-#show-sidebar {
+.ic-corner-btn {
     position:absolute;
-    top:20px;
-    left:20px;
     background:@dark;
     color:@light;
+    z-index:2;
 }
 
-#show-chat {
-    position:absolute;
+#ic-show-sidebar {
+    top:20px;
+    left:20px;
+}
+
+#ic-show-chat {
     bottom:20px;
     right:40px;
-    background:@dark;
-    color:@light;
+}
+
+#ic-compact {
+    right:40px;
+    top:20px;
 }
 
 #hline {

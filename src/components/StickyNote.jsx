@@ -28,7 +28,8 @@ export default class StickyNote extends Component {
             this.props.w !== nextProps.w ||
             this.props.h !== nextProps.h ||
             this.props.i !== nextProps.i ||
-            this.props.focusedNote !== nextProps.focusedNote
+            this.props.focusedNote !== nextProps.focusedNote ||
+            this.props.compact !== nextProps.compact
         );
     }
 
@@ -47,12 +48,20 @@ export default class StickyNote extends Component {
             };
             return (
                 <a className="ic-img" style={s}>
-                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width="164px"/>
+                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width={this.props.compact ? "100px" : "164px"}/>
                 </a>
             );
         } else {
+            let style = {background: n.color, letterSpacing: '1px'};
+
+            if (this.props.compact) {
+                style.letterSpacing = '0px';
+                style.maxHeight = '70px';
+                style.overflow = 'auto';
+            }
+
             return (
-                <a style={{background: n.color}}>
+                <a style={style}>
                     <p>{n.text}</p>
                 </a>
             );
@@ -82,7 +91,7 @@ export default class StickyNote extends Component {
             style = {
                 left: n.x * this.props.w,
                 top: n.y * this.props.h,
-                zIndex: this.props.i === this.props.focusedNote ? 1 : 0
+                zIndex: this.props.i === this.props.focusedNote ? 1 : 0,
             };
 
         return (
@@ -108,6 +117,7 @@ StickyNote.propTypes = {
     destroy: PropTypes.func.isRequired,
     mode: PropTypes.string.isRequired,
     focusedNote: PropTypes.number.isRequired,
-    focusOn: PropTypes.func.isRequired
+    focusOn: PropTypes.func.isRequired,
+    compact: PropTypes.bool.isRequired
 };
 

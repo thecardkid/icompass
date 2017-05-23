@@ -18,6 +18,7 @@ export default {
                 destroy={this.socket.emitDeleteNote}
                 mode={this.state.mode}
                 focusOn={this.focusOnNote}
+                compact={this.state.compact}
             />
         );
     },

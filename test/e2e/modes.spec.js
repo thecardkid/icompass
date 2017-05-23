@@ -39,8 +39,9 @@ module.exports = {
         .assert.elementPresent('#hline')
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
-        .assert.elementNotPresent('#show-chat')
-        .assert.elementNotPresent('#show-sidebar');
+        .assert.elementNotPresent('#ic-show-chat')
+        .assert.elementNotPresent('#ic-show-sidebar')
+        .assert.elementNotPresent('#ic-compact');
     },
 
     'view-only from login page': function(browser) {
@@ -61,8 +62,9 @@ module.exports = {
         .assert.elementPresent('#hline')
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
-        .assert.elementNotPresent('#show-chat')
-        .assert.elementNotPresent('#show-sidebar');
+        .assert.elementNotPresent('#ic-show-chat')
+        .assert.elementNotPresent('#ic-show-sidebar')
+        .assert.elementNotPresent('#ic-compact');
     },
 
     'url with bad params is rejected': function(browser) {
@@ -106,8 +108,9 @@ module.exports = {
         .assert.elementPresent('#hline')
         .assert.elementPresent('#ic-sidebar')
         .assert.elementPresent('#ic-chat')
-        .assert.elementPresent('#show-chat')
-        .assert.elementPresent('#show-sidebar')
+        .assert.elementPresent('#ic-show-chat')
+        .assert.elementPresent('#ic-show-sidebar')
+        .assert.elementPresent('#ic-compact')
         .click('#ic-sidebar button[name=destroyer]')
         .acceptAlert()
         .pause(500)

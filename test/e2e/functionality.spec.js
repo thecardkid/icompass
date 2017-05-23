@@ -22,8 +22,9 @@ module.exports = {
         .assert.elementPresent('#hline')
         .assert.elementPresent('#ic-sidebar')
         .assert.elementPresent('#ic-chat')
-        .assert.elementPresent('#show-chat')
-        .assert.elementPresent('#show-sidebar')
+        .assert.elementPresent('#ic-show-chat')
+        .assert.elementPresent('#ic-show-sidebar')
+        .assert.elementPresent('#ic-compact')
         .assert.containsText('#center', 'nightwatchjs')
         .assert.elementPresent('#observations')
             .assert.containsText('#observations h1', 'OBSERVATIONS')
@@ -131,7 +132,7 @@ module.exports = {
             });
         })
         // delete note
-        .moveToElement('#note1', 164, 10, function() {
+        .moveToElement('#note1', 173, 3, function() {
             browser
             .mouseButtonClick(0)
             .pause(500)
@@ -146,6 +147,34 @@ module.exports = {
             .pause(2000)
             .assert.elementNotPresent('#note1');
         });
+    },
+
+    'compact mode': function(browser) {
+        browser
+        .getCssProperty('#note0 a', 'letter-spacing', function(result) {
+            this.assert.notEqual(result.value, '0px');
+        })
+        .getCssProperty('#note0 a', 'overflow', function(result) {
+            this.assert.notEqual(result.value, 'auto');
+        })
+        .getCssProperty('#note0 a', 'height', function(result) {
+            this.assert.notEqual(result.value, '70px');
+        })
+        .pause(500)
+        .click('#ic-compact')
+        .pause(500)
+        .getCssProperty('#note0 a', 'letter-spacing', function(result) {
+            this.assert.equal(result.value, 'normal'); // 0px
+        })
+        .getCssProperty('#note0 a', 'overflow', function(result) {
+            this.assert.equal(result.value, 'auto');
+        })
+        .getCssProperty('#note0 a', 'max-height', function(result) {
+            this.assert.equal(result.value, '70px');
+        })
+        .pause(500)
+        .click('#ic-compact')
+        .pause(500)
     },
 
     'doodle events': function(browser) {
