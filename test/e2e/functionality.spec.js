@@ -174,7 +174,7 @@ module.exports = {
         })
         .pause(500)
         .click('#ic-compact')
-        .pause(500)
+        .pause(500);
     },
 
     'doodle events': function(browser) {

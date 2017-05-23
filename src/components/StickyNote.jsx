@@ -48,7 +48,7 @@ export default class StickyNote extends Component {
             };
             return (
                 <a className="ic-img" style={s}>
-                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width={this.props.compact ? "100px" : "164px"}/>
+                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width={this.props.compact ? '100px' : '164px'}/>
                 </a>
             );
         } else {
