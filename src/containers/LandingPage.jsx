@@ -82,8 +82,8 @@ export default class LandingPage extends Component {
         return (
             <div className="section">
                 <h1>Are you finding or making a compass?</h1>
-                <button className="ic-button" name="find" onClick={() => this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
                 <button className="ic-button" name="make" onClick={() => this.setLoginType(LOGIN_TYPE.MAKE)}>making</button>
+                <button className="ic-button" name="find" onClick={() => this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
             </div>
         );
     }
