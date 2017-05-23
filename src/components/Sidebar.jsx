@@ -1,10 +1,13 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
 import { PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants.js';
+
+const TWEET = "https://twitter.com/home?status=Check%20out%20my%20compass%3A%20http%3A//icompass.hieuqn.com/compass/view/";
 
 export default class Sidebar extends Component {
 
@@ -13,6 +16,7 @@ export default class Sidebar extends Component {
         this.controlList = _.map(CONTROLS, this.renderControl);
         this.showSavePrompt = this.showSavePrompt.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
+        this.tweetThis = this.tweetThis.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -55,6 +59,11 @@ export default class Sidebar extends Component {
         if (confirm(PROMPTS.EXPORT)) this.props.exportCompass();
     }
 
+    tweetThis() {
+        let tweetURL = TWEET + this.props.viewCode + '/spectator';
+        window.open(tweetURL, '_blank').focus();
+    }
+
     confirmDelete() {
         if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS))
             this.props.destroy();
@@ -90,18 +99,19 @@ export default class Sidebar extends Component {
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Actions</h2>
-                        <button className="ic-action" onClick={this.showSavePrompt}>Export to PDF</button>
-                        <button name="sucks" className="ic-action" onClick={this.notifyMe}>Feedback</button>
-                        <button name="tutorial" className="ic-action"><a href="/tutorial" target="_blank" rel="noopener noreferrer">Tutorial</a></button>
-                        <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>Delete Compass</button>
+                        <button className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
+                        <button name="sucks" className="ic-action" onClick={this.notifyMe}>feedback</button>
+                        <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">tutorial</Link></button>
+                        <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>tweet this</button>
+                        <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>delete compass</button>
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Credits</h2>
-                        <p>Compass by
-                            <a href="http://innovatorscompass.org" target="_blank" rel="noopener noreferrer"> Ela Ben-Ur</a>
+                        <p>compass by
+                            <Link to="http://innovatorscompass.org" target="_blank" rel="noopener noreferrer"> Ela Ben-Ur</Link>
                         </p>
-                        <p>App by
-                            <a href="http://hieuqn.com" target="_blank" rel="noopener noreferrer"> Hieu Nguyen</a>
+                        <p>app by
+                            <Link href="http://hieuqn.com" target="_blank" rel="noopener noreferrer"> Hieu Nguyen</Link>
                         </p>
                     </div>
                 </div></div>
