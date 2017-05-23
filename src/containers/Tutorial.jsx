@@ -97,13 +97,22 @@ const STEPS = [
         text: 'Send messages to anyone who is online. Messages are cleared when you log out',
         prep: () => {
             $('#ic-chat').css('bottom', '-265px');
-            $('#show-chat').css('z-index', 4);
-            $('#show-sidebar').css('z-index', 4);
+            $('#ic-show-chat').css('z-index', 4);
+            $('#ic-show-sidebar').css('z-index', 4);
         }
     },
     {
         header: 'Buttons',
         text: 'If you forget the key bindings "s" for sidebar and "c" for chat, use these buttons to get them back',
+        prep: () => {
+            $('#ic-show-chat').css('z-index', 2);
+            $('#ic-show-sidebar').css('z-index', 2);
+            $('#ic-compact').css('z-index', 4);
+        }
+    },
+    {
+        header: 'Compact mode',
+        text: 'When things get crowded, use compact mode in the top right corner to give yourself more space. Compact mode only applies to your view.',
         prep: () => {}
     },
     {

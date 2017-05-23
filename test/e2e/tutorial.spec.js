@@ -1,6 +1,6 @@
 
 var originalTranslation;
-var STEPS = 17;
+var STEPS = 18;
 
 module.exports = {
     'creates successfully': function(browser) {
