@@ -18,7 +18,6 @@ import Shared from 'Utils/Shared.jsx';
 
 import { KEYCODES, COLORS } from 'Lib/constants.js';
 
-let modifier = false; // to differentiate between 'c' and 'ctrl-c'
 let drag = false;
 
 export default class CompassEdit extends Component {
@@ -60,6 +59,7 @@ export default class CompassEdit extends Component {
         this.renderNote = Shared.renderNote.bind(this);
         this.center = Shared.center.bind(this);
         this.getCompassStructure = Shared.getCompassStructure.bind(this);
+        this.renderQuadrant = Shared.renderQuadrant;
 
         // user events
         this.showEditForm = this.showEditForm.bind(this);
@@ -72,7 +72,6 @@ export default class CompassEdit extends Component {
         this.toggleChat = this.toggleChat.bind(this);
         this.toggleCompactMode = this.toggleCompactMode.bind(this);
         this.toggleFeedback = this.toggleFeedback.bind(this);
-        this.renderQuadrant = Shared.renderQuadrant;
         this.exportCompass = this.exportCompass.bind(this);
         this.focusOnNote = this.focusOnNote.bind(this);
 
@@ -151,7 +150,6 @@ export default class CompassEdit extends Component {
         drag = true;
         let x = (parseFloat(e.target.getAttribute('data-x')) || 0) + e.dx;
         let y = (parseFloat(e.target.getAttribute('data-y')) || 0) + e.dy;
-
         this.setTranslation(e.target, x, y);
     }
 
@@ -164,27 +162,19 @@ export default class CompassEdit extends Component {
             k === KEYCODES.D;
     }
 
-    isModifierKey(k) {
-        return k === KEYCODES.SHIFT ||
-            k === KEYCODES.ALT ||
-            k === KEYCODES.CTRL ||
-            k === KEYCODES.CMD;
+    isModifierKey(e) {
+        return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
     }
 
     handleKeyDown(e) {
-        if (this.state.newNote || this.state.editNote || this.state.doodleNote) {
-            if (e.which === 27) this.closeForm();
-            return;
-        }
+        if (this.state.newNote || this.state.editNote || this.state.doodleNote)
+            if (e.which === KEYCODES.ESC) return this.closeForm();
 
         if (document.activeElement.id === 'message-text') return;
 
-        if (this.isControlKey(e.which) && !modifier) {
+        if (this.isControlKey(e.which) && !this.isModifierKey(e)) {
             e.preventDefault();
             this.keypressHandler[e.which]();
-        } else if (this.isModifierKey(e.which)) {
-            modifier = true;
-            setTimeout(() => modifier = false, 5000);
         }
     }
 
