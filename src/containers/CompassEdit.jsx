@@ -1,7 +1,11 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as noteActions from '../actions/notes';
 import PropTypes from 'prop-types';
+import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
@@ -20,11 +24,13 @@ import { KEYCODES, COLORS } from 'Lib/constants.js';
 
 let drag = false;
 
-export default class CompassEdit extends Component {
+class CompassEdit extends Component {
 
     constructor(props, context) {
         super(props, context);
         this.socket = new Socket(this);
+        this.socket.socket.on('update notes', this.props.noteActions.updateAll);
+        this.socket.socket.on('compass found', this.props.noteActions.api);
 
         if (!this.props.compass) {
             this.validateParams(this.props);
@@ -281,7 +287,7 @@ export default class CompassEdit extends Component {
     }
 
     getStickies() {
-        return _.map(this.state.compass.notes, this.renderNote);
+        return _.map(this.props.notes, this.renderNote);
     }
 
     getSidebar() {
@@ -344,4 +350,18 @@ CompassEdit.propTypes = {
     username: PropTypes.string,
     users: PropTypes.object
 };
+
+function mapStateToProps(state, props) {
+    return {
+        notes: state.notes
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        noteActions: bindActionCreators(noteActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CompassEdit);
 

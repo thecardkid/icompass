@@ -31,7 +31,6 @@ export default class Socket {
         this.handleDisconnect = this.handleDisconnect.bind(this);
         this.handleReconnect = this.handleReconnect.bind(this);
         this.handleCompassDeleted = this.handleCompassDeleted.bind(this);
-        this.handleUpdateNotes = this.handleUpdateNotes.bind(this);
         this.handleUserJoined = this.handleUserJoined.bind(this);
         this.handleUserLeft = this.handleUserLeft.bind(this);
         this.handleUpdateUsers = this.handleUpdateUsers.bind(this);
@@ -41,7 +40,6 @@ export default class Socket {
         this.handleCompassReady = this.handleCompassReady.bind(this);
 
         // socket event handlers
-        this.socket.on('update notes', this.handleUpdateNotes);
         this.socket.on('user joined', this.handleUserJoined);
         this.socket.on('user left', this.handleUserLeft);
         this.socket.on('disconnect', this.handleDisconnect);
@@ -89,14 +87,13 @@ export default class Socket {
         this.component.setTranslation(event.target, 0, 0);
         if (this.socket.disconnected) return this.alertInvalidAction();
 
-        let compass = this.component.state.compass;
+        let notes = this.component.props.notes;
         let i = this.component.state.dragNote;
-        let note = JSON.parse(JSON.stringify(compass.notes[i]));
-        note.x += event.dx / this.component.state.vw;
-        note.y += event.dy / this.component.state.vh;
+        let x = notes[i].x + event.dx / this.component.state.vw,
+            y = notes[i].y + event.dy / this.component.state.vh;
+        let note = Object.assign({}, notes[i], { x, y });
 
-        compass.notes[i] = note;
-        this.component.setState({ compass }); // positive update
+        this.component.props.noteActions.drag(i, x, y);
         this.socket.emit('update note', note);
     }
 
@@ -220,12 +217,6 @@ export default class Socket {
     handleCompassDeleted() {
         alert(PROMPTS.COMPASS_DELETED);
         browserHistory.push('/');
-    }
-
-    handleUpdateNotes(newNotes) {
-        let { compass } = this.component.state;
-        compass.notes = newNotes;
-        this.component.setState({ compass });
     }
 
     handleUserJoined(data) {
