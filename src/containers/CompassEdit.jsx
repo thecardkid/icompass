@@ -167,8 +167,10 @@ export default class CompassEdit extends Component {
     }
 
     handleKeyDown(e) {
-        if (this.state.newNote || this.state.editNote || this.state.doodleNote)
-            if (e.which === KEYCODES.ESC) return this.closeForm();
+        if (this.state.newNote || this.state.editNote || this.state.doodleNote) {
+            if (e.which === KEYCODES.ESC) this.closeForm();
+            return;
+        }
 
         if (document.activeElement.id === 'message-text') return;
 
