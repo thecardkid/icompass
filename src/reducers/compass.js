@@ -1,8 +1,8 @@
 export default (state = {}, action) => {
     switch(action.type) {
-        case 'set':
+        case 'setCompass':
             return Object.assign({}, action.compass, {notes: undefined});
-        case 'remove':
+        case 'removeCompass':
             return {};
         default:
             return state;

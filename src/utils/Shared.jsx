@@ -40,6 +40,8 @@ export default {
     },
 
     getCompassStructure(text) {
+        if (!text) return null;
+
         let lines = Math.ceil(text.length / 11),
             textHeight = 13 * lines,
             top = (100 - textHeight) / 2;

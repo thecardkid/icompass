@@ -1,8 +1,8 @@
 export default (state = [], action) => {
     switch(action.type) {
-        case 'updateAll':
+        case 'updateNotes':
             return action.notes;
-        case 'drag':
+        case 'dragNote':
             let n = state[action.idx];
             let dragged = Object.assign({}, n, { x: action.x, y: action.y });
             return [
@@ -10,7 +10,7 @@ export default (state = [], action) => {
                 dragged,
                 ...state.slice(action.idx + 1)
             ];
-        case 'clear':
+        case 'clearNotes':
             return [];
         default:
             return state;

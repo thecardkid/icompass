@@ -29,7 +29,8 @@ export default class Sidebar extends Component {
 
         return (
             this.props.disconnected !== nextProps.disconnected ||
-            this.props.show !== nextProps.show
+            this.props.show !== nextProps.show ||
+            this.props.you !== nextProps.you
         );
     }
 

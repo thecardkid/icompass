@@ -1,12 +1,12 @@
 export const set = (compass) => {
     return {
-        type: 'set',
+        type: 'setCompass',
         compass
     };
 };
 
 export const remove = () => {
     return {
-        type: 'remove'
+        type: 'removeCompass'
     };
 };

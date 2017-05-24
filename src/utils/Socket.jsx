@@ -217,7 +217,8 @@ export default class Socket {
             info: true,
             text: data.joined + ' joined'
         });
-        this.component.setState({users: data.users, messages: messages});
+        this.component.setState({ messages });
+        this.component.props.userActions.update(data);
     }
 
     handleUserLeft(data) {
@@ -226,7 +227,8 @@ export default class Socket {
             info: true,
             text: data.left + ' left'
         });
-        this.component.setState({users: data.users, messages: messages});
+        this.component.setState({ messages });
+        this.component.props.userActions.update(data);
     }
 
     handleUpdateUsers(users) {

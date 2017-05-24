@@ -1,10 +1,13 @@
+import { combineReducers } from 'redux';
+
 import notes from './notes';
 import compass from './compass';
-import { combineReducers } from 'redux';
+import users from './users';
 
 const rootReducer = combineReducers({
     notes,
-    compass
+    compass,
+    users
 });
 
 export default rootReducer;

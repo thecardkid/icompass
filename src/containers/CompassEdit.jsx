@@ -10,6 +10,7 @@ import _ from 'underscore';
 
 import * as noteActions from '../actions/notes';
 import * as compassActions from '../actions/compass';
+import * as userActions from '../actions/users';
 
 import Sidebar from 'Components/Sidebar.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
@@ -39,6 +40,7 @@ class CompassEdit extends Component {
             }
             this.props.compassActions.set(data.compass);
             this.props.noteActions.updateAll(data.compass.notes);
+            this.props.userActions.me(data.username);
 
             this.setState({
                 compass: data.compass,
@@ -55,13 +57,11 @@ class CompassEdit extends Component {
         this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
-            username: this.props.username,
             focusedNote: -1,
             newNote: false,
             editNote: false,
             dragNote: false,
             doodleNote: false,
-            users: this.props.users || {},
             showSidebar: true,
             showChat: true,
             showAbout: false,
@@ -286,7 +286,7 @@ class CompassEdit extends Component {
         } else if (this.state.doodleNote) {
             return <DoodleForm
                 style={this.center(450, 345)}
-                bg={this.state.users.usernameToColor[this.state.username]}
+                bg={'#FFCCCC'}
                 close={this.closeForm}
                 save={this.socket.emitNewDoodle}
             />;
@@ -308,8 +308,8 @@ class CompassEdit extends Component {
         return (
             <Sidebar viewCode={this.props.compass.viewCode}
                 editCode={this.props.compass.editCode}
-                users={this.state.users.usernameToColor}
-                you={this.state.username}
+                users={this.props.users.nameToColor}
+                you={this.props.users.me}
                 show={this.state.showSidebar}
                 disconnected={this.socket.socket.disconnected}
                 toggleSidebar={this.toggleSidebar}
@@ -323,8 +323,8 @@ class CompassEdit extends Component {
     getChat() {
         return (
             <Chat messages={this.state.messages}
-                colorMap={this.state.users.usernameToColor}
-                username={this.state.username}
+                colorMap={this.props.users.nameToColor}
+                username={this.props.users.me}
                 socket={this.socket}
                 show={this.state.showChat}
                 toggleChat={this.toggleChat}
@@ -368,14 +368,16 @@ CompassEdit.propTypes = {
 function mapStateToProps(state, props) {
     return {
         notes: state.notes,
-        compass: state.compass
+        compass: state.compass,
+        users: state.users,
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         noteActions: bindActionCreators(noteActions, dispatch),
-        compassActions: bindActionCreators(compassActions, dispatch)
+        compassActions: bindActionCreators(compassActions, dispatch),
+        userActions: bindActionCreators(userActions, dispatch)
     };
 }
 

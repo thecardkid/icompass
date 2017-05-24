@@ -1,27 +1,27 @@
 export const updateAll = (notes) => {
     return {
-        type: 'updateAll',
+        type: 'updateNotes',
         notes
     };
 };
 
 export const api = (data) => {
     return {
-        type: 'updateAll',
+        type: 'updateNotes',
         notes: data.compass.notes
     };
 };
 
 export const drag = (idx, x, y) => {
     return {
-        type: 'drag',
+        type: 'dragNote',
         idx, x, y
     };
 };
 
 export const clear = () => {
     return {
-        type: 'clear'
+        type: 'clearNotes'
     };
 };
 
