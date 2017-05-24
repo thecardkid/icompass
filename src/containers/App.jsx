@@ -10,6 +10,7 @@ import CompassEdit from 'Containers/CompassEdit.jsx';
 import CompassView from 'Containers/CompassView.jsx';
 import LandingPage from 'Containers/LandingPage.jsx';
 import Tutorial from 'Containers/Tutorial.jsx';
+import PromptName from 'Components/PromptName.jsx';
 import NotFound from 'Containers/NotFound.jsx';
 
 class App extends Component {
@@ -24,7 +25,8 @@ class App extends Component {
             <Router history={browserHistory}>
                 <Route path='/' component={LandingPage} />
                 <Route path='/compass/edit/:code/:username' component={CompassEdit} />
-                <Route path='/compass/view/:code/:username' component={CompassView} />
+                <Route path='/compass/edit/:code' component={PromptName} />
+                <Route path='/compass/view/:code(/:username)' component={CompassView} />
                 <Route path='/tutorial' component={Tutorial} />
                 <Route path='*' component={NotFound} />
             </Router>

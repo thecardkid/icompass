@@ -81,7 +81,7 @@ export default class LandingPage extends Component {
     getFirst() {
         return (
             <div className="section">
-                <h1>Are you finding or making a compass?</h1>
+                <h1>Are you making or finding a compass?</h1>
                 <button className="ic-button" name="make" onClick={() => this.setLoginType(LOGIN_TYPE.MAKE)}>making</button>
                 <button className="ic-button" name="find" onClick={() => this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
             </div>
@@ -117,10 +117,14 @@ export default class LandingPage extends Component {
     }
 
     getNullNotification() {
+        let error = <h2>I couldn&apos;t find your compass. Do you have the right code?</h2>;
+        if (this.state.loginType === LOGIN_TYPE.MAKE)
+            error = <h2>Something went wrong. I&apos;tm not sure what. Please <Link to='https://github.com/thecardkid/innovators-compass/issues'>submit a bug</Link></h2>;
+
         return (
             <div className="section third">
                 <h1>Sorry!</h1>
-                <h2>I couldn&apos;t find your compass. Do you have the right code?</h2>
+                {error}
             </div>
         );
     }
@@ -146,7 +150,7 @@ export default class LandingPage extends Component {
         return (
             <div className="section third">
                 <h1>{code}</h1>
-                <h2>This is your compass code. If you would like to email me this to you, enter your email below. Your email will not be saved.</h2>
+                <h2>This is your compass code. If you would like me to email you a link to your compass, enter your email below. Your email will not be saved.</h2>
                 <input id="email" type="text" />
                 <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>let&apos;s go</button>
             </div>

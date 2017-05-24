@@ -5,25 +5,27 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
-import { VERSION, TWEET, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants.js';
+import { VERSION, TWEET, HOST, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants.js';
 
 export default class Sidebar extends Component {
 
     constructor(props, context) {
         super(props, context);
+
         this.controlList = _.map(CONTROLS, this.renderControl);
         this.showSavePrompt = this.showSavePrompt.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
         this.tweetThis = this.tweetThis.bind(this);
+        this.shareEditCode = this.shareEditCode.bind(this);
+        this.shareViewCode = this.shareViewCode.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
         if (this.props.users !== nextProps.users)
             return true;
 
-        if (this.props.users)
-            if (this.props.users.length !== nextProps.users.length)
-                return true;
+        if (this.props.users && this.props.users.length !== nextProps.users.length)
+            return true;
 
         return (
             this.props.disconnected !== nextProps.disconnected ||
@@ -53,8 +55,16 @@ export default class Sidebar extends Component {
         if (confirm(PROMPTS.EXPORT)) this.props.exportCompass();
     }
 
+    shareEditCode() {
+        window.prompt('Share this link below:', HOST + 'compass/edit/' + this.props.editCode);
+    }
+
+    shareViewCode() {
+        window.prompt('Share this link below:', HOST + 'compass/view/' + this.props.viewCode);
+    }
+
     tweetThis() {
-        let tweetURL = TWEET + this.props.viewCode + '/spectator';
+        let tweetURL = TWEET + this.props.viewCode;
         window.open(tweetURL, '_blank').focus();
     }
 
@@ -76,8 +86,10 @@ export default class Sidebar extends Component {
                     <button name="close-sidebar" className="ic-close-window" onClick={this.props.toggleSidebar}>x</button>
                     <div className="ic-sidebar-list">
                         <h2>Share</h2>
-                        <p><span name="edit-code" className="code">{this.props.editCode}</span> edit</p>
-                        <p><span name="view-code" className="code">{this.props.viewCode}</span> view</p>
+                        <button name="share-edit" id={this.props.editCode} className="ic-action" onClick={this.shareEditCode}>edit code</button>
+                        <button name="share-view" id={this.props.viewCode} className="ic-action" onClick={this.shareViewCode}>view code</button>
+                        <button className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
+                        <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>tweet this</button>
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Controls</h2>
@@ -93,10 +105,8 @@ export default class Sidebar extends Component {
                     </div>
                     <div className="ic-sidebar-list">
                         <h2>Actions</h2>
-                        <button className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
                         <button name="sucks" className="ic-action" onClick={this.props.toggleFeedback}>feedback</button>
                         <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">tutorial</Link></button>
-                        <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>tweet this</button>
                         <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>delete compass</button>
                     </div>
                     <div className="ic-sidebar-list">

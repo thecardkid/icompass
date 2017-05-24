@@ -11,7 +11,7 @@ const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}};
 const STEPS = [
     {
         header: 'Welcome to iCompass',
-        text: 'In this short tour, we\'ll cover a few things to help you make informed decisions about this workspace',
+        text: 'In this short tour, we\'ll cover a few things to help you make informed decisions about this workspace.',
         prep: () => $('#ic-tutorial-cover').fadeOut()
     },
     {
@@ -24,7 +24,7 @@ const STEPS = [
     },
     {
         header: 'The compass',
-        text: 'This is the compass structure that you know and love. In the middle is the people group - you will be asked to fill this out when you make a compass.',
+        text: 'This is the compass structure that you know and love. You will be asked to fill out the center when you create a new compass.',
         prep: () => {
             $('#ic-tutorial-cover').fadeIn();
             $('#ic-sidebar').css({'left': '0px', 'z-index': 4});
@@ -36,13 +36,13 @@ const STEPS = [
         prep: (root) => root.showOnly(0)
     },
     {
-        header: 'Compass codes',
-        text: 'This is how you share and FIND your compass. Scribble these down somewhere when you get them, or give me your email when you log in and I\'ll send them to you',
+        header: 'Sharing your compass',
+        text: 'Share with editing or view-only access, or export it to a pdf, or tweet the view-only link with the hashtag #innovatorscompass.',
         prep: (root) => root.showOnly(1)
     },
     {
         header: 'Key bindings',
-        text: 'Each of these keys is associated with a special action. For example, press "s" twice to toggle the sidebar',
+        text: 'Each of these keys is associated with a special action. For example, press "s" twice to toggle the sidebar.',
         prep: () => $('#ic-tutorial-cover').fadeOut()
     },
     {
@@ -52,12 +52,12 @@ const STEPS = [
     },
     {
         header: 'Linking images',
-        text: 'If you enter a hyperlink, I can import that image for you',
+        text: 'If you enter a hyperlink, I can import that image for you.',
         prep: () => $('button[name=nvm]').click()
     },
     {
-        header: 'Clicking on notes',
-        text: 'Click once to bring a note to the foreground, twice to edit its contents.',
+        header: 'Working with notes',
+        text: 'Click once to bring a sticky to the foreground, twice to edit its contents. Stickies are draggable by default.',
         prep: () => {}
     },
     {
@@ -71,21 +71,21 @@ const STEPS = [
     },
     {
         header: 'Active users',
-        text: 'Each person in your current compass session is listed here, associated with a unique color. This is the color of stickies they make and their chat bubble',
+        text: 'Each person in your current compass session is listed here, associated with a unique color. This is the color of stickies they make and their chat bubble.',
         prep: (root) => root.showOnly(3)
     },
     {
         header: 'Connection status',
-        text: 'When you disconnect from the server, the sidebar will open and you will see a red "Disconnected". If it\'s green you\'re all set',
+        text: 'When you disconnect from the server, the sidebar will open and you will see a red "Disconnected". If it\'s green you\'re all set.',
         prep: (root) => root.showOnly(4)
     },
     {
         header: 'Reduce',
-        text: 'I would appreciate if you could clean up server space by deleting a compass you know you won\'t need again! You can also save a pdf, send me your complaints, or see this tutorial again',
+        text: 'I would appreciate if you could clean up server space by deleting a compass you know you won\'t need again!',
         prep: (root) => root.showOnly(5)
     },
     {
-        header: 'People who made this Stuff',
+        header: 'People who made this Stuff.',
         text: 'Do check us out!',
         prep: () => {
             $('#ic-sidebar').css('left', '-240px');
@@ -94,7 +94,7 @@ const STEPS = [
     },
     {
         header: 'Chat',
-        text: 'Send messages to anyone who is online. Messages are cleared when you log out',
+        text: 'Send messages to anyone who is online. Messages are cleared when you log out.',
         prep: () => {
             $('#ic-chat').css('bottom', '-265px');
             $('#ic-show-chat').css('z-index', 4);
@@ -103,7 +103,7 @@ const STEPS = [
     },
     {
         header: 'Buttons',
-        text: 'If you forget the key bindings "s" for sidebar and "c" for chat, use these buttons to get them back',
+        text: 'If you forget the key bindings "s" for sidebar and "c" for chat, use these buttons to get them back.',
         prep: () => {
             $('#ic-show-chat').css('z-index', 2);
             $('#ic-show-sidebar').css('z-index', 2);
