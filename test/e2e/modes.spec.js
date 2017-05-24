@@ -37,11 +37,11 @@ module.exports = {
         .assert.elementPresent('#center')
         .assert.elementPresent('#vline')
         .assert.elementPresent('#hline')
+        .assert.elementPresent('#ic-compact')
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
         .assert.elementNotPresent('#ic-show-chat')
-        .assert.elementNotPresent('#ic-show-sidebar')
-        .assert.elementNotPresent('#ic-compact');
+        .assert.elementNotPresent('#ic-show-sidebar');
     },
 
     'view-only from login page': function(browser) {
@@ -60,11 +60,11 @@ module.exports = {
         .assert.elementPresent('#center')
         .assert.elementPresent('#vline')
         .assert.elementPresent('#hline')
+        .assert.elementPresent('#ic-compact')
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
         .assert.elementNotPresent('#ic-show-chat')
-        .assert.elementNotPresent('#ic-show-sidebar')
-        .assert.elementNotPresent('#ic-compact');
+        .assert.elementNotPresent('#ic-show-sidebar');
     },
 
     'url with bad params is rejected': function(browser) {
