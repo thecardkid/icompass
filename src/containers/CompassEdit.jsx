@@ -3,11 +3,13 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as noteActions from '../actions/notes';
 import PropTypes from 'prop-types';
 import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
+
+import * as noteActions from '../actions/notes';
+import * as compassActions from '../actions/compass';
 
 import Sidebar from 'Components/Sidebar.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
@@ -30,9 +32,22 @@ class CompassEdit extends Component {
         super(props, context);
         this.socket = new Socket(this);
         this.socket.socket.on('update notes', this.props.noteActions.updateAll);
-        this.socket.socket.on('compass found', this.props.noteActions.api);
+        this.socket.socket.on('compass found', (data) => {
+            if (data.compass === null) {
+                alert(PROMPTS.COMPASS_NOT_FOUND);
+                browserHistory.push('/');
+            }
+            this.props.compassActions.set(data.compass);
+            this.props.noteActions.updateAll(data.compass.notes);
 
-        if (!this.props.compass) {
+            this.setState({
+                compass: data.compass,
+                username: data.username,
+                mode: data.mode
+            });
+        });
+
+        if (_.isEmpty(this.props.compass)) {
             this.validateParams(this.props);
             this.socket.emitFindCompassEdit();
         }
@@ -40,7 +55,6 @@ class CompassEdit extends Component {
         this.state = {
             vw: window.innerWidth,
             vh: window.innerHeight,
-            compass: this.props.compass,
             username: this.props.username,
             focusedNote: -1,
             newNote: false,
@@ -292,8 +306,8 @@ class CompassEdit extends Component {
 
     getSidebar() {
         return (
-            <Sidebar viewCode={this.state.compass.viewCode}
-                editCode={this.state.compass.editCode}
+            <Sidebar viewCode={this.props.compass.viewCode}
+                editCode={this.props.compass.editCode}
                 users={this.state.users.usernameToColor}
                 you={this.state.username}
                 show={this.state.showSidebar}
@@ -324,7 +338,7 @@ class CompassEdit extends Component {
     }
 
     render() {
-        if (!this.state.compass)
+        if (_.isEmpty(this.props.compass))
             return <div id="compass"></div>;
 
         return (
@@ -333,7 +347,7 @@ class CompassEdit extends Component {
                 {this.getStickies()}
                 {this.getForm()}
                 {this.getAbout()}
-                {this.getCompassStructure(this.state.compass.center)}
+                {this.getCompassStructure(this.props.compass.center)}
                 <button className="ic-corner-btn" id="ic-compact" onClick={this.toggleCompactMode}>Compact</button>
                 <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.toggleSidebar}>Show Sidebar</button>
                 {this.getSidebar()}
@@ -353,13 +367,15 @@ CompassEdit.propTypes = {
 
 function mapStateToProps(state, props) {
     return {
-        notes: state.notes
+        notes: state.notes,
+        compass: state.compass
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        noteActions: bindActionCreators(noteActions, dispatch)
+        noteActions: bindActionCreators(noteActions, dispatch),
+        compassActions: bindActionCreators(compassActions, dispatch)
     };
 }
 

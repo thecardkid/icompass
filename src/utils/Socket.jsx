@@ -132,8 +132,9 @@ export default class Socket {
 
     emitDeleteCompass() {
         if (this.socket.disconnected) return this.alertInvalidAction();
-
-        this.socket.emit('delete compass', this.component.state.compass._id);
+        this.component.props.compassActions.remove();
+        this.component.props.noteActions.clear();
+        this.socket.emit('delete compass', this.component.props.compass._id);
     }
 
     emitDeleteNote(noteId) {
@@ -189,15 +190,6 @@ export default class Socket {
     }
 
     handleCompassFound(data) {
-        if (data.compass === null) {
-            alert(PROMPTS.COMPASS_NOT_FOUND);
-            browserHistory.push('/');
-        }
-        this.component.setState({
-            compass: data.compass,
-            username: data.username,
-            mode: data.mode
-        });
     }
 
     handleDisconnect() {
@@ -206,8 +198,8 @@ export default class Socket {
 
     handleReconnect() {
         this.socket.emit('reconnected', {
-            code: this.component.state.compass.editCode,
-            compassId: this.component.state.compass._id,
+            code: this.component.props.compass.editCode,
+            compassId: this.component.props.compass._id,
             username: this.component.state.username,
             color: this.component.state.users.usernameToColor[this.component.state.username]
         });

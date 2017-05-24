@@ -19,3 +19,9 @@ export const drag = (idx, x, y) => {
     };
 };
 
+export const clear = () => {
+    return {
+        type: 'clear'
+    };
+};
+

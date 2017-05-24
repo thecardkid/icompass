@@ -10,6 +10,8 @@ export default (state = [], action) => {
                 dragged,
                 ...state.slice(action.idx + 1)
             ];
+        case 'clear':
+            return [];
         default:
             return state;
     }
