@@ -184,7 +184,7 @@ class Sidebar extends Component {
 
 Sidebar.propTypes = {
     socket: PropTypes.object.isRequired,
-    exportCompass: PropTypes.func.isRequired,
+    exportCompass: PropTypes.func,
 
     editCode: PropTypes.string.isRequired,
     viewCode: PropTypes.string.isRequired,

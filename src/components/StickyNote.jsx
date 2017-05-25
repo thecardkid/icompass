@@ -114,7 +114,7 @@ StickyNote.propTypes = {
     w: PropTypes.number.isRequired,
     h: PropTypes.number.isRequired,
     edit: PropTypes.func,
-    destroy: PropTypes.func.isRequired,
+    destroy: PropTypes.func,
     mode: PropTypes.string.isRequired,
     focusedNote: PropTypes.number.isRequired,
     focusOn: PropTypes.func.isRequired,

@@ -30,15 +30,14 @@ class Workspace extends Component {
     constructor(props) {
         super(props);
         this.socket = new Socket(this);
+        this.isEditable = this.props.route.mode === MODES.EDIT;
         this.socket.socket.on('update notes', this.props.noteActions.updateAll);
 
-        if (this.props.tutorial === true) {
-            this.props.compassActions.set(this.props.tutorialCompass, MODES.EDIT);
-            this.props.userActions.update({users: this.props.tutorialUsers});
-            this.props.userActions.me(this.props.tutorialUsername);
-        } else {
+        if (this.isEditable) {
             this.validateRouteParams(this.props.params);
             this.socket.emitFindCompassEdit();
+        } else {
+            this.socket.emitFindCompassView();
         }
 
         // user events
@@ -78,12 +77,14 @@ class Workspace extends Component {
         $(window).on('keydown', this.handleKeyDown);
 
         // set up draggable sticky notes
-        interact('.draggable').draggable({
-            restrict: DRAGGABLE_RESTRICTIONS,
-            autoScroll: true,
-            onmove: this.dragTarget.bind(this),
-            onend: this.socket.emitDragNote
-        });
+        if (this.isEditable) {
+            interact('.draggable').draggable({
+                restrict: DRAGGABLE_RESTRICTIONS,
+                autoScroll: true,
+                onmove: this.dragTarget.bind(this),
+                onend: this.socket.emitDragNote
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -205,11 +206,6 @@ class Workspace extends Component {
         return (
             <div>
                 <button className="ic-corner-btn"
-                    id="ic-compact"
-                    onClick={actions.toggleCompactMode}>
-                    Compact
-                </button>
-                <button className="ic-corner-btn"
                     id="ic-show-sidebar"
                     onClick={actions.toggleSidebar}>
                     Show Sidebar
@@ -227,10 +223,13 @@ class Workspace extends Component {
     render() {
         if (_.isEmpty(this.props.compass)) return <div></div>;
 
+        if (this.props.route.mode === MODES.VIEW)
+            return <Compass />;
+
         return (
             <div>
                 {this.renderCornerButtons()}
-                <Compass socket={this.socket} />
+                <Compass destroy={this.socket.emitDeleteNote} />
                 <Sidebar socket={this.socket} exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 {this.getFeedback()}

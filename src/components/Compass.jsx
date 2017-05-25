@@ -25,7 +25,7 @@ class Compass extends Component {
                 w={this.props.ui.vw}
                 h={this.props.ui.vh}
                 edit={this.props.uiActions.showEdit}
-                destroy={this.props.socket.emitDeleteNote}
+                destroy={this.props.destroy}
                 mode={this.props.compass.mode}
                 focusOn={this.props.uiActions.focusOnNote}
                 compact={this.props.ui.compact}
@@ -72,6 +72,11 @@ class Compass extends Component {
             <div id="compass">
                 {this.renderCompassStructure()}
                 {_.map(this.props.notes, this.renderNote.bind(this))}
+                <button className="ic-corner-btn"
+                    id="ic-compact"
+                    onClick={this.props.uiActions.toggleCompactMode}>
+                    Compact
+                </button>
             </div>
         );
     }

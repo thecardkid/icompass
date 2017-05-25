@@ -10,11 +10,12 @@ import { Provider } from 'react-redux';
 import Store from '../store';
 
 import Workspace from 'Containers/Workspace.jsx';
-import CompassView from 'Containers/CompassView.jsx';
 import LandingPage from 'Containers/LandingPage.jsx';
 import Tutorial from 'Containers/Tutorial.jsx';
 import PromptName from 'Components/PromptName.jsx';
 import NotFound from 'Containers/NotFound.jsx';
+
+import { MODES } from 'Lib/constants';
 
 class App extends Component {
     constructor(props) {
@@ -27,9 +28,9 @@ class App extends Component {
             <Provider store={Store()}>
                 <Router history={browserHistory}>
                     <Route path='/' component={LandingPage} />
-                    <Route path='/compass/edit/:code/:username' component={Workspace} />
-                    <Route path='/compass/edit/:code' component={PromptName} />
-                    <Route path='/compass/view/:code(/:username)' component={CompassView} />
+                    <Route path='/compass/edit/:code/:username' mode={MODES.EDIT} component={Workspace} />
+                    <Route path='/compass/edit/:code' mode={MODES.EDIT} component={PromptName} />
+                    <Route path='/compass/view/:code(/:username)' mode={MODES.VIEW} component={Workspace} />
                     <Route path='/tutorial' component={Tutorial} />
                     <Route path='*' component={NotFound} />
                 </Router>
