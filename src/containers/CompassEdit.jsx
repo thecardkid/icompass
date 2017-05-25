@@ -18,16 +18,15 @@ import About from 'Components/About.jsx';
 import Chat from 'Components/Chat.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 import Feedback from 'Components/Feedback.jsx';
-import Compass from 'Containers/Compass.jsx';
+import Compass from 'Components/Compass.jsx';
 
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
-import Shared from 'Utils/Shared.jsx';
 
 import { KEYCODES, COLORS, MODES, DRAGGABLE_RESTRICTIONS } from 'Lib/constants.js';
 
 /* eslint react/prop-types: 0 */
-class CompassEdit extends Component {
+class Workspace extends Component {
     constructor(props) {
         super(props);
         this.socket = new Socket(this);
@@ -38,20 +37,15 @@ class CompassEdit extends Component {
             this.props.userActions.update({users: this.props.tutorialUsers});
             this.props.userActions.me(this.props.tutorialUsername);
         } else if (_.isEmpty(this.props.compass)) {
-            this.validateParams(this.props.params);
+            this.validateRouteParams(this.props.params);
             this.socket.emitFindCompassEdit();
         }
-
-        // Shared methods
-        this.renderNote = Shared.renderNote.bind(this);
-        this.center = Shared.center.bind(this);
-        this.getCompassStructure = Shared.getCompassStructure.bind(this);
-        this.renderQuadrant = Shared.renderQuadrant;
 
         // user events
         this.exportCompass = this.exportCompass.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.clickShowChat = this.clickShowChat.bind(this);
+        this.center = this.center.bind(this);
 
         this.keypressHandler = {
             78: this.props.uiActions.showNewNote,
@@ -227,17 +221,25 @@ class CompassEdit extends Component {
         this.props.uiActions.toggleChat();
     }
 
+    center(w, h) {
+        if (!this.props.ui) return {};
+
+        return {
+            top: Math.max((this.props.ui.vh - h) / 2, 0),
+            left: Math.max((this.props.ui.vw - w) / 2, 0)
+        };
+    }
+
     render() {
         if (_.isEmpty(this.props.compass))
             return <div id="compass"></div>;
 
         return (
-            <div id="compass">
+            <div>
                 {this.getFeedback()}
-                {this.getStickies()}
                 {this.getForm()}
                 {this.getAbout()}
-                {this.getCompassStructure(this.props.compass.center)}
+                <Compass socket={this.socket}/>
                 <button className="ic-corner-btn" id="ic-compact" onClick={this.props.uiActions.toggleCompactMode}>Compact</button>
                 <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.props.uiActions.toggleSidebar}>Show Sidebar</button>
                 {this.getSidebar()}
@@ -269,5 +271,5 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompassEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(Workspace);
 

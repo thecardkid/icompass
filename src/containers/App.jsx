@@ -10,7 +10,7 @@ import { Provider } from 'react-redux';
 import Store from '../store';
 
 import CompassEdit from 'Containers/CompassEdit.jsx';
-import CompassView from 'Containers/Compass.jsx';
+import CompassView from 'Containers/CompassView.jsx';
 import LandingPage from 'Containers/LandingPage.jsx';
 import Tutorial from 'Containers/Tutorial.jsx';
 import PromptName from 'Components/PromptName.jsx';
