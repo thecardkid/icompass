@@ -2,10 +2,14 @@
 
 import React, { Component } from 'react';
 import { browserHistory, Link } from 'react-router';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Shared from 'Utils/Shared.jsx';
 import Socket from 'Utils/Socket.jsx';
 import Validator from 'Utils/Validator.jsx';
+
+import * as uiActions from '../actions/ui';
 
 import { ERROR_MSG } from 'Lib/constants.js';
 
@@ -14,13 +18,13 @@ const LOGIN_TYPE = {
     FIND: 1
 };
 
-export default class LandingPage extends Component {
+class LandingPage extends Component {
 
     constructor(props, context) {
         super(props, context);
 
         this.socket = new Socket(this);
-        this.state = {loginType: null, vw: window.innerWidth, vh: window.innerHeight};
+        this.state = {loginType: null};
 
         this.center = Shared.center.bind(this);
         this.setLoginType = this.setLoginType.bind(this);
@@ -30,21 +34,18 @@ export default class LandingPage extends Component {
         this.validateFindInput = this.validateFindInput.bind(this);
         this.validateMakeInput = this.validateMakeInput.bind(this);
         this.toWorkspace = this.toWorkspace.bind(this);
-        this.updateWindowSize = this.updateWindowSize.bind(this);
         this.getMakeSuccessNotification = this.getMakeSuccessNotification.bind(this);
         this.getFindSuccessNotification = this.getFindSuccessNotification.bind(this);
+
+        this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
     }
 
     componentDidMount() {
-        $(window).on('resize', this.updateWindowSize);
+        $(window).on('resize', this.props.uiActions.resize);
     }
 
     componentWillUnmount() {
-        $(window).off('resize', this.updateWindowSize);
-    }
-
-    updateWindowSize() {
-        this.setState({vw: window.innerWidth, vh: window.innerHeight});
+        $(window).off('resize', this.props.uiActions.resize);
     }
 
     setLoginType(type) {
@@ -192,3 +193,16 @@ export default class LandingPage extends Component {
     }
 }
 
+function mapStateToProps(state, props) {
+    return {
+        ui: state.ui
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);

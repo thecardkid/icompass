@@ -89,8 +89,8 @@ export default class Socket {
 
         let notes = this.component.props.notes;
         let i = Number(event.target.id.substring(4));
-        let x = notes[i].x + event.dx / this.component.state.vw,
-            y = notes[i].y + event.dy / this.component.state.vh;
+        let x = notes[i].x + event.dx / this.component.props.ui.vw,
+            y = notes[i].y + event.dy / this.component.props.ui.vh;
         let note = Object.assign({}, notes[i], { x, y });
 
         this.component.props.noteActions.drag(i, x, y);
@@ -190,6 +190,15 @@ export default class Socket {
     }
 
     handleCompassFound(data) {
+        if (data.compass === null) {
+            alert(PROMPTS.COMPASS_NOT_FOUND);
+            browserHistory.push('/');
+        }
+        this.component.props.compassActions.set(data.compass, data.mode);
+        this.component.props.noteActions.updateAll(data.compass.notes);
+
+        if (this.component.props.userActions)
+            this.component.props.userActions.me(data.username);
     }
 
     handleDisconnect() {

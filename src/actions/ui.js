@@ -69,3 +69,11 @@ export const resize = (e) => {
     };
 };
 
+export const setScreenSize = (vw, vh) => {
+    return {
+        type: 'resize',
+        screenWidth: vw,
+        screenHeight: vh
+    };
+};
+

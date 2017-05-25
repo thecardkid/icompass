@@ -33,15 +33,6 @@ class CompassEdit extends Component {
         super(props, context);
         this.socket = new Socket(this);
         this.socket.socket.on('update notes', this.props.noteActions.updateAll);
-        this.socket.socket.on('compass found', (data) => {
-            if (data.compass === null) {
-                alert(PROMPTS.COMPASS_NOT_FOUND);
-                browserHistory.push('/');
-            }
-            this.props.compassActions.set(data.compass, data.mode);
-            this.props.noteActions.updateAll(data.compass.notes);
-            this.props.userActions.me(data.username);
-        });
 
         if (_.isEmpty(this.props.compass)) {
             this.validateParams(this.props);
@@ -68,6 +59,8 @@ class CompassEdit extends Component {
             83: this.props.uiActions.toggleSidebar,
             65: this.props.uiActions.toggleAbout
         };
+
+        this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
     }
 
     validateParams(props) {

@@ -12,8 +12,8 @@ export default {
                 note={note}
                 focusedNote={this.props.ui.focusedNote}
                 i={i}
-                w={this.state.vw}
-                h={this.state.vh}
+                w={this.props.ui.vw}
+                h={this.props.ui.vh}
                 edit={this.props.uiActions.showEdit}
                 destroy={this.socket.emitDeleteNote}
                 mode={this.props.compass.mode}
@@ -25,8 +25,8 @@ export default {
 
     center(w, h) {
         return {
-            top: Math.max((this.state.vh - h) / 2, 0),
-            left: Math.max((this.state.vw - w) / 2, 0)
+            top: Math.max((this.props.ui.vh - h) / 2, 0),
+            left: Math.max((this.props.ui.vw - w) / 2, 0)
         };
     },
 
@@ -52,8 +52,8 @@ export default {
                     <p style={{marginTop: top}}>{text}</p>
                 </div>
                 {_.map(QUADRANTS_INFO, this.renderQuadrant)}
-                <div id="hline" style={{top: this.state.vh/2 - 2}}></div>
-                <div id="vline" style={{left: this.state.vw/2 - 2}}></div>
+                <div id="hline" style={{top: this.props.ui.vh/2 - 2}}></div>
+                <div id="vline" style={{left: this.props.ui.vw/2 - 2}}></div>
             </div>
         );
     }
