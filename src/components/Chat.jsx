@@ -1,12 +1,18 @@
+'use strict';
+
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
+
+import * as uiActions from '../actions/ui';
 
 import Message from 'Components/Message.jsx';
 
 import { KEYCODES, PIXELS } from 'Lib/constants.js';
 
-export default class Chat extends Component {
+class Chat extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -27,7 +33,7 @@ export default class Chat extends Component {
     }
 
     sendMessage() {
-        this.props.emitMessage();
+        this.props.socket.emitMessage();
         this.text.val('').focus();
     }
 
@@ -35,11 +41,11 @@ export default class Chat extends Component {
         if (m.info)
             return <div key={'msg'+i} className="ic-chat-info">{m.text}</div>;
 
-        let type = (m.username === this.props.username) ? 'bubble mine' : 'bubble theirs';
+        let type = (m.username === this.props.me) ? 'bubble mine' : 'bubble theirs';
 
         return (
             <Message key={'msg'+i}
-                color={this.props.colorMap[m.username]}
+                color={this.props.nameToColor[m.username]}
                 m={m}
                 type={type}
             />
@@ -52,7 +58,7 @@ export default class Chat extends Component {
 
         return (
             <div id="ic-chat" style={{bottom: bottom}}>
-                <button className="ic-close-window" onClick={this.props.toggleChat}>x</button>
+                <button className="ic-close-window" onClick={this.props.uiActions.toggleChat}>x</button>
                 <div id="messages-container">
                     <div id="messages">
                         {messages}
@@ -70,11 +76,27 @@ export default class Chat extends Component {
 
 Chat.propTypes = {
     socket: PropTypes.object.isRequired,
-    username: PropTypes.string.isRequired,
-    colorMap: PropTypes.object.isRequired,
-    toggleChat: PropTypes.func.isRequired,
+    me: PropTypes.string.isRequired,
+    nameToColor: PropTypes.object.isRequired,
     messages: PropTypes.array.isRequired,
     show: PropTypes.bool.isRequired,
-    emitMessage: PropTypes.func.isRequired
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
 };
+
+function mapStateToProps(state) {
+    return {
+        nameToColor: state.users.nameToColor,
+        me: state.users.me,
+        messages: state.chat.messages,
+        show: state.ui.showChat
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
 

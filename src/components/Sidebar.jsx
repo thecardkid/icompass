@@ -80,7 +80,7 @@ class Sidebar extends Component {
 
     confirmDelete() {
         if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS))
-            this.props.destroy();
+            this.props.socket.emitDeleteCompass();
     }
 
     renderShareList() {
@@ -115,7 +115,7 @@ class Sidebar extends Component {
     }
 
     renderConnectionStatus() {
-        let connectionStatus = this.props.disconnected ?
+        let connectionStatus = this.props.socket.socket.disconnected ?
             <p style={{color:COLORS.RED}}>Disconnected</p> :
             <p style={{color:COLORS.GREEN}}>Connected</p>;
         return (
@@ -183,15 +183,16 @@ class Sidebar extends Component {
 }
 
 Sidebar.propTypes = {
-    disconnected: PropTypes.bool.isRequired,
-    destroy: PropTypes.func.isRequired,
+    socket: PropTypes.object.isRequired,
     exportCompass: PropTypes.func.isRequired,
 
-    users: PropTypes.object.isRequired,
     editCode: PropTypes.string.isRequired,
     viewCode: PropTypes.string.isRequired,
+    users: PropTypes.object.isRequired,
     you: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
+
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 function mapStateToProps(state) {

@@ -45,6 +45,7 @@ class Workspace extends Component {
         this.exportCompass = this.exportCompass.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.clickShowChat = this.clickShowChat.bind(this);
+        this.renderCornerButtons = this.renderCornerButtons.bind(this);
         this.center = this.center.bind(this);
 
         this.keypressHandler = {
@@ -183,29 +184,6 @@ class Workspace extends Component {
         return _.map(this.props.notes, this.renderNote);
     }
 
-    getSidebar() {
-        return (
-            <Sidebar
-                disconnected={this.socket.socket.disconnected}
-                destroy={this.socket.emitDeleteCompass}
-                exportCompass={this.exportCompass}
-            />
-        );
-    }
-
-    getChat() {
-        return (
-            <Chat messages={this.props.chat.messages}
-                colorMap={this.props.users.nameToColor}
-                username={this.props.users.me}
-                socket={this.socket}
-                show={this.props.ui.showChat}
-                toggleChat={this.props.uiActions.toggleChat}
-                emitMessage={this.socket.emitMessage}
-            />
-        );
-    }
-
     getFeedback() {
         if (this.props.ui.showFeedback) return <Feedback style={this.center(400,200)} close={this.props.uiActions.toggleFeedback}/>;
     }
@@ -222,21 +200,46 @@ class Workspace extends Component {
         };
     }
 
-    render() {
-        if (_.isEmpty(this.props.compass))
-            return <div id="compass"></div>;
+    renderCornerButtons() {
+        let actions = this.props.uiActions;
+        let showChatStyle = {
+            background: this.props.chat.unread ? COLORS.RED : COLORS.DARK
+        };
 
         return (
             <div>
+                <button className="ic-corner-btn"
+                    id="ic-compact"
+                    onClick={actions.toggleCompactMode}>
+                    Compact
+                </button>
+                <button className="ic-corner-btn"
+                    id="ic-show-sidebar"
+                    onClick={actions.toggleSidebar}>
+                    Show Sidebar
+                </button>
+                <button className="ic-corner-btn"
+                    id="ic-show-chat"
+                    onClick={this.clickShowChat}
+                    style={showChatStyle}>
+                    Show Chat
+                </button>
+            </div>
+        );
+    }
+
+    render() {
+        if (_.isEmpty(this.props.compass)) return <div></div>;
+
+        return (
+            <div>
+                {this.renderCornerButtons()}
+                <Compass socket={this.socket} />
+                <Sidebar socket={this.socket} exportCompass={this.exportCompass} />
+                <Chat socket={this.socket} />
                 {this.getFeedback()}
                 {this.getForm()}
                 {this.getAbout()}
-                <Compass socket={this.socket}/>
-                <button className="ic-corner-btn" id="ic-compact" onClick={this.props.uiActions.toggleCompactMode}>Compact</button>
-                <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.props.uiActions.toggleSidebar}>Show Sidebar</button>
-                {this.getSidebar()}
-                <button className="ic-corner-btn" id="ic-show-chat" onClick={this.clickShowChat} style={{background: this.props.chat.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
-                {this.getChat()}
             </div>
         );
     }
