@@ -1,5 +1,6 @@
+'use strict';
 
-import { ERROR_MSG, REGEX } from 'Lib/constants.js';
+import { ERROR_MSG, REGEX } from 'Lib/constants';
 
 const MAX_USERNAME_LEN = 15,
     MAX_PPL_GROUP_LEN = 30,

@@ -6,13 +6,12 @@ import { browserHistory, Link } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as uiActions from '../actions/ui';
+import * as uiActions from 'Actions/ui';
 
-import Shared from 'Utils/Shared.jsx';
 import Socket from 'Utils/Socket.jsx';
 import Validator from 'Utils/Validator.jsx';
 
-import { ERROR_MSG } from 'Lib/constants.js';
+import { ERROR_MSG } from 'Lib/constants';
 
 const LOGIN_TYPE = {
     MAKE: 0,
@@ -27,7 +26,7 @@ class LandingPage extends Component {
         this.socket = new Socket(this);
         this.state = {loginType: null};
 
-        this.center = Shared.center.bind(this);
+        this.center = this.center.bind(this);
         this.setLoginType = this.setLoginType.bind(this);
         this.getFirst = this.getFirst.bind(this);
         this.getSecond = this.getSecond.bind(this);
@@ -47,6 +46,13 @@ class LandingPage extends Component {
 
     componentWillUnmount() {
         $(window).off('resize', this.props.uiActions.resize);
+    }
+
+    center(w, h) {
+        return {
+            top: Math.max((this.props.ui.vh - h) / 2, 0),
+            left: Math.max((this.props.ui.vw - w) / 2, 0)
+        };
     }
 
     setLoginType(type) {

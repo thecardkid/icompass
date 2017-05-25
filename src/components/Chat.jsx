@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
-import * as uiActions from '../actions/ui';
+import * as uiActions from 'Actions/ui';
 
 import Message from 'Components/Message.jsx';
 
-import { KEYCODES, PIXELS } from 'Lib/constants.js';
+import { KEYCODES, PIXELS } from 'Lib/constants';
 
 class Chat extends Component {
 

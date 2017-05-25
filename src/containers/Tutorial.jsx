@@ -1,3 +1,5 @@
+'use strict';
+
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
@@ -5,20 +7,18 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as noteActions from '../actions/notes';
-import * as compassActions from '../actions/compass';
-import * as userActions from '../actions/users';
-import * as chatActions from '../actions/chat';
-import * as uiActions from '../actions/ui';
+import * as noteActions from 'Actions/notes';
+import * as compassActions from 'Actions/compass';
+import * as userActions from 'Actions/users';
+import * as uiActions from 'Actions/ui';
 
-// import Workspace from 'Containers/Workspace.jsx';
 import Compass from 'Components/Compass.jsx';
 import Sidebar from 'Components/Sidebar.jsx';
 import Chat from 'Components/Chat.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 
-import DefaultCompass from 'Models/defaultCompass.js';
+import DefaultCompass from 'Models/defaultCompass';
 import { MODES, KEYCODES } from 'Lib/constants';
 
 const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}, colors: []};
@@ -85,7 +85,7 @@ const STEPS = [
         prep: (root) => {
             $(window).on('keydown', (e) => {
                 if (e.which === KEYCODES.D) root.props.uiActions.showDoodle();
-            })
+            });
         }
     },
     {
@@ -156,10 +156,11 @@ class Tutorial extends Component {
         this.state = {i: 0};
         this.socket = {socket: {disconnected: false}};
 
-        this.compass = DefaultCompass;
-        this.compass.center = 'Your People Group';
-        this.compass.editCode = '1s5a2nd0';
-        this.compass.viewCode = 'd147bo5x';
+        this.compass = Object.assign({}, DefaultCompass, {
+            center: 'The People involved',
+            editCode: '1s5a2nd0',
+            viewCode: 'd147bo5x'
+        });
 
         this.center = this.center.bind(this);
         this.next = this.next.bind(this);
@@ -244,7 +245,10 @@ class Tutorial extends Component {
 
 Tutorial.propTypes = {
     ui: PropTypes.object.isRequired,
-    uiActions: PropTypes.objectOf(PropTypes.func).isRequired
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
+    noteActions: PropTypes.objectOf(PropTypes.func).isRequired,
+    compassActions: PropTypes.objectOf(PropTypes.func).isRequired,
+    userActions: PropTypes.objectOf(PropTypes.func).isRequired
 };
 
 function mapStateToProps(state) {

@@ -1,15 +1,16 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 
-import * as uiActions from '../actions/ui';
+import * as uiActions from 'Actions/ui';
 
 import StickyNote from 'Components/StickyNote.jsx';
 
-import { QUADRANTS_INFO } from 'Lib/constants.js';
+import { QUADRANTS_INFO } from 'Lib/constants';
 
 class Compass extends Component {
     constructor(props) {
@@ -81,6 +82,14 @@ class Compass extends Component {
         );
     }
 }
+
+Compass.propTypes = {
+    ui: PropTypes.object.isRequired,
+    compass: PropTypes.object.isRequired,
+    notes: PropTypes.array.isRequired,
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
+    destroy: PropTypes.func
+};
 
 function mapStateToProps(state) {
     return {

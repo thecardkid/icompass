@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 
 import Validator from 'Utils/Validator.jsx';
 
-import { PROMPTS } from 'Lib/constants.js';
+import { PROMPTS } from 'Lib/constants';
 
 export default class Socket {
     constructor(component) {

@@ -7,9 +7,9 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
-import * as uiActions from '../actions/ui';
+import * as uiActions from 'Actions/ui';
 
-import { VERSION, TWEET, HOST, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants.js';
+import { VERSION, TWEET, HOST, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants';
 
 class Sidebar extends Component {
 
@@ -37,7 +37,7 @@ class Sidebar extends Component {
             return true;
 
         return (
-            this.props.disconnected !== nextProps.disconnected ||
+            this.props.socket.socket.disconnected !== nextProps.socket.socket.disconnected ||
             this.props.show !== nextProps.show ||
             this.props.you !== nextProps.you
         );

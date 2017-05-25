@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
-import * as noteActions from '../actions/notes';
-import * as compassActions from '../actions/compass';
-import * as userActions from '../actions/users';
-import * as chatActions from '../actions/chat';
-import * as uiActions from '../actions/ui';
+import * as noteActions from 'Actions/notes';
+import * as compassActions from 'Actions/compass';
+import * as userActions from 'Actions/users';
+import * as chatActions from 'Actions/chat';
+import * as uiActions from 'Actions/ui';
 
 import Sidebar from 'Components/Sidebar.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
@@ -23,7 +23,7 @@ import Compass from 'Components/Compass.jsx';
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
 
-import { KEYCODES, COLORS, MODES, DRAGGABLE_RESTRICTIONS } from 'Lib/constants.js';
+import { KEYCODES, COLORS, MODES, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
 
 /* eslint react/prop-types: 0 */
 class Workspace extends Component {

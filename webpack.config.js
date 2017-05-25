@@ -17,7 +17,8 @@ var config = {
             Containers: path.resolve(__dirname, 'src/containers/'),
             Utils: path.resolve(__dirname, 'src/utils'),
             Lib: path.resolve(__dirname, 'lib'),
-            Models: path.resolve(__dirname, 'models')
+            Models: path.resolve(__dirname, 'models'),
+            Actions: path.resolve(__dirname, 'src/actions')
         }
     },
 	module: {

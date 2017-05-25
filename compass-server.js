@@ -22,5 +22,5 @@ var server = app.listen(port, function() {
     logger.info('Listening on port:', port);
 });
 
-socket.socketServer(server);
+socket.connect(server);
 

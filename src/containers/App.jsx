@@ -7,22 +7,16 @@ import { render } from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 
-import Store from '../store';
-
 import Workspace from 'Containers/Workspace.jsx';
 import LandingPage from 'Containers/LandingPage.jsx';
 import Tutorial from 'Containers/Tutorial.jsx';
 import PromptName from 'Components/PromptName.jsx';
 import NotFound from 'Containers/NotFound.jsx';
 
+import Store from '../store';
 import { MODES } from 'Lib/constants';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {data: {}};
-    }
-
     render() {
         return (
             <Provider store={Store()}>

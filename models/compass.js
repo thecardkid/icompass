@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-var logger = require('../lib/logger.js');
-var MODES = require('../lib/constants.js').MODES;
-var DefaultCompass = require('./defaultCompass.js');
+var logger = require('../lib/logger');
+var MODES = require('../lib/constants').MODES;
+var DefaultCompass = require('./defaultCompass');
 var _ = require('underscore');
 
 function generateUUID() {
@@ -63,10 +63,11 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
 };
 
 compassSchema.statics.makeCompass = function(center, cb) {
-    var newCompass = DefaultCompass;
-    newCompass.editCode = generateUUID();
-    newCompass.viewCode = generateUUID();
-    newCompass.center = center;
+    var newCompass = Object.assign({}, DefaultCompass, {
+        editCode: generateUUID(),
+        viewCode: generateUUID(),
+        center: center
+    });
     this.create(newCompass, function (err, compass) {
         if (err) return logger.error('Could not create compass with center', center, err);
 

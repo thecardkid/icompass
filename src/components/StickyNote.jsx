@@ -1,7 +1,9 @@
+'use strict';
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { PROMPTS, MODES } from 'Lib/constants.js';
+import { PROMPTS, MODES } from 'Lib/constants';
 
 export default class StickyNote extends Component {
 
