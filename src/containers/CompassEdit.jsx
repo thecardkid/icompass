@@ -25,7 +25,7 @@ import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
 import Shared from 'Utils/Shared.jsx';
 
-import { KEYCODES, COLORS } from 'Lib/constants.js';
+import { KEYCODES, COLORS, MODES } from 'Lib/constants.js';
 
 class CompassEdit extends Component {
 
@@ -34,7 +34,11 @@ class CompassEdit extends Component {
         this.socket = new Socket(this);
         this.socket.socket.on('update notes', this.props.noteActions.updateAll);
 
-        if (_.isEmpty(this.props.compass)) {
+        if (this.props.tutorial === true) {
+            this.props.compassActions.set(this.props.tutorialCompass, MODES.EDIT);
+            this.props.userActions.update({users: this.props.tutorialUsers});
+            this.props.userActions.me(this.props.tutorialUsername);
+        } else if (_.isEmpty(this.props.compass)) {
             this.validateParams(this.props);
             this.socket.emitFindCompassEdit();
         }

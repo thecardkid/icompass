@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
 import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as uiActions from '../actions/ui';
 
 import CompassEdit from 'Containers/CompassEdit.jsx';
 import Shared from 'Utils/Shared.jsx';
 
 import DefaultCompass from 'Models/defaultCompass.js';
 
-const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}};
+const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}, colors: []};
 const STEPS = [
     {
         header: 'Welcome to iCompass',
@@ -113,7 +117,7 @@ const STEPS = [
     {
         header: 'Compact mode',
         text: 'When things get crowded, use compact mode in the top right corner to give yourself more space. Compact mode only applies to your view.',
-        prep: () => {}
+        prep: () => $('#ic-compact').css('z-index', 2)
     },
     {
         header: 'That\'s it!',
@@ -121,11 +125,11 @@ const STEPS = [
     }
 ];
 
-export default class Tutorial extends Component {
+class Tutorial extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.state = {vw: window.innerWidth, vh: window.innerHeight, i: 0};
+        this.state = {i: 0};
 
         this.compass = DefaultCompass;
         this.compass.center = 'Your People Group';
@@ -134,20 +138,24 @@ export default class Tutorial extends Component {
 
         this.center = Shared.center.bind(this);
         this.next = this.next.bind(this);
+
+        this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
     }
 
     componentDidMount() {
-        $(window).on('resize', () => {
-            this.setState({vw: window.innerWidth, vh: window.innerHeight});
-        });
-        this.lists = $('.ic-sidebar-list');
+        $(window).on('resize', this.props.uiActions.resize);
+    }
+
+    componentWillUnmount() {
+        $(window).off('resize', this.props.uiActions.resize);
     }
 
     showOnly(x) {
         let opacity;
-        for (let i=0; i<this.lists.length; i++) {
+        let lists = $('.ic-sidebar-list');
+        for (let i=0; i<lists.length; i++) {
             opacity = i === x ? 1 : 0.1;
-            $(this.lists[i]).fadeTo('slow', opacity);
+            $(lists[i]).fadeTo('slow', opacity);
         }
     }
 
@@ -175,9 +183,23 @@ export default class Tutorial extends Component {
                         </button>
                     </div>
                 </Draggable>
-                <CompassEdit compass={this.compass} username={'sandbox'} users={USERS} />
+                <CompassEdit tutorial={true} tutorialCompass={this.compass} tutorialUsername={'sandbox'} tutorialUsers={USERS} />
             </div>
         );
     }
 }
+
+function mapStateToProps(state, props) {
+    return {
+        ui: state.ui
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tutorial);
 
