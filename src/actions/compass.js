@@ -1,7 +1,7 @@
-export const set = (compass) => {
+export const set = (compass, mode) => {
     return {
         type: 'setCompass',
-        compass
+        compass, mode
     };
 };
 

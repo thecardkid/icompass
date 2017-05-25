@@ -11,6 +11,8 @@ import _ from 'underscore';
 import * as noteActions from '../actions/notes';
 import * as compassActions from '../actions/compass';
 import * as userActions from '../actions/users';
+import * as chatActions from '../actions/chat';
+import * as uiActions from '../actions/ui';
 
 import Sidebar from 'Components/Sidebar.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
@@ -25,8 +27,6 @@ import Shared from 'Utils/Shared.jsx';
 
 import { KEYCODES, COLORS } from 'Lib/constants.js';
 
-let drag = false;
-
 class CompassEdit extends Component {
 
     constructor(props, context) {
@@ -38,42 +38,15 @@ class CompassEdit extends Component {
                 alert(PROMPTS.COMPASS_NOT_FOUND);
                 browserHistory.push('/');
             }
-            this.props.compassActions.set(data.compass);
+            this.props.compassActions.set(data.compass, data.mode);
             this.props.noteActions.updateAll(data.compass.notes);
             this.props.userActions.me(data.username);
-
-            this.setState({
-                compass: data.compass,
-                username: data.username,
-                mode: data.mode
-            });
         });
 
         if (_.isEmpty(this.props.compass)) {
             this.validateParams(this.props);
             this.socket.emitFindCompassEdit();
         }
-
-        this.state = {
-            vw: window.innerWidth,
-            vh: window.innerHeight,
-            focusedNote: -1,
-            newNote: false,
-            editNote: false,
-            dragNote: false,
-            doodleNote: false,
-            showSidebar: true,
-            showChat: true,
-            showAbout: false,
-            showHelp: false,
-            showFeedback: false,
-            unread: false,
-            compact: false,
-            messages: [{
-                info: true,
-                text: 'These messages will be cleared when you log out'
-            }]
-        };
 
         // Shared methods
         this.renderNote = Shared.renderNote.bind(this);
@@ -82,30 +55,18 @@ class CompassEdit extends Component {
         this.renderQuadrant = Shared.renderQuadrant;
 
         // user events
-        this.showEditForm = this.showEditForm.bind(this);
-        this.showDoodleForm = this.showDoodleForm.bind(this);
-        this.closeForm = this.closeForm.bind(this);
-        this.showNewNote = this.showNewNote.bind(this);
-        this.toggleSidebar = this.toggleSidebar.bind(this);
-        this.toggleAbout = this.toggleAbout.bind(this);
-        this.toggleHelp = this.toggleHelp.bind(this);
-        this.toggleChat = this.toggleChat.bind(this);
-        this.toggleCompactMode = this.toggleCompactMode.bind(this);
-        this.toggleFeedback = this.toggleFeedback.bind(this);
         this.exportCompass = this.exportCompass.bind(this);
-        this.focusOnNote = this.focusOnNote.bind(this);
 
         // window listeners
-        this.updateWindowSize = this.updateWindowSize.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
 
         this.keypressHandler = {
-            78: this.showNewNote,
-            67: this.toggleChat,
-            68: this.showDoodleForm,
-            83: this.toggleSidebar,
-            65: this.toggleAbout
+            78: this.props.uiActions.showNewNote,
+            67: this.props.uiActions.toggleChat,
+            68: this.props.uiActions.showDoodle,
+            83: this.props.uiActions.toggleSidebar,
+            65: this.props.uiActions.toggleAbout
         };
     }
 
@@ -124,7 +85,7 @@ class CompassEdit extends Component {
     }
 
     componentDidMount() {
-        $(window).on('resize', this.updateWindowSize);
+        $(window).on('resize', this.props.uiActions.resize);
         $(window).on('keydown', this.handleKeyDown);
         $(window).on('keyup', this.handleKeyUp);
 
@@ -136,7 +97,6 @@ class CompassEdit extends Component {
                 elementRect: {top:0, left:0, bottom:1, right:1}
             },
             autoScroll: true,
-            onstart: this.beginDrag.bind(this),
             onmove: this.dragTarget.bind(this),
             onend: this.socket.emitDragNote
         });
@@ -160,14 +120,7 @@ class CompassEdit extends Component {
         target.setAttribute('data-y', y);
     }
 
-    beginDrag(e) {
-        // id of target e.g. 'note8'
-        let draggedNoteIndex = Number(e.target.id.substring(4));
-        this.setState({dragNote: draggedNoteIndex});
-    }
-
     dragTarget(e) {
-        drag = true;
         let x = (parseFloat(e.target.getAttribute('data-x')) || 0) + e.dx;
         let y = (parseFloat(e.target.getAttribute('data-y')) || 0) + e.dy;
         this.setTranslation(e.target, x, y);
@@ -187,8 +140,8 @@ class CompassEdit extends Component {
     }
 
     handleKeyDown(e) {
-        if (this.state.newNote || this.state.editNote || this.state.doodleNote) {
-            if (e.which === KEYCODES.ESC) this.closeForm();
+        if (this.props.ui.newNote || this.props.ui.editNote || this.props.ui.doodleNote) {
+            if (e.which === KEYCODES.ESC) this.props.uiActions.closeForm();
             return;
         }
 
@@ -205,55 +158,8 @@ class CompassEdit extends Component {
             modifier = false;
     }
 
-    updateWindowSize() {
+    updateWindowSize(e) {
         this.setState({vw: window.innerWidth, vh: window.innerHeight});
-    }
-
-    toggleSidebar() {
-        this.setState({showSidebar: !this.state.showSidebar});
-    }
-
-    toggleAbout() {
-        this.setState({showAbout: !this.state.showAbout});
-    }
-
-    toggleHelp() {
-        this.setState({showHelp: !this.state.showHelp});
-    }
-
-    toggleChat() {
-        this.setState({showChat: !this.state.showChat, unread: false});
-    }
-
-    toggleCompactMode() {
-        this.setState({compact: !this.state.compact});
-    }
-
-    toggleFeedback() {
-        this.setState({showFeedback: !this.state.showFeedback});
-    }
-
-    closeForm() {
-        $('#form-text').val('');
-        this.setState({newNote: false, editNote: false, doodleNote: false});
-    }
-
-    showNewNote() {
-        this.setState({newNote: true, editNote: false, doodleNote: false});
-    }
-
-    showEditForm(note) {
-        if (drag) return drag = false;
-        if (note.doodle) return;
-        this.setState({editNote: note, newNote: false, doodleNote: false});
-    }
-
-    showDoodleForm() {
-        this.setState({editNote: false, newNote: false, doodleNote: true});
-    }
-
-    focusOnNote(i) {
-        this.setState({focusedNote: i});
     }
 
     exportCompass() {
@@ -268,26 +174,26 @@ class CompassEdit extends Component {
     }
 
     getForm() {
-        if (this.state.newNote) {
+        if (this.props.ui.newNote) {
             return <NoteForm
                 style={this.center(300,230)}
                 title={'Make a new post-it'}
                 make={this.socket.emitNewNote}
-                close={this.closeForm}
+                close={this.props.uiActions.closeForm}
             />;
-        } else if (this.state.editNote && drag === false) {
+        } else if (this.props.ui.editNote) {
             return <NoteForm
                 style={this.center(300,230)}
                 title={'Edit this post-it'}
-                text={this.state.editNote.text}
+                text={this.props.ui.editNote.text}
                 make={this.socket.emitEditNote}
-                close={this.closeForm}
+                close={this.props.uiActions.closeForm}
             />;
-        } else if (this.state.doodleNote) {
+        } else if (this.props.ui.doodleNote) {
             return <DoodleForm
                 style={this.center(450, 345)}
-                bg={'#FFCCCC'}
-                close={this.closeForm}
+                bg={this.props.users.nameToColor[this.props.users.me]}
+                close={this.props.uiActions.closeForm}
                 save={this.socket.emitNewDoodle}
             />;
         }
@@ -295,8 +201,8 @@ class CompassEdit extends Component {
     }
 
     getAbout() {
-        if (this.state.showAbout)
-            return <About close={this.toggleAbout} />;
+        if (this.props.ui.showAbout)
+            return <About close={this.props.uiActions.toggleAbout} />;
         return null;
     }
 
@@ -310,10 +216,10 @@ class CompassEdit extends Component {
                 editCode={this.props.compass.editCode}
                 users={this.props.users.nameToColor}
                 you={this.props.users.me}
-                show={this.state.showSidebar}
+                show={this.props.ui.showSidebar}
                 disconnected={this.socket.socket.disconnected}
-                toggleSidebar={this.toggleSidebar}
-                toggleFeedback={this.toggleFeedback}
+                toggleSidebar={this.props.uiActions.toggleSidebar}
+                toggleFeedback={this.props.uiActions.toggleFeedback}
                 destroy={this.socket.emitDeleteCompass}
                 exportCompass={this.exportCompass}
             />
@@ -322,19 +228,19 @@ class CompassEdit extends Component {
 
     getChat() {
         return (
-            <Chat messages={this.state.messages}
+            <Chat messages={this.props.chat.messages}
                 colorMap={this.props.users.nameToColor}
                 username={this.props.users.me}
                 socket={this.socket}
-                show={this.state.showChat}
-                toggleChat={this.toggleChat}
+                show={this.props.ui.showChat}
+                toggleChat={this.props.uiActions.toggleChat}
                 emitMessage={this.socket.emitMessage}
             />
         );
     }
 
     getFeedback() {
-        if (this.state.showFeedback) return <Feedback style={this.center(400,200)} close={this.toggleFeedback}/>;
+        if (this.props.ui.showFeedback) return <Feedback style={this.center(400,200)} close={this.props.uiActions.toggleFeedback}/>;
     }
 
     render() {
@@ -348,10 +254,10 @@ class CompassEdit extends Component {
                 {this.getForm()}
                 {this.getAbout()}
                 {this.getCompassStructure(this.props.compass.center)}
-                <button className="ic-corner-btn" id="ic-compact" onClick={this.toggleCompactMode}>Compact</button>
-                <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.toggleSidebar}>Show Sidebar</button>
+                <button className="ic-corner-btn" id="ic-compact" onClick={this.props.uiActions.toggleCompactMode}>Compact</button>
+                <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.props.uiActions.toggleSidebar}>Show Sidebar</button>
                 {this.getSidebar()}
-                <button className="ic-corner-btn" id="ic-show-chat" onClick={this.toggleChat} style={{background: this.state.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
+                <button className="ic-corner-btn" id="ic-show-chat" onClick={this.props.uiActions.toggleChat} style={{background: this.props.chat.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
                 {this.getChat()}
             </div>
         );
@@ -370,6 +276,8 @@ function mapStateToProps(state, props) {
         notes: state.notes,
         compass: state.compass,
         users: state.users,
+        chat: state.chat,
+        ui: state.ui
     };
 }
 
@@ -377,7 +285,9 @@ function mapDispatchToProps(dispatch) {
     return {
         noteActions: bindActionCreators(noteActions, dispatch),
         compassActions: bindActionCreators(compassActions, dispatch),
-        userActions: bindActionCreators(userActions, dispatch)
+        userActions: bindActionCreators(userActions, dispatch),
+        chatActions: bindActionCreators(chatActions, dispatch),
+        uiActions: bindActionCreators(uiActions, dispatch)
     };
 }
 

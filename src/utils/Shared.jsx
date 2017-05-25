@@ -10,15 +10,15 @@ export default {
         return (
             <StickyNote key={note._id}
                 note={note}
-                focusedNote={this.state.focusedNote}
+                focusedNote={this.props.ui.focusedNote}
                 i={i}
                 w={this.state.vw}
                 h={this.state.vh}
-                edit={this.showEditForm}
+                edit={this.props.uiActions.showEdit}
                 destroy={this.socket.emitDeleteNote}
-                mode={this.state.mode}
-                focusOn={this.focusOnNote}
-                compact={this.state.compact}
+                mode={this.props.compass.mode}
+                focusOn={this.props.uiActions.focusOnNote}
+                compact={this.props.ui.compact}
             />
         );
     },

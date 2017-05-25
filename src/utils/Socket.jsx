@@ -76,11 +76,11 @@ export default class Socket {
             text: text,
             isImage: isImage,
             doodle: null,
-            color: this.component.state.users.usernameToColor[this.component.state.username],
+            color: this.component.props.users.nameToColor[this.component.props.users.me],
             x: 0.5,
             y: 0.5
         });
-        this.component.closeForm();
+        this.component.props.uiActions.closeForm();
     }
 
     emitDragNote(event) {
@@ -88,7 +88,7 @@ export default class Socket {
         if (this.socket.disconnected) return this.alertInvalidAction();
 
         let notes = this.component.props.notes;
-        let i = this.component.state.dragNote;
+        let i = Number(event.target.id.substring(4));
         let x = notes[i].x + event.dx / this.component.state.vw,
             y = notes[i].y + event.dy / this.component.state.vh;
         let note = Object.assign({}, notes[i], { x, y });
@@ -110,11 +110,11 @@ export default class Socket {
         else
             if (!validText[1]) return alert(PROMPTS.POST_IT_TOO_LONG);
 
-        let note = JSON.parse(JSON.stringify(this.component.state.editNote));
+        let note = Object.assign({}, this.component.props.ui.editNote);
         note.text = text;
         note.isImage = isImage;
         this.socket.emit('update note', note);
-        this.component.closeForm();
+        this.component.props.uiActions.closeForm();
     }
 
     emitNewDoodle() {
@@ -123,11 +123,11 @@ export default class Socket {
         this.socket.emit('new note', {
             text: null,
             doodle: document.getElementById('ic-doodle').toDataURL(),
-            color: this.component.state.users.usernameToColor[this.component.state.username],
+            color: this.component.props.users.nameToColor[this.component.props.users.me],
             x: 0.5,
             y: 0.5
         });
-        this.component.closeForm();
+        this.component.props.uiActions.closeForm();
     }
 
     emitDeleteCompass() {
@@ -150,7 +150,7 @@ export default class Socket {
         if (!text) return;
 
         this.socket.emit('message', {
-            username: this.component.state.username,
+            username: this.component.props.users.me,
             text: text
         });
     }
@@ -200,10 +200,9 @@ export default class Socket {
         this.socket.emit('reconnected', {
             code: this.component.props.compass.editCode,
             compassId: this.component.props.compass._id,
-            username: this.component.state.username,
-            color: this.component.state.users.usernameToColor[this.component.state.username]
+            username: this.component.props.users.me,
+            color: this.component.props.users.nameToColor[this.component.props.users.me]
         });
-        this.component.setState({disconnected: false});
     }
 
     handleCompassDeleted() {
@@ -212,22 +211,12 @@ export default class Socket {
     }
 
     handleUserJoined(data) {
-        let { messages } = this.component.state;
-        messages.push({
-            info: true,
-            text: data.joined + ' joined'
-        });
-        this.component.setState({ messages });
+        this.component.props.chatActions.userJoined(data.joined);
         this.component.props.userActions.update(data);
     }
 
     handleUserLeft(data) {
-        let { messages } = this.component.state;
-        messages.push({
-            info: true,
-            text: data.left + ' left'
-        });
-        this.component.setState({ messages });
+        this.component.props.chatActions.userLeft(data.left);
         this.component.props.userActions.update(data);
     }
 
@@ -235,17 +224,18 @@ export default class Socket {
         this.component.setState({ users });
     }
 
-    handleUpdateMessages(newMessage) {
-        let { messages } = this.component.state;
-        messages.push(newMessage);
+    handleUpdateMessages(msg) {
+        this.component.props.chatActions.newMessage(msg);
 
-        let unread = !this.component.state.showChat;
-        this.component.setState({messages, unread}, () => {
+        setTimeout(() => {
             let outer = $('#messages-container');
             let inner = $('#messages');
             // scroll to bottom of messages div
             outer.scrollTop(inner.outerHeight());
-        });
+        }, 100);
+
+        if (!this.component.props.ui.showChat)
+            this.component.props.chatActions.unread();
     }
 
     handleMailStatus(status) {
