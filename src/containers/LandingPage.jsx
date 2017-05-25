@@ -202,7 +202,7 @@ class LandingPage extends Component {
 
 LandingPage.propTypes = {
     ui: PropTypes.object.isRequired,
-    uiActions: PropTypes.objectOf(PropTypes.fn).isRequired
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired
 };
 
 function mapStateToProps(state) {

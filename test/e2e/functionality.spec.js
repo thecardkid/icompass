@@ -60,7 +60,7 @@ module.exports = {
         .assert.elementNotPresent('#ic-doodle-form');
     },
 
-    'text note events': function(browser) {
+    'create sticky': function(browser) {
         browser
         // open and close form
         .keys(['n'])
@@ -73,8 +73,11 @@ module.exports = {
         .setValue('#ic-form-text', 'An observation')
         .click('button[name=ship]')
         .waitForElementVisible('.ic-sticky-note', 500)
-        .assert.containsText('.ic-sticky-note', 'An observation')
-        // edit sticky
+        .assert.containsText('.ic-sticky-note', 'An observation');
+    },
+
+    'edit sticky': function(browser) {
+        browser
         .moveToElement('.ic-sticky-note', 5, 5, function() {
             browser.doubleClick();
         })
@@ -83,8 +86,11 @@ module.exports = {
         .setValue('#ic-form-text', 'A principle')
         .click('button[name=ship]')
         .pause(500)
-        .assert.containsText('.ic-sticky-note', 'A principle')
-        // create image sticky
+        .assert.containsText('.ic-sticky-note', 'A principle');
+    },
+
+    'images': function(browser) {
+        browser
         .keys('n')
         .assert.elementNotPresent('a.ic-img')
         .setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg')
@@ -95,7 +101,7 @@ module.exports = {
         .acceptAlert()
         .pause(500)
         .assert.elementPresent('a.ic-img')
-        // edit image
+        // render as text not image
         .moveToElement('a.ic-img', 50, 50, function() {
             browser.doubleClick();
         })
@@ -107,8 +113,11 @@ module.exports = {
         })
         .dismissAlert()
         .pause(500)
-        .assert.elementNotPresent('a.ic-img')
-        // drag note
+        .assert.elementNotPresent('a.ic-img');
+    },
+
+    'dragging': function(browser) {
+        browser
         .getCssProperty('#note1', 'top', function(result) {
             top = Number(result.value.substring(0,result.value.length-2));
         })
@@ -130,8 +139,11 @@ module.exports = {
                     });
                 });
             });
-        })
-        // delete note
+        });
+    },
+
+    'delete note': function(browser) {
+        browser
         .moveToElement('#note1', 173, 3, function() {
             browser
             .mouseButtonClick(0)
@@ -152,7 +164,7 @@ module.exports = {
     'compact mode': function(browser) {
         browser
         .getCssProperty('#note0 a', 'letter-spacing', function(result) {
-            this.assert.notEqual(result.value, '0px');
+            this.assert.notEqual(result.value, '-1px');
         })
         .getCssProperty('#note0 a', 'overflow', function(result) {
             this.assert.notEqual(result.value, 'auto');
@@ -160,11 +172,11 @@ module.exports = {
         .getCssProperty('#note0 a', 'height', function(result) {
             this.assert.notEqual(result.value, '70px');
         })
-        .pause(500)
+        .pause(100)
         .click('#ic-compact')
-        .pause(500)
+        .pause(100)
         .getCssProperty('#note0 a', 'letter-spacing', function(result) {
-            this.assert.equal(result.value, 'normal'); // 0px
+            this.assert.equal(result.value, '-1px');
         })
         .getCssProperty('#note0 a', 'overflow', function(result) {
             this.assert.equal(result.value, 'auto');
@@ -172,9 +184,9 @@ module.exports = {
         .getCssProperty('#note0 a', 'max-height', function(result) {
             this.assert.equal(result.value, '70px');
         })
-        .pause(500)
+        .pause(100)
         .click('#ic-compact')
-        .pause(500);
+        .pause(100);
     },
 
     'doodle events': function(browser) {
@@ -197,6 +209,29 @@ module.exports = {
         .getAttribute('#note1 .ic-img img', 'src', function(result) {
             this.assert.equal(result.value.indexOf('data:image/png;base64'), 0);
         });
+    },
+
+    'styling': function(browser) {
+        browser
+        .keys('n')
+        .waitForElementVisible('#ic-note-form', 100)
+        .setValue('#ic-form-text', 'Text styling example')
+        .assert.cssClassNotPresent('#ic-form-text', 'bold')
+        .click('button[name=bold]')
+        .pause(100)
+        .assert.cssClassPresent('#ic-form-text', 'bold')
+        .click('button[name=bold]')
+        .pause(100)
+        .assert.cssClassNotPresent('#ic-form-text', 'bold')
+        .click('button[name=italic]')
+        .click('button[name=underline]')
+        .pause(100)
+        .click('button[name=ship]')
+        .pause(500)
+        .assert.elementPresent('#note2')
+        .assert.cssClassNotPresent('#note2', 'bold')
+        .assert.cssClassPresent('#note2 a p', 'italic')
+        .assert.cssClassPresent('#note2 a p', 'underline');
     },
 
     'chat events': function(browser) {

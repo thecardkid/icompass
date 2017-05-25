@@ -58,31 +58,21 @@ export default class Socket {
         alert(PROMPTS.NOT_CONNECTED);
     }
 
-    emitNewNote() {
+    emitNewNote(note) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-
-        let text = $('#ic-form-text').val();
-        if (!text) return;
-        let validText = Validator.validateStickyText(text);
-        let isImage;
-
-        if (validText[0])
-            isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
-        else
-            if (!validText[1]) return alert(PROMPTS.POST_IT_TOO_LONG);
-
-        this.socket.emit('new note', {
-            text: text,
-            isImage: isImage,
-            doodle: null,
-            color: this.component.props.users.nameToColor[this.component.props.users.me],
-            x: 0.5,
-            y: 0.5
-        });
+        this.socket.emit('new note', note);
         this.component.props.uiActions.closeForm();
     }
 
-    emitDragNote(event) {
+    emitEditNote(edited) {
+        if (this.socket.disconnected) return this.alertInvalidAction();
+        let before = Object.assign({}, this.component.props.ui.editNote);
+        let after = Object.assign({}, before, edited);
+        this.socket.emit('update note', after);
+        this.component.props.uiActions.closeForm();
+    }
+
+     emitDragNote(event) {
         this.component.setTranslation(event.target, 0, 0);
         if (this.socket.disconnected) return this.alertInvalidAction();
 
@@ -96,27 +86,7 @@ export default class Socket {
         this.socket.emit('update note', note);
     }
 
-    emitEditNote() {
-        if (this.socket.disconnected) return this.alertInvalidAction();
-
-        let text = $('#ic-form-text').val();
-        if (!text) return;
-        let validText = Validator.validateStickyText(text);
-        let isImage;
-
-        if (validText[0])
-            isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
-        else
-            if (!validText[1]) return alert(PROMPTS.POST_IT_TOO_LONG);
-
-        let note = Object.assign({}, this.component.props.ui.editNote);
-        note.text = text;
-        note.isImage = isImage;
-        this.socket.emit('update note', note);
-        this.component.props.uiActions.closeForm();
-    }
-
-    emitNewDoodle() {
+   emitNewDoodle() {
         if (this.socket.disconnected) return this.alertInvalidAction();
 
         this.socket.emit('new note', {

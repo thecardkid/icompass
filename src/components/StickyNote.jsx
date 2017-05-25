@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import deepEqual from 'deep-equal';
 import PropTypes from 'prop-types';
 
 import { PROMPTS, MODES } from 'Lib/constants';
@@ -23,10 +24,7 @@ export default class StickyNote extends Component {
             nextNote = nextProps.note;
 
         return (
-            thisNote.x !== nextNote.x ||
-            thisNote.y !== nextNote.y ||
-            thisNote.text !== nextNote.text ||
-            thisNote.isImage !== nextNote.isImage ||
+            !deepEqual(thisNote, nextNote) ||
             this.props.w !== nextProps.w ||
             this.props.h !== nextProps.h ||
             this.props.i !== nextProps.i ||
@@ -50,21 +48,25 @@ export default class StickyNote extends Component {
             };
             return (
                 <a className="ic-img" style={s}>
-                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width={this.props.compact ? '100px' : '164px'}/>
+                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width={this.props.compact ? '100px' : '160px'}/>
                 </a>
             );
         } else {
-            let style = {background: n.color, letterSpacing: '1px'};
+            let style = {background: n.color, letterSpacing: '0px'};
+            let textStyle = '';
+            if (n.style.bold) textStyle += 'bold ';
+            if (n.style.italic) textStyle += 'italic ';
+            if (n.style.underline) textStyle += 'underline';
 
             if (this.props.compact) {
-                style.letterSpacing = '0px';
+                style.letterSpacing = '-1px';
                 style.maxHeight = '70px';
                 style.overflow = 'auto';
             }
 
             return (
                 <a style={style}>
-                    <p>{n.text}</p>
+                    <p className={textStyle}>{n.text}</p>
                 </a>
             );
         }

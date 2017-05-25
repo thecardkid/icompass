@@ -154,16 +154,19 @@ class Workspace extends Component {
     getForm() {
         if (this.props.ui.newNote) {
             return <NoteForm style={this.center(300,230)}
-                title={'Make a new post-it'}
-                make={this.socket.emitNewNote}
+                mode={'make'}
+                note={{}}
+                ship={this.socket.emitNewNote}
                 close={this.props.uiActions.closeForm}
+                bg={this.props.users.nameToColor[this.props.users.me]}
             />;
         } else if (this.props.ui.editNote) {
             return <NoteForm style={this.center(300,230)}
-                title={'Edit this post-it'}
-                text={this.props.ui.editNote.text}
-                make={this.socket.emitEditNote}
+                mode={'edit'}
+                note={this.props.ui.editNote}
+                ship={this.socket.emitEditNote}
                 close={this.props.uiActions.closeForm}
+                bg={this.props.users.nameToColor[this.props.users.me]}
             />;
         } else if (this.props.ui.doodleNote) {
             return <DoodleForm style={this.center(450, 345)}
