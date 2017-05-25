@@ -13,10 +13,6 @@ import StickyNote from 'Components/StickyNote.jsx';
 import { QUADRANTS_INFO } from 'Lib/constants';
 
 class Compass extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     renderNote(note, i) {
         return (
             <StickyNote key={note._id}
