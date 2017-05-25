@@ -52,6 +52,7 @@ class CompassEdit extends Component {
         // user events
         this.exportCompass = this.exportCompass.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.clickShowChat = this.clickShowChat.bind(this);
 
         this.keypressHandler = {
             78: this.props.uiActions.showNewNote,
@@ -226,6 +227,11 @@ class CompassEdit extends Component {
         if (this.props.ui.showFeedback) return <Feedback style={this.center(400,200)} close={this.props.uiActions.toggleFeedback}/>;
     }
 
+    clickShowChat() {
+        this.props.chatActions.read();
+        this.props.uiActions.toggleChat();
+    }
+
     render() {
         if (_.isEmpty(this.props.compass))
             return <div id="compass"></div>;
@@ -240,7 +246,7 @@ class CompassEdit extends Component {
                 <button className="ic-corner-btn" id="ic-compact" onClick={this.props.uiActions.toggleCompactMode}>Compact</button>
                 <button className="ic-corner-btn" id="ic-show-sidebar" onClick={this.props.uiActions.toggleSidebar}>Show Sidebar</button>
                 {this.getSidebar()}
-                <button className="ic-corner-btn" id="ic-show-chat" onClick={this.props.uiActions.toggleChat} style={{background: this.props.chat.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
+                <button className="ic-corner-btn" id="ic-show-chat" onClick={this.clickShowChat} style={{background: this.props.chat.unread ? COLORS.RED : COLORS.DARK}}>Show Chat</button>
                 {this.getChat()}
             </div>
         );
