@@ -175,6 +175,7 @@ class Sidebar extends Component {
                     {this.renderUserList()}
                     {this.renderConnectionStatus()}
                     {this.renderActionList()}
+                    {this.renderCreditsList()}
                     {this.renderVersionList()}
                 </div></div>
             </div>
