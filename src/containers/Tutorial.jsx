@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
+import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -189,7 +190,12 @@ class Tutorial extends Component {
     }
 }
 
-function mapStateToProps(state, props) {
+Tutorial.propTypes = {
+    ui: PropTypes.object.isRequired,
+    uiActions: PropTypes.objectOf(PropTypes.fn).isRequired
+};
+
+function mapStateToProps(state) {
     return {
         ui: state.ui
     };

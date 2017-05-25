@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { browserHistory, Link } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -140,10 +141,10 @@ class LandingPage extends Component {
         if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, this.state.username, email);
 
         switch(this.state.loginType) {
-        case LOGIN_TYPE.MAKE:
-            return browserHistory.push('/compass/edit/'+d.code+'/'+this.state.username);
-        case LOGIN_TYPE.FIND:
-            return browserHistory.push('/compass/'+d.mode+'/'+d.code+'/'+this.state.username);
+            case LOGIN_TYPE.MAKE:
+                return browserHistory.push('/compass/edit/'+d.code+'/'+this.state.username);
+            case LOGIN_TYPE.FIND:
+                return browserHistory.push('/compass/'+d.mode+'/'+d.code+'/'+this.state.username);
         }
     }
 
@@ -193,7 +194,12 @@ class LandingPage extends Component {
     }
 }
 
-function mapStateToProps(state, props) {
+LandingPage.propTypes = {
+    ui: PropTypes.object.isRequired,
+    uiActions: PropTypes.objectOf(PropTypes.fn).isRequired
+};
+
+function mapStateToProps(state) {
     return {
         ui: state.ui
     };

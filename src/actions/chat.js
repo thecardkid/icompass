@@ -36,6 +36,6 @@ export const read = () => {
     return {
         type: 'setUnread',
         value: false
-    }
-}
+    };
+};
 

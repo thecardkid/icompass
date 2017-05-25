@@ -114,7 +114,7 @@ module.exports = {
         .assert.elementPresent('#ic-chat')
         .assert.elementPresent('#ic-show-chat')
         .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-compact')
+        .assert.elementPresent('#ic-compact');
     },
 
     'edit access from url without username': function(browser) {
@@ -132,7 +132,7 @@ module.exports = {
         .acceptAlert()
         .pause(500)
         .getAlertText(function(result) {
-            this.assert.equal(result.value.indexOf(ERROR_MSG.REQUIRED('Username')), 0)
+            this.assert.equal(result.value.indexOf(ERROR_MSG.REQUIRED('Username')), 0);
         })
         .setAlertText('sandbox')
         .acceptAlert()
@@ -144,7 +144,7 @@ module.exports = {
         .assert.elementPresent('#ic-chat')
         .assert.elementPresent('#ic-show-chat')
         .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-compact')
+        .assert.elementPresent('#ic-compact');
     },
 
     'clean up': function(browser) {

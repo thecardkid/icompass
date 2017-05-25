@@ -13,8 +13,6 @@ import * as compassActions from '../actions/compass';
 import Socket from 'Utils/Socket.jsx';
 import Shared from 'Utils/Shared.jsx';
 
-import { QUADRANTS_INFO } from 'Lib/constants.js';
-
 class CompassView extends Component {
     constructor(props, context) {
         super(props, context);
@@ -56,10 +54,14 @@ class CompassView extends Component {
 }
 
 CompassView.propTypes = {
-    params: PropTypes.object.isRequired
+    params: PropTypes.object.isRequired,
+    notes: PropTypes.array.isRequired,
+    compass: PropTypes.object.isRequired,
+    ui: PropTypes.object.isRequired,
+    uiActions: PropTypes.objectOf(PropTypes.fn).isRequired
 };
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
     return {
         notes: state.notes,
         compass: state.compass,

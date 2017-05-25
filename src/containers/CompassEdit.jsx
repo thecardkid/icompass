@@ -3,8 +3,6 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
@@ -27,6 +25,7 @@ import Shared from 'Utils/Shared.jsx';
 
 import { KEYCODES, COLORS, MODES } from 'Lib/constants.js';
 
+/* eslint react/prop-types: 0 */
 class CompassEdit extends Component {
 
     constructor(props, context) {
@@ -252,15 +251,9 @@ class CompassEdit extends Component {
         );
     }
 }
+/* eslint react/prop-types: 0 */
 
-CompassEdit.propTypes = {
-    params: PropTypes.object,
-    compass: PropTypes.object,
-    username: PropTypes.string,
-    users: PropTypes.object
-};
-
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
     return {
         notes: state.notes,
         compass: state.compass,

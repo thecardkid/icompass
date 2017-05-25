@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 
 import Validator from 'Utils/Validator.jsx';
 
 export default class PromptName extends Component {
-
     componentDidMount() {
         let valid = Validator.validateUsername(window.prompt('Enter your name:'));
 
@@ -19,4 +19,8 @@ export default class PromptName extends Component {
         return <div></div>;
     }
 }
+
+PromptName.propTypes = {
+    params: PropTypes.object.isRequired
+};
 
