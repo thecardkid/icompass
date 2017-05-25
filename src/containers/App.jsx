@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 
 import Store from '../store';
 
-import CompassEdit from 'Containers/CompassEdit.jsx';
+import Workspace from 'Containers/Workspace.jsx';
 import CompassView from 'Containers/CompassView.jsx';
 import LandingPage from 'Containers/LandingPage.jsx';
 import Tutorial from 'Containers/Tutorial.jsx';
@@ -27,7 +27,7 @@ class App extends Component {
             <Provider store={Store()}>
                 <Router history={browserHistory}>
                     <Route path='/' component={LandingPage} />
-                    <Route path='/compass/edit/:code/:username' component={CompassEdit} />
+                    <Route path='/compass/edit/:code/:username' component={Workspace} />
                     <Route path='/compass/edit/:code' component={PromptName} />
                     <Route path='/compass/view/:code(/:username)' component={CompassView} />
                     <Route path='/tutorial' component={Tutorial} />

@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import * as uiActions from '../actions/ui';
 
-import CompassEdit from 'Containers/CompassEdit.jsx';
+import Workspace from 'Containers/Workspace.jsx';
 import Shared from 'Utils/Shared.jsx';
 
 import DefaultCompass from 'Models/defaultCompass.js';
@@ -184,7 +184,7 @@ class Tutorial extends Component {
                         </button>
                     </div>
                 </Draggable>
-                <CompassEdit tutorial={true} tutorialCompass={this.compass} tutorialUsername={'sandbox'} tutorialUsers={USERS} />
+                <Workspace tutorial={true} tutorialCompass={this.compass} tutorialUsername={'sandbox'} tutorialUsers={USERS} />
             </div>
         );
     }

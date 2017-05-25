@@ -185,14 +185,8 @@ class Workspace extends Component {
 
     getSidebar() {
         return (
-            <Sidebar viewCode={this.props.compass.viewCode}
-                editCode={this.props.compass.editCode}
-                users={this.props.users.nameToColor}
-                you={this.props.users.me}
-                show={this.props.ui.showSidebar}
+            <Sidebar
                 disconnected={this.socket.socket.disconnected}
-                toggleSidebar={this.props.uiActions.toggleSidebar}
-                toggleFeedback={this.props.uiActions.toggleFeedback}
                 destroy={this.socket.emitDeleteCompass}
                 exportCompass={this.exportCompass}
             />
@@ -222,8 +216,6 @@ class Workspace extends Component {
     }
 
     center(w, h) {
-        if (!this.props.ui) return {};
-
         return {
             top: Math.max((this.props.ui.vh - h) / 2, 0),
             left: Math.max((this.props.ui.vw - w) / 2, 0)
