@@ -51,10 +51,7 @@ class CompassEdit extends Component {
 
         // user events
         this.exportCompass = this.exportCompass.bind(this);
-
-        // window listeners
         this.handleKeyDown = this.handleKeyDown.bind(this);
-        this.handleKeyUp = this.handleKeyUp.bind(this);
 
         this.keypressHandler = {
             78: this.props.uiActions.showNewNote,
@@ -84,7 +81,6 @@ class CompassEdit extends Component {
     componentDidMount() {
         $(window).on('resize', this.props.uiActions.resize);
         $(window).on('keydown', this.handleKeyDown);
-        $(window).on('keyup', this.handleKeyUp);
 
         // set up draggable sticky notes
         interact('.draggable').draggable({
@@ -103,7 +99,6 @@ class CompassEdit extends Component {
         this.socket.disconnect();
         $(window).off('resize', this.updateWindowSize);
         $(window).off('keydown', this.handleKeyDown);
-        $(window).off('keyup', this.handleKeyUp);
     }
 
     setTranslation(target, x, y) {
@@ -148,15 +143,6 @@ class CompassEdit extends Component {
             e.preventDefault();
             this.keypressHandler[e.which]();
         }
-    }
-
-    handleKeyUp(e) {
-        if (this.isModifierKey(e.which))
-            modifier = false;
-    }
-
-    updateWindowSize(e) {
-        this.setState({vw: window.innerWidth, vh: window.innerHeight});
     }
 
     exportCompass() {

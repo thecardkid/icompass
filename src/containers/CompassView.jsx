@@ -43,14 +43,12 @@ class CompassView extends Component {
         if (!this.props.compass) return <div id="compass"></div>;
 
         let stickies = _.map(this.props.notes, this.renderNote);
-        let quadrants = _.map(QUADRANTS_INFO, Shared.renderQuadrant);
         let structure = this.getCompassStructure(this.props.compass.center);
 
         return (
             <div id="compass">
                 <button className="ic-corner-btn" id="ic-compact" onClick={this.props.uiActions.toggleCompactMode}>Compact</button>
                 {stickies}
-                {quadrants}
                 {structure}
             </div>
         );
