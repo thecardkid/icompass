@@ -49,9 +49,23 @@ export const toggleChat = () => {
     };
 };
 
+export const setChatVisible = (value) => {
+    return {
+        type: 'setChat',
+        value
+    };
+};
+
 export const toggleSidebar = () => {
     return {
         type: 'toggleSidebar'
+    };
+};
+
+export const setSidebarVisible = (value) => {
+    return {
+        type: 'setSidebar',
+        value
     };
 };
 

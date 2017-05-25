@@ -36,7 +36,7 @@ class Workspace extends Component {
             this.props.compassActions.set(this.props.tutorialCompass, MODES.EDIT);
             this.props.userActions.update({users: this.props.tutorialUsers});
             this.props.userActions.me(this.props.tutorialUsername);
-        } else if (_.isEmpty(this.props.compass)) {
+        } else {
             this.validateRouteParams(this.props.params);
             this.socket.emitFindCompassEdit();
         }
@@ -137,35 +137,35 @@ class Workspace extends Component {
     }
 
     exportCompass() {
-        this.setState({showChat: false, showSidebar: false}, () => {
+        this.props.uiActions.setSidebarVisible(false);
+        this.props.uiActions.setChatVisible(false);
+
+        setTimeout(() => {
             window.html2canvas(document.body).then((canvas) => {
                 let imgData = canvas.toDataURL('image/png');
                 let doc = new jsPDF('l', 'cm', 'a4');
                 doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
                 doc.save('compass.pdf');
             });
-        });
+        }, 500);
     }
 
     getForm() {
         if (this.props.ui.newNote) {
-            return <NoteForm
-                style={this.center(300,230)}
+            return <NoteForm style={this.center(300,230)}
                 title={'Make a new post-it'}
                 make={this.socket.emitNewNote}
                 close={this.props.uiActions.closeForm}
             />;
         } else if (this.props.ui.editNote) {
-            return <NoteForm
-                style={this.center(300,230)}
+            return <NoteForm style={this.center(300,230)}
                 title={'Edit this post-it'}
                 text={this.props.ui.editNote.text}
                 make={this.socket.emitEditNote}
                 close={this.props.uiActions.closeForm}
             />;
         } else if (this.props.ui.doodleNote) {
-            return <DoodleForm
-                style={this.center(450, 345)}
+            return <DoodleForm style={this.center(450, 345)}
                 bg={this.props.users.nameToColor[this.props.users.me]}
                 close={this.props.uiActions.closeForm}
                 save={this.socket.emitNewDoodle}
@@ -178,10 +178,6 @@ class Workspace extends Component {
         if (this.props.ui.showAbout)
             return <About close={this.props.uiActions.toggleAbout} />;
         return null;
-    }
-
-    getStickies() {
-        return _.map(this.props.notes, this.renderNote);
     }
 
     getFeedback() {

@@ -201,7 +201,7 @@ export default class Socket {
     }
 
     handleDisconnect() {
-        this.component.setState({showSidebar: true, disconnected: true});
+        this.component.props.uiActions.setSidebarVisible(true);
     }
 
     handleReconnect() {

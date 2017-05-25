@@ -41,8 +41,12 @@ export default (state = defaultState, action) => {
             return {...state, showAbout: !state.showAbout};
         case 'toggleChat':
             return {...state, showChat: !state.showChat};
+        case 'setChat':
+            return {...state, showChat: action.value};
         case 'toggleSidebar':
             return {...state, showSidebar: !state.showSidebar};
+        case 'setSidebar':
+            return {...state, showSidebar: action.value};
         case 'toggleFeedback':
             return {...state, showFeedback: !state.showFeedback};
         case 'resize':
