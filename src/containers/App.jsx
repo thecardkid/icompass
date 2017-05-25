@@ -10,16 +10,15 @@ import { Provider } from 'react-redux';
 import Store from '../store';
 
 import CompassEdit from 'Containers/CompassEdit.jsx';
-import CompassView from 'Containers/CompassView.jsx';
+import CompassView from 'Containers/Compass.jsx';
 import LandingPage from 'Containers/LandingPage.jsx';
 import Tutorial from 'Containers/Tutorial.jsx';
 import PromptName from 'Components/PromptName.jsx';
 import NotFound from 'Containers/NotFound.jsx';
 
 class App extends Component {
-
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.state = {data: {}};
     }
 

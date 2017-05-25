@@ -33,7 +33,6 @@ export default class Socket {
         this.handleCompassDeleted = this.handleCompassDeleted.bind(this);
         this.handleUserJoined = this.handleUserJoined.bind(this);
         this.handleUserLeft = this.handleUserLeft.bind(this);
-        this.handleUpdateUsers = this.handleUpdateUsers.bind(this);
         this.handleUpdateMessages = this.handleUpdateMessages.bind(this);
         this.handleCompassFound = this.handleCompassFound.bind(this);
         this.handleMailStatus = this.handleMailStatus.bind(this);
@@ -227,10 +226,6 @@ export default class Socket {
     handleUserLeft(data) {
         this.component.props.chatActions.userLeft(data.left);
         this.component.props.userActions.update(data);
-    }
-
-    handleUpdateUsers(users) {
-        this.component.setState({ users });
     }
 
     handleUpdateMessages(msg) {

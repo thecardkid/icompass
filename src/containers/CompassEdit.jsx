@@ -18,18 +18,18 @@ import About from 'Components/About.jsx';
 import Chat from 'Components/Chat.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 import Feedback from 'Components/Feedback.jsx';
+import Compass from 'Containers/Compass.jsx';
 
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
 import Shared from 'Utils/Shared.jsx';
 
-import { KEYCODES, COLORS, MODES } from 'Lib/constants.js';
+import { KEYCODES, COLORS, MODES, DRAGGABLE_RESTRICTIONS } from 'Lib/constants.js';
 
 /* eslint react/prop-types: 0 */
 class CompassEdit extends Component {
-
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.socket = new Socket(this);
         this.socket.socket.on('update notes', this.props.noteActions.updateAll);
 
@@ -38,7 +38,7 @@ class CompassEdit extends Component {
             this.props.userActions.update({users: this.props.tutorialUsers});
             this.props.userActions.me(this.props.tutorialUsername);
         } else if (_.isEmpty(this.props.compass)) {
-            this.validateParams(this.props);
+            this.validateParams(this.props.params);
             this.socket.emitFindCompassEdit();
         }
 
@@ -64,9 +64,9 @@ class CompassEdit extends Component {
         this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
     }
 
-    validateParams(props) {
-        let validCode = Validator.validateCompassCode(props.params.code);
-        let validUsername = Validator.validateUsername(props.params.username);
+    validateRouteParams(params) {
+        let validCode = Validator.validateCompassCode(params.code);
+        let validUsername = Validator.validateUsername(params.username);
 
         if (!validCode[0] || !validUsername[0]) {
             let err = 'There was a problem with your login info:\n\n';
@@ -84,11 +84,7 @@ class CompassEdit extends Component {
 
         // set up draggable sticky notes
         interact('.draggable').draggable({
-            restrict: {
-                restriction: 'parent',
-                endOnly: true,
-                elementRect: {top:0, left:0, bottom:1, right:1}
-            },
+            restrict: DRAGGABLE_RESTRICTIONS,
             autoScroll: true,
             onmove: this.dragTarget.bind(this),
             onend: this.socket.emitDragNote
