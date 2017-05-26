@@ -138,15 +138,12 @@ class LandingPage extends Component {
         );
     }
 
-    // TODO create "send email" button
     toWorkspace() {
         let email = $('#email').val();
         let valid = Validator.validateEmail(email);
         let d = this.state.data;
 
-        // TODO: store email
         if (email && !valid[0]) return alert(ERROR_MSG.INVALID('Email'));
-
         if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, this.state.username, email);
 
         switch(this.state.loginType) {

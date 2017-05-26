@@ -3,14 +3,6 @@
 import _ from 'underscore';
 
 export default {
-    lock() {
-        this.locked = true;
-    },
-
-    unlock() {
-        this.locked = false;
-    },
-
     getBookmarks() {
         return JSON.parse(localStorage.getItem('bookmarks')) || [];
     },
@@ -20,8 +12,6 @@ export default {
     },
 
     addAllBookmarks(bookmarks) {
-        if (this.locked) return false;
-
         let withDups = (this.getBookmarks()).concat(bookmarks);
         let unique = _.uniq(withDups, (item) => item.center);
         this.setBookmarks(unique);
@@ -29,8 +19,6 @@ export default {
     },
 
     addBookmark(center, code, name, mode) {
-        if (this.locked) return false;
-
         let href = '/compass/edit/'+code+'/'+name;
         return this.addAllBookmarks([
             { center, href, name, mode }

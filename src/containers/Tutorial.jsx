@@ -66,8 +66,8 @@ const STEPS = [
             let t = 800;
             $('#circle').css({
                 position:'absolute',
-                left:'300px',
-                top:'200px',
+                left:'30vw',
+                top:'40vh',
                 width:'20px',
                 height:'20px',
                 background:'black',
@@ -174,7 +174,6 @@ class Tutorial extends Component {
         super(props, context);
 
         this.state = {i: 0};
-        this.socket = {socket: {disconnected: false}};
 
         this.compass = Object.assign({}, DefaultCompass, {
             center: 'The People involved',
@@ -258,8 +257,8 @@ class Tutorial extends Component {
                 <button className="ic-corner-btn" id="ic-show-chat">Show Chat</button>
                 <div id="circle"></div>
                 <Compass />
-                <Sidebar socket={this.socket} />
-                <Chat socket={this.socket} />
+                <Sidebar connected={true} />
+                <Chat />
                 {this.getForm()}
             </div>
         );

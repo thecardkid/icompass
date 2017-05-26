@@ -7,6 +7,8 @@ import _ from 'underscore';
 
 import Storage from 'Utils/Storage.jsx';
 
+import { PROMPTS } from 'Lib/constants';
+
 export default class BookmarkList extends Component {
     constructor(props) {
         super(props);
@@ -14,20 +16,14 @@ export default class BookmarkList extends Component {
         this.state = {
             bookmarks: Storage.getBookmarks()
         };
-        Storage.lock();
 
         this.renderBookmark = this.renderBookmark.bind(this);
     }
 
-    componentWillUnmount() {
-        Storage.addAllBookmarks(this.state.bookmarks);
-        Storage.unlock();
-    }
-
     remove(center) {
-        if (confirm('Remove this workspace?')) {
-            let bookmarks = _.reject(this.state.bookmarks, e => e.center === center);
-            this.setState({ bookmarks });
+        if (confirm(PROMPTS.CONFIRM_DELETE_BOOKMARK)) {
+            Storage.removeBookmark(center);
+            this.setState({ bookmarks: Storage.getBookmarks() });
         }
     }
 
@@ -46,7 +42,7 @@ export default class BookmarkList extends Component {
         return (
             <div id="ic-bookmarks">
                 <div id="contents">
-                    <h1>Your Workspaces</h1>
+                    <h1>Saved Workspaces</h1>
                     <div id="ic-bookmark-list">
                         {list}
                     </div>
