@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import Validator from 'Utils/Validator.jsx';
 
-import { PROMPTS } from 'Lib/constants';
+import { PROMPTS, COLORS } from 'Lib/constants';
 
 export default class NoteForm extends Component {
     constructor(props) {
@@ -79,11 +79,12 @@ export default class NoteForm extends Component {
     }
 
     renderToolbar() {
+        let selected = {background: COLORS.DARK, color: 'white'};
         return (
             <div className="ic-text-ibu">
-                <button name="underline" onClick={this.underline}><u>U</u></button>
-                <button name="italic" onClick={this.italicize}><i>I</i></button>
-                <button name="bold" onClick={this.bold}><b>B</b></button>
+                <button name="underline" style={this.state.underline ? selected : null} onClick={this.underline}><u>U</u></button>
+                <button name="italic" style={this.state.italic ? selected : null} onClick={this.italicize}><i>I</i></button>
+                <button name="bold" style={this.state.bold ? selected : null} onClick={this.bold}><b>B</b></button>
             </div>
         )
     }
