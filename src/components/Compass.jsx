@@ -30,11 +30,17 @@ class Compass extends Component {
         );
     }
 
+    noteWithPosition(e) {
+        this.props.uiActions.showNewNote(e);
+    }
+
     renderQuadrant(q) {
         return (
-            <div key={q.id} className="ic-quadrant" id={q.id}>
-                <h1>{q.id.toUpperCase()}</h1>
-                <h2>{q.prompt}</h2>
+            <div onDoubleClick={this.noteWithPosition.bind(this)} key={q.id} className="ic-quadrant" id={q.id}>
+                <div>
+                    <h1>{q.id.toUpperCase()}</h1>
+                    <h2>{q.prompt}</h2>
+                </div>
             </div>
         );
     }
@@ -59,7 +65,7 @@ class Compass extends Component {
                 </div>
                 <div id="hline" style={{top: this.props.ui.vh/2 - 2}}></div>
                 <div id="vline" style={{left: this.props.ui.vw/2 - 2}}></div>
-                {_.map(QUADRANTS_INFO, this.renderQuadrant)}
+                {_.map(QUADRANTS_INFO, this.renderQuadrant.bind(this))}
             </div>
         );
     }

@@ -12,7 +12,7 @@ export default class NoteForm extends Component {
         super(props);
 
         this.state = { bold: false, italic: false, underline: false };
-        if (this.props.note) Object.assign(this.state, this.props.note.style);
+        if (this.props.note.style) Object.assign(this.state, this.props.note.style);
 
         this.bold = this.bold.bind(this);
         this.italicize = this.italicize.bind(this);
@@ -50,11 +50,17 @@ export default class NoteForm extends Component {
     make() {
         let { text, isImage } = this.getText();
         if (!text) return;
+
+        let x = 0.5, y = 0.5;
+        if (typeof this.props.position === 'object') {
+            x = this.props.position.x;
+            y = this.props.position.y;
+        }
+
         let note = {
-            text, isImage,
+            text, isImage, x, y,
             doodle: null,
             color: this.props.bg,
-            x: 0.5, y: 0.5,
             style: this.state
         };
 

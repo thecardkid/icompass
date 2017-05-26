@@ -1,6 +1,7 @@
-export const showNewNote = () => {
+export const showNewNote = (event) => {
     return {
-        type: 'showNewNote'
+        type: 'showNewNote',
+        event
     };
 };
 

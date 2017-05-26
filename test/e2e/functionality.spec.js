@@ -234,6 +234,20 @@ module.exports = {
         .assert.cssClassPresent('#note2 a p', 'underline');
     },
 
+    'double click create': function(browser) {
+        browser
+        .moveToElement('body', 200, 200)
+        .doubleClick()
+        .waitForElementVisible('#ic-note-form', 100)
+        .setValue('#ic-form-text', 'Double click to create')
+        .click('button[name=ship]')
+        .pause(500)
+        .assert.elementPresent('#note3')
+        .doubleClick() // if note spawned correctly, it will be under mouse cursor
+        .assert.elementPresent('#ic-note-form')
+        .click('button[name=nvm]')
+    },
+
     'chat events': function(browser) {
         browser
         .keys('c').pause(500)

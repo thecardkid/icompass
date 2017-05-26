@@ -15,9 +15,16 @@ const defaultState = {
 export default (state = defaultState, action) => {
     switch(action.type) {
         case 'showNewNote':
+            let newNote = true;
+            if (action.event) {
+                newNote = {
+                    x: action.event.clientX / state.vw,
+                    y: action.event.clientY / state.vh
+                };
+            }
             return {...state,
                 editNote: false, doodleNote: false,
-                newNote: true
+                newNote
             };
         case 'showEdit':
             return {...state,

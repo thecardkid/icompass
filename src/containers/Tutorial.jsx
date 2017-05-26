@@ -62,15 +62,35 @@ const STEPS = [
     {
         header: 'Key bindings',
         text: 'Each of these keys is associated with a special action. For example, press "s" twice to toggle the sidebar.',
-        prep: (root) => {
-            $('#ic-tutorial-cover').fadeOut();
-            $(window).on('keydown', (e) => {
-                if (e.which === KEYCODES.N) root.props.uiActions.showNewNote();
-            });
+        prep: () => {
+            let t = 800;
+            $('#circle').css({
+                position:'absolute',
+                left:'300px',
+                top:'200px',
+                width:'20px',
+                height:'20px',
+                background:'black',
+                'border-radius':'100%',
+            }).fadeOut(t).fadeIn(t).fadeOut(t).fadeIn(t);
         }
     },
     {
         header: 'Creating notes',
+        text: 'Double click anywhere on a blank space to spawn a new note there',
+        prep: (root) => {
+            $('#ic-tutorial-cover').fadeOut();
+            $('#circle').hide();
+            $(window).on('keydown', (e) => {
+                if (e.which === KEYCODES.N) {
+                    e.preventDefault();
+                    root.props.uiActions.showNewNote();
+                }
+            });
+        }
+    },
+    {
+        header: 'New note key',
         text: 'Press "n" to bring up the new note form. You can put up to 300 characters in a note. Drag this blurb to see the from.',
         prep: () => $('#ic-form-text').val('https://s-media-cache-ak0.pinimg.com/736x/73/de/32/73de32f9e5a0db66ec7805bb7cb3f807.jpg')
     },
@@ -183,6 +203,8 @@ class Tutorial extends Component {
         if (this.props.ui.newNote) {
             return <NoteForm style={this.center(300,230)}
                 title={'Make a new post-it'}
+                bg={'#CCFFFF'}
+                note={{}}
             />;
         } else if (this.props.ui.doodleNote) {
             return <DoodleForm style={this.center(450, 345)}
@@ -234,6 +256,7 @@ class Tutorial extends Component {
                 <button className="ic-corner-btn" id="ic-compact">Compact</button>
                 <button className="ic-corner-btn" id="ic-show-sidebar">Show Sidebar</button>
                 <button className="ic-corner-btn" id="ic-show-chat">Show Chat</button>
+                <div id="circle"></div>
                 <Compass />
                 <Sidebar socket={this.socket} />
                 <Chat socket={this.socket} />

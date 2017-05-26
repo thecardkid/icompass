@@ -156,6 +156,7 @@ class Workspace extends Component {
             return <NoteForm style={this.center(300,230)}
                 mode={'make'}
                 note={{}}
+                position={this.props.ui.newNote}
                 ship={this.socket.emitNewNote}
                 close={this.props.uiActions.closeForm}
                 bg={this.props.users.nameToColor[this.props.users.me]}
