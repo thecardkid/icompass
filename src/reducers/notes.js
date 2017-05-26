@@ -10,7 +10,7 @@ export default (state = [], action) => {
                 dragged,
                 ...state.slice(action.idx + 1)
             ];
-        case 'clearNotes':
+        case 'resetNotes':
             return [];
         default:
             return state;

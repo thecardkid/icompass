@@ -12,3 +12,9 @@ export const me = (clientName) => {
     };
 };
 
+export const reset = () => {
+    return {
+        type: 'resetUsers'
+    };
+};
+

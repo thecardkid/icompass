@@ -61,6 +61,8 @@ export default (state = defaultState, action) => {
                 vw: action.screenWidth,
                 vh: action.screenHeight
             };
+        case 'resetUI':
+            return defaultState;
         default:
             return state;
     }

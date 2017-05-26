@@ -89,6 +89,11 @@ class Workspace extends Component {
 
     componentWillUnmount() {
         this.socket.disconnect();
+        this.props.compassActions.reset();
+        this.props.noteActions.reset();
+        this.props.chatActions.reset();
+        this.props.uiActions.reset();
+        this.props.userActions.reset();
         $(window).off('resize', this.updateWindowSize);
         $(window).off('keydown', this.handleKeyDown);
     }
@@ -234,7 +239,7 @@ class Workspace extends Component {
             <div>
                 {this.renderCornerButtons()}
                 <Compass destroy={this.socket.emitDeleteNote} />
-                <Sidebar socket={this.socket} exportCompass={this.exportCompass} />
+                <Sidebar connected={this.socket.socket.connected} destroy={this.socket.emitDeleteCompass} exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 {this.getFeedback()}
                 {this.getForm()}

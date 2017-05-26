@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 
 import * as uiActions from 'Actions/ui';
 
+import BookmarkList from 'Components/BookmarkList.jsx';
 import Socket from 'Utils/Socket.jsx';
 import Validator from 'Utils/Validator.jsx';
 
@@ -48,10 +49,10 @@ class LandingPage extends Component {
         $(window).off('resize', this.props.uiActions.resize);
     }
 
-    center(w, h) {
+    center(w, h, offsetLeft = 0) {
         return {
             top: Math.max((this.props.ui.vh - h) / 2, 0),
-            left: Math.max((this.props.ui.vw - w) / 2, 0)
+            left: Math.max((this.props.ui.vw - w + offsetLeft) / 2, 0)
         };
     }
 
@@ -137,11 +138,13 @@ class LandingPage extends Component {
         );
     }
 
+    // TODO create "send email" button
     toWorkspace() {
         let email = $('#email').val();
         let valid = Validator.validateEmail(email);
         let d = this.state.data;
 
+        // TODO: store email
         if (email && !valid[0]) return alert(ERROR_MSG.INVALID('Email'));
 
         if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, this.state.username, email);
@@ -190,11 +193,14 @@ class LandingPage extends Component {
 
     render() {
         return (
-            <div id="ic-landing" style={this.center(600,550)}>
-                <div id="ic-tour"><Link to="/tutorial">First timer? Take the tour!</Link></div>
-                {this.getFirst()}
-                {this.getSecond()}
-                {this.getThird()}
+            <div>
+                <BookmarkList />
+                <div id="ic-landing" style={this.center(600,550,200)}>
+                    <div id="ic-tour"><Link to="/tutorial">First timer? Take the tour!</Link></div>
+                    {this.getFirst()}
+                    {this.getSecond()}
+                    {this.getThird()}
+                </div>
             </div>
         );
     }

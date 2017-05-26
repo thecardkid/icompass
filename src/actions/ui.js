@@ -92,3 +92,9 @@ export const setScreenSize = (vw, vh) => {
     };
 };
 
+export const reset = () => {
+    return {
+        type: 'resetUI'
+    };
+};
+

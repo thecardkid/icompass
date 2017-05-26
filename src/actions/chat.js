@@ -39,3 +39,9 @@ export const read = () => {
     };
 };
 
+export const reset = () => {
+    return {
+        type: 'resetChat'
+    };
+};
+

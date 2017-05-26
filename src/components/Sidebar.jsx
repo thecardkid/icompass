@@ -3,13 +3,15 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
+import Storage from 'Utils/Storage.jsx';
+
 import * as uiActions from 'Actions/ui';
 
-import { VERSION, TWEET, HOST, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants';
+import { MODES, VERSION, TWEET, HOST, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants';
 
 class Sidebar extends Component {
 
@@ -22,6 +24,7 @@ class Sidebar extends Component {
         this.tweetThis = this.tweetThis.bind(this);
         this.shareEditLink = this.shareEditLink.bind(this);
         this.shareViewOnlyLink = this.shareViewOnlyLink.bind(this);
+        this.save = this.save.bind(this);
         this.renderShareList = this.renderShareList.bind(this);
         this.renderControlList = this.renderControlList.bind(this);
         this.renderUserList = this.renderUserList.bind(this);
@@ -37,7 +40,7 @@ class Sidebar extends Component {
             return true;
 
         return (
-            this.props.socket.socket.disconnected !== nextProps.socket.socket.disconnected ||
+            this.props.connected !== nextProps.connected ||
             this.props.show !== nextProps.show ||
             this.props.you !== nextProps.you
         );
@@ -66,21 +69,23 @@ class Sidebar extends Component {
     }
 
     shareEditLink() {
-        window.prompt('Share this link below:', HOST + 'compass/edit/' + this.props.editCode);
+        window.prompt('Share this link below:', HOST + 'compass/edit/' + this.props.compass.viewCode);
     }
 
     shareViewOnlyLink() {
-        window.prompt('Share this link below:', HOST + 'compass/view/' + this.props.viewCode);
+        window.prompt('Share this link below:', HOST + 'compass/view/' + this.props.compass.viewCode);
     }
 
     tweetThis() {
-        let tweetURL = TWEET + this.props.viewCode;
+        let tweetURL = TWEET + this.props.compass.viewCode;
         window.open(tweetURL, '_blank').focus();
     }
 
     confirmDelete() {
-        if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS))
-            this.props.socket.emitDeleteCompass();
+        if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS)) {
+            Storage.removeBookmark(this.props.compass.center);
+            this.props.destroy();
+        }
     }
 
     renderShareList() {
@@ -115,9 +120,9 @@ class Sidebar extends Component {
     }
 
     renderConnectionStatus() {
-        let connectionStatus = this.props.socket.socket.disconnected ?
-            <p style={{color:COLORS.RED}}>Disconnected</p> :
-            <p style={{color:COLORS.GREEN}}>Connected</p>;
+        let connectionStatus = this.props.connected ?
+            <p style={{color:COLORS.GREEN}}>Connected</p> :
+            <p style={{color:COLORS.RED}}>Disconnected</p>;
         return (
             <div className="ic-sidebar-list">
                 <h2>Status</h2>
@@ -126,13 +131,25 @@ class Sidebar extends Component {
         );
     }
 
+    save() {
+        let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, this.props.you, MODES.EDIT);
+        if (saved) alert(PROMPTS.SAVE_SUCCESS);
+        else alert(PROMPTS.SAVE_FAIL);
+    }
+
+    logout() {
+        browserHistory.push('/');
+    }
+
     renderActionList() {
         return (
             <div className="ic-sidebar-list">
                 <h2>Actions</h2>
                 <button name="sucks" className="ic-action" onClick={this.props.uiActions.toggleFeedback}>feedback</button>
                 <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">tutorial</Link></button>
+                <button name="save" className="ic-action bookmark" onClick={this.save}>bookmark</button>
                 <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>delete compass</button>
+                <button name="logout" className="ic-action" onClick={this.logout}>log out</button>
             </div>
         );
     }
@@ -184,11 +201,11 @@ class Sidebar extends Component {
 }
 
 Sidebar.propTypes = {
-    socket: PropTypes.object.isRequired,
+    connected: PropTypes.bool.isRequired,
+    destroy: PropTypes.func.isRequired,
     exportCompass: PropTypes.func,
 
-    editCode: PropTypes.string.isRequired,
-    viewCode: PropTypes.string.isRequired,
+    compass: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
     you: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
@@ -198,11 +215,10 @@ Sidebar.propTypes = {
 
 function mapStateToProps(state) {
     return {
-        editCode: state.compass.editCode,
-        viewCode: state.compass.viewCode,
         users: state.users.nameToColor,
         you: state.users.me,
-        show: state.ui.showSidebar
+        show: state.ui.showSidebar,
+        compass: state.compass
     };
 }
 

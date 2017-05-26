@@ -99,8 +99,6 @@ export default class Socket {
 
     emitDeleteCompass() {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        this.component.props.compassActions.remove();
-        this.component.props.noteActions.clear();
         this.socket.emit('delete compass', this.component.props.compass._id);
     }
 

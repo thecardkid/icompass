@@ -19,9 +19,9 @@ export const drag = (idx, x, y) => {
     };
 };
 
-export const clear = () => {
+export const reset = () => {
     return {
-        type: 'clearNotes'
+        type: 'resetNotes'
     };
 };
 

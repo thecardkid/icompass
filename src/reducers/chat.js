@@ -18,6 +18,8 @@ export default (state = defaultState, action) => {
                 ...state,
                 unread: action.value
             };
+        case 'resetChat':
+            return defaultState;
         default:
             return state;
     }

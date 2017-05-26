@@ -5,8 +5,8 @@ export const set = (compass, mode) => {
     };
 };
 
-export const remove = () => {
+export const reset = () => {
     return {
-        type: 'removeCompass'
+        type: 'resetCompass'
     };
 };
