@@ -86,7 +86,7 @@ export default class NoteForm extends Component {
                 <button name="italic" style={this.state.italic ? selected : null} onClick={this.italicize}><i>I</i></button>
                 <button name="bold" style={this.state.bold ? selected : null} onClick={this.bold}><b>B</b></button>
             </div>
-        )
+        );
     }
 
     render() {
@@ -116,10 +116,12 @@ export default class NoteForm extends Component {
 }
 
 NoteForm.propTypes = {
+    mode: PropTypes.object.isRequired,
     style: PropTypes.object.isRequired,
     note: PropTypes.object.isRequired,
     ship: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
-    bg: PropTypes.string.isRequired
+    bg: PropTypes.string.isRequired,
+    position: PropTypes.object,
 };
 

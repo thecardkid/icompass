@@ -245,7 +245,7 @@ module.exports = {
         .assert.elementPresent('#note3')
         .doubleClick() // if note spawned correctly, it will be under mouse cursor
         .assert.elementPresent('#ic-note-form')
-        .click('button[name=nvm]')
+        .click('button[name=nvm]');
     },
 
     'chat events': function(browser) {

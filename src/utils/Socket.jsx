@@ -3,8 +3,6 @@
 import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 
-import Validator from 'Utils/Validator.jsx';
-
 import { PROMPTS } from 'Lib/constants';
 
 export default class Socket {
@@ -72,7 +70,7 @@ export default class Socket {
         this.component.props.uiActions.closeForm();
     }
 
-     emitDragNote(event) {
+    emitDragNote(event) {
         this.component.setTranslation(event.target, 0, 0);
         if (this.socket.disconnected) return this.alertInvalidAction();
 
@@ -86,7 +84,7 @@ export default class Socket {
         this.socket.emit('update note', note);
     }
 
-   emitNewDoodle() {
+    emitNewDoodle() {
         if (this.socket.disconnected) return this.alertInvalidAction();
 
         this.socket.emit('new note', {
