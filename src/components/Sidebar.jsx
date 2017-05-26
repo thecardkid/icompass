@@ -20,8 +20,8 @@ class Sidebar extends Component {
         this.showSavePrompt = this.showSavePrompt.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
         this.tweetThis = this.tweetThis.bind(this);
-        this.shareEditCode = this.shareEditCode.bind(this);
-        this.shareViewCode = this.shareViewCode.bind(this);
+        this.shareEditLink = this.shareEditLink.bind(this);
+        this.shareViewOnlyLink = this.shareViewOnlyLink.bind(this);
         this.renderShareList = this.renderShareList.bind(this);
         this.renderControlList = this.renderControlList.bind(this);
         this.renderUserList = this.renderUserList.bind(this);
@@ -65,11 +65,11 @@ class Sidebar extends Component {
         if (confirm(PROMPTS.EXPORT)) this.props.exportCompass();
     }
 
-    shareEditCode() {
+    shareEditLink() {
         window.prompt('Share this link below:', HOST + 'compass/edit/' + this.props.editCode);
     }
 
-    shareViewCode() {
+    shareViewOnlyLink() {
         window.prompt('Share this link below:', HOST + 'compass/view/' + this.props.viewCode);
     }
 
@@ -87,8 +87,8 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list">
                 <h2>Share</h2>
-                <button name="share-edit" id={this.props.editCode} className="ic-action" onClick={this.shareEditCode}>edit code</button>
-                <button name="share-view" id={this.props.viewCode} className="ic-action" onClick={this.shareViewCode}>view code</button>
+                <button name="share-edit" id={this.props.editCode} className="ic-action" onClick={this.shareEditLink}>editing link</button>
+                <button name="share-view" id={this.props.viewCode} className="ic-action" onClick={this.shareViewOnlyLink}>view-only link</button>
                 <button className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
                 <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>tweet this</button>
             </div>
