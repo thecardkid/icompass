@@ -60,7 +60,7 @@ class Compass extends Component {
 
         return (
             <div>
-                <div id="center" style={this.center(100,100)}>
+                <div id="center" className="wordwrap" style={this.center(100,100)}>
                     <p style={{marginTop: top}}>{center}</p>
                 </div>
                 <div id="hline" style={{top: this.props.ui.vh/2 - 2}}></div>

@@ -25,10 +25,18 @@ export default {
         ]);
     },
 
-    removeBookmark(center) {
+    removeBookmark(idx) {
+        let b = this.getBookmarks();
+        b.splice(idx, 1);
+        this.setBookmarks(b);
+        return b;
+    },
+
+    removeBookmarkByCenter(center) {
         let b = this.getBookmarks();
         b = _.reject(b, e => e.center === center);
         this.setBookmarks(b);
+        return b;
     }
 };
 

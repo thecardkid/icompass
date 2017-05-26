@@ -69,7 +69,7 @@ class Sidebar extends Component {
     }
 
     shareEditLink() {
-        window.prompt('Share this link below:', HOST + 'compass/edit/' + this.props.compass.viewCode);
+        window.prompt('Share this link below:', HOST + 'compass/edit/' + this.props.compass.editCode);
     }
 
     shareViewOnlyLink() {
@@ -83,7 +83,7 @@ class Sidebar extends Component {
 
     confirmDelete() {
         if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS)) {
-            Storage.removeBookmark(this.props.compass.center);
+            Storage.removeBookmarkByCenter(this.props.compass.center);
             this.props.destroy();
         }
     }

@@ -193,7 +193,7 @@ class LandingPage extends Component {
             <div>
                 <BookmarkList />
                 <div id="ic-landing" style={this.center(600,550,200)}>
-                    <div id="ic-tour"><Link to="/tutorial">First timer? Take the tour!</Link></div>
+                    <div id="ic-tour"><Link to="/tutorial">First-timer? Take the tour!</Link></div>
                     {this.getFirst()}
                     {this.getSecond()}
                     {this.getThird()}

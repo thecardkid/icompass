@@ -16,13 +16,34 @@ div#ic-bookmarks {
 
         div.ic-saved {
             margin:10px 0;
-            width:160px;
+            width:140px;
+            padding:10px;
+            background:#222;
+            cursor:pointer;
+            border-radius:5px;
 
-            button {
-                float:right;
-                background:transparent;
-                font-weight:bold;
-                color:@red;
+            div.ic-saved-info {
+                margin-top:5px;
+                height:20px;
+                overflow:hidden;
+                .hasTransition(0.2s);
+
+                p {
+                    font-size:12px;
+                    display:inline-block;
+                }
+
+                button {
+                    float:right;
+                    font-weight:bold;
+                    padding:0 2px;
+                    height:100%;
+                    color:white;
+                }
+
+                button.remove {
+                    background:@red;
+                }
             }
         }
     }
