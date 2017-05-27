@@ -2,11 +2,9 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import PropTypes from 'prop-types';
 import _ from 'underscore';
 
 import Storage from 'Utils/Storage.jsx';
-import Validator from 'Utils/Validator.jsx';
 
 import { PROMPTS } from 'Lib/constants';
 

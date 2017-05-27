@@ -2,7 +2,7 @@
 var editURL = 'http://localhost:8080/compass/edit/',
     viewURL = 'http://localhost:8080/compass/view/',
     editCode, viewCode;
-var ERROR_MSG = require('../../lib/constants.js').ERROR_MSG;
+var ERROR_MSG = require('../../lib/constants').ERROR_MSG;
 
 module.exports = {
     'creates successfully': function(browser) {
@@ -158,7 +158,6 @@ module.exports = {
             this.assert.equal(result.value, 'http://localhost:8080/');
         })
         .end();
-
     }
 };
 

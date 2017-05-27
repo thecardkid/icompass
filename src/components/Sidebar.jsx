@@ -90,11 +90,11 @@ class Sidebar extends Component {
 
     renderShareList() {
         return (
-            <div className="ic-sidebar-list">
+            <div className="ic-sidebar-list" name="share">
                 <h2>Share</h2>
-                <button name="share-edit" id={this.props.editCode} className="ic-action" onClick={this.shareEditLink}>editing link</button>
-                <button name="share-view" id={this.props.viewCode} className="ic-action" onClick={this.shareViewOnlyLink}>view-only link</button>
-                <button className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
+                <button name="share-edit" id={this.props.compass.editCode} className="ic-action" onClick={this.shareEditLink}>editing link</button>
+                <button name="share-view" id={this.props.compass.viewCode} className="ic-action" onClick={this.shareViewOnlyLink}>view-only link</button>
+                <button name="export" className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
                 <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>tweet this</button>
             </div>
         );
@@ -102,7 +102,7 @@ class Sidebar extends Component {
 
     renderControlList() {
         return (
-            <div className="ic-sidebar-list">
+            <div className="ic-sidebar-list" name="controls">
                 <h2>Controls</h2>
                 {this.controlList}
             </div>
@@ -112,7 +112,7 @@ class Sidebar extends Component {
     renderUserList() {
         let userList = _.map(this.props.users, this.renderUserColor.bind(this));
         return (
-            <div className="ic-sidebar-list">
+            <div className="ic-sidebar-list" name="users">
                 <h2>Collaborators</h2>
                 {userList}
             </div>
@@ -124,7 +124,7 @@ class Sidebar extends Component {
             <p style={{color:COLORS.GREEN}}>Connected</p> :
             <p style={{color:COLORS.RED}}>Disconnected</p>;
         return (
-            <div className="ic-sidebar-list">
+            <div className="ic-sidebar-list" name="status">
                 <h2>Status</h2>
                 {connectionStatus}
             </div>
@@ -143,7 +143,7 @@ class Sidebar extends Component {
 
     renderActionList() {
         return (
-            <div className="ic-sidebar-list">
+            <div className="ic-sidebar-list" name="actions">
                 <h2>Actions</h2>
                 <button name="sucks" className="ic-action" onClick={this.props.uiActions.toggleFeedback}>feedback</button>
                 <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">tutorial</Link></button>
@@ -156,12 +156,12 @@ class Sidebar extends Component {
 
     renderCreditsList() {
         return (
-            <div className="ic-sidebar-list">
+            <div className="ic-sidebar-list" name="credits">
                 <h2>Credits</h2>
-                <p>compass by
+                <p name="ela">compass by
                     <Link to="http://innovatorscompass.org" target="_blank" rel="noopener noreferrer"> Ela Ben-Ur</Link>
                 </p>
-                <p>app by
+                <p name="hieu">app by
                     <Link href="http://hieuqn.com" target="_blank" rel="noopener noreferrer"> Hieu Nguyen</Link>
                 </p>
             </div>
@@ -170,7 +170,7 @@ class Sidebar extends Component {
 
     renderVersionList() {
         return (
-            <div className="ic-sidebar-list">
+            <div className="ic-sidebar-list" name="version">
                 <h2>Version</h2>
                 <p>iCompass {VERSION}</p>
                 <p>
