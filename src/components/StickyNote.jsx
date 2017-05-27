@@ -16,6 +16,9 @@ export default class StickyNote extends Component {
         this.getX = this.getX.bind(this);
         this.edit = this.edit.bind(this);
         this.focus = this.focus.bind(this);
+        this.renderDoodle = this.renderDoodle.bind(this);
+        this.renderText = this.renderText.bind(this);
+
         this.hasEditingRights = this.props.mode === MODES.EDIT;
     }
 
@@ -39,37 +42,44 @@ export default class StickyNote extends Component {
             this.props.destroy(this.props.note._id);
     }
 
+    renderDoodle(n) {
+        let s = {
+            background: n.color,
+            padding: n.isImage ? '3px' : '0',
+        };
+        return (
+            <a className="ic-img" style={s}>
+                <img onDoubleClick={this.edit}
+                    src={n.doodle || n.text}
+                    width={this.props.compact ? '100px' : '160px'}/>
+            </a>
+        );
+    }
+
+    renderText(n) {
+        let style = {background: n.color, letterSpacing: '0px'};
+        let textStyle = '';
+        if (n.style.bold) textStyle += 'bold ';
+        if (n.style.italic) textStyle += 'italic ';
+        if (n.style.underline) textStyle += 'underline';
+
+        if (this.props.compact) {
+            style.letterSpacing = '-1px';
+            style.maxHeight = '70px';
+            style.overflow = 'auto';
+        }
+
+        return (
+            <a style={style}>
+                <p className={textStyle}>{n.text}</p>
+            </a>
+        );
+    }
+
     getContents() {
         let n = this.props.note;
-        if (n.doodle || n.isImage) {
-            let s = {
-                background: n.color,
-                padding: n.isImage ? '3px' : '0',
-            };
-            return (
-                <a className="ic-img" style={s}>
-                    <img onDoubleClick={this.edit} src={n.doodle || n.text} width={this.props.compact ? '100px' : '160px'}/>
-                </a>
-            );
-        } else {
-            let style = {background: n.color, letterSpacing: '0px'};
-            let textStyle = '';
-            if (n.style.bold) textStyle += 'bold ';
-            if (n.style.italic) textStyle += 'italic ';
-            if (n.style.underline) textStyle += 'underline';
-
-            if (this.props.compact) {
-                style.letterSpacing = '-1px';
-                style.maxHeight = '70px';
-                style.overflow = 'auto';
-            }
-
-            return (
-                <a style={style}>
-                    <p className={textStyle}>{n.text}</p>
-                </a>
-            );
-        }
+        if (n.doodle || n.isImage) return this.renderDoodle(n);
+        else return this.renderText(n);
     }
 
     getX() {
