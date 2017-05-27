@@ -84,7 +84,7 @@ export default class Socket {
         this.socket.emit('update note', note);
     }
 
-    emitNewDoodle() {
+    emitNewDoodle(user) {
         if (this.socket.disconnected) return this.alertInvalidAction();
 
         this.socket.emit('new note', {
@@ -92,7 +92,8 @@ export default class Socket {
             doodle: document.getElementById('ic-doodle').toDataURL(),
             color: this.component.props.users.nameToColor[this.component.props.users.me],
             x: 0.5,
-            y: 0.5
+            y: 0.5,
+            user
         });
         this.component.props.uiActions.closeForm();
     }

@@ -13,6 +13,8 @@ export default class DoodleForm extends Component {
         this.addClick = this.addClick.bind(this);
         this.beginDraw = this.beginDraw.bind(this);
         this.draw = this.draw.bind(this);
+        this.beginTouchDraw = this.beginTouchDraw.bind(this);
+        this.touchDraw = this.touchDraw.bind(this);
         this.drawCanvas = this.drawCanvas.bind(this);
         this.makeDoodle = this.makeDoodle.bind(this);
         this.clearCanvas = this.clearCanvas.bind(this);
@@ -20,32 +22,53 @@ export default class DoodleForm extends Component {
 
     componentDidMount() {
         this.canvas = $('#ic-doodle');
-        this.state = {x: [], y: [], drag: []};
+        $(document).on('touchstart', this.preventDefaultIfCanvas);
+        $(document).on('touchmove', this.preventDefaultIfCanvas);
+        this.state = { x: [], y: [], drag: [] };
+    }
+
+    componentWillUnmount() {
+        $(document).off('touchstart', this.preventDefaultIfCanvas);
+        $(document).off('touchmove', this.preventDefaultIfCanvas);
     }
 
     componentDidUpdate() {
         this.drawCanvas();
     }
 
-    addClick(ev, evDrag) {
+    preventDefaultIfCanvas(e) {
+        if (e.target === document.getElementById('ic-doodle'))
+            e.preventDefault();
+    }
+
+    addClick(xPos, yPos, evDrag) {
         let { x, y, drag } = this.state;
-        x.push(ev.pageX - this.canvas.offset().left);
-        y.push(ev.pageY - this.canvas.offset().top);
+        x.push(xPos - this.canvas.offset().left);
+        y.push(yPos - this.canvas.offset().top);
         drag.push(evDrag ? 1 : 0);
         this.setState({ x, y, drag });
     }
 
     beginDraw(e) {
         paint = true;
-        this.addClick(e, false);
+        this.addClick(e.clientX, e.clientY, false);
     }
 
     draw(e) {
-        if (paint) this.addClick(e, true);
+        if (paint) this.addClick(e.clientX, e.clientY, true);
     }
 
     stopDraw() {
         paint = false;
+    }
+
+    beginTouchDraw(e) {
+        paint = true;
+        this.addClick(e.touches[0].clientX, e.touches[0].clientY, false);
+    }
+
+    touchDraw(e) {
+        if (paint) this.addClick(e.touches[0].clientX, e.touches[0].clientY, true);
     }
 
     drawCanvas() {
@@ -61,11 +84,10 @@ export default class DoodleForm extends Component {
 
         for(var i=0; i < x.length; i++) {
             ctx.beginPath();
-            if (drag[i] && i) {
-                ctx.moveTo(x[i-1], y[i-1]);
-            } else {
-                ctx.moveTo(x[i]-1, y[i]);
-            }
+
+            if (drag[i] && i) ctx.moveTo(x[i-1], y[i-1]);
+            else ctx.moveTo(x[i]-1, y[i]);
+
             ctx.lineTo(x[i], y[i]);
             ctx.closePath();
             ctx.stroke();
@@ -74,12 +96,11 @@ export default class DoodleForm extends Component {
 
     makeDoodle() {
         if (this.state.x.length === 0) return;
-        let { x, y, drag } = this.state;
-        this.props.save(x, y, drag);
+        this.props.save(this.props.user);
     }
 
     clearCanvas() {
-        this.setState({x: [], y: [], drag: []});
+        this.setState({ x: [], y: [], drag: [] });
     }
 
     render() {
@@ -97,6 +118,9 @@ export default class DoodleForm extends Component {
                         onMouseMove={this.draw}
                         onMouseLeave={this.stopDraw}
                         onMouseUp={this.stopDraw}
+                        onTouchStart={this.beginTouchDraw}
+                        onTouchMove={this.touchDraw}
+                        onTouchEnd={this.stopDraw}
                         style={{background:this.props.bg}}>
                     </canvas>
                     <div id="ic-doodle-toolbar">
@@ -114,6 +138,7 @@ DoodleForm.propTypes = {
     save: PropTypes.func.isRequired,
     style: PropTypes.object.isRequired,
     bg: PropTypes.string.isRequired,
-    close: PropTypes.func.isRequired
+    close: PropTypes.func.isRequired,
+    user: PropTypes.string.isRequired
 };
 

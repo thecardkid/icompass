@@ -133,7 +133,7 @@ module.exports = {
         .pause(200)
         .acceptAlert()
         .pause(200)
-        .assert.elementNotPresent('div.ic-saved')
+        .assert.elementNotPresent('div.ic-saved');
     },
 
     'delete': function(browser) {

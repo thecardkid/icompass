@@ -38,8 +38,7 @@ export default class StickyNote extends Component {
         );
     }
 
-    confirmDelete(e) {
-        e.stopPropagation();
+    confirmDelete() {
         if (confirm(PROMPTS.CONFIRM_DELETE_NOTE))
             this.props.destroy(this.props.note._id);
     }
@@ -54,6 +53,8 @@ export default class StickyNote extends Component {
                 <img onDoubleClick={this.edit}
                     src={n.doodle || n.text}
                     width={this.props.compact ? '100px' : '160px'}/>
+                <p data-tip={n.user} data-delay-show="500"></p>
+                <ReactTooltip effect="solid" delayShow={500} />
             </a>
         );
     }
@@ -122,7 +123,7 @@ export default class StickyNote extends Component {
                 id={noteId}
                 height={height}>
                 {x}
-                <Tappable onPress={this.edit}>
+                <Tappable onTap={this.focus} onPress={this.edit}>
                     {contents}
                 </Tappable>
             </div>

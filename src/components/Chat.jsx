@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Swipeable from 'react-swipeable';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
@@ -58,17 +59,15 @@ class Chat extends Component {
 
         return (
             <div id="ic-chat" style={{bottom: bottom}}>
+                <Swipeable onSwipedDown={this.props.uiActions.toggleChat}>
                 <button className="ic-close-window" onClick={this.props.uiActions.toggleChat}>x</button>
-                <div id="messages-container">
-                    <div id="messages">
-                        {messages}
-                    </div>
-                </div>
-                <div id="composer">
-                    <div id="textbox">
-                        <textarea id="message-text"/>
-                    </div>
-                </div>
+                <div id="messages-container"><div id="messages">
+                    {messages}
+                </div></div>
+                <div id="composer"><div id="textbox">
+                    <textarea id="message-text"/>
+                </div></div>
+                </Swipeable>
             </div>
         );
     }

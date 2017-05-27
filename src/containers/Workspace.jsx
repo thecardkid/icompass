@@ -177,6 +177,7 @@ class Workspace extends Component {
             />;
         } else if (this.props.ui.doodleNote) {
             return <DoodleForm style={this.center(450, 345)}
+                user={this.props.users.me}
                 bg={this.props.users.nameToColor[this.props.users.me]}
                 close={this.props.uiActions.closeForm}
                 save={this.socket.emitNewDoodle}
@@ -225,6 +226,11 @@ class Workspace extends Component {
                     onClick={this.clickShowChat}
                     style={showChatStyle}>
                     Show Chat
+                </button>
+                <button className="ic-corner-btn"
+                    id="ic-show-doodle"
+                    onClick={actions.showDoodle}>
+                    Doodle
                 </button>
             </div>
         );

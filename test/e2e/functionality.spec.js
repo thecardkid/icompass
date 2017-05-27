@@ -249,7 +249,7 @@ module.exports = {
         .getCssProperty('#note3', 'top', function(result) {
             this.assert.equal(result.value, '200px');
         })
-        .pause(500)
+        .pause(500);
     },
 
     'chat events': function(browser) {

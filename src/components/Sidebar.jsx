@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
+import Swipeable from 'react-swipeable';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
@@ -185,6 +186,7 @@ class Sidebar extends Component {
 
         return (
             <div id="ic-sidebar" style={style}>
+                <Swipeable onSwipedLeft={this.props.uiActions.toggleSidebar}>
                 <div id="ic-sidebar-scroll"><div id="ic-sidebar-contents">
                     <button name="close-sidebar" className="ic-close-window" onClick={this.props.uiActions.toggleSidebar}>x</button>
                     {this.renderShareList()}
@@ -195,6 +197,7 @@ class Sidebar extends Component {
                     {this.renderCreditsList()}
                     {this.renderVersionList()}
                 </div></div>
+                </Swipeable>
             </div>
         );
     }
