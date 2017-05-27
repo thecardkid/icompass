@@ -23,16 +23,21 @@ module.exports = {
         browser
         .assert.elementPresent('div.ic-sidebar-list[name=share]')
         .click('button[name=share-edit]')
+        .pause(200)
         .getAlertText(function(result) {
             this.assert.equal(result.value.indexOf('Share this link below'), 0);
         })
         .dismissAlert()
+        .pause(200)
         .click('button[name=share-view]')
+        .pause(200)
         .getAlertText(function(result) {
             this.assert.equal(result.value.indexOf('Share this link below'), 0);
         })
         .dismissAlert()
+        .pause(200)
         .click('button[name=export]')
+        .pause(200)
         .getAlertText(function(result) {
             this.assert.equal(result.value, PROMPTS.EXPORT);
         })
@@ -87,22 +92,23 @@ module.exports = {
         browser
         .assert.elementPresent('div.ic-sidebar-list[name=actions]')
         .click('button[name=sucks]')
-        .pause(100)
+        .pause(200)
         .assert.elementPresent('#ic-feedback')
         .click('#ic-feedback button.ic-close-window')
-        .pause(100)
+        .pause(200)
         .assert.elementNotPresent('#ic-feedback')
         .getAttribute('button[name=tutorial] a', 'href', function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/tutorial');
         })
         .click('button[name=save]')
-        .pause(100)
+        .pause(200)
         .getAlertText(function(result) {
             this.assert.equal(result.value, PROMPTS.SAVE_SUCCESS);
         })
-        .dismissAlert()
+        .acceptAlert()
+        .pause(200)
         .click('button[name=logout]')
-        .waitForElementVisible('div.ic-saved', 500)
+        .waitForElementVisible('div.ic-saved', 1000)
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/');
         })
@@ -110,16 +116,35 @@ module.exports = {
         .waitForElementVisible('#ic-sidebar', 500)
         .url(function(result) {
             this.assert.equal(result.value, editURL);
-        });
+        })
+        .click('button[name=logout]')
+        .waitForElementVisible('div.ic-saved', 1000)
+        .moveToElement('div.ic-saved', 100, 10, function() {
+            browser.mouseButtonClick();
+        })
+        .pause(600)
+        .getText('div.ic-saved a', function(result) {
+            this.assert.equal(result.value, 'nightwatchjs');
+        })
+        .getText('div.ic-saved div.ic-saved-info p', function(result) {
+            this.assert.equal(result.value, 'as "sandbox"');
+        })
+        .click('button.remove')
+        .pause(200)
+        .acceptAlert()
+        .pause(200)
+        .assert.elementNotPresent('div.ic-saved')
     },
 
     'delete': function(browser) {
         browser
+        .url(editURL)
+        .waitForElementVisible('#ic-sidebar', 500)
         .click('#ic-sidebar button[name=destroyer]')
         .acceptAlert()
-        .pause(500)
+        .pause(200)
         .acceptAlert()
-        .pause(500)
+        .pause(200)
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/');
         })
