@@ -19,6 +19,7 @@ var compassSchema = mongoose.Schema({
     viewCode: String,
     center: String,
     notes: [{
+        user: String,
         color: String,
         text: String,
         style: {

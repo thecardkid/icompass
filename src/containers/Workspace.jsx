@@ -164,6 +164,7 @@ class Workspace extends Component {
                 position={this.props.ui.newNote}
                 ship={this.socket.emitNewNote}
                 close={this.props.uiActions.closeForm}
+                user={this.props.users.me}
                 bg={this.props.users.nameToColor[this.props.users.me]}
             />;
         } else if (this.props.ui.editNote) {

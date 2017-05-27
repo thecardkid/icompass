@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
 import deepEqual from 'deep-equal';
 import PropTypes from 'prop-types';
 
@@ -71,7 +72,8 @@ export default class StickyNote extends Component {
 
         return (
             <a style={style}>
-                <p className={textStyle}>{n.text}</p>
+                <p data-tip={n.user} data-event='click focus' className={textStyle}>{n.text}</p>
+                <ReactTooltip effect="solid" globalEventOff='click' />
             </a>
         );
     }
@@ -109,15 +111,15 @@ export default class StickyNote extends Component {
             };
 
         return (
-            <li style={style}
-                className="ic-sticky-note draggable"
+            <div className="ic-sticky-note draggable"
+                style={style}
                 onClick={this.focus}
                 onDoubleClick={this.edit}
                 id={noteId}
                 height={height}>
                 {x}
                 {contents}
-            </li>
+            </div>
         );
     }
 }

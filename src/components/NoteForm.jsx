@@ -61,7 +61,8 @@ export default class NoteForm extends Component {
             text, isImage, x, y,
             doodle: null,
             color: this.props.bg,
-            style: this.state
+            style: this.state,
+            user: this.props.user
         };
 
         this.props.ship(note);
@@ -116,12 +117,13 @@ export default class NoteForm extends Component {
 }
 
 NoteForm.propTypes = {
-    mode: PropTypes.object.isRequired,
+    mode: PropTypes.string.isRequired,
     style: PropTypes.object.isRequired,
     note: PropTypes.object.isRequired,
     ship: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
     bg: PropTypes.string.isRequired,
     position: PropTypes.object,
+    user: PropTypes.string
 };
 

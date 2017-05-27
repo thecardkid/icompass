@@ -144,7 +144,7 @@ module.exports = {
 
     'delete note': function(browser) {
         browser
-        .moveToElement('#note1', 173, 3, function() {
+        .moveToElement('#note1', 158, 3, function() {
             browser
             .mouseButtonClick(0)
             .pause(500)
