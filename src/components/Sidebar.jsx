@@ -51,7 +51,7 @@ class Sidebar extends Component {
         return (
             <p key={username}>
                 <span style={{background: color}}>     </span>
-                {username === this.props.you ? 'You' : username}
+                {username === this.props.you ? 'You ( '+username+' )' : username}
             </p>
         );
     }
@@ -133,7 +133,8 @@ class Sidebar extends Component {
     }
 
     save() {
-        let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, this.props.you, MODES.EDIT);
+        let name = this.props.you.replace(/\d+/g, '');
+        let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, name, MODES.EDIT);
         if (saved) alert(PROMPTS.SAVE_SUCCESS);
         else alert(PROMPTS.SAVE_FAIL);
     }
