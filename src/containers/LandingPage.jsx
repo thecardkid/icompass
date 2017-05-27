@@ -158,7 +158,7 @@ class LandingPage extends Component {
         return (
             <div className="section third">
                 <h1>{code}</h1>
-                <h2>This is your compass code. If you would like me to email you a link to your compass, enter your email below. Your email will not be saved.</h2>
+                <h2>This is your compass code. If you would like me to email you a link to your compass, enter your email below. I will not send you spam.</h2>
                 <input id="email" type="text" />
                 <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>let&apos;s go</button>
             </div>
