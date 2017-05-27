@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import Tappable from 'react-tappable/lib/Tappable';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -13,6 +14,14 @@ import StickyNote from 'Components/StickyNote.jsx';
 import { QUADRANTS_INFO } from 'Lib/constants';
 
 class Compass extends Component {
+    constructor(props) {
+        super(props);
+
+        this.renderNote = this.renderNote.bind(this);
+        this.renderQuadrant = this.renderQuadrant.bind(this);
+        this.noteWithPosition = this.noteWithPosition.bind(this);
+    }
+
     renderNote(note, i) {
         return (
             <StickyNote key={note._id}
@@ -36,12 +45,14 @@ class Compass extends Component {
 
     renderQuadrant(q) {
         return (
-            <div onDoubleClick={this.noteWithPosition.bind(this)} key={q.id} className="ic-quadrant" id={q.id}>
-                <div>
-                    <h1>{q.id.toUpperCase()}</h1>
-                    <h2>{q.prompt}</h2>
+            <Tappable onPress={this.noteWithPosition} key={q.id}>
+                <div onDoubleClick={this.noteWithPosition} className="ic-quadrant" id={q.id}>
+                    <div>
+                        <h1>{q.id.toUpperCase()}</h1>
+                        <h2>{q.prompt}</h2>
+                    </div>
                 </div>
-            </div>
+            </Tappable>
         );
     }
 

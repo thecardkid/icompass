@@ -108,8 +108,8 @@ export default class NoteForm extends Component {
                         {this.renderToolbar()}
                     </div>
                     <textarea id="ic-form-text" className={textStyle} autoFocus defaultValue={this.props.note.text} style={{background: color}}></textarea>
-                    <button name="ship" className="ic-button" onClick={click}>ship it</button>
                     <button name="nvm" className="ic-button" onClick={this.props.close}>never mind</button>
+                    <button name="ship" className="ic-button" onClick={click}>ship it</button>
                 </div>
             </div>
         );
@@ -123,7 +123,10 @@ NoteForm.propTypes = {
     ship: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
     bg: PropTypes.string.isRequired,
-    position: PropTypes.object,
+    position: PropTypes.oneOfType([
+        PropTypes.bool,
+        PropTypes.objectOf(PropTypes.number)
+    ]),
     user: PropTypes.string
 };
 

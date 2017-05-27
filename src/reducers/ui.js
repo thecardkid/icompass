@@ -16,10 +16,14 @@ export default (state = defaultState, action) => {
     switch(action.type) {
         case 'showNewNote':
             let newNote = true;
-            if (action.event) {
+            let e = action.event;
+            if (e) {
+                // mobile touch events come with touches[] array
+                let touchX = e.clientX || e.touches[0].clientX,
+                    touchY = e.clientY || e.touches[0].clientY;
                 newNote = {
-                    x: action.event.clientX / state.vw,
-                    y: action.event.clientY / state.vh
+                    x: touchX / state.vw,
+                    y: touchY / state.vh
                 };
             }
             return {...state,

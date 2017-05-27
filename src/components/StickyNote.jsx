@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import Tappable from 'react-tappable/lib/Tappable';
 import ReactTooltip from 'react-tooltip';
 import deepEqual from 'deep-equal';
 import PropTypes from 'prop-types';
@@ -72,8 +73,8 @@ export default class StickyNote extends Component {
 
         return (
             <a style={style}>
-                <p data-tip={n.user} data-event='click focus' className={textStyle}>{n.text}</p>
-                <ReactTooltip effect="solid" globalEventOff='click' />
+                <p data-tip={n.user} data-delay-show="500" className={textStyle}>{n.text}</p>
+                <ReactTooltip effect="solid" delayShow={500} />
             </a>
         );
     }
@@ -85,8 +86,11 @@ export default class StickyNote extends Component {
     }
 
     getX() {
-        if (this.hasEditingRights)
-            return <button className='ic-close-window' onClick={this.confirmDelete}>x</button>;
+        if (this.hasEditingRights) {
+            return <button className='ic-close-window' onClick={this.confirmDelete}>
+                <Tappable onTap={this.confirmDelete}>x</Tappable>
+            </button>;
+        }
     }
 
     edit() {
@@ -118,7 +122,9 @@ export default class StickyNote extends Component {
                 id={noteId}
                 height={height}>
                 {x}
-                {contents}
+                <Tappable onPress={this.edit}>
+                    {contents}
+                </Tappable>
             </div>
         );
     }

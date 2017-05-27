@@ -236,16 +236,20 @@ module.exports = {
 
     'double click create': function(browser) {
         browser
-        .moveToElement('body', 200, 200)
+        .moveToElement('body', 300, 200)
         .doubleClick()
         .waitForElementVisible('#ic-note-form', 100)
         .setValue('#ic-form-text', 'Double click to create')
         .click('button[name=ship]')
         .pause(500)
         .assert.elementPresent('#note3')
-        .doubleClick() // if note spawned correctly, it will be under mouse cursor
-        .assert.elementPresent('#ic-note-form')
-        .click('button[name=nvm]');
+        .getCssProperty('#note3', 'left', function(result) {
+            this.assert.equal(result.value, '300px');
+        })
+        .getCssProperty('#note3', 'top', function(result) {
+            this.assert.equal(result.value, '200px');
+        })
+        .pause(500)
     },
 
     'chat events': function(browser) {

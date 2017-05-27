@@ -100,9 +100,9 @@ export default class DoodleForm extends Component {
                         style={{background:this.props.bg}}>
                     </canvas>
                     <div id="ic-doodle-toolbar">
+                        <button name="nvm" className="ic-button" onClick={this.props.close}>never mind</button>
                         <button className="ic-button" onClick={this.clearCanvas}>clear</button>
                         <button name="ship" className="ic-button" onClick={this.makeDoodle}>ship it</button>
-                        <button name="nvm" className="ic-button" onClick={this.props.close}>never mind</button>
                     </div>
                 </div>
             </div>
