@@ -193,7 +193,7 @@ class Workspace extends Component {
     }
 
     getFeedback() {
-        if (this.props.ui.showFeedback) return <Feedback style={this.center(400,200)} close={this.props.uiActions.toggleFeedback}/>;
+        if (this.props.ui.showFeedback) return <Feedback style={this.center(400,250)} close={this.props.uiActions.toggleFeedback}/>;
     }
 
     clickShowChat() {
