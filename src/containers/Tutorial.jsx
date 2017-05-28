@@ -61,7 +61,7 @@ const STEPS = [
     },
     {
         header: 'Key bindings',
-        text: 'Each of these keys is associated with a special action. For example, press "s" twice to toggle the sidebar.',
+        text: 'Each of these keys is associated with a special action. For example, press "s" twice to toggle the sidebar. On handheld devices, swipe left on the sidebar.',
         prep: () => {
             let t = 800;
             $('#circle').css({
@@ -77,7 +77,7 @@ const STEPS = [
     },
     {
         header: 'Creating notes',
-        text: 'Double click anywhere on a blank space to spawn a new note there',
+        text: 'Double click anywhere on a blank space to spawn a new note there. On handheld devices: long click.',
         prep: (root) => {
             $('#ic-tutorial-cover').fadeOut();
             $('#circle').hide();
@@ -101,7 +101,7 @@ const STEPS = [
     },
     {
         header: 'Working with notes',
-        text: 'Click once to bring a sticky to the foreground, twice to edit its contents. Stickies are draggable by default.',
+        text: 'Click once to bring a sticky to the foreground, twice to edit its contents. Stickies are draggable by default. On handheld devices: tap and long click.',
         prep: (root) => {
             $(window).on('keydown', (e) => {
                 if (e.which === KEYCODES.D) root.props.uiActions.showDoodle();
@@ -142,7 +142,7 @@ const STEPS = [
     },
     {
         header: 'Chat',
-        text: 'Send messages to anyone who is online. Messages are cleared when you log out.',
+        text: 'Send messages to anyone who is online. Messages are cleared when you log out. Swipe down to hide the chat on handheld devices.',
         prep: () => {
             $('#ic-chat').css('bottom', '-265px');
             $('#ic-show-chat').css('z-index', 4);

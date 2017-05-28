@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import Tappable from 'react-tappable/lib/Tappable';
-import ReactTooltip from 'react-tooltip';
 import deepEqual from 'deep-equal';
 import PropTypes from 'prop-types';
 
@@ -53,8 +52,7 @@ export default class StickyNote extends Component {
                 <img onDoubleClick={this.edit}
                     src={n.doodle || n.text}
                     width={this.props.compact ? '100px' : '160px'}/>
-                <p data-tip={n.user} data-delay-show="500"></p>
-                <ReactTooltip effect="solid" delayShow={500} />
+                <p className="ic-tooltip">{n.user}</p>
             </a>
         );
     }
@@ -74,8 +72,8 @@ export default class StickyNote extends Component {
 
         return (
             <a style={style}>
-                <p data-tip={n.user} data-delay-show="500" className={textStyle}>{n.text}</p>
-                <ReactTooltip effect="solid" delayShow={500} />
+                <p className={textStyle}>{n.text}</p>
+                <p className="ic-tooltip">{n.user}</p>
             </a>
         );
     }
@@ -88,7 +86,7 @@ export default class StickyNote extends Component {
 
     getX() {
         if (this.hasEditingRights) {
-            return <button className='ic-close-window' onClick={this.confirmDelete}>
+            return <button className="ic-close-window" onClick={this.confirmDelete}>
                 <Tappable onTap={this.confirmDelete}>x</Tappable>
             </button>;
         }
