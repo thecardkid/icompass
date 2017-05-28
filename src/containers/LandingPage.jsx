@@ -49,10 +49,10 @@ class LandingPage extends Component {
         $(window).off('resize', this.props.uiActions.resize);
     }
 
-    center(w, h, offsetLeft = 0) {
+    center(w, h) {
         return {
             top: Math.max((this.props.ui.vh - h) / 2, 0),
-            left: Math.max((this.props.ui.vw - w + offsetLeft) / 2, 0)
+            left: Math.max((this.props.ui.vw - w) / 2, 0)
         };
     }
 
@@ -189,14 +189,22 @@ class LandingPage extends Component {
     }
 
     render() {
+        let w = this.props.ui.vw - 200;
+        let loginStyle = {
+            width: Math.min(600, w),
+            marginLeft: Math.max(0, this.props.ui.vw-200-600)/2
+        };
+
         return (
             <div>
                 <BookmarkList />
-                <div id="ic-landing" style={this.center(600,550,200)}>
-                    <div id="ic-tour"><Link to="/tutorial">First-timer? Take the tour!</Link></div>
-                    {this.getFirst()}
-                    {this.getSecond()}
-                    {this.getThird()}
+                <div id="ic-landing-container" style={{width:w}}>
+                    <div id="ic-landing" style={loginStyle}>
+                        <div id="ic-tour"><Link to="/tutorial">First-timer? Take the tour!</Link></div>
+                        {this.getFirst()}
+                        {this.getSecond()}
+                        {this.getThird()}
+                    </div>
                 </div>
             </div>
         );
