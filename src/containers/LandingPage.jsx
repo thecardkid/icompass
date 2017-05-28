@@ -20,9 +20,8 @@ const LOGIN_TYPE = {
 };
 
 class LandingPage extends Component {
-
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
 
         this.socket = new Socket(this);
         this.state = {loginType: null};

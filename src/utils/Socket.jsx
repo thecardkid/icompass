@@ -172,12 +172,14 @@ export default class Socket {
     }
 
     handleReconnect() {
-        this.socket.emit('reconnected', {
-            code: this.component.props.compass.editCode,
-            compassId: this.component.props.compass._id,
-            username: this.component.props.users.me,
-            color: this.component.props.users.nameToColor[this.component.props.users.me]
-        });
+        if (this.component.props.compass) {
+            this.socket.emit('reconnected', {
+                code: this.component.props.compass.editCode,
+                compassId: this.component.props.compass._id,
+                username: this.component.props.users.me,
+                color: this.component.props.users.nameToColor[this.component.props.users.me]
+            });
+        }
     }
 
     handleCompassDeleted() {

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 
-export default class Explanation extends Component {
+export default class About extends Component {
 
     shouldComponentUpdate() {
         return false;
@@ -52,7 +52,7 @@ export default class Explanation extends Component {
     }
 }
 
-Explanation.propTypes = {
+About.propTypes = {
     close: PropTypes.func.isRequired
 };
 
