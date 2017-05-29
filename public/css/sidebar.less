@@ -26,6 +26,12 @@
             font-weight:700em;
         }
 
+        div[name=status] {
+            h2 p {
+                display:inline;
+            }
+        }
+
         div.ic-sidebar-list {
             margin-top:40px;
 
@@ -33,33 +39,36 @@
                 font-size:18px;
             }
 
-            p {
-                margin:5px 0;
-                height:17px;
+            p.ic-user {
+                width:120px;
+                height:25px;
+                line-height:25px;
+                margin:4px 0;
+                padding-left:10px;
+                color:@dark;
+                text-align:left;
+            }
 
-                a { color:@blue }
+            button.ic-ctrl {
+                width:130px;
+                height:25px;
+                background:@light;
+                text-align:left;
+                margin:2px 0;
 
-                span {
-                    font-size:12px;
-                    border-radius:20%;
-                    margin-right:10px;
-                    white-space:pre;
-                }
-
-                span.code {
+                span.ic-ctrl-key {
                     font-family:monospace;
-                    background:@blue;
-                    color:#eee;
-                    padding:2px;
-                    font-size:12px;
-                    border-radius:0px;
-                }
-
-                span.ic-control-key {
-                    font-family:monospace;
-                    background:@light;
-                    color:@dark;
+                    background:@dark;
+                    color:@light;
+                    border-radius:5px;
                     padding:0 4px;
+                    font-size:15px;
+                    margin: 0 10px;
+                }
+
+                p {
+                    display:inline-block;
+                    color:@dark;
                     font-size:15px;
                 }
             }
@@ -68,7 +77,20 @@
                 margin:4px 0;
                 font-size:15px;
                 display:block;
-                width:100px;
+                width:130px;
+                height:25px;
+                text-align:left;
+
+                i {
+                    font-size:20px;
+                    color:black;
+                    float:left;
+                    margin:0 10px;
+                }
+
+                p {
+                    display:inline-block;
+                }
 
                 a {color: @dark}
             }

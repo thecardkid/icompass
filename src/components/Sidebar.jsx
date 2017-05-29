@@ -19,7 +19,6 @@ class Sidebar extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.controlList = _.map(CONTROLS, this.renderControl);
         this.showSavePrompt = this.showSavePrompt.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
         this.tweetThis = this.tweetThis.bind(this);
@@ -48,19 +47,10 @@ class Sidebar extends Component {
     }
 
     renderUserColor(color, username) {
+        let label = username === this.props.you ? 'You [ '+username+' ]' : username;
         return (
-            <p key={username}>
-                <span style={{background: color}}>     </span>
-                {username === this.props.you ? 'You ( '+username+' )' : username}
-            </p>
-        );
-    }
-
-    renderControl(action, key) {
-        return (
-            <p key={'control'+key}>
-                <span className='ic-control-key'>{key}</span>
-                {action}
+            <p key={username} className="ic-user" style={{background: color}}>
+                {label}
             </p>
         );
     }
@@ -93,10 +83,26 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="share">
                 <h2>Share</h2>
-                <button name="share-edit" id={this.props.compass.editCode} className="ic-action" onClick={this.shareEditLink}>editing link</button>
-                <button name="share-view" id={this.props.compass.viewCode} className="ic-action" onClick={this.shareViewOnlyLink}>view-only link</button>
-                <button name="export" className="ic-action" onClick={this.showSavePrompt}>export to pdf</button>
-                <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>tweet this</button>
+                <button name="save" className="ic-action bookmark" onClick={this.save}>
+                    <i className="material-icons">star</i>
+                    <p>bookmark</p>
+                </button>
+                <button name="share-edit" id={this.props.compass.editCode} className="ic-action" onClick={this.shareEditLink}>
+                    <i className="material-icons">edit</i>
+                    <p>editing link</p>
+                </button>
+                <button name="share-view" id={this.props.compass.viewCode} className="ic-action" onClick={this.shareViewOnlyLink}>
+                    <i className="material-icons">remove_red_eye</i>
+                    <p>view-only link</p>
+                </button>
+                <button name="export" className="ic-action" onClick={this.showSavePrompt}>
+                    <i className="material-icons">picture_as_pdf</i>
+                    <p>export to pdf</p>
+                </button>
+                <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>
+                    <i className="fa fa-twitter" style={{color:'white'}}></i>
+                    <p>tweet this</p>
+                </button>
             </div>
         );
     }
@@ -105,7 +111,26 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="controls">
                 <h2>Controls</h2>
-                {this.controlList}
+                <button className="ic-ctrl" onClick={this.props.uiActions.showNewNote}>
+                    <span className='ic-ctrl-key'>n</span>
+                    <p>new note</p>
+                </button>
+                <button className="ic-ctrl" onClick={this.props.uiActions.showDoodle}>
+                    <span className='ic-ctrl-key'>d</span>
+                    <p>new doodle</p>
+                </button>
+                <button className="ic-ctrl" onClick={this.props.uiActions.toggleSidebar}>
+                    <span className='ic-ctrl-key'>s</span>
+                    <p>toggle sidebar</p>
+                </button>
+                <button className="ic-ctrl" onClick={this.props.uiActions.toggleChat}>
+                    <span className='ic-ctrl-key'>c</span>
+                    <p>toggle chat</p>
+                </button>
+                <button className="ic-ctrl" onClick={this.props.uiActions.toggleAbout}>
+                    <span className='ic-ctrl-key'>a</span>
+                    <p>about this app</p>
+                </button>
             </div>
         );
     }
@@ -122,12 +147,15 @@ class Sidebar extends Component {
 
     renderConnectionStatus() {
         let connectionStatus = this.props.connected ?
-            <p style={{color:COLORS.GREEN}}>Connected</p> :
-            <p style={{color:COLORS.RED}}>Disconnected</p>;
+            <p style={{color:COLORS.GREEN}}>connected</p> :
+            <p style={{color:COLORS.RED}}>disconnected</p>;
         return (
             <div className="ic-sidebar-list" name="status">
-                <h2>Status</h2>
-                {connectionStatus}
+                <h2>Status - {connectionStatus}</h2>
+                <button name="logout" className="ic-action" onClick={this.logout}>
+                    <i className="material-icons">lock</i>
+                    <p>log out</p>
+                </button>
             </div>
         );
     }
@@ -147,11 +175,18 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="actions">
                 <h2>Actions</h2>
-                <button name="sucks" className="ic-action" onClick={this.props.uiActions.toggleFeedback}>feedback</button>
-                <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">tutorial</Link></button>
-                <button name="save" className="ic-action bookmark" onClick={this.save}>bookmark</button>
-                <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>delete compass</button>
-                <button name="logout" className="ic-action" onClick={this.logout}>log out</button>
+                <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">
+                    <i className="material-icons">info</i>
+                    <p>tutorial</p>
+                </Link></button>
+                <button name="sucks" className="ic-action" onClick={this.props.uiActions.toggleFeedback}>
+                    <i className="material-icons">chat_bubble</i>
+                    <p>feedback</p>
+                </button>
+                <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>
+                    <i className="material-icons" style={{color:'white'}}>delete</i>
+                    <p>delete</p>
+                </button>
             </div>
         );
     }
@@ -173,8 +208,7 @@ class Sidebar extends Component {
     renderVersionList() {
         return (
             <div className="ic-sidebar-list" name="version">
-                <h2>Version</h2>
-                <p>iCompass {VERSION}</p>
+                <h2>iCompass {VERSION}</h2>
                 <p>
                     <Link to="https://github.com/thecardkid/innovators-compass/releases" target="_blank" rel="noopener noreferrer">changelog</Link>
                 </p>
