@@ -27,9 +27,7 @@
         }
 
         div[name=status] {
-            h2 p {
-                display:inline;
-            }
+            h2 p { display:inline }
         }
 
         div.ic-sidebar-list {
@@ -37,16 +35,17 @@
 
             h2 {
                 font-size:18px;
+                margin-bottom:5px;
             }
 
             p.ic-user {
                 width:120px;
                 height:25px;
                 line-height:25px;
-                margin:4px 0;
                 padding-left:10px;
                 color:@dark;
                 text-align:left;
+                border-bottom:0.5px solid @dark;
             }
 
             button.ic-ctrl {
@@ -54,7 +53,7 @@
                 height:25px;
                 background:@light;
                 text-align:left;
-                margin:2px 0;
+                border-bottom:0.5px solid @dark;
 
                 span.ic-ctrl-key {
                     font-family:monospace;
@@ -74,12 +73,12 @@
             }
 
             button.ic-action {
-                margin:4px 0;
                 font-size:15px;
                 display:block;
                 width:130px;
                 height:25px;
                 text-align:left;
+                border-bottom:0.5px solid @dark;
 
                 i {
                     font-size:20px;
@@ -88,11 +87,9 @@
                     margin:0 10px;
                 }
 
-                p {
-                    display:inline-block;
-                }
+                p { display:inline-block }
 
-                a {color: @dark}
+                a { color: @dark }
             }
 
             .dangerous {

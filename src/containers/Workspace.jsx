@@ -43,7 +43,7 @@ class Workspace extends Component {
         // user events
         this.exportCompass = this.exportCompass.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
-        this.clickShowChat = this.clickShowChat.bind(this);
+        this.showChat = this.showChat.bind(this);
         this.renderCornerButtons = this.renderCornerButtons.bind(this);
         this.center = this.center.bind(this);
 
@@ -100,12 +100,8 @@ class Workspace extends Component {
     }
 
     setTranslation(target, x, y) {
-        // translate the element
         target.style.webkitTransform =
-        target.style.transform =
-        'translate(' + x + 'px, ' + y + 'px)';
-
-        // update the posiion attributes
+            target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
         target.setAttribute('data-x', x);
         target.setAttribute('data-y', y);
     }
@@ -193,7 +189,7 @@ class Workspace extends Component {
             return <Feedback style={this.center(400,250)} close={this.props.uiActions.toggleFeedback}/>;
     }
 
-    clickShowChat() {
+    showChat() {
         this.props.chatActions.read();
         this.props.uiActions.toggleChat();
     }
@@ -220,7 +216,7 @@ class Workspace extends Component {
                 </button>
                 <button className="ic-corner-btn"
                     id="ic-show-chat"
-                    onClick={this.clickShowChat}
+                    onClick={this.showChat}
                     style={showChatStyle}>
                     Show Chat
                 </button>
@@ -234,10 +230,10 @@ class Workspace extends Component {
     }
 
     render() {
+        // not ready
         if (_.isEmpty(this.props.compass)) return <div></div>;
 
-        if (this.props.route.mode === MODES.VIEW)
-            return <Compass />;
+        if (this.props.route.mode === MODES.VIEW) return <Compass />;
 
         return (
             <div>

@@ -8,9 +8,8 @@ import PropTypes from 'prop-types';
 import { PROMPTS, MODES } from 'Lib/constants';
 
 export default class StickyNote extends Component {
-
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
 
         this.confirmDelete = this.confirmDelete.bind(this);
         this.getContents = this.getContents.bind(this);
