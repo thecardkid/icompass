@@ -16,7 +16,8 @@ module.exports = {
         .waitForElementVisible('#ic-sidebar', 500)
         .url(function(result) {
             editURL = result.value;
-        });
+        })
+        .windowMaximize();
     },
 
     'share list': function(browser) {
@@ -62,11 +63,8 @@ module.exports = {
         browser
         .assert.elementPresent('div.ic-sidebar-list[name=status]')
         .getText('div.ic-sidebar-list[name=status] h2', function(result) {
-            this.assert.equal(result.value, 'Status');
+            this.assert.equal(result.value, 'Status - connected');
         })
-        .getText('div.ic-sidebar-list[name=status] p', function(result) {
-            this.assert.equal(result.value, 'Connected');
-        });
     },
 
     'credits': function(browser) {
@@ -91,8 +89,9 @@ module.exports = {
     'actions': function(browser) {
         browser
         .assert.elementPresent('div.ic-sidebar-list[name=actions]')
+        .assert.visible('button[name=sucks]')
         .click('button[name=sucks]')
-        .pause(200)
+        .pause(500)
         .assert.elementPresent('#ic-feedback')
         .click('#ic-feedback button.ic-close-window')
         .pause(200)

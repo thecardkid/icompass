@@ -13,7 +13,8 @@ module.exports = {
         .click('button[name=next]')
         .waitForElementVisible('.third', 1000)
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000);
+        .waitForElementVisible('#ic-sidebar', 1000)
+        .windowMaximize();
     },
 
     'renders correctly': function(browser) {
@@ -42,12 +43,12 @@ module.exports = {
 
     'key bindings': function(browser) {
         browser
-        .keys(['s', 'c', 'a'])
+        .keys(['s', 'c', 'p'])
         .pause(500)
         .assert.cssProperty('#ic-sidebar', 'left', '-240px')
         .assert.cssProperty('#ic-chat', 'bottom', '-265px')
         .assert.elementPresent('#ic-about')
-        .keys(['a', 's'])
+        .keys(['p', 's'])
         .keys(['n'])
         .assert.elementPresent('#ic-note-form')
         .click('button[name=ship]')
@@ -156,7 +157,7 @@ module.exports = {
             .mouseButtonClick(0)
             .pause(500)
             .acceptAlert()
-            .pause(2000)
+            .pause(500)
             .assert.elementNotPresent('#note1');
         });
     },

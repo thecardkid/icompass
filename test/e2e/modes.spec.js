@@ -15,7 +15,8 @@ module.exports = {
         .click('button[name=next]')
         .waitForElementVisible('.third', 1000)
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 500);
+        .waitForElementVisible('#ic-sidebar', 500)
+        .windowMaximize();
     },
 
     'retrieve codes': function(browser) {

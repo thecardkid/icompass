@@ -9,7 +9,8 @@ module.exports = {
         .waitForElementVisible('body', 1000)
         .assert.title('The Innovators\' Compass')
         .assert.elementPresent('button[name=find]')
-        .assert.elementPresent('button[name=make]');
+        .assert.elementPresent('button[name=make]')
+        .windowMaximize();
     },
 
     'make path': function(browser) {

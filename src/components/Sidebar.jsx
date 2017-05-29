@@ -119,6 +119,10 @@ class Sidebar extends Component {
                     <span className='ic-ctrl-key'>d</span>
                     <p>new doodle</p>
                 </button>
+                <button className="ic-ctrl" onClick={this.props.uiActions.toggleCompactMode}>
+                    <span className='ic-ctrl-key'>x</span>
+                    <p>toggle compact</p>
+                </button>
                 <button className="ic-ctrl" onClick={this.props.uiActions.toggleSidebar}>
                     <span className='ic-ctrl-key'>s</span>
                     <p>toggle sidebar</p>
@@ -128,8 +132,8 @@ class Sidebar extends Component {
                     <p>toggle chat</p>
                 </button>
                 <button className="ic-ctrl" onClick={this.props.uiActions.toggleAbout}>
-                    <span className='ic-ctrl-key'>a</span>
-                    <p>about this app</p>
+                    <span className='ic-ctrl-key'>p</span>
+                    <p>toggle prompt</p>
                 </button>
             </div>
         );

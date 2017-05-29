@@ -52,7 +52,8 @@ class Workspace extends Component {
             67: this.props.uiActions.toggleChat,
             68: this.props.uiActions.showDoodle,
             83: this.props.uiActions.toggleSidebar,
-            65: this.props.uiActions.toggleAbout
+            80: this.props.uiActions.toggleAbout,
+            88: this.props.uiActions.toggleCompactMode
         };
 
         this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
@@ -116,12 +117,7 @@ class Workspace extends Component {
     }
 
     isControlKey(k) {
-        return k === KEYCODES.N ||
-            k === KEYCODES.D ||
-            k === KEYCODES.C ||
-            k === KEYCODES.A ||
-            k === KEYCODES.S ||
-            k === KEYCODES.D;
+        return k in this.keypressHandler;
     }
 
     isModifierKey(e) {
@@ -157,30 +153,31 @@ class Workspace extends Component {
     }
 
     getForm() {
+        let commonAttrs = {
+            bg: this.props.users.nameToColor[this.props.users.me],
+            user: this.props.users.me,
+            close: this.props.uiActions.closeForm
+        };
+
         if (this.props.ui.newNote) {
             return <NoteForm style={this.center(300,230)}
                 mode={'make'}
                 note={{}}
                 position={this.props.ui.newNote}
                 ship={this.socket.emitNewNote}
-                close={this.props.uiActions.closeForm}
-                user={this.props.users.me}
-                bg={this.props.users.nameToColor[this.props.users.me]}
+                {...commonAttrs}
             />;
         } else if (this.props.ui.editNote) {
             return <NoteForm style={this.center(300,230)}
                 mode={'edit'}
                 note={this.props.ui.editNote}
                 ship={this.socket.emitEditNote}
-                close={this.props.uiActions.closeForm}
-                bg={this.props.users.nameToColor[this.props.users.me]}
+                {...commonAttrs}
             />;
         } else if (this.props.ui.doodleNote) {
             return <DoodleForm style={this.center(450, 345)}
-                user={this.props.users.me}
-                bg={this.props.users.nameToColor[this.props.users.me]}
-                close={this.props.uiActions.closeForm}
                 save={this.socket.emitNewDoodle}
+                {...commonAttrs}
             />;
         }
         return null;
@@ -189,11 +186,11 @@ class Workspace extends Component {
     getAbout() {
         if (this.props.ui.showAbout)
             return <About close={this.props.uiActions.toggleAbout} />;
-        return null;
     }
 
     getFeedback() {
-        if (this.props.ui.showFeedback) return <Feedback style={this.center(400,250)} close={this.props.uiActions.toggleFeedback}/>;
+        if (this.props.ui.showFeedback)
+            return <Feedback style={this.center(400,250)} close={this.props.uiActions.toggleFeedback}/>;
     }
 
     clickShowChat() {
