@@ -48,10 +48,11 @@
                 border-bottom:0.5px solid @dark;
             }
 
-            button.ic-ctrl {
+            button.ic-action {
+                font-size:15px;
+                display:block;
                 width:130px;
                 height:25px;
-                background:@light;
                 text-align:left;
                 border-bottom:0.5px solid @dark;
 
@@ -65,21 +66,6 @@
                     margin: 0 10px;
                 }
 
-                p {
-                    display:inline-block;
-                    color:@dark;
-                    font-size:15px;
-                }
-            }
-
-            button.ic-action {
-                font-size:15px;
-                display:block;
-                width:130px;
-                height:25px;
-                text-align:left;
-                border-bottom:0.5px solid @dark;
-
                 i {
                     font-size:20px;
                     color:black;
@@ -92,18 +78,34 @@
                 a { color: @dark }
             }
 
+            button.ic-action:hover {
+                background:#BABABA;
+            }
+
             .dangerous {
                 background:@red;
                 color:@light;
             }
 
+            .dangerous:hover {
+                background:#8C1302 !important;
+            }
+
             .bookmark {
-                background:@yellow;
+                background:#EDFF4C;
+            }
+
+            .bookmark:hover {
+                background:@yellow !important;
             }
 
             .tweet {
                 background:@twitterBlue;
                 color:@light;
+            }
+
+            .tweet:hover {
+                background:#3A7EB1 !important;
             }
         }
     }

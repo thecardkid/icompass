@@ -111,27 +111,27 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="controls">
                 <h2>Controls</h2>
-                <button className="ic-ctrl" onClick={this.props.uiActions.showNewNote}>
+                <button className="ic-action" onClick={this.props.uiActions.showNewNote}>
                     <span className='ic-ctrl-key'>n</span>
                     <p>new note</p>
                 </button>
-                <button className="ic-ctrl" onClick={this.props.uiActions.showDoodle}>
+                <button className="ic-action" onClick={this.props.uiActions.showDoodle}>
                     <span className='ic-ctrl-key'>d</span>
                     <p>new doodle</p>
                 </button>
-                <button className="ic-ctrl" onClick={this.props.uiActions.toggleCompactMode}>
+                <button className="ic-action" onClick={this.props.uiActions.toggleCompactMode}>
                     <span className='ic-ctrl-key'>x</span>
                     <p>toggle compact</p>
                 </button>
-                <button className="ic-ctrl" onClick={this.props.uiActions.toggleSidebar}>
+                <button className="ic-action" onClick={this.props.uiActions.toggleSidebar}>
                     <span className='ic-ctrl-key'>s</span>
                     <p>toggle sidebar</p>
                 </button>
-                <button className="ic-ctrl" onClick={this.props.uiActions.toggleChat}>
+                <button className="ic-action" onClick={this.props.uiActions.toggleChat}>
                     <span className='ic-ctrl-key'>c</span>
                     <p>toggle chat</p>
                 </button>
-                <button className="ic-ctrl" onClick={this.props.uiActions.toggleAbout}>
+                <button className="ic-action" onClick={this.props.uiActions.toggleAbout}>
                     <span className='ic-ctrl-key'>p</span>
                     <p>toggle prompt</p>
                 </button>
