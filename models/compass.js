@@ -34,6 +34,19 @@ var compassSchema = mongoose.Schema({
     }]
 });
 
+compassSchema.statics.makeCompass = function(center, cb) {
+    var newCompass = Object.assign({}, DefaultCompass, {
+        editCode: generateUUID(),
+        viewCode: generateUUID(),
+        center: center
+    });
+    this.create(newCompass, function (err, compass) {
+        if (err) return logger.error('Could not create compass with center', center, err);
+
+        cb(compass);
+    });
+};
+
 compassSchema.statics.addNote = function(id, newNote, cb) {
     this.findByIdAndUpdate(
         id,
@@ -65,25 +78,9 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
     });
 };
 
-compassSchema.statics.makeCompass = function(center, cb) {
-    var newCompass = Object.assign({}, DefaultCompass, {
-        editCode: generateUUID(),
-        viewCode: generateUUID(),
-        center: center
-    });
-    this.create(newCompass, function (err, compass) {
-        if (err) return logger.error('Could not create compass with center', center, err);
-
-        logger.debug('Created compass with center', center, compass._id);
-        cb(compass);
-    });
-};
-
 compassSchema.statics.findByEditCode = function(code, cb) {
     this.findOne({editCode: code}, function(err, c) {
         if (err) logger.error('Could not find compass for editing', code, err);
-
-        if (c !== null) logger.debug('Found compass for editing', c._id);
         cb(c);
     });
 };
@@ -91,12 +88,10 @@ compassSchema.statics.findByEditCode = function(code, cb) {
 compassSchema.statics.findByViewCode = function(code, cb) {
     this.findOne({viewCode: code}, function(err, c) {
         if (err) logger.error('Could not find compass for viewing', code, err);
-
         if (c === null) return cb(null);
 
-        logger.debug('Found compass for viewing', c._id);
         var copy = JSON.parse(JSON.stringify(c));
-        delete copy.editCode; // TODO delete comment code
+        delete copy.editCode;
         cb(copy);
     });
 };
@@ -106,10 +101,8 @@ compassSchema.statics.findCode = function(code, cb) {
     schema.findByEditCode(code, function(compassEdit) {
         if (compassEdit === null) {
             schema.findByViewCode(code, function(compassView) {
-                if (compassView === null) {
-                    cb(null, null);
-                    return;
-                }
+                if (compassView === null)
+                    return cb(null, null);
 
                 cb(compassView, MODES.VIEW);
             });
@@ -129,7 +122,6 @@ compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
 
         c.save(function(err, updatedCompass) {
             if (err) logger.error('Could not delete note', compassId, noteId, err);
-
             cb(updatedCompass.notes);
         });
     });
