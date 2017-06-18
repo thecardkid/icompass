@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import _ from 'underscore';
 
 import * as noteActions from 'Actions/notes';
 import * as compassActions from 'Actions/compass';
@@ -21,24 +22,21 @@ import DoodleForm from 'Components/DoodleForm.jsx';
 import DefaultCompass from 'Models/defaultCompass';
 import { MODES, KEYCODES } from 'Lib/constants';
 
+const FOCUSED = 1, UNFOCUSED = 0.1;
 const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}, colors: []};
 const STEPS = [
     {
         header: 'Welcome to iCompass',
-        text: 'In this short tour, we\'ll cover a few things to help you make informed decisions about this workspace.',
-        prep: () => $('#ic-tutorial-cover').fadeOut()
-    },
-    {
-        header: 'Your workspace',
-        text: 'This tutorial is not for the compass itself, but for this app. Feel free to drag this blurb around so you can see everything.',
+        text: 'Here\'s a short tour, to help you drive this workspace. Feel free to drag this blurb around so you can see everything.',
         prep: () => {
+            $('#ic-tutorial-cover').fadeOut();
             $('#ic-sidebar').css('left', '-240px');
             $('#ic-chat').css('bottom', '-265px');
         }
     },
     {
-        header: 'The compass',
-        text: 'This is the compass structure that you know and love. You will be asked to fill out the center when you create a new compass.',
+        header: 'The Compass workspace',
+        text: 'This is your Innovators\' Compass workspace. You will be asked to fill out the center when you create a Compass.',
         prep: () => {
             $('#ic-tutorial-cover').fadeIn();
             $('#ic-sidebar').css({'left': '0px', 'z-index': 4});
@@ -47,79 +45,72 @@ const STEPS = [
     {
         header: 'The Sidebar',
         text: 'The sidebar is your best reference for everything.',
-        prep: (root) => root.showOnly(0)
+        prep: (root) => {
+            root.showOnly(0, [0, 3]);
+        }
+    },
+    {
+        header: 'Saving your Compass',
+        text: 'Bookmark workspaces for faster access when you log in, or save as a PDF.',
+        prep: (root) => {
+            root.showOnly(0, [1, 2, 4])
+        }
     },
     {
         header: 'Sharing your compass',
-        text: 'Share with editing or view-only access, or export it to a pdf, or tweet the view-only link with the hashtag #innovatorscompass.',
+        text: 'Share links with editing or view-only access, or tweet the view-only link with the hashtag #innovatorscompass.',
         prep: (root) => {
             root.showOnly(1);
-            $(window).on('keydown', (e) => {
-                if (e.which === KEYCODES.S) root.props.uiActions.toggleSidebar();
-            });
+            // $(window).on('keydown', (e) => {
+                // if (e.which === KEYCODES.S) root.props.uiActions.toggleSidebar();
+            // });
         }
     },
     {
-        header: 'Key bindings',
-        text: 'Each of these keys is associated with a special action. For example, press "s" twice to toggle the sidebar. On handheld devices, swipe left on the sidebar.',
-        prep: () => {
-            let t = 800;
-            $('#circle').css({
-                position:'absolute',
-                left:'30vw',
-                top:'40vh',
-                width:'20px',
-                height:'20px',
-                background:'black',
-                'border-radius':'100%',
-            }).fadeOut(t).fadeIn(t).fadeOut(t).fadeIn(t);
-        }
-    },
-    {
-        header: 'Creating notes',
-        text: 'Double click anywhere on a blank space to spawn a new note there. On handheld devices: long click.',
+        header: 'Control keys',
+        text: 'Each of these buttons also has a shortcut key on a computer.',
         prep: (root) => {
-            $('#ic-tutorial-cover').fadeOut();
-            $('#circle').hide();
-            $(window).on('keydown', (e) => {
-                if (e.which === KEYCODES.N) {
-                    e.preventDefault();
-                    root.props.uiActions.showNewNote();
-                }
-            });
+            root.showOnly(1, [0]);
         }
     },
     {
-        header: 'New note key',
-        text: 'Press "n" to bring up the new note form. You can put up to 300 characters in a note. Drag this blurb to see the from.',
-        prep: () => $('#ic-form-text').val('https://s-media-cache-ak0.pinimg.com/736x/73/de/32/73de32f9e5a0db66ec7805bb7cb3f807.jpg')
+        header: 'Creating text notes',
+        text: 'Double click on any blank space to spawn a new text note there. On handheld devices, use a long click. Or, press "n" to bring up a new note form. You can put up to 300 characters in a text note.',
+        prep: () => {}
     },
     {
-        header: 'Linking images',
-        text: 'If you enter a hyperlink, I can import that image for you.',
-        prep: () => $('button[name=nvm]').click()
+        header: 'Creating photo notes',
+        text: 'If you enter a photo\'s hyperlink in a text note, I can import that image for you.',
+        prep: (root) => root.showOnly(1, [1])
+    },
+    {
+        header: 'Creating sketched notes',
+        text: 'Press this button or “d” to make a doodle note you can sketch on. (Note: if you have many doodles, your Compass may respond more slowly.)',
+        prep: () => {}
     },
     {
         header: 'Working with notes',
-        text: 'Click once to bring a sticky to the foreground, twice to edit its contents. Stickies are draggable by default. On handheld devices: tap and long click.',
-        prep: (root) => {
-            $(window).on('keydown', (e) => {
-                if (e.which === KEYCODES.D) root.props.uiActions.showDoodle();
-            });
-        }
+        text: 'Click once on a note to bring it to the front, twice to edit its contents. Click and drag notes to move them.',
+        prep: (root) => root.showOnly(1, [2])
     },
     {
-        header: 'Doodling',
-        text: 'Press "d" to make a doodle, if you\'re more visual. The more doodles in a compass, the more lag there might be, though.',
-        prep: (root) => {
-            $('#ic-tutorial-cover').fadeIn();
-            root.props.uiActions.closeForm();
-            root.showOnly(2);
-        }
+        header: 'Compact mode',
+        text: 'When things get crowded, try compact mode. You can see four lines of note text and scroll for more. Doodles are shown smaller. (Note: compact mode only applies to your own view; check that others see it the same way before moving notes.)',
+        prep: (root) => root.showOnly(1, [3, 4])
+    },
+    {
+        header: 'Toggling the sidebar or chat',
+        text: 'Press “s” or “c” to show/hide the sidebar or chat. Or, click the “X” at the top right of the box to hide. On handheld devices you can also swipe left from the sidebar, or down from the chat box, to hide them.',
+        prep: (root) => root.showOnly(1, [5])
+    },
+    {
+        header: 'Compass prompts',
+        text: 'Press this button or “p” to show/hide more detailed prompts for the Innovators’ Compass.',
+        prep: (root) => root.showOnly(2)
     },
     {
         header: 'Active users',
-        text: 'Each person in your current compass session is listed here, associated with a unique color. This is the color of stickies they make and their chat bubble.',
+        text: 'Each person in your current Compass session is listed here, associated with a unique color. This is the color of stickies they make and their chat bubble.',
         prep: (root) => root.showOnly(3)
     },
     {
@@ -128,8 +119,8 @@ const STEPS = [
         prep: (root) => root.showOnly(4)
     },
     {
-        header: 'Reduce',
-        text: 'I would appreciate if you could clean up server space by deleting a compass you know you won\'t need again!',
+        header: 'More actions',
+        text: 'You can see this tutorial anytime. And, send us app bugs or ideas. I would appreciate if you could save server space by deleting a compass you know you won\'t need again!',
         prep: (root) => root.showOnly(5)
     },
     {
@@ -142,26 +133,22 @@ const STEPS = [
     },
     {
         header: 'Chat',
-        text: 'Send messages to anyone who is online. Messages are cleared when you log out. Swipe down to hide the chat on handheld devices.',
+        text: 'Send messages to current collaborators. Messages are cleared when you log out. Swipe down to hide the chat on handheld devices.',
         prep: () => {
             $('#ic-chat').css('bottom', '-265px');
             $('#ic-show-chat').css('z-index', 4);
             $('#ic-show-sidebar').css('z-index', 4);
-        }
-    },
-    {
-        header: 'Buttons',
-        text: 'If you forget the key bindings "s" for sidebar and "c" for chat, use these buttons to get them back.',
-        prep: () => {
-            $('#ic-show-chat').css('z-index', 2);
-            $('#ic-show-sidebar').css('z-index', 2);
             $('#ic-compact').css('z-index', 4);
         }
     },
     {
-        header: 'Compact mode',
-        text: 'When things get crowded, use compact mode in the top right corner to give yourself more space. Compact mode only applies to your view, so be careful to not disturb others\' views when you rearrange notes.',
-        prep: () => $('#ic-compact').css('z-index', 2)
+        header: 'Workspace buttons',
+        text: 'A few buttons are on your workspace for convenience. You can show the hidden sidebar or chat box, toggle compact mode, or make a new doodle.',
+        prep: () => {
+            $('#ic-show-chat').css('z-index', 2);
+            $('#ic-show-sidebar').css('z-index', 2);
+            $('#ic-compact').css('z-index', 2);
+        }
     },
     {
         header: 'That\'s it!',
@@ -212,12 +199,25 @@ class Tutorial extends Component {
         }
     }
 
-    showOnly(x) {
+    showOnly(x, buttons) {
         let opacity;
         let lists = $('.ic-sidebar-list');
+        let showSome = buttons && buttons.length > 0;
+
         for (let i=0; i<lists.length; i++) {
-            opacity = i === x ? 1 : 0.1;
-            $(lists[i]).fadeTo('slow', opacity);
+            if (i === x) {
+                $(lists[i]).fadeTo('slow', FOCUSED);
+
+                if (showSome) {
+                    let btns = $(lists[i]).children().slice(1);
+                    for (let j=0; j<btns.length; j++) {
+                        let o = _.contains(buttons, j) ? FOCUSED : UNFOCUSED;
+                        $(btns[j]).fadeTo('slow', o);
+                    }
+                }
+            } else {
+                $(lists[i]).fadeTo('slow', UNFOCUSED);
+            }
         }
     }
 
