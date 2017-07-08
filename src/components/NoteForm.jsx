@@ -11,7 +11,12 @@ export default class NoteForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { bold: false, italic: false, underline: false };
+        this.state = {
+            bold: false,
+            italic: false,
+            underline: false,
+            charCount: this.props.note.text ? this.props.note.text.length : 0
+        };
         if (this.props.note.style) Object.assign(this.state, this.props.note.style);
 
         this.bold = this.bold.bind(this);
@@ -19,6 +24,7 @@ export default class NoteForm extends Component {
         this.underline = this.underline.bind(this);
         this.make = this.make.bind(this);
         this.edit = this.edit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     bold() {
@@ -90,8 +96,15 @@ export default class NoteForm extends Component {
         );
     }
 
+    handleChange() {
+        this.setState({
+            charCount: $('#ic-form-text').val().length
+        });
+    }
+
     render() {
         let header = this.props.mode === 'make' ? 'Create a note' : 'Edit this note';
+        header += ' /' + this.state.charCount;
         let click = this.props.mode === 'make' ? this.make : this.edit;
         let color = this.props.note.color || this.props.bg;
 
@@ -107,7 +120,13 @@ export default class NoteForm extends Component {
                         <h1 id="ic-form-title">{header}</h1>
                         {this.renderToolbar()}
                     </div>
-                    <textarea id="ic-form-text" className={textStyle} autoFocus defaultValue={this.props.note.text} style={{background: color}}></textarea>
+                    <textarea id="ic-form-text"
+                        className={textStyle}
+                        autoFocus
+                        defaultValue={this.props.note.text}
+                        onChange={this.handleChange}
+                        style={{background: color}}>
+                    </textarea>
                     <button name="nvm" className="ic-button" onClick={this.props.close}>never mind</button>
                     <button name="ship" className="ic-button" onClick={click}>ship it</button>
                 </div>
