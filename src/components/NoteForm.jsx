@@ -47,8 +47,8 @@ export default class NoteForm extends Component {
 
         if (validText[0])
             isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
-        else
-            if (!validText[1]) return alert(PROMPTS.POST_IT_TOO_LONG);
+        else if (!validText[1])
+            return alert(PROMPTS.POST_IT_TOO_LONG);
 
         return { text, isImage };
     }

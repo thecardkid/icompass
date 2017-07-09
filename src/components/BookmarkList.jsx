@@ -61,7 +61,10 @@ export default class BookmarkList extends Component {
         return (
             <div id="ic-bookmarks">
                 <div id="contents">
-                    <h1>Saved Workspaces</h1>
+                    <h1>
+                        <i className="material-icons">star</i>
+                         Bookmarks
+                    </h1>
                     <div id="ic-bookmark-list">
                         {list}
                     </div>
