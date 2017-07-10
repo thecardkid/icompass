@@ -20,7 +20,7 @@ import NoteForm from 'Components/NoteForm.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 
 import DefaultCompass from 'Models/defaultCompass';
-import { MODES, KEYCODES } from 'Lib/constants';
+import { KEYCODES } from 'Lib/constants';
 
 const FOCUSED = 1, UNFOCUSED = 0.1;
 const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}, colors: []};
@@ -172,7 +172,7 @@ class Tutorial extends Component {
         this.next = this.next.bind(this);
 
         this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
-        this.props.compassActions.set(this.compass, MODES.EDIT);
+        this.props.compassActions.set(this.compass, false);
         this.props.userActions.update({users: USERS});
         this.props.userActions.me('sandbox');
     }

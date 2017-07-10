@@ -1,15 +1,17 @@
+import { EDITING_MODE } from 'Lib/constants.js';
+
 const defaultState = {
     newNote: false,
     editNote: false,
     doodleNote: false,
     focusedNote: -1,
-    compact: false,
     showAbout: false,
     showChat: true,
     showSidebar: true,
     showFeedback: false,
     vw: 0,
-    vh: 0
+    vh: 0,
+    editingMode: EDITING_MODE.NORMAL
 };
 
 export default (state = defaultState, action) => {
@@ -46,8 +48,6 @@ export default (state = defaultState, action) => {
             };
         case 'focusOnNote':
             return {...state, focusedNote: action.idx};
-        case 'toggleCompactMode':
-            return {...state, compact: !state.compact};
         case 'toggleAbout':
             return {...state, showAbout: !state.showAbout};
         case 'toggleChat':
@@ -64,6 +64,21 @@ export default (state = defaultState, action) => {
             return {...state,
                 vw: action.screenWidth,
                 vh: action.screenHeight
+            };
+        case 'normalMode':
+            return {
+                ...state,
+                editingMode: EDITING_MODE.NORMAL
+            };
+        case 'compactMode':
+            return {
+                ...state,
+                editingMode: EDITING_MODE.COMPACT
+            };
+        case 'visualMode':
+            return {
+                ...state,
+                editingMode: EDITING_MODE.VISUAL
             };
         case 'resetUI':
             return defaultState;

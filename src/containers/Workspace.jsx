@@ -23,21 +23,20 @@ import Compass from 'Components/Compass.jsx';
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
 
-import { KEYCODES, COLORS, MODES, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
+import { KEYCODES, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
 
 /* eslint react/prop-types: 0 */
 class Workspace extends Component {
     constructor(props) {
         super(props);
         this.socket = new Socket(this);
-        this.isEditable = this.props.route.mode === MODES.EDIT;
         this.socket.socket.on('update notes', this.props.noteActions.updateAll);
 
-        if (this.isEditable) {
+        if (this.props.route.viewOnly) {
+            this.socket.emitFindCompassView();
+        } else {
             this.validateRouteParams(this.props.params);
             this.socket.emitFindCompassEdit();
-        } else {
-            this.socket.emitFindCompassView();
         }
 
         // user events
@@ -45,6 +44,7 @@ class Workspace extends Component {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.showChat = this.showChat.bind(this);
         this.renderCornerButtons = this.renderCornerButtons.bind(this);
+        this.renderModesToolbar = this.renderModesToolbar.bind(this);
         this.center = this.center.bind(this);
 
         this.keypressHandler = {
@@ -53,7 +53,6 @@ class Workspace extends Component {
             68: this.props.uiActions.showDoodle,
             83: this.props.uiActions.toggleSidebar,
             80: this.props.uiActions.toggleAbout,
-            88: this.props.uiActions.toggleCompactMode
         };
 
         this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
@@ -65,9 +64,9 @@ class Workspace extends Component {
 
         if (!validCode[0] || !validUsername[0]) {
             let err = 'There was a problem with your login info:\n\n';
-            if (!validCode[0]) err += validCode[1] + '\n\n';
-            if (!validUsername[0]) err += validUsername[1] + '\n\n';
-            err += 'You will now be directed to the login page';
+            if (!validCode[0]) err += validCode[1];
+            if (!validUsername[0]) err += validUsername[1];
+            err += '\n\nYou will now be directed to the login page';
             alert(err);
             browserHistory.push('/');
         }
@@ -78,7 +77,7 @@ class Workspace extends Component {
         $(window).on('keydown', this.handleKeyDown);
 
         // set up draggable sticky notes
-        if (this.isEditable) {
+        if (!this.props.route.viewOnly) {
             interact('.draggable').draggable({
                 restrict: DRAGGABLE_RESTRICTIONS,
                 autoScroll: true,
@@ -201,6 +200,31 @@ class Workspace extends Component {
         };
     }
 
+    renderModesToolbar() {
+        let ui = this.props.uiActions,
+            m = this.props.ui.editingMode;
+
+        return (
+            <div id="ic-modes">
+                <button id="ic-mode-visual"
+                    className={m === EDITING_MODE.VISUAL ? 'selected' : 'unselected'}
+                    onClick={ui.visualMode}>
+                    Visual
+                </button>
+                <button id="ic-mode-compact"
+                    className={m === EDITING_MODE.COMPACT ? 'selected' : 'unselected'}
+                    onClick={ui.compactMode}>
+                    Compact
+                </button>
+                <button id="ic-mode-normal"
+                    className={m === EDITING_MODE.NORMAL ? 'selected' : 'unselected'}
+                    onClick={ui.normalMode}>
+                    Normal
+                </button>
+            </div>
+        );
+    }
+
     renderCornerButtons() {
         let actions = this.props.uiActions;
         let showChatStyle = {
@@ -233,11 +257,12 @@ class Workspace extends Component {
         // not ready
         if (_.isEmpty(this.props.compass)) return <div></div>;
 
-        if (this.props.route.mode === MODES.VIEW) return <Compass />;
+        if (this.props.route.viewOnly) return <Compass />;
 
         return (
             <div>
                 {this.renderCornerButtons()}
+                {this.renderModesToolbar()}
                 <Compass destroy={this.socket.emitDeleteNote} />
                 <Sidebar connected={this.socket.socket.connected} destroy={this.socket.emitDeleteCompass} exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />

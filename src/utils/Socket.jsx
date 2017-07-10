@@ -160,7 +160,7 @@ export default class Socket {
             alert(PROMPTS.COMPASS_NOT_FOUND);
             return browserHistory.push('/');
         }
-        this.component.props.compassActions.set(data.compass, data.mode);
+        this.component.props.compassActions.set(data.compass, data.viewOnly);
         this.component.props.noteActions.updateAll(data.compass.notes);
 
         if (this.component.props.userActions)

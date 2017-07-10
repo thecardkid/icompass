@@ -25,7 +25,7 @@ module.exports = {
         .assert.elementPresent('#ic-chat')
         .assert.elementPresent('#ic-show-chat')
         .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-compact')
+        .assert.elementPresent('#ic-modes')
         .assert.containsText('#center', 'nightwatchjs')
         .assert.elementPresent('#observations')
             .assert.containsText('#observations h1', 'OBSERVATIONS')
@@ -174,7 +174,7 @@ module.exports = {
             this.assert.notEqual(result.value, '70px');
         })
         .pause(100)
-        .click('#ic-compact')
+        .click('#ic-mode-compact')
         .pause(100)
         .getCssProperty('#note0 a', 'letter-spacing', function(result) {
             this.assert.equal(result.value, '-1px');
@@ -186,7 +186,7 @@ module.exports = {
             this.assert.equal(result.value, '70px');
         })
         .pause(100)
-        .click('#ic-compact')
+        .click('#ic-mode-normal')
         .pause(100);
     },
 

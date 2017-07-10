@@ -11,7 +11,7 @@ import * as uiActions from 'Actions/ui';
 
 import StickyNote from 'Components/StickyNote.jsx';
 
-import { QUADRANTS_INFO } from 'Lib/constants';
+import { QUADRANTS_INFO, EDITING_MODE } from 'Lib/constants';
 
 class Compass extends Component {
     constructor(props) {
@@ -32,9 +32,9 @@ class Compass extends Component {
                 h={this.props.ui.vh}
                 edit={this.props.uiActions.showEdit}
                 destroy={this.props.destroy}
-                mode={this.props.compass.mode}
+                viewOnly={this.props.compass.viewOnly}
                 focusOn={this.props.uiActions.focusOnNote}
-                compact={this.props.ui.compact}
+                compact={this.props.ui.editingMode === EDITING_MODE.COMPACT}
             />
         );
     }
@@ -86,11 +86,6 @@ class Compass extends Component {
             <div id="compass">
                 {this.renderCompassStructure()}
                 {_.map(this.props.notes, this.renderNote.bind(this))}
-                <button className="ic-corner-btn"
-                    id="ic-compact"
-                    onClick={this.props.uiActions.toggleCompactMode}>
-                    Compact
-                </button>
             </div>
         );
     }

@@ -42,7 +42,7 @@ module.exports = {
         .assert.elementPresent('#center')
         .assert.elementPresent('#vline')
         .assert.elementPresent('#hline')
-        .assert.elementPresent('#ic-compact')
+        .assert.elementNotPresent('#ic-modes')
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
         .assert.elementNotPresent('#ic-show-chat')
@@ -58,14 +58,14 @@ module.exports = {
         .setValue('#username', 'sandbox')
         .click('button[name=next]')
         .waitForElementVisible('.third', 500)
-        .assert.containsText('.third h1', 'view access')
+        .assert.containsText('.third h1', 'View-only access')
         .assert.containsText('.third h2', 'You will be logged in as sandbox')
         .click('button[name=to-workspace]')
         .pause(500)
         .assert.elementPresent('#center')
         .assert.elementPresent('#vline')
         .assert.elementPresent('#hline')
-        .assert.elementPresent('#ic-compact')
+        .assert.elementNotPresent('#ic-modes')
         .assert.elementNotPresent('#ic-sidebar')
         .assert.elementNotPresent('#ic-chat')
         .assert.elementNotPresent('#ic-show-chat')
@@ -115,7 +115,7 @@ module.exports = {
         .assert.elementPresent('#ic-chat')
         .assert.elementPresent('#ic-show-chat')
         .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-compact');
+        .assert.elementPresent('#ic-modes');
     },
 
     'edit access from url without username': function(browser) {
@@ -145,7 +145,7 @@ module.exports = {
         .assert.elementPresent('#ic-chat')
         .assert.elementPresent('#ic-show-chat')
         .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-compact');
+        .assert.elementPresent('#ic-modes');
     },
 
     'clean up': function(browser) {

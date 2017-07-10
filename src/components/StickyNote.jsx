@@ -5,7 +5,7 @@ import Tappable from 'react-tappable/lib/Tappable';
 import deepEqual from 'deep-equal';
 import PropTypes from 'prop-types';
 
-import { PROMPTS, MODES } from 'Lib/constants';
+import { PROMPTS } from 'Lib/constants';
 
 export default class StickyNote extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ export default class StickyNote extends Component {
         this.renderDoodle = this.renderDoodle.bind(this);
         this.renderText = this.renderText.bind(this);
 
-        this.hasEditingRights = this.props.mode === MODES.EDIT;
+        this.hasEditingRights = !this.props.viewOnly;
     }
 
     shouldComponentUpdate(nextProps) {
@@ -135,7 +135,7 @@ StickyNote.propTypes = {
     h: PropTypes.number.isRequired,
     edit: PropTypes.func,
     destroy: PropTypes.func,
-    mode: PropTypes.string.isRequired,
+    viewOnly: PropTypes.bool.isRequired,
     focusedNote: PropTypes.number.isRequired,
     focusOn: PropTypes.func.isRequired,
     compact: PropTypes.bool.isRequired

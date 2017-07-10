@@ -1,7 +1,7 @@
 export default (state = {}, action) => {
     switch(action.type) {
         case 'setCompass':
-            return Object.assign({}, action.compass, {notes: undefined}, {mode: action.mode});
+            return Object.assign({}, action.compass, {notes: undefined}, {viewOnly: action.viewOnly});
         case 'resetCompass':
             return {};
         default:

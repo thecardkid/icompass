@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var logger = require('../lib/logger');
-var MODES = require('../lib/constants').MODES;
 var DefaultCompass = require('./defaultCompass');
 var _ = require('underscore');
 
@@ -104,10 +103,10 @@ compassSchema.statics.findCode = function(code, cb) {
                 if (compassView === null)
                     return cb(null, null);
 
-                cb(compassView, MODES.VIEW);
+                cb(compassView, true);
             });
         } else {
-            cb(compassEdit, MODES.EDIT);
+            cb(compassEdit, false);
         }
     });
 };

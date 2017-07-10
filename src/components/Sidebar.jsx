@@ -119,10 +119,6 @@ class Sidebar extends Component {
                     <span className='ic-ctrl-key'>d</span>
                     <p>new doodle</p>
                 </button>
-                <button className="ic-action" onClick={this.props.uiActions.toggleCompactMode}>
-                    <span className='ic-ctrl-key'>x</span>
-                    <p>toggle compact</p>
-                </button>
                 <button className="ic-action" onClick={this.props.uiActions.toggleSidebar}>
                     <span className='ic-ctrl-key'>s</span>
                     <p>toggle sidebar</p>

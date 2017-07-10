@@ -32,9 +32,21 @@ export const focusOnNote = (idx) => {
     };
 };
 
-export const toggleCompactMode = () => {
+export const normalMode = () => {
     return {
-        type: 'toggleCompactMode'
+        type: 'normalMode'
+    };
+};
+
+export const compactMode = () => {
+    return {
+        type: 'compactMode'
+    };
+};
+
+export const visualMode = () => {
+    return {
+        type: 'visualMode'
     };
 };
 

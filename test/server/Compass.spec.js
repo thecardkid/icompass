@@ -2,7 +2,6 @@
 
 import mongoose from 'mongoose';
 import { expect } from 'chai';
-import { MODES } from '../../lib/constants';
 import Compass from '../../models/compass';
 
 const CENTER = 'test suite';
@@ -73,16 +72,16 @@ describe('Compass: models', () => {
     it('#findCode', (done) => {
         let found = false;
 
-        Compass.findCode(DUT.editCode, (c, mode) => {
+        Compass.findCode(DUT.editCode, (c, viewOnly) => {
             expect(c).to.not.be.null;
-            expect(mode).to.equal(MODES.EDIT);
+            expect(viewOnly).to.equal(false);
             if (found) done();
             else found = true;
         })
 
-        Compass.findCode(DUT.viewCode, (c, mode) => {
+        Compass.findCode(DUT.viewCode, (c, viewOnly) => {
             expect(c).to.not.be.null;
-            expect(mode).to.equal(MODES.VIEW);
+            expect(viewOnly).to.equal(true);
             if (found) done();
             else found = true;
         })

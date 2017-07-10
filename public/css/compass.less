@@ -59,31 +59,47 @@
     }
 }
 
-.ic-corner-btn {
+button.ic-corner-btn {
     position:absolute;
     background:@dark;
     color:@light;
     z-index:2;
 }
 
-#ic-show-sidebar {
+button#ic-show-sidebar {
     top:20px;
     left:20px;
 }
 
-#ic-show-chat {
+button#ic-show-chat {
     bottom:20px;
     right:20px;
 }
 
-#ic-compact {
-    right:20px;
-    top:20px;
-}
-
-#ic-show-doodle {
+button#ic-show-doodle {
     left:20px;
     bottom:20px;
+}
+
+div#ic-modes {
+    position: absolute;
+    background:@dark;
+    z-index:2;
+    top:0px;
+    right:0px;
+
+    button {
+        float:right;
+        border-left:1px solid black;
+        border-bottom:1px solid black;
+        font-size:12px;
+        padding:1px 3px;
+    }
+
+    button.selected {
+        background:@dark;
+        color:@light;
+    }
 }
 
 #hline {

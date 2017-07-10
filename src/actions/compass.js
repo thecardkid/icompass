@@ -1,7 +1,7 @@
-export const set = (compass, mode) => {
+export const set = (compass, viewOnly) => {
     return {
         type: 'setCompass',
-        compass, mode
+        compass, viewOnly
     };
 };
 

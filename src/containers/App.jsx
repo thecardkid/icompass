@@ -14,7 +14,6 @@ import PromptName from 'Components/PromptName.jsx';
 import NotFound from 'Containers/NotFound.jsx';
 
 import Store from '../store';
-import { MODES } from 'Lib/constants';
 
 class App extends Component {
     render() {
@@ -22,9 +21,9 @@ class App extends Component {
             <Provider store={Store()}>
                 <Router history={browserHistory}>
                     <Route path='/' component={LandingPage} />
-                    <Route path='/compass/edit/:code/:username' mode={MODES.EDIT} component={Workspace} />
-                    <Route path='/compass/edit/:code' mode={MODES.EDIT} component={PromptName} />
-                    <Route path='/compass/view/:code(/:username)' mode={MODES.VIEW} component={Workspace} />
+                    <Route path='/compass/edit/:code/:username' viewOnly={false} component={Workspace} />
+                    <Route path='/compass/edit/:code' viewOnly={false} component={PromptName} />
+                    <Route path='/compass/view/:code(/:username)' viewOnly={true} component={Workspace} />
                     <Route path='/tutorial' component={Tutorial} />
                     <Route path='*' component={NotFound} />
                 </Router>

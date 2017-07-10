@@ -140,16 +140,17 @@ class LandingPage extends Component {
     toWorkspace() {
         let email = $('#email').val();
         let valid = Validator.validateEmail(email);
-        let d = this.state.data;
+        let d = this.state.data, u = this.state.username;
+        let mode = d.viewOnly ? 'view' : 'edit';
 
         if (email && !valid[0]) return alert(ERROR_MSG.INVALID('Email'));
-        if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, this.state.username, email);
+        if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, u, email);
 
         switch(this.state.loginType) {
             case LOGIN_TYPE.MAKE:
-                return browserHistory.push('/compass/edit/'+d.code+'/'+this.state.username);
+                return browserHistory.push('/compass/edit/' + d.code + '/' + u);
             case LOGIN_TYPE.FIND:
-                return browserHistory.push('/compass/'+d.mode+'/'+d.code+'/'+this.state.username);
+                return browserHistory.push('/compass/' + mode + '/' + d.code + '/' + u);
         }
     }
 
@@ -164,7 +165,8 @@ class LandingPage extends Component {
         );
     }
 
-    getFindSuccessNotification(mode) {
+    getFindSuccessNotification(viewOnly) {
+        let mode = viewOnly ? 'View-only' : 'Edit';
         return (
             <div className="section third">
                 <h1>{mode} access</h1>
@@ -184,7 +186,7 @@ class LandingPage extends Component {
             return this.getMakeSuccessNotification(this.state.data.code);
 
         if (this.state.loginType === LOGIN_TYPE.FIND)
-            return this.getFindSuccessNotification(this.state.data.mode);
+            return this.getFindSuccessNotification(this.state.data.viewOnly);
     }
 
     render() {
