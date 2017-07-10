@@ -26,15 +26,8 @@ class Compass extends Component {
         return (
             <StickyNote key={note._id}
                 note={note}
-                focusedNote={this.props.ui.focusedNote}
                 i={i}
-                w={this.props.ui.vw}
-                h={this.props.ui.vh}
-                edit={this.props.uiActions.showEdit}
                 destroy={this.props.destroy}
-                viewOnly={this.props.compass.viewOnly}
-                focusOn={this.props.uiActions.focusOnNote}
-                compact={this.props.ui.editingMode === EDITING_MODE.COMPACT}
             />
         );
     }

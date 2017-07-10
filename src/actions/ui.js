@@ -44,9 +44,10 @@ export const compactMode = () => {
     };
 };
 
-export const visualMode = () => {
+export const visualMode = (n) => {
     return {
-        type: 'visualMode'
+        type: 'visualMode',
+        n
     };
 };
 

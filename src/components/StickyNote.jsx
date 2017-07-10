@@ -4,10 +4,15 @@ import React, { Component } from 'react';
 import Tappable from 'react-tappable/lib/Tappable';
 import deepEqual from 'deep-equal';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { PROMPTS } from 'Lib/constants';
+import * as uiActions from 'Actions/ui';
+import * as workspaceActions from 'Actions/workspace';
 
-export default class StickyNote extends Component {
+import { PROMPTS, EDITING_MODE } from 'Lib/constants';
+
+class StickyNote extends Component {
     constructor(props) {
         super(props);
 
@@ -15,25 +20,27 @@ export default class StickyNote extends Component {
         this.getContents = this.getContents.bind(this);
         this.getX = this.getX.bind(this);
         this.edit = this.edit.bind(this);
-        this.focus = this.focus.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.renderDoodle = this.renderDoodle.bind(this);
         this.renderText = this.renderText.bind(this);
-
-        this.hasEditingRights = !this.props.viewOnly;
     }
 
     shouldComponentUpdate(nextProps) {
-        let thisNote = this.props.note,
-            nextNote = nextProps.note;
-
         return (
-            !deepEqual(thisNote, nextNote) ||
-            this.props.w !== nextProps.w ||
-            this.props.h !== nextProps.h ||
+            !deepEqual(this.props.note, nextProps.note) ||
+            this.props.ui.vw !== nextProps.ui.vw ||
+            this.props.ui.vh !== nextProps.ui.vh ||
             this.props.i !== nextProps.i ||
-            this.props.focusedNote !== nextProps.focusedNote ||
-            this.props.compact !== nextProps.compact
+            this.props.ui.focusedNote !== nextProps.ui.focusedNote ||
+            this.props.ui.editingMode === EDITING_MODE.VISUAL ||
+            this.props.ui.editingMode !== nextProps.ui.editingMode
         );
+    }
+
+    componentDidUpdate() {
+        this.hasEditingRights = !this.props.compass.viewOnly;
+        this.compact = this.props.ui.editingMode === EDITING_MODE.COMPACT;
+        this.visual = this.props.ui.editingMode === EDITING_MODE.VISUAL;
     }
 
     confirmDelete() {
@@ -50,7 +57,7 @@ export default class StickyNote extends Component {
             <a className="ic-img" style={s}>
                 <img onDoubleClick={this.edit}
                     src={n.doodle || n.text}
-                    width={this.props.compact ? '100px' : '160px'}/>
+                    width={this.compact ? '100px' : '160px'}/>
                 <p className="ic-tooltip">{n.user}</p>
             </a>
         );
@@ -63,7 +70,7 @@ export default class StickyNote extends Component {
         if (n.style.italic) textStyle += 'italic ';
         if (n.style.underline) textStyle += 'underline';
 
-        if (this.props.compact) {
+        if (this.compact) {
             style.letterSpacing = '-1px';
             style.maxHeight = '70px';
             style.overflow = 'auto';
@@ -92,35 +99,46 @@ export default class StickyNote extends Component {
     }
 
     edit() {
-        if (this.hasEditingRights)
-            this.props.edit(this.props.note);
+        if (this.hasEditingRights && !this.props.note.doodle)
+            this.props.uiActions.showEdit(this.props.note);
     }
 
-    focus() {
-        this.props.focusOn(this.props.i);
+    handleClick() {
+        if (this.visual)
+            this.props.workspaceActions.selectNote(this.props.i);
+        else
+            this.props.uiActions.focusOnNote(this.props.i);
     }
 
     render() {
         let n = this.props.note,
+            i = this.props.i,
             contents = this.getContents(),
             x = this.getX(),
-            noteId = 'note'+this.props.i,
+            noteId = 'note' + i,
             height = n.doodle ? '100px' : null,
             style = {
-                left: n.x * this.props.w,
-                top: n.y * this.props.h,
-                zIndex: this.props.i === this.props.focusedNote ? 1 : 0,
+                left: n.x * this.props.ui.vw,
+                top: n.y * this.props.ui.vh,
+                zIndex: i === this.props.ui.focusedNote ? 1 : 0,
             };
+
+        let sel = this.props.workspace.selected;
+        if (sel && sel[i]) {
+            style.left -= 3;
+            style.top -=3 ;
+            style['border'] = '3px solid blue';
+        }
 
         return (
             <div className="ic-sticky-note draggable"
                 style={style}
-                onClick={this.focus}
+                onClick={this.handleClick}
                 onDoubleClick={this.edit}
                 id={noteId}
                 height={height}>
                 {x}
-                <Tappable onTap={this.focus} onPress={this.edit}>
+                <Tappable onTap={this.handleClick} onPress={this.edit}>
                     {contents}
                 </Tappable>
             </div>
@@ -131,13 +149,23 @@ export default class StickyNote extends Component {
 StickyNote.propTypes = {
     note: PropTypes.object.isRequired,
     i: PropTypes.number.isRequired,
-    w: PropTypes.number.isRequired,
-    h: PropTypes.number.isRequired,
-    edit: PropTypes.func,
     destroy: PropTypes.func,
-    viewOnly: PropTypes.bool.isRequired,
-    focusedNote: PropTypes.number.isRequired,
-    focusOn: PropTypes.func.isRequired,
-    compact: PropTypes.bool.isRequired
 };
+
+function mapStateToProps(state) {
+    return {
+        compass: state.compass,
+        ui: state.ui,
+        workspace: state.workspace
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        workspaceActions: bindActionCreators(workspaceActions, dispatch),
+        uiActions: bindActionCreators(uiActions, dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StickyNote);
 

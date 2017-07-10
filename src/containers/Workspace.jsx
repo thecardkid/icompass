@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import Draggable from 'react-draggable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
@@ -11,6 +12,7 @@ import * as compassActions from 'Actions/compass';
 import * as userActions from 'Actions/users';
 import * as chatActions from 'Actions/chat';
 import * as uiActions from 'Actions/ui';
+import * as workspaceActions from 'Actions/workspace';
 
 import Sidebar from 'Components/Sidebar.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
@@ -45,6 +47,7 @@ class Workspace extends Component {
         this.showChat = this.showChat.bind(this);
         this.renderCornerButtons = this.renderCornerButtons.bind(this);
         this.renderModesToolbar = this.renderModesToolbar.bind(this);
+        this.renderBulkEditToolbar = this.renderBulkEditToolbar.bind(this);
         this.center = this.center.bind(this);
 
         this.keypressHandler = {
@@ -208,7 +211,7 @@ class Workspace extends Component {
             <div id="ic-modes">
                 <button id="ic-mode-visual"
                     className={m === EDITING_MODE.VISUAL ? 'selected' : 'unselected'}
-                    onClick={ui.visualMode}>
+                    onClick={() => ui.visualMode(this.props.notes.length)}>
                     Visual
                 </button>
                 <button id="ic-mode-compact"
@@ -253,6 +256,18 @@ class Workspace extends Component {
         );
     }
 
+    renderBulkEditToolbar() {
+        if (this.props.ui.editingMode !== EDITING_MODE.VISUAL) return;
+
+        return (
+            <Draggable>
+                <div id="ic-bulk-edit-toolbar">
+                    
+                </div>
+            </Draggable>
+        );
+    }
+
     render() {
         // not ready
         if (_.isEmpty(this.props.compass)) return <div></div>;
@@ -263,6 +278,7 @@ class Workspace extends Component {
             <div>
                 {this.renderCornerButtons()}
                 {this.renderModesToolbar()}
+                {this.renderBulkEditToolbar()}
                 <Compass destroy={this.socket.emitDeleteNote} />
                 <Sidebar connected={this.socket.socket.connected} destroy={this.socket.emitDeleteCompass} exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
@@ -281,7 +297,8 @@ function mapStateToProps(state) {
         compass: state.compass,
         users: state.users,
         chat: state.chat,
-        ui: state.ui
+        ui: state.ui,
+        workspace: state.workspace
     };
 }
 
@@ -291,7 +308,8 @@ function mapDispatchToProps(dispatch) {
         compassActions: bindActionCreators(compassActions, dispatch),
         userActions: bindActionCreators(userActions, dispatch),
         chatActions: bindActionCreators(chatActions, dispatch),
-        uiActions: bindActionCreators(uiActions, dispatch)
+        uiActions: bindActionCreators(uiActions, dispatch),
+        workspaceActions: bindActionCreators(workspaceActions, dispatch)
     };
 }
 
