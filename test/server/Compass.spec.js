@@ -3,6 +3,7 @@
 import mongoose from 'mongoose';
 import { expect } from 'chai';
 import Compass from '../../models/compass';
+import _ from 'underscore';
 
 const CENTER = 'test suite';
 const NOTE = {
@@ -106,9 +107,27 @@ describe('Compass: models', () => {
         })
     })
 
+    it('#bulkUpdateNotes', (done) => {
+        Compass.addNote(DUT._id, NOTE, (c) => {
+            let noteIds = _.map(c.notes, note => note._id.toString());
+
+            let transformation = {
+                style: { bold: true, italic: false, underline: true }
+            };
+            Compass.bulkUpdateNotes(DUT._id, noteIds, transformation, (c) => {
+                _.map(c.notes, (note) => {
+                    expect(note.style.bold).to.be.true;
+                    expect(note.style.italic).to.be.false;
+                    expect(note.style.underline).to.be.true;
+                });
+                done();
+            })
+        })
+    })
+
     it('#deleteNote', (done) => {
         Compass.deleteNote(DUT._id, DUT.notes[0]._id.toString(), (newNotes) => {
-            expect(newNotes).to.be.empty;
+            expect(newNotes).to.have.lengthOf(1);
             done();
         })
     })

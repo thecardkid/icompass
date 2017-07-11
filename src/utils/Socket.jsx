@@ -16,6 +16,7 @@ export default class Socket {
         this.emitNewNote = this.emitNewNote.bind(this);
         this.emitDragNote = this.emitDragNote.bind(this);
         this.emitEditNote = this.emitEditNote.bind(this);
+        this.emitBulkEditNotes = this.emitBulkEditNotes.bind(this);
         this.emitNewDoodle = this.emitNewDoodle.bind(this);
         this.emitDeleteCompass = this.emitDeleteCompass.bind(this);
         this.emitDeleteNote = this.emitDeleteNote.bind(this);
@@ -68,6 +69,11 @@ export default class Socket {
         let after = Object.assign({}, before, edited);
         this.socket.emit('update note', after);
         this.component.props.uiActions.closeForm();
+    }
+
+    emitBulkEditNotes(noteIds, transformation) {
+        if (this.socket.disconnected) return this.alertInvalidAction();
+        this.socket.emit('bulk update notes', noteIds, transformation);
     }
 
     emitDragNote(event) {

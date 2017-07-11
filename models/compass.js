@@ -77,6 +77,23 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
     });
 };
 
+compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb) {
+    this.findOne({_id: id}, function(err, c) {
+        if (err) logger.error('Could not find compass to update note', id, updatedNote, err);
+
+        _.map(c.notes, function(note) {
+            if (_.contains(noteIds, note._id.toString())) {
+                note.style = transformation.style;
+            }
+        });
+
+        c.save(function(err, updatedCompass) {
+            if (err) logger.error('Could not update note in compass', id, updatedNote, err);
+            cb(updatedCompass);
+        });
+    })
+}
+
 compassSchema.statics.findByEditCode = function(code, cb) {
     this.findOne({editCode: code}, function(err, c) {
         if (err) logger.error('Could not find compass for editing', code, err);
