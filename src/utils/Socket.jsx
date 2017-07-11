@@ -57,14 +57,24 @@ export default class Socket {
         alert(PROMPTS.NOT_CONNECTED);
     }
 
+    alertVisualMode() {
+        alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+    }
+
+    alertVisualModeNoCreate() {
+        alert(PROMPTS.VISUAL_MODE_NO_CREATE);
+    }
+
     emitNewNote(note) {
         if (this.socket.disconnected) return this.alertInvalidAction();
+        if (this.component.isVisualMode()) return this.alertVisualModeNoCreate();
         this.socket.emit('new note', note);
         this.component.props.uiActions.closeForm();
     }
 
     emitEditNote(edited) {
         if (this.socket.disconnected) return this.alertInvalidAction();
+        if (this.component.isVisualMode()) return this.alertVisualMode();
         let before = Object.assign({}, this.component.props.ui.editNote);
         let after = Object.assign({}, before, edited);
         this.socket.emit('update note', after);
@@ -77,6 +87,8 @@ export default class Socket {
     }
 
     emitDragNote(event) {
+        if (this.component.isVisualMode()) return this.alertVisualMode();
+
         this.component.setTranslation(event.target, 0, 0);
         if (this.socket.disconnected) return this.alertInvalidAction();
 

@@ -81,10 +81,11 @@ compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb
     this.findOne({_id: id}, function(err, c) {
         if (err) logger.error('Could not find compass to update note', id, updatedNote, err);
 
-        _.map(c.notes, function(note) {
+        c.notes = _.map(c.notes, function(note) {
             if (_.contains(noteIds, note._id.toString())) {
-                note.style = transformation.style;
+                Object.assign(note.style, transformation.style);
             }
+            return note;
         });
 
         c.save(function(err, updatedCompass) {

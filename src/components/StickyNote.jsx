@@ -37,14 +37,14 @@ class StickyNote extends Component {
         );
     }
 
-    componentDidUpdate() {
-        this.hasEditingRights = !this.props.compass.viewOnly;
-        this.compact = this.props.ui.editingMode === EDITING_MODE.COMPACT;
-        this.visual = this.props.ui.editingMode === EDITING_MODE.VISUAL;
+    componentWillUpdate(nextProps) {
+        this.hasEditingRights = !nextProps.compass.viewOnly;
+        this.compact = nextProps.ui.editingMode === EDITING_MODE.COMPACT;
+        this.visual = nextProps.ui.editingMode === EDITING_MODE.VISUAL;
     }
 
     confirmDelete() {
-        if (confirm(PROMPTS.CONFIRM_DELETE_NOTE))
+        if (!this.visual && confirm(PROMPTS.CONFIRM_DELETE_NOTE))
             this.props.destroy(this.props.note._id);
     }
 
@@ -99,13 +99,14 @@ class StickyNote extends Component {
     }
 
     edit() {
-        if (this.hasEditingRights && !this.props.note.doodle)
+        if (!this.visual && this.hasEditingRights && !this.props.note.doodle)
             this.props.uiActions.showEdit(this.props.note);
     }
 
     handleClick() {
         if (this.visual)
-            this.props.workspaceActions.selectNote(this.props.i);
+            if (!this.props.note.doodle && !this.props.note.isImage)
+                this.props.workspaceActions.selectNote(this.props.i);
         else
             this.props.uiActions.focusOnNote(this.props.i);
     }

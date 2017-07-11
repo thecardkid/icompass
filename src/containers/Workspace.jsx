@@ -1,7 +1,6 @@
 'use strict';
 
 import React, { Component } from 'react';
-import Draggable from 'react-draggable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
@@ -21,6 +20,7 @@ import Chat from 'Components/Chat.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 import Feedback from 'Components/Feedback.jsx';
 import Compass from 'Components/Compass.jsx';
+import VisualModeToolbar from 'Components/VisualModeToolbar.jsx';
 
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
@@ -47,7 +47,8 @@ class Workspace extends Component {
         this.showChat = this.showChat.bind(this);
         this.renderCornerButtons = this.renderCornerButtons.bind(this);
         this.renderModesToolbar = this.renderModesToolbar.bind(this);
-        this.renderBulkEditToolbar = this.renderBulkEditToolbar.bind(this);
+        this.getVisualModeToolbar = this.getVisualModeToolbar.bind(this);
+        this.isVisualMode = this.isVisualMode.bind(this);
         this.center = this.center.bind(this);
 
         this.keypressHandler = {
@@ -109,9 +110,11 @@ class Workspace extends Component {
     }
 
     dragTarget(e) {
-        let x = (parseFloat(e.target.getAttribute('data-x')) || 0) + e.dx;
-        let y = (parseFloat(e.target.getAttribute('data-y')) || 0) + e.dy;
-        this.setTranslation(e.target, x, y);
+        if (!this.isVisualMode()) {
+            let x = (parseFloat(e.target.getAttribute('data-x')) || 0) + e.dx;
+            let y = (parseFloat(e.target.getAttribute('data-y')) || 0) + e.dy;
+            this.setTranslation(e.target, x, y);
+        }
     }
 
     isControlKey(k) {
@@ -211,7 +214,7 @@ class Workspace extends Component {
             <div id="ic-modes">
                 <button id="ic-mode-visual"
                     className={m === EDITING_MODE.VISUAL ? 'selected' : 'unselected'}
-                    onClick={() => ui.visualMode(this.props.notes.length)}>
+                    onClick={() => ui.visualMode(this.props.notes)}>
                     Visual
                 </button>
                 <button id="ic-mode-compact"
@@ -256,35 +259,41 @@ class Workspace extends Component {
         );
     }
 
-    renderBulkEditToolbar() {
-        if (this.props.ui.editingMode !== EDITING_MODE.VISUAL) return;
+    getVisualModeToolbar() {
+        if (this.isVisualMode())
+            return <VisualModeToolbar socket={this.socket}/>;
+    }
 
-        return (
-            <Draggable>
-                <div id="ic-bulk-edit-toolbar">
-                    
-                </div>
-            </Draggable>
-        );
+    isVisualMode() {
+        return this.props.ui.editingMode === EDITING_MODE.VISUAL;
     }
 
     render() {
         // not ready
         if (_.isEmpty(this.props.compass)) return <div></div>;
 
-        if (this.props.route.viewOnly) return <Compass />;
+        let notes = this.props.notes;
+        if (this.props.route.viewOnly) return <Compass notes={notes}/>;
+
+        // Selected notes rendered according to sandbox
+        let w = this.props.workspace;
+        if (this.isVisualMode()) {
+            notes = _.map(notes, (n, i) => {
+                return w.selected[i] ? w.sandbox[i] : n
+            });
+        }
 
         return (
             <div>
                 {this.renderCornerButtons()}
                 {this.renderModesToolbar()}
-                {this.renderBulkEditToolbar()}
-                <Compass destroy={this.socket.emitDeleteNote} />
+                <Compass destroy={this.socket.emitDeleteNote} notes={notes}/>
                 <Sidebar connected={this.socket.socket.connected} destroy={this.socket.emitDeleteCompass} exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 {this.getFeedback()}
                 {this.getForm()}
                 {this.getAbout()}
+                {this.getVisualModeToolbar()}
             </div>
         );
     }

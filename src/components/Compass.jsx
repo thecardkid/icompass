@@ -95,7 +95,6 @@ Compass.propTypes = {
 function mapStateToProps(state) {
     return {
         compass: state.compass,
-        notes: state.notes,
         ui: state.ui
     };
 }

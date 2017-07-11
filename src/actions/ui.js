@@ -44,10 +44,10 @@ export const compactMode = () => {
     };
 };
 
-export const visualMode = (n) => {
+export const visualMode = (notes) => {
     return {
         type: 'visualMode',
-        n
+        notes
     };
 };
 

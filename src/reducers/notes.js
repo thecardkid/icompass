@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 export default (state = [], action) => {
     switch(action.type) {
         case 'updateNotes':
