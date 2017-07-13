@@ -279,7 +279,10 @@ class Workspace extends Component {
         let w = this.props.workspace;
         if (this.isVisualMode()) {
             notes = _.map(notes, (n, i) => {
-                return w.selected[i] ? w.sandbox[i] : n
+                if (w.selected[i]) {
+                    if (w.color) return Object.assign({}, w.sandbox[i], { color: w.color });
+                    else return w.sandbox[i];
+                } else return n;
             });
         }
 

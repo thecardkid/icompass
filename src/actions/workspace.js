@@ -26,3 +26,10 @@ export const underlineAll = (value) => {
         style: { underline: value }
     };
 };
+
+export const colorAll = (color) => {
+    return {
+        type: 'colorAll',
+        color
+    };
+};

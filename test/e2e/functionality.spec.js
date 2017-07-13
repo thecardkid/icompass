@@ -99,6 +99,7 @@ module.exports = {
         .getAlertText(function(result) {
             this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
         })
+        .pause(500)
         .acceptAlert()
         .pause(500)
         .assert.elementPresent('a.ic-img')

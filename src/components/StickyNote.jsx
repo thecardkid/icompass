@@ -23,6 +23,10 @@ class StickyNote extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.renderDoodle = this.renderDoodle.bind(this);
         this.renderText = this.renderText.bind(this);
+
+        this.hasEditingRights = !this.props.compass.viewOnly;
+        this.compact = false;
+        this.visual = false;
     }
 
     shouldComponentUpdate(nextProps) {
@@ -38,9 +42,8 @@ class StickyNote extends Component {
     }
 
     componentWillUpdate(nextProps) {
-        this.hasEditingRights = !nextProps.compass.viewOnly;
-        this.compact = nextProps.ui.editingMode === EDITING_MODE.COMPACT;
-        this.visual = nextProps.ui.editingMode === EDITING_MODE.VISUAL;
+        this.compact = nextProps.ui.editingMode === EDITING_MODE.COMPACT || false;
+        this.visual = nextProps.ui.editingMode === EDITING_MODE.VISUAL || false;
     }
 
     confirmDelete() {

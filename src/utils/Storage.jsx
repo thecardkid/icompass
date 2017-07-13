@@ -18,10 +18,10 @@ export default {
         return true;
     },
 
-    addBookmark(center, code, name, mode) {
+    addBookmark(center, code, name) {
         let href = '/compass/edit/'+code+'/'+name;
         return this.addAllBookmarks([
-            { center, href, name, mode }
+            { center, href, name }
         ]);
     },
 

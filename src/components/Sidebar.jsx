@@ -162,7 +162,7 @@ class Sidebar extends Component {
 
     save() {
         let name = this.props.you.replace(/\d+/g, '');
-        let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, name, MODES.EDIT);
+        let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, name);
         if (saved) alert(PROMPTS.SAVE_SUCCESS);
         else alert(PROMPTS.SAVE_FAIL);
     }

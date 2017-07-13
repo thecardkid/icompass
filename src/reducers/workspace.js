@@ -2,7 +2,8 @@ import _ from 'underscore';
 
 const defaultState = {
     selected: [],
-    sandbox: []
+    sandbox: [],
+    color: null
 };
 
 export default (state = {}, action) => {
@@ -24,12 +25,14 @@ export default (state = {}, action) => {
             };
 
         case 'styleAll':
-            let sandbox = [];
-            _.map(state.sandbox, (n) => {
+            let sandbox = _.map(state.sandbox, (n) => {
                 let style = Object.assign({}, n.style, action.style);
-                sandbox.push(Object.assign({}, n, { style }));
+                return Object.assign({}, n, { style });
             });
             return {...state, sandbox};
+
+        case 'colorAll':
+            return {...state, color: action.color};
 
         case 'normalMode':
         case 'compactMode':

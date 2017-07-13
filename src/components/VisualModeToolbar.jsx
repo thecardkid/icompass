@@ -9,7 +9,7 @@ import * as workspaceActions from 'Actions/workspace';
 
 import { COLORS, PROMPTS, STICKY_COLORS } from 'Lib/constants';
 
-const SELECTED = {background: COLORS.DARK, color: 'white', border: '1px solid white'};
+const SELECTED = {background: COLORS.DARK, color: 'white', border: '2px solid white'};
 
 class VisualModeToolbar extends Component {
     constructor(props) {
@@ -18,12 +18,14 @@ class VisualModeToolbar extends Component {
         this.state = {
             bold: false,
             italic: false,
-            underline: false
+            underline: false,
+            color: null
         };
 
         this.bold = this.bold.bind(this);
         this.italicize = this.italicize.bind(this);
         this.underline = this.underline.bind(this);
+        this.colorPick = this.colorPick.bind(this);
         this.getSelectedNotes = this.getSelectedNotes.bind(this);
         this.bulkDelete = this.bulkDelete.bind(this);
         this.cancel = this.cancel.bind(this);
@@ -31,21 +33,21 @@ class VisualModeToolbar extends Component {
     }
 
     bold() {
-        let value = !this.state.bold;
-        this.setState({bold: value});
-        this.props.workspaceActions.boldAll(value);
+        let bold = !this.state.bold;
+        this.setState({ bold });
+        this.props.workspaceActions.boldAll(bold);
     }
 
     italicize() {
-        let value = !this.state.italic;
-        this.setState({italic: value});
-        this.props.workspaceActions.italicizeAll(value);
+        let italic = !this.state.italic;
+        this.setState({ italic });
+        this.props.workspaceActions.italicizeAll(italic);
     }
 
     underline() {
-        let value = !this.state.underline;
-        this.setState({underline: value});
-        this.props.workspaceActions.underlineAll(value);
+        let underline = !this.state.underline;
+        this.setState({ underline });
+        this.props.workspaceActions.underlineAll(underline);
     }
 
     getSelectedNotes() {
@@ -55,6 +57,12 @@ class VisualModeToolbar extends Component {
             if (w.selected[i]) noteIds.push(n._id);
         });
         return noteIds;
+    }
+
+    colorPick(c) {
+        let color = this.state.color === c ? null : c;
+        this.setState({ color });
+        this.props.workspaceActions.colorAll(color);
     }
 
     bulkDelete() {
@@ -69,14 +77,17 @@ class VisualModeToolbar extends Component {
     }
 
     submit() {
-        let transformation = { style: Object.assign({}, this.state) };
+        let { bold, italic, underline } = this.state;
+        let transformation = { style: { bold, italic, underline}, color: this.state.color };
         this.props.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
         this.cancel();
     }
 
     render() {
         let colors = _.map(STICKY_COLORS, (c, i) => {
-            return <button key={i} className="ic-visual-color" style={{background: c}} />
+            let style = {background: c};
+            if (c === this.state.color) style['border'] = '2px solid orangered';
+            return <button onClick={() => this.colorPick(c)} key={i} className="ic-visual-color" style={style} />
         });
 
         return (
