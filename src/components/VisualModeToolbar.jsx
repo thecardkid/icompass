@@ -7,7 +7,7 @@ import _ from 'underscore';
 import * as uiActions from 'Actions/ui';
 import * as workspaceActions from 'Actions/workspace';
 
-import { COLORS, STICKY_COLORS } from 'Lib/constants';
+import { COLORS, PROMPTS, STICKY_COLORS } from 'Lib/constants';
 
 const SELECTED = {background: COLORS.DARK, color: 'white', border: '1px solid white'};
 
@@ -24,7 +24,10 @@ class VisualModeToolbar extends Component {
         this.bold = this.bold.bind(this);
         this.italicize = this.italicize.bind(this);
         this.underline = this.underline.bind(this);
-        this.submitChanges = this.submitChanges.bind(this);
+        this.getSelectedNotes = this.getSelectedNotes.bind(this);
+        this.bulkDelete = this.bulkDelete.bind(this);
+        this.cancel = this.cancel.bind(this);
+        this.submit = this.submit.bind(this);
     }
 
     bold() {
@@ -45,40 +48,72 @@ class VisualModeToolbar extends Component {
         this.props.workspaceActions.underlineAll(value);
     }
 
-    submitChanges() {
-        let noteIds = [];
-        let transformation = { style: Object.assign({}, this.state) };
+    getSelectedNotes() {
         let w = this.props.workspace;
-
+        let noteIds = [];
         _.map(w.sandbox, (n, i) => {
             if (w.selected[i]) noteIds.push(n._id);
         });
-        this.props.socket.emitBulkEditNotes(noteIds, transformation);
+        return noteIds;
+    }
+
+    bulkDelete() {
+        if (confirm(PROMPTS.CONFIRM_BULK_DELETE_NOTES)) {
+            this.props.socket.emitBulkDeleteNotes(this.getSelectedNotes());
+            this.cancel();
+        }
+    }
+
+    cancel() {
         this.props.uiActions.normalMode();
     }
 
+    submit() {
+        let transformation = { style: Object.assign({}, this.state) };
+        this.props.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
+        this.cancel();
+    }
+
     render() {
+        let colors = _.map(STICKY_COLORS, (c, i) => {
+            return <button key={i} className="ic-visual-color" style={{background: c}} />
+        });
+
         return (
             <Draggable><div id="ic-visual-toolbar">
-                <button className="ic-bulk-edit"
-                    style={this.state.bold ? SELECTED : null}
-                    onClick={this.bold}>
-                        <b>B</b>
-                </button>
-                <button className="ic-bulk-edit"
-                    style={this.state.italic ? SELECTED : null}
-                    onClick={this.italicize}>
-                        <i>I</i>
-                </button>
-                <button className="ic-bulk-edit"
-                    style={this.state.underline ? SELECTED : null}
-                    onClick={this.underline}>
-                        <u>U</u>
-                </button>
-                <button className="ic-visual-action"
-                    onClick={this.submitChanges}>
-                    Submit
-                </button>
+                <div className="ic-visual-group">
+                    <button className="ic-bulk-edit"
+                        style={this.state.bold ? SELECTED : null}
+                        onClick={this.bold}>
+                            <b>B</b>
+                    </button>
+                    <button className="ic-bulk-edit"
+                        style={this.state.italic ? SELECTED : null}
+                        onClick={this.italicize}>
+                            <i>I</i>
+                    </button>
+                    <button className="ic-bulk-edit"
+                        style={this.state.underline ? SELECTED : null}
+                        onClick={this.underline}>
+                            <u>U</u>
+                    </button>
+                </div>
+                <hr />
+                <div className="ic-visual-group">
+                    {colors}
+                </div>
+                <hr />
+                <div className="ic-visual-group ic-visual-actions">
+                    <button id="ic-bulk-delete" onClick={this.bulkDelete}>
+                        delete all
+                    </button>
+                    <button id="ic-bulk-cancel" onClick={this.cancel}>
+                        never mind
+                    </button>
+                    <button id="ic-bulk-submit" onClick={this.submit}>
+                        ship it
+                    </button>
+                </div>
             </div></Draggable>
         );
     }

@@ -103,8 +103,10 @@ div#ic-modes {
 }
 
 div#ic-visual-toolbar {
-    width:300px;
-    height:40px;
+    width:105px;
+    height:200px;
+    text-align:center;
+    padding:5px;
     position:absolute;
     background:@dark;
     color:@light;
@@ -113,15 +115,34 @@ div#ic-visual-toolbar {
     top:50px;
     right:50px;
 
-    button.ic-bulk-edit {
-        width:30px;
-        height:30px;
-        margin-top:5px;
-        margin-left:5px;
-        border:1px solid @dark;
+    div.ic-visual-group {
+        margin:5px 0;
     }
 
+    button.ic-visual-color {
+        border-radius:100%;
+        border:2px solid @dark;
+    }
 
+    button {
+        width:30px;
+        height:30px;
+        margin:0 2.5px;
+        font-size:13px;
+    }
+
+    div.ic-visual-actions {
+        button {
+            width:90%;
+            height:20px;
+            border:1px solid @dark;
+        }
+
+        button#ic-bulk-delete {
+            background:@red;
+            color:@light;
+        }
+    }
 }
 
 #hline {

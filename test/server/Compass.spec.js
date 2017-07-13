@@ -32,7 +32,6 @@ before((done) => {
     }
 })
 
-
 after((done) => {
     clearDB(done);
     mongoose.disconnect();
@@ -129,6 +128,18 @@ describe('Compass: models', () => {
         Compass.deleteNote(DUT._id, DUT.notes[0]._id.toString(), (newNotes) => {
             expect(newNotes).to.have.lengthOf(1);
             done();
+        })
+    })
+
+    it('#deleteNotes', (done) => {
+        Compass.addNote(DUT._id, NOTE, (c) => {
+            let noteIds = _.map(c.notes, note => note._id.toString());
+            expect(noteIds).to.have.lengthOf(2);
+
+            Compass.deleteNotes(DUT._id, noteIds, (notes) => {
+                expect(notes).to.have.lengthOf(0);
+                done();
+            });
         })
     })
 })

@@ -130,15 +130,19 @@ compassSchema.statics.findCode = function(code, cb) {
 };
 
 compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
+    this.deleteNotes(compassId, [ noteId ], cb);
+};
+
+compassSchema.statics.deleteNotes = function(compassId, noteIds, cb) {
     this.findOne({_id: compassId}, function(err, c) {
-        if (err) logger.error('Could not find compass to delete note', compassId, noteId, err);
+        if (err) logger.error('Could not find compass to delete notes', compassId, noteIds, err);
 
         c.notes = _.filter(c.notes, function(e) {
-            return e._id.toString() !== noteId;
+            return !_.contains(noteIds, e._id.toString());
         });
 
         c.save(function(err, updatedCompass) {
-            if (err) logger.error('Could not delete note', compassId, noteId, err);
+            if (err) logger.error('Could not delete notes', compassId, noteIds, err);
             cb(updatedCompass.notes);
         });
     });
