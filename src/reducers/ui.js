@@ -1,3 +1,5 @@
+'use strict';
+
 import { EDITING_MODE } from 'Lib/constants.js';
 
 const defaultState = {
@@ -28,24 +30,13 @@ export default (state = defaultState, action) => {
                     y: touchY / state.vh
                 };
             }
-            return {...state,
-                editNote: false, doodleNote: false,
-                newNote
-            };
+            return {...state, editNote: false, doodleNote: false, newNote};
         case 'showEdit':
-            return {...state,
-                newNote: false, doodleNote: false,
-                editNote: action.note
-            };
+            return {...state, newNote: false, doodleNote: false, editNote: action.note};
         case 'showDoodle':
-            return {...state,
-                newNote: false, editNote: false,
-                doodleNote: true
-            };
+            return {...state, newNote: false, editNote: false, doodleNote: true};
         case 'closeForm':
-            return {...state,
-                newNote: false, editNote: false, doodleNote: false
-            };
+            return {...state, newNote: false, editNote: false, doodleNote: false};
         case 'focusOnNote':
             return {...state, focusedNote: action.idx};
         case 'toggleAbout':
@@ -61,25 +52,13 @@ export default (state = defaultState, action) => {
         case 'toggleFeedback':
             return {...state, showFeedback: !state.showFeedback};
         case 'resize':
-            return {...state,
-                vw: action.screenWidth,
-                vh: action.screenHeight
-            };
+            return {...state, vw: action.screenWidth, vh: action.screenHeight};
         case 'normalMode':
-            return {
-                ...state,
-                editingMode: EDITING_MODE.NORMAL
-            };
+            return {...state, editingMode: EDITING_MODE.NORMAL};
         case 'compactMode':
-            return {
-                ...state,
-                editingMode: EDITING_MODE.COMPACT
-            };
+            return {...state, editingMode: EDITING_MODE.COMPACT};
         case 'visualMode':
-            return {
-                ...state,
-                editingMode: EDITING_MODE.VISUAL
-            };
+            return {...state, editingMode: EDITING_MODE.VISUAL};
         case 'resetUI':
             return defaultState;
         default:

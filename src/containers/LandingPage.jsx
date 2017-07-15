@@ -118,7 +118,7 @@ class LandingPage extends Component {
                 <div className="response"><input id={inputId} /></div>
                 <div className="prompt">Your name (how others will see you)</div>
                 <div className="response"><input id="username" /></div>
-                <div id="error-message"></div>
+                <div id="error-message" />
                 <button className="ic-button" name="next" onClick={cb}>next</button>
             </div>
         );
@@ -127,7 +127,11 @@ class LandingPage extends Component {
     getNullNotification() {
         let error = <h2>I couldn&apos;t find your compass. Do you have the right code?</h2>;
         if (this.state.loginType === LOGIN_TYPE.MAKE)
-            error = <h2>Something went wrong. I&apos;tm not sure what. Please <Link to='https://github.com/thecardkid/innovators-compass/issues'>submit a bug</Link></h2>;
+            error = (
+                <h2>Something went wrong. I&apos;tm not sure what. Please
+                    <Link to='https://github.com/thecardkid/innovators-compass/issues'>submit a bug</Link>
+                </h2>
+            );
 
         return (
             <div className="section third">

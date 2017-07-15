@@ -82,7 +82,7 @@ export default class DoodleForm extends Component {
 
         let { x, y, drag } = this.state;
 
-        for(var i=0; i < x.length; i++) {
+        for(let i=0; i < x.length; i++) {
             ctx.beginPath();
 
             if (drag[i] && i) ctx.moveTo(x[i-1], y[i-1]);

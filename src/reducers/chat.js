@@ -1,3 +1,5 @@
+'use strict';
+
 const defaultState = {
     messages: [{
         info: true,

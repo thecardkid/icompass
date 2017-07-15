@@ -1,3 +1,5 @@
+'use strict';
+
 const defaultState = { me: '' };
 
 export default (state = defaultState, action) => {

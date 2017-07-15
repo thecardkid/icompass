@@ -1,3 +1,5 @@
+'use strict';
+
 import UserManager from '../../lib/userManager';
 import { expect } from 'chai';
 
@@ -61,3 +63,4 @@ describe('user manager', () => {
         expect(m).to.be.null;
     });
 });
+

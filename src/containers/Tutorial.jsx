@@ -44,30 +44,22 @@ const STEPS = [
     {
         header: 'The Sidebar',
         text: 'The sidebar is your best reference for everything.',
-        prep: (root) => {
-            root.showOnly(0, [0, 3]);
-        }
+        prep: (root) => root.showOnly(0, [0, 3])
     },
     {
         header: 'Saving your Compass',
         text: 'Bookmark workspaces for faster access when you log in, or save as a PDF.',
-        prep: (root) => {
-            root.showOnly(0, [1, 2, 4]);
-        }
+        prep: (root) => root.showOnly(0, [1, 2, 4])
     },
     {
         header: 'Sharing your compass',
         text: 'Share links with editing or view-only access, or tweet the view-only link with the hashtag #innovatorscompass.',
-        prep: (root) => {
-            root.showOnly(1);
-        }
+        prep: (root) => root.showOnly(1)
     },
     {
         header: 'Control keys',
         text: 'Each of these buttons also has a shortcut key on a computer.',
-        prep: (root) => {
-            root.showOnly(1, [0]);
-        }
+        prep: (root) => root.showOnly(1, [0])
     },
     {
         header: 'Creating text notes',

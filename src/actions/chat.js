@@ -1,3 +1,5 @@
+'use strict';
+
 export const newMessage = (msg) => {
     return {
         type: 'newMessage',
@@ -44,4 +46,3 @@ export const reset = () => {
         type: 'resetChat'
     };
 };
-

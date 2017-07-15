@@ -1,3 +1,4 @@
+'use strict';
 
 var originalTranslation;
 var STEPS = 20;
@@ -39,4 +40,3 @@ module.exports = {
         .end();
     }
 };
-

@@ -1,3 +1,5 @@
+'use strict';
+
 export const set = (compass, viewOnly) => {
     return {
         type: 'setCompass',

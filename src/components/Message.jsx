@@ -25,4 +25,3 @@ Message.propTypes = {
     color: PropTypes.string.isRequired,
     m: PropTypes.object.isRequired
 };
-

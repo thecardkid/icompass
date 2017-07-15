@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const path = require('path');
 const port = 8080;
@@ -23,4 +25,3 @@ var server = app.listen(port, function() {
 });
 
 socket.connect(server);
-

@@ -19,7 +19,10 @@ class Compass extends Component {
 
         this.renderNote = this.renderNote.bind(this);
         this.renderQuadrant = this.renderQuadrant.bind(this);
-        this.noteWithPosition = this.noteWithPosition.bind(this);
+        this.createNoteWithPosition = this.createNoteWithPosition.bind(this);
+
+        this.centerStyle = null;
+        this.quadrants = _.map(QUADRANTS_INFO, this.renderQuadrant);
     }
 
     renderNote(note, i) {
@@ -32,14 +35,14 @@ class Compass extends Component {
         );
     }
 
-    noteWithPosition(e) {
+    createNoteWithPosition(e) {
         this.props.uiActions.showNewNote(e);
     }
 
     renderQuadrant(q) {
         return (
-            <Tappable onPress={this.noteWithPosition} key={q.id}>
-                <div onDoubleClick={this.noteWithPosition} className="ic-quadrant" id={q.id}>
+            <Tappable onPress={this.createNoteWithPosition} key={q.id}>
+                <div onDoubleClick={this.createNoteWithPosition} className="ic-quadrant" id={q.id}>
                     <div>
                         <h1>{q.id.toUpperCase()}</h1>
                         <h2>{q.prompt}</h2>
@@ -56,20 +59,24 @@ class Compass extends Component {
         };
     }
 
+    calculateTextHeight(center) {
+        let lines = Math.ceil(center.length / 11),
+            textHeight = 13 * lines;
+        this.centerStyle = {marginTop: (100 - textHeight) / 2};
+    }
+
     renderCompassStructure() {
         let center = this.props.compass.center;
-        let lines = Math.ceil(center.length / 11),
-            textHeight = 13 * lines,
-            top = (100 - textHeight) / 2;
+        if (!this.centerStyle) this.calculateTextHeight(center);
 
         return (
             <div>
                 <div id="center" className="wordwrap" style={this.center(100,100)}>
-                    <p style={{marginTop: top}}>{center}</p>
+                    <p style={this.centerStyle}>{center}</p>
                 </div>
-                <div id="hline" style={{top: this.props.ui.vh/2 - 2}}></div>
-                <div id="vline" style={{left: this.props.ui.vw/2 - 2}}></div>
-                {_.map(QUADRANTS_INFO, this.renderQuadrant.bind(this))}
+                <div id="hline" style={{top: this.props.ui.vh/2 - 2}} />
+                <div id="vline" style={{left: this.props.ui.vw/2 - 2}} />
+                {this.quadrants}
             </div>
         );
     }

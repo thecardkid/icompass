@@ -1,3 +1,5 @@
+'use strict';
+
 export const update = (data) => {
     return {
         type: 'setUsers',
@@ -17,4 +19,3 @@ export const reset = () => {
         type: 'resetUsers'
     };
 };
-

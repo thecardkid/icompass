@@ -1,3 +1,5 @@
+'use strict';
+
 export const updateAll = (notes) => {
     return {
         type: 'updateNotes',
@@ -24,4 +26,3 @@ export const reset = () => {
         type: 'resetNotes'
     };
 };
-

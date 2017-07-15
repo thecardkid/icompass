@@ -12,7 +12,8 @@ import * as workspaceActions from 'Actions/workspace';
 
 import { COLORS, PROMPTS, STICKY_COLORS } from 'Lib/constants';
 
-const SELECTED = {background: COLORS.DARK, color: 'white', border: '2px solid white'};
+const SELECTED = {background: COLORS.DARK, color: 'white', border: '2px solid white'},
+    SELECTED_COLOR_BORDER = '2px solid orangered';
 
 class VisualModeToolbar extends Component {
     constructor(props) {
@@ -86,13 +87,23 @@ class VisualModeToolbar extends Component {
         this.cancel();
     }
 
-    render() {
-        let colors = _.map(STICKY_COLORS, (c, i) => {
-            let style = {background: c};
-            if (c === this.state.color) style['border'] = '2px solid orangered';
-            return <button onClick={() => this.colorPick(c)} key={i} id={c.substring(1)} className="ic-visual-color" style={style} />;
+    getPalette() {
+        let style;
+        return _.map(STICKY_COLORS, (c, i) => {
+            style = { background: c };
+            if (c === this.state.color) style['border'] = SELECTED_COLOR_BORDER;
+            return (
+                <button onClick={() => this.colorPick(c)}
+                        key={'color'+i}
+                        id={c.substring(1)}
+                        className="ic-visual-color"
+                        style={style}
+                />
+            );
         });
+    }
 
+    render() {
         return (
             <Draggable><div id="ic-visual-toolbar">
                 <div className="ic-visual-group">
@@ -114,7 +125,7 @@ class VisualModeToolbar extends Component {
                 </div>
                 <hr />
                 <div className="ic-visual-group">
-                    {colors}
+                    {this.getPalette()}
                 </div>
                 <hr />
                 <div className="ic-visual-group ic-visual-actions">

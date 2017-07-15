@@ -1,3 +1,5 @@
+'use strict';
+
 export const showNewNote = (event) => {
     return {
         type: 'showNewNote',

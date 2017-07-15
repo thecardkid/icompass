@@ -1,3 +1,4 @@
+'use strict';
 
 var ERROR_MSG = require('../../lib/constants.js').ERROR_MSG;
 var code;

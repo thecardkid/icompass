@@ -143,5 +143,3 @@ describe('Compass: models', () => {
         });
     });
 });
-
-

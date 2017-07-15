@@ -18,11 +18,10 @@ export default class PromptName extends Component {
     }
 
     render() {
-        return <div></div>;
+        return <div />;
     }
 }
 
 PromptName.propTypes = {
     params: PropTypes.object.isRequired
 };
-
