@@ -11,7 +11,7 @@ import * as uiActions from 'Actions/ui';
 
 import StickyNote from 'Components/StickyNote.jsx';
 
-import { QUADRANTS_INFO, EDITING_MODE } from 'Lib/constants';
+import { QUADRANTS_INFO } from 'Lib/constants';
 
 class Compass extends Component {
     constructor(props) {

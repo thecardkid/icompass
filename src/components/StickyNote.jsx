@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import * as uiActions from 'Actions/ui';
 import * as workspaceActions from 'Actions/workspace';
 
-import { PROMPTS, EDITING_MODE } from 'Lib/constants';
+import { PROMPTS, COLORS, EDITING_MODE } from 'Lib/constants';
 
 class StickyNote extends Component {
     constructor(props) {
@@ -107,11 +107,10 @@ class StickyNote extends Component {
     }
 
     handleClick() {
-        if (this.visual)
+        if (this.visual) {
             if (!this.props.note.doodle && !this.props.note.isImage)
                 this.props.workspaceActions.selectNote(this.props.i);
-        else
-            this.props.uiActions.focusOnNote(this.props.i);
+        } else this.props.uiActions.focusOnNote(this.props.i);
     }
 
     render() {
@@ -131,7 +130,7 @@ class StickyNote extends Component {
         if (sel && sel[i]) {
             style.left -= 3;
             style.top -=3 ;
-            style['border'] = '3px solid blue';
+            style['border'] = '3px solid ' + COLORS.BLUE;
         }
 
         return (
@@ -154,6 +153,11 @@ StickyNote.propTypes = {
     note: PropTypes.object.isRequired,
     i: PropTypes.number.isRequired,
     destroy: PropTypes.func,
+    compass: PropTypes.object.isRequired,
+    ui: PropTypes.object.isRequired,
+    workspace: PropTypes.object.isRequired,
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
+    workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 function mapStateToProps(state) {
@@ -162,14 +166,14 @@ function mapStateToProps(state) {
         ui: state.ui,
         workspace: state.workspace
     };
-};
+}
 
 function mapDispatchToProps(dispatch) {
     return {
         workspaceActions: bindActionCreators(workspaceActions, dispatch),
         uiActions: bindActionCreators(uiActions, dispatch)
     };
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(StickyNote);
 

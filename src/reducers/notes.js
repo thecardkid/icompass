@@ -1,4 +1,3 @@
-import _ from 'underscore';
 
 export default (state = [], action) => {
     switch(action.type) {
@@ -18,4 +17,3 @@ export default (state = [], action) => {
             return state;
     }
 };
-

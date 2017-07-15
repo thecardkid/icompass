@@ -12,7 +12,7 @@ import Storage from 'Utils/Storage.jsx';
 
 import * as uiActions from 'Actions/ui';
 
-import { MODES, VERSION, TWEET, HOST, PROMPTS, CONTROLS, PIXELS, COLORS } from 'Lib/constants';
+import { VERSION, TWEET, HOST, PROMPTS, PIXELS, COLORS } from 'Lib/constants';
 
 class Sidebar extends Component {
 

@@ -64,7 +64,7 @@ module.exports = {
         .assert.elementPresent('div.ic-sidebar-list[name=status]')
         .getText('div.ic-sidebar-list[name=status] h2', function(result) {
             this.assert.equal(result.value, 'Status - connected');
-        })
+        });
     },
 
     'credits': function(browser) {

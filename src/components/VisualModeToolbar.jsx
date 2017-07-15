@@ -1,4 +1,7 @@
+'use strict';
+
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -87,23 +90,23 @@ class VisualModeToolbar extends Component {
         let colors = _.map(STICKY_COLORS, (c, i) => {
             let style = {background: c};
             if (c === this.state.color) style['border'] = '2px solid orangered';
-            return <button onClick={() => this.colorPick(c)} key={i} className="ic-visual-color" style={style} />
+            return <button onClick={() => this.colorPick(c)} key={i} id={c.substring(1)} className="ic-visual-color" style={style} />;
         });
 
         return (
             <Draggable><div id="ic-visual-toolbar">
                 <div className="ic-visual-group">
-                    <button className="ic-bulk-edit"
+                    <button className="ic-bulk-edit bold"
                         style={this.state.bold ? SELECTED : null}
                         onClick={this.bold}>
                             <b>B</b>
                     </button>
-                    <button className="ic-bulk-edit"
+                    <button className="ic-bulk-edit italic"
                         style={this.state.italic ? SELECTED : null}
                         onClick={this.italicize}>
                             <i>I</i>
                     </button>
-                    <button className="ic-bulk-edit"
+                    <button className="ic-bulk-edit underline"
                         style={this.state.underline ? SELECTED : null}
                         onClick={this.underline}>
                             <u>U</u>
@@ -129,6 +132,14 @@ class VisualModeToolbar extends Component {
         );
     }
 }
+
+VisualModeToolbar.propTypes = {
+    socket: PropTypes.object.isRequired,
+    ui: PropTypes.object.isRequired,
+    workspace: PropTypes.object.isRequired,
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
+    workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
+};
 
 function mapStateToProps(state) {
     return {

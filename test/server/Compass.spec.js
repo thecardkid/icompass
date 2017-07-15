@@ -28,14 +28,14 @@ before((done) => {
         mongoose.connect('mongodb://localhost/test', (err) => {
             if (err) throw err;
             done();
-        })
+        });
     }
-})
+});
 
 after((done) => {
     clearDB(done);
     mongoose.disconnect();
-})
+});
 
 describe('Compass: models', () => {
     let DUT;
@@ -48,8 +48,8 @@ describe('Compass: models', () => {
             expect(DUT.center).to.equal(CENTER);
             expect(DUT.notes).to.be.empty;
             done();
-        })
-    })
+        });
+    });
 
     it('#findByEditCode', (done) => {
         Compass.findByEditCode(DUT.editCode,(c) => {
@@ -57,8 +57,8 @@ describe('Compass: models', () => {
             expect(c.viewCode).to.not.be.undefined;
             expect(c.center).to.equal(CENTER);
             done();
-        })
-    })
+        });
+    });
 
     it('#findByViewCode', (done) => {
         Compass.findByViewCode(DUT.viewCode, (c) => {
@@ -66,8 +66,8 @@ describe('Compass: models', () => {
             expect(c.viewCode).to.not.be.undefined;
             expect(c.center).to.equal(CENTER);
             done();
-        })
-    })
+        });
+    });
 
     it('#findCode', (done) => {
         let found = false;
@@ -77,23 +77,23 @@ describe('Compass: models', () => {
             expect(viewOnly).to.equal(false);
             if (found) done();
             else found = true;
-        })
+        });
 
         Compass.findCode(DUT.viewCode, (c, viewOnly) => {
             expect(c).to.not.be.null;
             expect(viewOnly).to.equal(true);
             if (found) done();
             else found = true;
-        })
-    })
+        });
+    });
 
     it('#addNote', (done) => {
         Compass.addNote(DUT._id, NOTE, (c) => {
             DUT = c;
             expect(c.notes).to.have.lengthOf(1);
             done();
-        })
-    })
+        });
+    });
 
     it('#updateNote', (done) => {
         let updated = Object.assign({}, DUT.notes[0]._doc);
@@ -103,8 +103,8 @@ describe('Compass: models', () => {
             expect(c.notes).to.have.lengthOf(1);
             expect(c.notes[0].text).to.equal('Updated');
             done();
-        })
-    })
+        });
+    });
 
     it('#bulkUpdateNotes', (done) => {
         Compass.addNote(DUT._id, NOTE, (c) => {
@@ -120,16 +120,16 @@ describe('Compass: models', () => {
                     expect(note.style.underline).to.be.true;
                 });
                 done();
-            })
-        })
-    })
+            });
+        });
+    });
 
     it('#deleteNote', (done) => {
         Compass.deleteNote(DUT._id, DUT.notes[0]._id.toString(), (newNotes) => {
             expect(newNotes).to.have.lengthOf(1);
             done();
-        })
-    })
+        });
+    });
 
     it('#deleteNotes', (done) => {
         Compass.addNote(DUT._id, NOTE, (c) => {
@@ -140,8 +140,8 @@ describe('Compass: models', () => {
                 expect(notes).to.have.lengthOf(0);
                 done();
             });
-        })
-    })
-})
+        });
+    });
+});
 
 

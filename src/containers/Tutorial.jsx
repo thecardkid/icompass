@@ -20,7 +20,6 @@ import NoteForm from 'Components/NoteForm.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
 
 import DefaultCompass from 'Models/defaultCompass';
-import { KEYCODES } from 'Lib/constants';
 
 const FOCUSED = 1, UNFOCUSED = 0.1;
 const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}, colors: []};
@@ -53,7 +52,7 @@ const STEPS = [
         header: 'Saving your Compass',
         text: 'Bookmark workspaces for faster access when you log in, or save as a PDF.',
         prep: (root) => {
-            root.showOnly(0, [1, 2, 4])
+            root.showOnly(0, [1, 2, 4]);
         }
     },
     {
@@ -61,9 +60,6 @@ const STEPS = [
         text: 'Share links with editing or view-only access, or tweet the view-only link with the hashtag #innovatorscompass.',
         prep: (root) => {
             root.showOnly(1);
-            // $(window).on('keydown', (e) => {
-                // if (e.which === KEYCODES.S) root.props.uiActions.toggleSidebar();
-            // });
         }
     },
     {
@@ -200,7 +196,6 @@ class Tutorial extends Component {
     }
 
     showOnly(x, buttons) {
-        let opacity;
         let lists = $('.ic-sidebar-list');
         let showSome = buttons && buttons.length > 0;
 
