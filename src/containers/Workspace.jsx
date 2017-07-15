@@ -268,23 +268,25 @@ class Workspace extends Component {
         return this.props.ui.editingMode === EDITING_MODE.VISUAL;
     }
 
+    chooseSandboxOrOriginalNotes(w, notes) {
+        return _.map(notes, (n, i) => {
+            if (w.selected[i]) {
+                if (w.color) return Object.assign({}, w.sandbox[i], { color: w.color });
+                else return w.sandbox[i];
+            } else return n;
+        });
+    }
+
     render() {
         // not ready
-        if (_.isEmpty(this.props.compass)) return <div></div>;
+        if (_.isEmpty(this.props.compass)) return <div />;
 
         let notes = this.props.notes;
         if (this.props.route.viewOnly) return <Compass notes={notes}/>;
 
         // Selected notes rendered according to sandbox
-        let w = this.props.workspace;
-        if (this.isVisualMode()) {
-            notes = _.map(notes, (n, i) => {
-                if (w.selected[i]) {
-                    if (w.color) return Object.assign({}, w.sandbox[i], { color: w.color });
-                    else return w.sandbox[i];
-                } else return n;
-            });
-        }
+        if (this.isVisualMode())
+            notes = this.chooseSandboxOrOriginalNotes(this.props.workspace, this.props.notes);
 
         return (
             <div>
