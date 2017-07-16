@@ -62,3 +62,17 @@ export const createDoodleDraft = (user) => {
         user
     }
 };
+
+export const updateDrafts = (notes) => {
+    return {
+        type: 'updateDrafts',
+        notes
+    };
+};
+
+export const undraft = (idx) => {
+    return {
+        type: 'undraft',
+        idx
+    };
+};

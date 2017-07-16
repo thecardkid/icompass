@@ -23,6 +23,7 @@ class StickyNote extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.renderDoodle = this.renderDoodle.bind(this);
         this.renderText = this.renderText.bind(this);
+        this.submitDraft = this.submitDraft.bind(this);
 
         this.hasEditingRights = !this.props.compass.viewOnly;
         this.compactMode = this.visualMode = this.draftMode = false;
@@ -51,16 +52,29 @@ class StickyNote extends Component {
             this.props.destroy(this.props.note._id);
     }
 
+    submitDraft() {
+        this.props.submitDraft(this.props.note, this.props.i);
+    }
+
+    getTooltip(n) {
+        if (n.draft) {
+            return <p className="ic-tooltip submit" onClick={this.submitDraft}>submit</p>;
+        } else {
+            return <p className="ic-tooltip">{n.user}</p>
+        }
+    }
+
     renderDoodle(n) {
         let s = {
             background: n.color,
             padding: n.isImage ? '3px' : '0',
         };
+
         return (
             <a className="ic-img" style={s}>
                 <img src={n.doodle || n.text}
                     width={this.compactMode ? '100px' : '160px'}/>
-                <p className="ic-tooltip">{n.user}</p>
+                {this.getTooltip(n)}
             </a>
         );
     }
@@ -81,7 +95,7 @@ class StickyNote extends Component {
         return (
             <a style={style}>
                 <p className={textStyle}>{n.text}</p>
-                <p className="ic-tooltip">{n.user}</p>
+                {this.getTooltip(n)}
             </a>
         );
     }

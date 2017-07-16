@@ -32,7 +32,6 @@ class Workspace extends Component {
     constructor(props) {
         super(props);
         this.socket = new Socket(this);
-        this.socket.socket.on('update notes', this.props.noteActions.updateAll);
 
         if (this.props.route.viewOnly) {
             this.socket.emitFindCompassView();
@@ -50,6 +49,7 @@ class Workspace extends Component {
         this.getVisualModeToolbar = this.getVisualModeToolbar.bind(this);
         this.center = this.center.bind(this);
         this.handleChangeMode = this.handleChangeMode.bind(this);
+        this.submitDraft = this.submitDraft.bind(this);
 
         this.normalMode = this.compactMode = this.visualMode = this.draftMode = false;
         this.notes = null;
@@ -315,6 +315,14 @@ class Workspace extends Component {
             return <VisualModeToolbar socket={this.socket}/>;
     }
 
+    submitDraft(note, idx) {
+        this.props.workspaceActions.undraft(idx);
+
+        delete note.draft;
+        note.color = this.props.users.nameToColor[this.props.users.me];
+        this.socket.emitNewNote(note);
+    }
+
     chooseDisplayNotes(w, notes) {
         if (this.visualMode) {
             return _.map(notes, (n, i) => {
@@ -340,7 +348,7 @@ class Workspace extends Component {
             <div>
                 {this.renderCornerButtons()}
                 {this.renderModesToolbar()}
-                <Compass destroy={this.socket.emitDeleteNote} notes={this.notes}/>
+                <Compass destroy={this.socket.emitDeleteNote} notes={this.notes} submitDraft={this.submitDraft}/>
                 <Sidebar connected={this.socket.socket.connected} destroy={this.socket.emitDeleteCompass} exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 {this.getFeedback()}

@@ -30,6 +30,7 @@ class Compass extends Component {
             <StickyNote key={'note'+i}
                 note={note}
                 i={i}
+                submitDraft={this.props.submitDraft}
                 destroy={this.props.destroy}
             />
         );
@@ -96,7 +97,8 @@ Compass.propTypes = {
     compass: PropTypes.object.isRequired,
     notes: PropTypes.array.isRequired,
     uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-    destroy: PropTypes.func
+    destroy: PropTypes.func,
+    submitDraft: PropTypes.func,
 };
 
 function mapStateToProps(state) {

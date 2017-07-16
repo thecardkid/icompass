@@ -41,13 +41,31 @@ const editDraft = (state, action) => {
 
 const createDoodleDraft = (state, action) => {
     let doodle = {
-        text: null, color: 'grey', x: 0.5, y: 0.5, user: action.user,
+        text: null, color: 'grey', x: 0.5, y: 0.5,
+        user: action.user, draft: true,
         doodle: document.getElementById('ic-doodle').toDataURL()
     };
 
     return {...state,
         drafts: state.drafts.concat(doodle)
     };
+};
+
+const updateDrafts = (state, action) => {
+    let drafts = _.filter(state.drafts, (e) => e.draft);
+    drafts = action.notes.concat(drafts);
+
+    return {...state, drafts};
+};
+
+const undraft = (state, action) => {
+    let { idx } = action;
+    let n = state.drafts[idx];
+    delete n.draft;
+    let drafts = state.drafts.slice(0, idx)
+        .concat(n)
+        .concat(state.drafts.slice(idx + 1));
+    return {...state, drafts};
 };
 
 export default (state = {}, action) => {
@@ -100,6 +118,12 @@ export default (state = {}, action) => {
 
         case 'createDoodleDraft':
             return createDoodleDraft(state, action);
+
+        case 'updateDrafts':
+            return updateDrafts(state, action);
+
+        case 'undraft':
+            return undraft(state, action);
 
         default:
             return state;

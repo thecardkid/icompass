@@ -37,6 +37,7 @@ export default class Socket {
         this.handleCompassFound = this.handleCompassFound.bind(this);
         this.handleMailStatus = this.handleMailStatus.bind(this);
         this.handleCompassReady = this.handleCompassReady.bind(this);
+        this.handleUpdateNotes = this.handleUpdateNotes.bind(this);
 
         // socket event handlers
         this.socket.on('user joined', this.handleUserJoined);
@@ -48,6 +49,7 @@ export default class Socket {
         this.socket.on('compass found', this.handleCompassFound);
         this.socket.on('mail status', this.handleMailStatus);
         this.socket.on('compass ready', this.handleCompassReady);
+        this.socket.on('update notes', this.handleUpdateNotes);
     }
 
     disconnect() {
@@ -191,6 +193,11 @@ export default class Socket {
                 color: this.component.props.users.nameToColor[this.component.props.users.me]
             });
         }
+    }
+
+    handleUpdateNotes(notes) {
+        this.component.props.noteActions.updateAll(notes);
+        if (this.component.draftMode) this.component.props.workspaceActions.updateDrafts(notes);
     }
 
     handleCompassDeleted() {
