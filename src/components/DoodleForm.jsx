@@ -96,7 +96,8 @@ export default class DoodleForm extends Component {
 
     makeDoodle() {
         if (this.state.x.length === 0) return;
-        this.props.save(this.props.user);
+        this.props.ship(this.props.user);
+        this.props.close();
     }
 
     clearCanvas() {
@@ -135,7 +136,7 @@ export default class DoodleForm extends Component {
 }
 
 DoodleForm.propTypes = {
-    save: PropTypes.func.isRequired,
+    ship: PropTypes.func.isRequired,
     style: PropTypes.object.isRequired,
     bg: PropTypes.string.isRequired,
     close: PropTypes.func.isRequired,

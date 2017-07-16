@@ -27,7 +27,7 @@ class Compass extends Component {
 
     renderNote(note, i) {
         return (
-            <StickyNote key={note._id}
+            <StickyNote key={'note'+i}
                 note={note}
                 i={i}
                 destroy={this.props.destroy}

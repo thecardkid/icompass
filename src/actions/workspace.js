@@ -34,3 +34,31 @@ export const colorAll = (color) => {
         color
     };
 };
+
+export const createDraft = (note) => {
+    return {
+        type: 'createDraft',
+        note
+    };
+};
+
+export const dragDraft = (idx, x, y) => {
+    return {
+        type: 'dragDraft',
+        idx, x, y
+    };
+};
+
+export const editDraft = (updated, idx) => {
+    return {
+        type: 'editDraft',
+        updated, idx
+    };
+};
+
+export const createDoodleDraft = (user) => {
+    return {
+        type: 'createDoodleDraft',
+        user
+    }
+};

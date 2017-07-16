@@ -59,6 +59,8 @@ export default (state = defaultState, action) => {
             return {...state, editingMode: EDITING_MODE.COMPACT};
         case 'visualMode':
             return {...state, editingMode: EDITING_MODE.VISUAL};
+        case 'draftMode':
+            return {...state, editingMode: EDITING_MODE.DRAFT};
         case 'resetUI':
             return defaultState;
         default:

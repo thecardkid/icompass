@@ -25,7 +25,7 @@ import VisualModeToolbar from 'Components/VisualModeToolbar.jsx';
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
 
-import { KEYCODES, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
+import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
 
 /* eslint react/prop-types: 0 */
 class Workspace extends Component {
@@ -48,8 +48,11 @@ class Workspace extends Component {
         this.renderCornerButtons = this.renderCornerButtons.bind(this);
         this.renderModesToolbar = this.renderModesToolbar.bind(this);
         this.getVisualModeToolbar = this.getVisualModeToolbar.bind(this);
-        this.isVisualMode = this.isVisualMode.bind(this);
         this.center = this.center.bind(this);
+        this.handleChangeMode = this.handleChangeMode.bind(this);
+
+        this.normalMode = this.compactMode = this.visualMode = this.draftMode = false;
+        this.notes = null;
 
         this.keypressHandler = {
             78: this.props.uiActions.showNewNote,
@@ -60,6 +63,14 @@ class Workspace extends Component {
         };
 
         this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
+    }
+
+    componentWillUpdate(nextProps) {
+        this.normalMode = nextProps.ui.editingMode === EDITING_MODE.NORMAL || false;
+        this.compactMode = nextProps.ui.editingMode === EDITING_MODE.COMPACT || false;
+        this.visualMode = nextProps.ui.editingMode === EDITING_MODE.VISUAL || false;
+        this.draftMode = nextProps.ui.editingMode === EDITING_MODE.DRAFT || false;
+        this.notes = this.chooseDisplayNotes(nextProps.workspace, nextProps.notes);
     }
 
     validateRouteParams(params) {
@@ -86,7 +97,7 @@ class Workspace extends Component {
                 restrict: DRAGGABLE_RESTRICTIONS,
                 autoScroll: true,
                 onmove: this.dragTarget.bind(this),
-                onend: this.socket.emitDragNote
+                onend: this.dragEnd.bind(this)
             });
         }
     }
@@ -98,7 +109,7 @@ class Workspace extends Component {
         this.props.chatActions.reset();
         this.props.uiActions.reset();
         this.props.userActions.reset();
-        $(window).off('resize', this.updateWindowSize);
+        $(window).off('resize', this.props.uiActions.resize);
         $(window).off('keydown', this.handleKeyDown);
     }
 
@@ -110,10 +121,27 @@ class Workspace extends Component {
     }
 
     dragTarget(e) {
-        if (!this.isVisualMode()) {
+        if (!this.visualMode) {
             let x = (parseFloat(e.target.getAttribute('data-x')) || 0) + e.dx;
             let y = (parseFloat(e.target.getAttribute('data-y')) || 0) + e.dy;
             this.setTranslation(e.target, x, y);
+        }
+    }
+
+    dragEnd(e) {
+        if (this.visualMode) alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+
+        this.setTranslation(e.target, 0, 0);
+
+        let i = Number(e.target.id.substring(4));
+        let x = this.notes[i].x + e.dx / this.props.ui.vw,
+            y = this.notes[i].y + e.dy / this.props.ui.vh;
+        let note = Object.assign({}, this.notes[i], { x, y });
+
+        if (this.draftMode) this.props.workspaceActions.dragDraft(i, x, y);
+        else {
+            this.props.noteActions.drag(i, x, y);
+            this.socket.emitDragNote(note);
         }
     }
 
@@ -155,7 +183,7 @@ class Workspace extends Component {
 
     getForm() {
         let commonAttrs = {
-            bg: this.props.users.nameToColor[this.props.users.me],
+            bg: this.draftMode ? 'grey' : this.props.users.nameToColor[this.props.users.me],
             user: this.props.users.me,
             close: this.props.uiActions.closeForm
         };
@@ -165,19 +193,20 @@ class Workspace extends Component {
                 mode={'make'}
                 note={{}}
                 position={this.props.ui.newNote}
-                ship={this.socket.emitNewNote}
+                ship={this.draftMode ? this.props.workspaceActions.createDraft : this.socket.emitNewNote}
                 {...commonAttrs}
             />;
         } else if (this.props.ui.editNote) {
             return <NoteForm style={this.center(300,230)}
                 mode={'edit'}
-                note={this.props.ui.editNote}
-                ship={this.socket.emitEditNote}
+                idx={this.props.ui.editNote}
+                note={this.notes[this.props.ui.editNote]}
+                ship={this.draftMode ? this.props.workspaceActions.editDraft : this.socket.emitEditNote}
                 {...commonAttrs}
             />;
         } else if (this.props.ui.doodleNote) {
             return <DoodleForm style={this.center(450, 345)}
-                save={this.socket.emitNewDoodle}
+                ship={this.draftMode ? this.props.workspaceActions.createDoodleDraft : this.socket.emitNewDoodle}
                 {...commonAttrs}
             />;
         }
@@ -206,25 +235,47 @@ class Workspace extends Component {
         };
     }
 
-    renderModesToolbar() {
-        let ui = this.props.uiActions,
-            m = this.props.ui.editingMode;
+    handleChangeMode(e) {
+        if (this.draftMode && e.target.id !== 'ic-mode-draft'
+            && this.props.workspace.drafts.length > this.props.notes.length) {
+            if (!confirm(PROMPTS.EXIT_DRAFT_WARNING)) return;
+        }
 
+        switch (e.target.id) {
+            case 'ic-mode-normal':
+                return this.props.uiActions.normalMode();
+            case 'ic-mode-compact':
+                return this.props.uiActions.compactMode();
+            case 'ic-mode-visual':
+                return this.props.uiActions.visualMode(this.props.notes);
+            case 'ic-mode-draft':
+                return this.props.uiActions.draftMode(this.props.notes);
+            default:
+                return;
+        }
+    }
+
+    renderModesToolbar() {
         return (
             <div id="ic-modes">
+                <button id="ic-mode-draft"
+                        className={this.draftMode ? 'selected' : 'unselected'}
+                        onClick={this.handleChangeMode}>
+                    Draft
+                </button>
                 <button id="ic-mode-visual"
-                    className={m === EDITING_MODE.VISUAL ? 'selected' : 'unselected'}
-                    onClick={() => ui.visualMode(this.props.notes)}>
+                    className={this.visualMode ? 'selected' : 'unselected'}
+                    onClick={this.handleChangeMode}>
                     Visual
                 </button>
                 <button id="ic-mode-compact"
-                    className={m === EDITING_MODE.COMPACT ? 'selected' : 'unselected'}
-                    onClick={ui.compactMode}>
+                    className={this.compactMode ? 'selected' : 'unselected'}
+                    onClick={this.handleChangeMode}>
                     Compact
                 </button>
                 <button id="ic-mode-normal"
-                    className={m === EDITING_MODE.NORMAL ? 'selected' : 'unselected'}
-                    onClick={ui.normalMode}>
+                    className={this.normalMode ? 'selected' : 'unselected'}
+                    onClick={this.handleChangeMode}>
                     Normal
                 </button>
             </div>
@@ -260,39 +311,36 @@ class Workspace extends Component {
     }
 
     getVisualModeToolbar() {
-        if (this.isVisualMode())
+        if (this.visualMode)
             return <VisualModeToolbar socket={this.socket}/>;
     }
 
-    isVisualMode() {
-        return this.props.ui.editingMode === EDITING_MODE.VISUAL;
-    }
-
-    chooseSandboxOrOriginalNotes(w, notes) {
-        return _.map(notes, (n, i) => {
-            if (w.selected[i]) {
-                if (w.color) return Object.assign({}, w.sandbox[i], { color: w.color });
-                else return w.sandbox[i];
-            } else return n;
-        });
+    chooseDisplayNotes(w, notes) {
+        if (this.visualMode) {
+            return _.map(notes, (n, i) => {
+                if (w.selected[i]) {
+                    if (w.color) return Object.assign({}, w.sandbox[i], {color: w.color});
+                    else return w.sandbox[i];
+                } else return n;
+            });
+        } else if (this.draftMode) {
+            return w.drafts;
+        } else {
+            return notes;
+        }
     }
 
     render() {
         // not ready
         if (_.isEmpty(this.props.compass)) return <div />;
 
-        let notes = this.props.notes;
-        if (this.props.route.viewOnly) return <Compass notes={notes}/>;
-
-        // Selected notes rendered according to sandbox
-        if (this.isVisualMode())
-            notes = this.chooseSandboxOrOriginalNotes(this.props.workspace, this.props.notes);
+        if (this.props.route.viewOnly) return <Compass notes={this.notes}/>;
 
         return (
             <div>
                 {this.renderCornerButtons()}
                 {this.renderModesToolbar()}
-                <Compass destroy={this.socket.emitDeleteNote} notes={notes}/>
+                <Compass destroy={this.socket.emitDeleteNote} notes={this.notes}/>
                 <Sidebar connected={this.socket.socket.connected} destroy={this.socket.emitDeleteCompass} exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 {this.getFeedback()}

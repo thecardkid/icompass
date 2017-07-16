@@ -25,8 +25,7 @@ class StickyNote extends Component {
         this.renderText = this.renderText.bind(this);
 
         this.hasEditingRights = !this.props.compass.viewOnly;
-        this.compact = false;
-        this.visual = false;
+        this.compactMode = this.visualMode = this.draftMode = false;
     }
 
     shouldComponentUpdate(nextProps) {
@@ -42,12 +41,13 @@ class StickyNote extends Component {
     }
 
     componentWillUpdate(nextProps) {
-        this.compact = nextProps.ui.editingMode === EDITING_MODE.COMPACT || false;
-        this.visual = nextProps.ui.editingMode === EDITING_MODE.VISUAL || false;
+        this.compactMode = nextProps.ui.editingMode === EDITING_MODE.COMPACT || false;
+        this.visualMode = nextProps.ui.editingMode === EDITING_MODE.VISUAL || false;
+        this.draftMode = nextProps.ui.editingMode === EDITING_MODE.DRAFT || false;
     }
 
     confirmDelete() {
-        if (!this.visual && confirm(PROMPTS.CONFIRM_DELETE_NOTE))
+        if (!this.visualMode && confirm(PROMPTS.CONFIRM_DELETE_NOTE))
             this.props.destroy(this.props.note._id);
     }
 
@@ -58,9 +58,8 @@ class StickyNote extends Component {
         };
         return (
             <a className="ic-img" style={s}>
-                <img onDoubleClick={this.edit}
-                    src={n.doodle || n.text}
-                    width={this.compact ? '100px' : '160px'}/>
+                <img src={n.doodle || n.text}
+                    width={this.compactMode ? '100px' : '160px'}/>
                 <p className="ic-tooltip">{n.user}</p>
             </a>
         );
@@ -73,7 +72,7 @@ class StickyNote extends Component {
         if (n.style.italic) textStyle += 'italic ';
         if (n.style.underline) textStyle += 'underline';
 
-        if (this.compact) {
+        if (this.compactMode) {
             style.letterSpacing = '-1px';
             style.maxHeight = '70px';
             style.overflow = 'auto';
@@ -102,12 +101,14 @@ class StickyNote extends Component {
     }
 
     edit() {
-        if (!this.visual && this.hasEditingRights && !this.props.note.doodle)
-            this.props.uiActions.showEdit(this.props.note);
+        if (this.props.note.doodle) return alert(PROMPTS.CANNOT_EDIT_DOODLE);
+        if (this.visualMode) return alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+        if (this.draftMode && !this.props.note.draft) return alert(PROMPTS.DRAFT_MODE_NO_CHANGE);
+        if (this.hasEditingRights) this.props.uiActions.showEdit(this.props.i);
     }
 
     handleClick() {
-        if (this.visual) {
+        if (this.visualMode) {
             if (!this.props.note.doodle && !this.props.note.isImage)
                 this.props.workspaceActions.selectNote(this.props.i);
         } else this.props.uiActions.focusOnNote(this.props.i);

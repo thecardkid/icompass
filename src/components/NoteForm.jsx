@@ -43,7 +43,7 @@ export default class NoteForm extends Component {
         let text = $('#ic-form-text').val();
         if (!text) return {};
         let validText = Validator.validateStickyText(text);
-        let isImage;
+        let isImage = false;
 
         if (validText[0])
             isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
@@ -63,26 +63,31 @@ export default class NoteForm extends Component {
             y = this.props.position.y;
         }
 
+        let style = Object.assign({}, this.state);
+        delete style.charCount;
+
         let note = {
             text, isImage, x, y,
             doodle: null,
             color: this.props.bg,
-            style: this.state,
+            style,
             user: this.props.user
         };
 
         this.props.ship(note);
+        this.props.close();
     }
 
     edit() {
         let { text, isImage } = this.getText();
         if (!text) return;
-        let edited = {
-            text, isImage,
-            style: this.state
-        };
 
-        this.props.ship(edited);
+        let style = Object.assign({}, this.state);
+        delete style.charCount;
+        let edited = { text, isImage, style };
+
+        this.props.ship(edited, this.props.idx);
+        this.props.close();
     }
 
     renderToolbar() {
@@ -146,6 +151,6 @@ NoteForm.propTypes = {
         PropTypes.bool,
         PropTypes.objectOf(PropTypes.number)
     ]),
-    user: PropTypes.string
+    user: PropTypes.string,
+    idx: PropTypes.number,
 };
-

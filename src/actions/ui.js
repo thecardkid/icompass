@@ -53,6 +53,13 @@ export const visualMode = (notes) => {
     };
 };
 
+export const draftMode = (notes) => {
+    return {
+        type: 'draftMode',
+        notes
+    };
+};
+
 export const toggleAbout = () => {
     return {
         type: 'toggleAbout'

@@ -86,7 +86,8 @@ compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb
         c.notes = _.map(c.notes, function(note) {
             if (_.contains(noteIds, note._id.toString())) {
                 Object.assign(note.style, transformation.style);
-                note.color = transformation.color;
+                if (transformation.color)
+                    note.color = transformation.color;
             }
             return note;
         });

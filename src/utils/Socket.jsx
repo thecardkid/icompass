@@ -68,18 +68,17 @@ export default class Socket {
 
     emitNewNote(note) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        if (this.component.isVisualMode()) return this.alertVisualModeNoCreate();
+        if (this.component.visualMode) return this.alertVisualModeNoCreate();
         this.socket.emit('new note', note);
-        this.component.props.uiActions.closeForm();
     }
 
     emitEditNote(edited) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        if (this.component.isVisualMode()) return this.alertVisualMode();
-        let before = Object.assign({}, this.component.props.ui.editNote);
+        if (this.component.visualMode) return this.alertVisualMode();
+        let original = this.component.props.notes[this.component.props.ui.editNote];
+        let before = Object.assign({}, original);
         let after = Object.assign({}, before, edited);
         this.socket.emit('update note', after);
-        this.component.props.uiActions.closeForm();
     }
 
     emitBulkEditNotes(noteIds, transformation) {
@@ -92,19 +91,8 @@ export default class Socket {
         this.socket.emit('bulk delete notes', noteIds);
     }
 
-    emitDragNote(event) {
-        if (this.component.isVisualMode()) return this.alertVisualMode();
-
-        this.component.setTranslation(event.target, 0, 0);
+    emitDragNote(note) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-
-        let notes = this.component.props.notes;
-        let i = Number(event.target.id.substring(4));
-        let x = notes[i].x + event.dx / this.component.props.ui.vw,
-            y = notes[i].y + event.dy / this.component.props.ui.vh;
-        let note = Object.assign({}, notes[i], { x, y });
-
-        this.component.props.noteActions.drag(i, x, y);
         this.socket.emit('update note', note);
     }
 
@@ -119,7 +107,6 @@ export default class Socket {
             y: 0.5,
             user
         });
-        this.component.props.uiActions.closeForm();
     }
 
     emitDeleteCompass() {
