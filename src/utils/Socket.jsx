@@ -197,7 +197,9 @@ export default class Socket {
 
     handleUpdateNotes(notes) {
         this.component.props.noteActions.updateAll(notes);
-        if (this.component.draftMode) this.component.props.workspaceActions.updateDrafts(notes);
+
+        if (this.component.draftMode)
+            this.component.props.workspaceActions.updateDrafts(notes);
     }
 
     handleCompassDeleted() {
