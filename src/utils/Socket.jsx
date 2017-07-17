@@ -100,6 +100,7 @@ export default class Socket {
 
     emitNewDoodle(user) {
         if (this.socket.disconnected) return this.alertInvalidAction();
+        if (this.component.visualMode) return this.alertVisualMode();
 
         this.socket.emit('new note', {
             text: null,
@@ -118,6 +119,7 @@ export default class Socket {
 
     emitDeleteNote(noteId) {
         if (this.socket.disconnected) return this.alertInvalidAction();
+        if (this.component.visualMode) return this.alertVisualMode();
 
         this.socket.emit('delete note', noteId);
     }

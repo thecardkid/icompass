@@ -129,7 +129,7 @@ class Workspace extends Component {
     }
 
     dragEnd(e) {
-        if (this.visualMode) alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+        if (this.visualMode) return alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
         this.setTranslation(e.target, 0, 0);
 

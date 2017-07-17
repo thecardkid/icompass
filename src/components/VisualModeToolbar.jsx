@@ -97,8 +97,7 @@ class VisualModeToolbar extends Component {
                         key={'color'+i}
                         id={c.substring(1)}
                         className="ic-visual-color"
-                        style={style}
-                />
+                        style={style} />
             );
         });
     }
