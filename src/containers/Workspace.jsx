@@ -70,7 +70,7 @@ class Workspace extends Component {
         this.compactMode = nextProps.ui.editingMode === EDITING_MODE.COMPACT || false;
         this.visualMode = nextProps.ui.editingMode === EDITING_MODE.VISUAL || false;
         this.draftMode = nextProps.ui.editingMode === EDITING_MODE.DRAFT || false;
-        this.notes = this.chooseDisplayNotes(nextProps.workspace, nextProps.notes);
+        this.notes = this.chooseDisplayedNotes(nextProps.workspace, nextProps.notes);
     }
 
     validateRouteParams(params) {
@@ -323,7 +323,7 @@ class Workspace extends Component {
         this.socket.emitNewNote(note);
     }
 
-    chooseDisplayNotes(w, notes) {
+    chooseDisplayedNotes(w, notes) {
         if (this.visualMode) {
             return _.map(notes, (n, i) => {
                 if (w.selected[i]) {

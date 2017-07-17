@@ -20,9 +20,9 @@ class VisualModeToolbar extends Component {
         super(props);
 
         this.state = {
-            bold: false,
-            italic: false,
-            underline: false,
+            bold: null,
+            italic: null,
+            underline: null,
             color: null
         };
 
