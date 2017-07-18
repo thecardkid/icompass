@@ -35,8 +35,10 @@ class VisualModeToolbar extends Component {
     }
 
     bulkDelete() {
-        if (confirm(PROMPTS.CONFIRM_BULK_DELETE_NOTES))
+        if (confirm(PROMPTS.CONFIRM_BULK_DELETE_NOTES)) {
             this.props.socket.emitBulkDeleteNotes(this.getSelectedNotes());
+            this.cancel();
+        }
     }
 
     cancel() {
@@ -47,6 +49,7 @@ class VisualModeToolbar extends Component {
         let { bold, italic, underline, color } = this.props.workspace;
         let transformation = { style: { bold, italic, underline}, color};
         this.props.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
+        this.cancel();
     }
 
     getPalette() {
