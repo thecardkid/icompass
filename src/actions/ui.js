@@ -45,17 +45,16 @@ export const compactMode = () => {
     };
 };
 
-export const visualMode = (notes) => {
+export const visualMode = (len) => {
     return {
         type: 'visualMode',
-        notes
+        len
     };
 };
 
-export const draftMode = (notes) => {
+export const draftMode = () => {
     return {
-        type: 'draftMode',
-        notes
+        type: 'draftMode'
     };
 };
 

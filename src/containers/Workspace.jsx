@@ -138,7 +138,8 @@ class Workspace extends Component {
             y = this.notes[i].y + e.dy / this.props.ui.vh;
         let note = Object.assign({}, this.notes[i], { x, y });
 
-        if (this.draftMode) this.props.workspaceActions.dragDraft(i, x, y);
+        if (this.draftMode && !note.draft) return alert(PROMPTS.DRAFT_MODE_NO_CHANGE);
+        if (note.draft) this.props.workspaceActions.dragDraft(i, x, y);
         else {
             this.props.noteActions.drag(i, x, y);
             this.socket.emitDragNote(note);
@@ -200,7 +201,6 @@ class Workspace extends Component {
         } else if (typeof this.props.ui.editNote === 'number') {
             return <NoteForm style={this.center(300,230)}
                 mode={'edit'}
-                idx={this.props.ui.editNote}
                 note={this.notes[this.props.ui.editNote]}
                 ship={this.draftMode ? this.props.workspaceActions.editDraft : this.socket.emitEditNote}
                 {...commonAttrs}
@@ -248,9 +248,9 @@ class Workspace extends Component {
             case 'ic-mode-compact':
                 return this.props.uiActions.compactMode();
             case 'ic-mode-visual':
-                return this.props.uiActions.visualMode(this.props.notes);
+                return this.props.uiActions.visualMode(this.props.notes.length);
             case 'ic-mode-draft':
-                return this.props.uiActions.draftMode(this.props.notes);
+                return this.props.uiActions.draftMode();
             default:
                 return;
         }
@@ -341,7 +341,7 @@ class Workspace extends Component {
                 return copy;
             });
         } else if (this.draftMode) {
-            return w.drafts;
+            return w.drafts.concat(notes);
         } else {
             return notes;
         }

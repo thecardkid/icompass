@@ -58,13 +58,6 @@ const createDoodleDraft = (state, action) => {
     };
 };
 
-const updateDrafts = (state, action) => {
-    let drafts = _.filter(state.drafts, (e) => e.draft);
-    drafts = action.notes.concat(drafts);
-
-    return {...state, drafts};
-};
-
 /*
 1. Note added --> new note is not selected
 2. Note edited --> no change
@@ -80,12 +73,7 @@ const updateSelected = (state, action) => {
 };
 
 const undraft = (state, action) => {
-    let { idx } = action;
-    let n = state.drafts[idx];
-    delete n.draft;
-    let drafts = state.drafts.slice(0, idx)
-        .concat(n)
-        .concat(state.drafts.slice(idx + 1));
+    let drafts = _.filter(state.drafts, (e, i) => i !== action.idx);
     return {...state, drafts};
 };
 
@@ -93,18 +81,13 @@ export default (state = {}, action) => {
     switch(action.type) {
         case 'normalMode':
         case 'compactMode':
+        case 'draftMode':
             return defaultState;
 
         case 'visualMode':
             return {
                 ...defaultState,
-                selected: (new Array(action.notes.length)).fill(false)
-            };
-
-        case 'draftMode':
-            return {
-                ...defaultState,
-                drafts: action.notes
+                selected: (new Array(action.len)).fill(false)
             };
 
         case 'selectNote':
@@ -144,9 +127,6 @@ export default (state = {}, action) => {
 
         case 'createDoodleDraft':
             return createDoodleDraft(state, action);
-
-        case 'updateDrafts':
-            return updateDrafts(state, action);
 
         case 'updateSelected':
             return updateSelected(state, action);
