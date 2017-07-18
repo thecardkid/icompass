@@ -64,21 +64,25 @@ module.exports = {
         })
         .acceptAlert()
         .pause(200)
-        .click('button[name=nvm]')
-            .moveToElement('#note0', 10, 10)
-            .mouseButtonDown(0, function() {
-                browser.moveTo(null, -100, 0);
+        // try dragging
+        .assert.elementPresent('#note0')
+        .moveToElement('#note0', 10, 10)
+        .mouseButtonDown(0, function() {
+            browser.moveTo(null, -100, 0);
+        })
+        .mouseButtonUp(0, function() {
+            browser.getAlertText(function(result) {
+                this.assert.equal(result.value, PROMPTS.VISUAL_MODE_NO_CHANGE);
             })
-            .mouseButtonUp(0, function() {
-                browser.getAlertText(function(result) {
-                    this.assert.equal(result.value, PROMPTS.VISUAL_MODE_NO_CHANGE);
-                })
-                .acceptAlert();
-            })
+            .acceptAlert();
+        })
         .moveToElement('#note0', 10, 10)
         .doubleClick()
         .pause(100)
-        .assert.elementNotPresent('#ic-note-form')
+        .getAlertText(function(result) {
+            this.assert.equal(result.value, PROMPTS.VISUAL_MODE_NO_CHANGE);
+        })
+        .acceptAlert()
         .click('#note0'); // de-select the note
     },
 
@@ -171,8 +175,33 @@ module.exports = {
         .click('#note1');
     },
 
+    'submitting with no edits should cause no change': function(browser) {
+        browser
+        .click('#note1')
+        .click('button.bold').click('button.italic')
+        .click('button#ic-bulk-submit')
+        .pause(200)
+        .assert.cssClassPresent('#note1 span a p', 'bold')
+        .assert.cssClassPresent('#note1 span a p', 'italic')
+        .click('#ic-mode-visual')
+        .click('#note1')
+        .click('button#ic-bulk-submit')
+        .pause(200)
+        .assert.cssClassPresent('#note1 span a p', 'bold')
+        .assert.cssClassPresent('#note1 span a p', 'italic')
+        .click('#ic-mode-visual')
+        .click('#note1')
+        .click('button.bold').click('button.italic')
+        .click('button.bold').click('button.italic') // click twice to turn to false
+        .click('button#ic-bulk-submit')
+        .pause(200)
+        .assert.cssClassNotPresent('#note1 span a p', 'bold')
+        .assert.cssClassNotPresent('#note1 span a p', 'italic')
+    },
+
     'submitting': function(browser) {
         browser
+        .click('#ic-mode-visual')
         .click('#note1')
         .click('#note2')
         .click('button.bold')
