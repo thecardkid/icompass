@@ -38,6 +38,7 @@ export default class Socket {
         this.handleMailStatus = this.handleMailStatus.bind(this);
         this.handleCompassReady = this.handleCompassReady.bind(this);
         this.handleUpdateNotes = this.handleUpdateNotes.bind(this);
+        this.handleDeletedNotes = this.handleDeletedNotes.bind(this);
 
         // socket event handlers
         this.socket.on('user joined', this.handleUserJoined);
@@ -50,6 +51,7 @@ export default class Socket {
         this.socket.on('mail status', this.handleMailStatus);
         this.socket.on('compass ready', this.handleCompassReady);
         this.socket.on('update notes', this.handleUpdateNotes);
+        this.socket.on('deleted notes', this.handleDeletedNotes);
     }
 
     disconnect() {
@@ -202,6 +204,9 @@ export default class Socket {
 
         if (this.component.draftMode)
             this.component.props.workspaceActions.updateDrafts(notes);
+
+        if (this.component.visualMode)
+            this.component.props.workspaceActions.updateSelected(notes.length);
     }
 
     handleCompassDeleted() {
@@ -240,5 +245,10 @@ export default class Socket {
 
     handleCompassReady(data) {
         this.component.setState({ data });
+    }
+
+    handleDeletedNotes(deletedIdx) {
+        if (this.component.visualMode)
+            this.component.props.workspaceActions.removeNotesIfSelected(deletedIdx);
     }
 }

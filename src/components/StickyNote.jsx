@@ -122,10 +122,10 @@ class StickyNote extends Component {
     }
 
     handleClick() {
-        if (this.visualMode) {
-            if (!this.props.note.doodle && !this.props.note.isImage)
-                this.props.workspaceActions.selectNote(this.props.i);
-        } else this.props.uiActions.focusOnNote(this.props.i);
+        if (this.visualMode)
+            this.props.workspaceActions.selectNote(this.props.i);
+        else
+            this.props.uiActions.focusOnNote(this.props.i);
     }
 
     render() {

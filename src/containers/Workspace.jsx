@@ -154,7 +154,8 @@ class Workspace extends Component {
     }
 
     handleKeyDown(e) {
-        if (this.props.ui.newNote || this.props.ui.editNote || this.props.ui.doodleNote) {
+        if (this.props.ui.newNote || this.props.ui.doodleNote ||
+            typeof this.props.ui.editNote === 'number') {
             if (e.which === KEYCODES.ESC) this.props.uiActions.closeForm();
             return;
         }
@@ -196,7 +197,7 @@ class Workspace extends Component {
                 ship={this.draftMode ? this.props.workspaceActions.createDraft : this.socket.emitNewNote}
                 {...commonAttrs}
             />;
-        } else if (this.props.ui.editNote) {
+        } else if (typeof this.props.ui.editNote === 'number') {
             return <NoteForm style={this.center(300,230)}
                 mode={'edit'}
                 idx={this.props.ui.editNote}
@@ -329,9 +330,11 @@ class Workspace extends Component {
                 let copy = Object.assign({}, note);
                 copy.style = Object.assign({}, note.style);
                 if (w.selected[i]) {
-                    if (w.bold !== null) copy.style.bold = w.bold;
-                    if (w.italic !== null) copy.style.italic = w.italic;
-                    if (w.underline !== null) copy.style.underline = w.underline;
+                    if (!copy.doodle) {
+                        if (w.bold !== null) copy.style.bold = w.bold;
+                        if (w.italic !== null) copy.style.italic = w.italic;
+                        if (w.underline !== null) copy.style.underline = w.underline;
+                    }
                     if (w.color !== null) copy.color = w.color;
                 }
 

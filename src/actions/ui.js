@@ -7,11 +7,10 @@ export const showNewNote = (event) => {
     };
 };
 
-export const showEdit = (note) => {
-    if (note.doodle) return;
+export const showEdit = (noteIdx) => {
     return {
         type: 'showEdit',
-        note
+        noteIdx
     };
 };
 

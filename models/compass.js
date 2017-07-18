@@ -86,9 +86,11 @@ compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb
 
         c.notes = _.map(c.notes, function(note) {
             if (_.contains(noteIds, note._id.toString())) {
-                if (s.bold !== null) note.style.bold = s.bold;
-                if (s.italic !== null) note.style.italic = s.italic;
-                if (s.underline !== null) note.style.underline = s.underline;
+                if (!note.doodle) {
+                    if (s.bold !== null) note.style.bold = s.bold;
+                    if (s.italic !== null) note.style.italic = s.italic;
+                    if (s.underline !== null) note.style.underline = s.underline;
+                }
                 if (transformation.color) note.color = transformation.color;
             }
             return note;

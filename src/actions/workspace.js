@@ -74,6 +74,13 @@ export const undraft = (idx) => {
     };
 };
 
+export const updateSelected = (len) => {
+    return {
+        type: 'updateSelected',
+        len
+    };
+};
+
 export const removeNotesIfSelected = (deletedIdx) => {
     return {
         type: 'removeNotesIfSelected',

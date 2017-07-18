@@ -8,6 +8,14 @@ const defaultState = {
     color: null, bold: null, italic: null, underline: null
 };
 
+const removeNotesIfSelected = (state, action) => {
+    let selected = _.filter(state.selected, (e, i) => {
+        return !_.contains(action.deletedIdx, i);
+    });
+
+    return {...state, selected};
+};
+
 const createDraft = (state, action) => {
     let note = Object.assign({}, action.note);
     note.draft = true;
@@ -55,6 +63,20 @@ const updateDrafts = (state, action) => {
     drafts = action.notes.concat(drafts);
 
     return {...state, drafts};
+};
+
+/*
+1. Note added --> new note is not selected
+2. Note edited --> no change
+3. Note deleted --> handled separately by `removeNotesIfSelected`
+                    from a separate socket emission
+ */
+const updateSelected = (state, action) => {
+    if (action.len > state.selected.length) {
+        return {...state, selected: state.selected.concat([ false ])};
+    }
+
+    return state;
 };
 
 const undraft = (state, action) => {
@@ -125,6 +147,9 @@ export default (state = {}, action) => {
 
         case 'updateDrafts':
             return updateDrafts(state, action);
+
+        case 'updateSelected':
+            return updateSelected(state, action);
 
         case 'undraft':
             return undraft(state, action);

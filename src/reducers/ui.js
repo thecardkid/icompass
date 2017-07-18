@@ -32,7 +32,7 @@ export default (state = defaultState, action) => {
             }
             return {...state, editNote: false, doodleNote: false, newNote};
         case 'showEdit':
-            return {...state, newNote: false, doodleNote: false, editNote: action.note};
+            return {...state, newNote: false, doodleNote: false, editNote: action.noteIdx};
         case 'showDoodle':
             return {...state, newNote: false, editNote: false, doodleNote: true};
         case 'closeForm':
