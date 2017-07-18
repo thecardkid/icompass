@@ -325,11 +325,17 @@ class Workspace extends Component {
 
     chooseDisplayedNotes(w, notes) {
         if (this.visualMode) {
-            return _.map(notes, (n, i) => {
+            return _.map(notes, (note, i) => {
+                let copy = Object.assign({}, note);
+                copy.style = Object.assign({}, note.style);
                 if (w.selected[i]) {
-                    if (w.color) return Object.assign({}, w.sandbox[i], {color: w.color});
-                    else return w.sandbox[i];
-                } else return n;
+                    if (w.bold !== null) copy.style.bold = w.bold;
+                    if (w.italic !== null) copy.style.italic = w.italic;
+                    if (w.underline !== null) copy.style.underline = w.underline;
+                    if (w.color !== null) copy.color = w.color;
+                }
+
+                return copy;
             });
         } else if (this.draftMode) {
             return w.drafts;

@@ -4,9 +4,8 @@ import _ from 'underscore';
 
 const defaultState = {
     selected: [],
-    sandbox: [],
     drafts: [],
-    color: null
+    color: null, bold: null, italic: null, underline: null
 };
 
 const createDraft = (state, action) => {
@@ -76,14 +75,13 @@ export default (state = {}, action) => {
 
         case 'visualMode':
             return {
-                ...state,
-                selected: (new Array(action.notes.length)).fill(false),
-                sandbox: _.map(action.notes, n => Object.assign({}, n))
+                ...defaultState,
+                selected: (new Array(action.notes.length)).fill(false)
             };
 
         case 'draftMode':
             return {
-                ...state,
+                ...defaultState,
                 drafts: action.notes
             };
 
@@ -97,15 +95,21 @@ export default (state = {}, action) => {
                 ]
             };
 
-        case 'styleAll':
-            let sandbox = _.map(state.sandbox, (n) => {
-                let style = Object.assign({}, n.style, action.style);
-                return Object.assign({}, n, { style });
-            });
-            return {...state, sandbox};
+        case 'toggleBold':
+            return {...state, bold: !state.bold};
+
+        case 'toggleItalic':
+            return {...state, italic: !state.italic};
+
+        case 'toggleUnderline':
+            return {...state, underline: !state.underline};
 
         case 'colorAll':
-            return {...state, color: action.color};
+            let color = (action.color === state.color ? null : action.color);
+            return {...state, color};
+
+        case 'removeNotesIfSelected':
+            return removeNotesIfSelected(state, action);
 
         case 'createDraft':
             return createDraft(state, action);

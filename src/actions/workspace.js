@@ -7,24 +7,21 @@ export const selectNote = (idx) => {
     };
 };
 
-export const boldAll = (value) => {
+export const toggleBold = () => {
     return {
-        type: 'styleAll',
-        style: { bold: value }
+        type: 'toggleBold'
     };
 };
 
-export const italicizeAll = (value) => {
+export const toggleItalic = () => {
     return {
-        type: 'styleAll',
-        style: { italic: value }
+        type: 'toggleItalic'
     };
 };
 
-export const underlineAll = (value) => {
+export const toggleUnderline = () => {
     return {
-        type: 'styleAll',
-        style: { underline: value }
+        type: 'toggleUnderline'
     };
 };
 
@@ -74,5 +71,12 @@ export const undraft = (idx) => {
     return {
         type: 'undraft',
         idx
+    };
+};
+
+export const removeNotesIfSelected = (deletedIdx) => {
+    return {
+        type: 'removeNotesIfSelected',
+        deletedIdx
     };
 };
