@@ -192,7 +192,7 @@ class Workspace extends Component {
 
         if (this.props.ui.newNote) {
             return <NoteForm style={this.center(300,230)}
-                mode={'make'}
+                mode={this.draftMode ? 'make draft' : 'make'}
                 note={{}}
                 position={this.props.ui.newNote}
                 ship={this.draftMode ? this.props.workspaceActions.createDraft : this.socket.emitNewNote}
@@ -200,7 +200,8 @@ class Workspace extends Component {
             />;
         } else if (typeof this.props.ui.editNote === 'number') {
             return <NoteForm style={this.center(300,230)}
-                mode={'edit'}
+                mode={this.draftMode ? 'edit draft' : 'edit'}
+                idx={this.props.ui.editNote}
                 note={this.notes[this.props.ui.editNote]}
                 ship={this.draftMode ? this.props.workspaceActions.editDraft : this.socket.emitEditNote}
                 {...commonAttrs}
@@ -238,7 +239,7 @@ class Workspace extends Component {
 
     handleChangeMode(e) {
         if (this.draftMode && e.target.id !== 'ic-mode-draft'
-            && this.props.workspace.drafts.length > this.props.notes.length) {
+            && !_.isEmpty(this.props.workspace.drafts)) {
             if (!confirm(PROMPTS.EXIT_DRAFT_WARNING)) return;
         }
 

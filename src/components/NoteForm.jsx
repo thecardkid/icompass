@@ -107,10 +107,20 @@ export default class NoteForm extends Component {
         });
     }
 
+    getHeader(mode) {
+        switch (mode) {
+            case 'make': return 'Create a note';
+            case 'make draft': return 'Create a draft';
+            case 'edit': return 'Edit this note';
+            case 'edit draft': return 'Edit this draft';
+            default: return ''
+        }
+    }
+
     render() {
-        let header = this.props.mode === 'make' ? 'Create a note' : 'Edit this note';
+        let header = this.getHeader(this.props.mode);
         header += ' /' + this.state.charCount;
-        let click = this.props.mode === 'make' ? this.make : this.edit;
+        let click = this.props.mode.includes('make') ? this.make : this.edit;
         let color = this.props.note.color || this.props.bg;
 
         let textStyle = '';

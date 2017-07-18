@@ -48,8 +48,17 @@ class StickyNote extends Component {
     }
 
     confirmDelete() {
-        if (!this.visualMode && confirm(PROMPTS.CONFIRM_DELETE_NOTE))
-            this.props.destroy(this.props.note._id);
+        if (this.visualMode) return alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+
+        let n = this.props.note;
+        if (n.draft && confirm(PROMPTS.CONFIRM_DISCARD_DRAFT))
+            return this.props.workspaceActions.undraft(this.props.i);
+
+        if (this.draftMode)
+            return alert(PROMPTS.DRAFT_MODE_NO_CHANGE);
+
+        if (confirm(PROMPTS.CONFIRM_DELETE_NOTE))
+            return this.props.destroy(n._id);
     }
 
     submitDraft() {
