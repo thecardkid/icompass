@@ -109,6 +109,7 @@ describe('Compass: models', () => {
     it('#bulkUpdateNotes', (done) => {
         Compass.addNote(DUT._id, NOTE, (c) => {
             let noteIds = _.map(c.notes, note => note._id.toString());
+            DUT = c;
 
             let transformation = {
                 style: { bold: true, italic: false, underline: true }
@@ -125,8 +126,10 @@ describe('Compass: models', () => {
     });
 
     it('#deleteNote', (done) => {
-        Compass.deleteNote(DUT._id, DUT.notes[0]._id.toString(), (newNotes) => {
-            expect(newNotes).to.have.lengthOf(1);
+        Compass.deleteNote(DUT._id, DUT.notes[1]._id.toString(), (notes, deletedIdx) => {
+            expect(notes).to.have.lengthOf(1);
+            expect(deletedIdx).to.have.lengthOf(1);
+            expect(deletedIdx[0]).to.equal(1);
             done();
         });
     });
@@ -136,8 +139,11 @@ describe('Compass: models', () => {
             let noteIds = _.map(c.notes, note => note._id.toString());
             expect(noteIds).to.have.lengthOf(2);
 
-            Compass.deleteNotes(DUT._id, noteIds, (notes) => {
+            Compass.deleteNotes(DUT._id, noteIds, (notes, deletedIdx) => {
                 expect(notes).to.have.lengthOf(0);
+                expect(deletedIdx).to.have.lengthOf(2);
+                expect(deletedIdx[0]).to.equal(0);
+                expect(deletedIdx[1]).to.equal(1);
                 done();
             });
         });
