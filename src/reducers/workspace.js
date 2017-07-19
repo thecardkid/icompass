@@ -5,7 +5,8 @@ import _ from 'underscore';
 const defaultState = {
     selected: [],
     drafts: [],
-    color: null, bold: null, italic: null, underline: null
+    color: null, bold: null, italic: null, underline: null,
+    timer: null
 };
 
 const removeNotesIfSelected = (state, action) => {
@@ -133,6 +134,9 @@ export default (state = {}, action) => {
 
         case 'undraft':
             return undraft(state, action);
+
+        case 'setTimer':
+            return {...state, timer: action.timer};
 
         default:
             return state;

@@ -358,8 +358,13 @@ class Workspace extends Component {
             <div>
                 {this.renderCornerButtons()}
                 {this.renderModesToolbar()}
-                <Compass destroy={this.socket.emitDeleteNote} notes={this.notes} submitDraft={this.submitDraft}/>
-                <Sidebar connected={this.socket.socket.connected} destroy={this.socket.emitDeleteCompass} exportCompass={this.exportCompass} />
+                <Compass destroy={this.socket.emitDeleteNote}
+                         notes={this.notes}
+                         submitDraft={this.submitDraft}/>
+                <Sidebar connected={this.socket.socket.connected}
+                         destroy={this.socket.emitDeleteCompass}
+                         createTimer={this.socket.emitCreateTimer}
+                         exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 {this.getFeedback()}
                 {this.getForm()}

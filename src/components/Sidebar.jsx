@@ -8,6 +8,8 @@ import Swipeable from 'react-swipeable';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
+import Timer from 'Components/Timer.jsx';
+
 import Storage from 'Utils/Storage.jsx';
 
 import * as uiActions from 'Actions/ui';
@@ -183,6 +185,7 @@ class Sidebar extends Component {
                     <i className="material-icons">chat_bubble</i>
                     <p>feedback</p>
                 </button>
+                <Timer createTimer={this.props.createTimer} />
                 <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>
                     <i className="material-icons" style={{color:'white'}}>delete</i>
                     <p>delete</p>

@@ -13,6 +13,7 @@ export default class Socket {
         this.disconnect = this.disconnect.bind(this);
 
         // socket event emitters
+        this.emitCreateTimer = this.emitCreateTimer.bind(this);
         this.emitNewNote = this.emitNewNote.bind(this);
         this.emitDragNote = this.emitDragNote.bind(this);
         this.emitEditNote = this.emitEditNote.bind(this);
@@ -39,6 +40,7 @@ export default class Socket {
         this.handleCompassReady = this.handleCompassReady.bind(this);
         this.handleUpdateNotes = this.handleUpdateNotes.bind(this);
         this.handleDeletedNotes = this.handleDeletedNotes.bind(this);
+        this.handleStartTimer = this.handleStartTimer.bind(this);
 
         // socket event handlers
         this.socket.on('user joined', this.handleUserJoined);
@@ -52,6 +54,7 @@ export default class Socket {
         this.socket.on('compass ready', this.handleCompassReady);
         this.socket.on('update notes', this.handleUpdateNotes);
         this.socket.on('deleted notes', this.handleDeletedNotes);
+        this.socket.on('start timer', this.handleStartTimer);
     }
 
     disconnect() {
@@ -68,6 +71,11 @@ export default class Socket {
 
     alertVisualModeNoCreate() {
         alert(PROMPTS.VISUAL_MODE_NO_CREATE);
+    }
+
+    emitCreateTimer(min, sec) {
+        if (this.socket.disconnected) return this.alertInvalidAction();
+        this.socket.emit('create timer', min, sec);
     }
 
     emitNewNote(note) {
@@ -247,5 +255,9 @@ export default class Socket {
     handleDeletedNotes(deletedIdx) {
         if (this.component.visualMode)
             this.component.props.workspaceActions.removeNotesIfSelected(deletedIdx);
+    }
+
+    handleStartTimer(min, sec) {
+        this.component.props.workspaceActions.setTimer({ min, sec });
     }
 }
