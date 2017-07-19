@@ -130,9 +130,9 @@ export default class NoteForm extends Component {
 
         return (
             <div className="ic-modal" id="ic-note-form" style={this.props.style}>
-                <div id="ic-form-contents">
-                    <div id="ic-form-header">
-                        <h1 id="ic-form-title">{header}</h1>
+                <div className="ic-modal-contents">
+                    <div className="ic-modal-header">
+                        <h1 className="ic-modal-title">{header}</h1>
                         {this.renderToolbar()}
                     </div>
                     <textarea id="ic-form-text"

@@ -10,6 +10,7 @@
 @import "feedback.less";
 @import "chat.less";
 @import "tutorial.less";
+@import "timer.less";
 
 @defaultFont:'Dosis', sans-serif;
 @stickySize:120px;
@@ -126,6 +127,22 @@ div.ic-modal {
     z-index:2;
     background:@light;
     text-align:center;
+
+    div.ic-modal-contents {
+        margin:10px;
+
+        div.ic-modal-header {
+            height:30px;
+
+            h1.ic-modal-title {
+                width:50%;
+                height:30px;
+                line-height:30px;
+                text-align:left;
+                float:left;
+            }
+        }
+    }
 }
 
 div#ic-404 {

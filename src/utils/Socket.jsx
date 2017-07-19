@@ -259,5 +259,6 @@ export default class Socket {
 
     handleStartTimer(min, sec) {
         this.component.props.workspaceActions.setTimer({ min, sec });
+        alert(PROMPTS.TIMEBOX(min, sec));
     }
 }

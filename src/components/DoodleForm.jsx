@@ -109,7 +109,7 @@ export default class DoodleForm extends Component {
 
         return (
             <div className="ic-modal" id="ic-doodle-form" style={this.props.style}>
-                <div id="ic-doodle-contents">
+                <div>
                     <h1>Doodle on a note</h1>
                     <canvas id="ic-doodle"
                         ref="canvas"

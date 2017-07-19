@@ -21,6 +21,7 @@ import DoodleForm from 'Components/DoodleForm.jsx';
 import Feedback from 'Components/Feedback.jsx';
 import Compass from 'Components/Compass.jsx';
 import VisualModeToolbar from 'Components/VisualModeToolbar.jsx';
+import TimerForm from "Components/TimerForm.jsx";
 
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
@@ -211,6 +212,11 @@ class Workspace extends Component {
                 ship={this.draftMode ? this.props.workspaceActions.createDoodleDraft : this.socket.emitNewDoodle}
                 {...commonAttrs}
             />;
+        } else if (this.props.ui.timerConfig) {
+            return <TimerForm style={this.center(300,150)}
+                ship={this.socket.emitCreateTimer}
+                {...commonAttrs}
+            />
         }
         return null;
     }

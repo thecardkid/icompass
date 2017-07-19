@@ -185,7 +185,7 @@ class Sidebar extends Component {
                     <i className="material-icons">chat_bubble</i>
                     <p>feedback</p>
                 </button>
-                <Timer createTimer={this.props.createTimer} />
+                <Timer />
                 <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>
                     <i className="material-icons" style={{color:'white'}}>delete</i>
                     <p>delete</p>

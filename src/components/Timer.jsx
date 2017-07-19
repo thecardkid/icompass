@@ -3,9 +3,9 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import * as workspaceActions from 'Actions/workspace';
+import * as uiActions from 'Actions/ui';
 
 class Timer extends Component {
     constructor(props) {
@@ -47,7 +47,7 @@ class Timer extends Component {
     handleClick() {
         if (this.running) return; // TODO pause
         if (this.state.flash) return this.setState({flash: false});
-        this.props.createTimer(0, 10);
+        this.props.uiActions.showTimerConfig();
     }
 
     tick() {
@@ -93,10 +93,6 @@ class Timer extends Component {
     }
 }
 
-Timer.propTypes = {
-    createTimer: PropTypes.func.isRequired
-};
-
 function mapStateToProps(state) {
     return {
         workspace: state.workspace
@@ -105,7 +101,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        workspaceActions: bindActionCreators(workspaceActions, dispatch)
+        workspaceActions: bindActionCreators(workspaceActions, dispatch),
+        uiActions: bindActionCreators(uiActions, dispatch)
     };
 }
 
