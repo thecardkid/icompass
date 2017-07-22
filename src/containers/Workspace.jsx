@@ -369,7 +369,7 @@ class Workspace extends Component {
                          submitDraft={this.submitDraft}/>
                 <Sidebar connected={this.socket.socket.connected}
                          destroy={this.socket.emitDeleteCompass}
-                         createTimer={this.socket.emitCreateTimer}
+                         stop={this.socket.emitCancelTimer}
                          exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 {this.getFeedback()}

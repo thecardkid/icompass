@@ -7,36 +7,44 @@ import { connect } from 'react-redux';
 import * as workspaceActions from 'Actions/workspace';
 import * as uiActions from 'Actions/ui';
 
+const GREY = 'rgb(221, 221, 221)',
+      RED = 'rgb(219, 112, 147)';
+
 class Timer extends Component {
     constructor(props) {
         super(props);
 
         this.granularity = 1000;
         this.running = false;
-        this.state = {
-            left: null,
-            flash: false,
-        };
+        this.interval = null;
+        this.state = {left: null};
 
         this.tick = this.tick.bind(this);
+        this.stop = this.stop.bind(this);
         this.handleClick = this.handleClick.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return nextProps.workspace.timer !== this.props.workspace.timer ||
-            nextState.left !== this.state.left ||
-            nextState.flash !== this.state.flash;
+            nextState.left !== this.state.left;
     }
 
     componentDidUpdate() {
-        let timer;
-        if (!this.running && (timer = this.props.workspace.timer)) {
+        let timer = this.props.workspace.timer;
+        if (this.running && timer === null) {
+            this.running = false;
+            this.setState({left: null});
+            return;
+        }
+
+        if (!this.running && timer !== null) {
             this.start(timer.min, timer.sec);
         }
     }
 
     start(min, sec) {
         if (this.running) return;
+        if (this.interval) this.removeInterval();
 
         this.duration = min * 60 + sec;
         this.startTime = Date.now();
@@ -44,50 +52,80 @@ class Timer extends Component {
         this.tick();
     }
 
+    removeInterval() {
+        clearInterval(this.interval);
+        this.interval = null;
+        $('button[name=timer]').css('background', '');
+    }
+
     handleClick() {
-        if (this.running) return; // TODO pause
-        if (this.state.flash) return this.setState({flash: false});
+        if (this.running) return;
+        if (this.interval) return this.removeInterval();
         this.props.uiActions.showTimerConfig();
     }
 
     tick() {
-        let left = this.duration - (((Date.now() - this.startTime) / 1000) | 0),
-            flash = false;
+        let left = this.duration - (((Date.now() - this.startTime) / 1000) | 0);
 
         if (left > 0) {
             setTimeout(this.tick, this.granularity);
         } else {
             left = 0;
-            flash = true;
+            this.flash();
             this.running = false;
             this.props.workspaceActions.setTimer(null);
+            this.props.uiActions.setSidebarVisible(true);
         }
 
-        this.setState({ left, flash });
+        this.setState({ left });
+    }
+
+    flash() {
+        this.interval = setInterval(this.toggleBackground, 600);
+    }
+
+    toggleBackground() {
+        let btn = $('button[name=timer]');
+        if (btn.css('background').includes(GREY)) {
+            btn.css('background', RED);
+        } else {
+            btn.css('background', GREY);
+        }
     }
 
     parse(seconds) {
-        return {
-            min: (seconds / 60) | 0,
-            sec: (seconds % 60) | 0,
-        };
+        let min = (seconds / 60) | 0;
+        if (min < 10) min = '0' + min;
+        let sec = (seconds % 60) | 0;
+        if (sec < 10) sec = '0' + sec;
+        return { min, sec };
+    }
+
+    stop(e) {
+        e.stopPropagation();
+        this.props.stop();
     }
 
     render() {
-        let contents, style = {};
+        let contents;
         if (this.running) {
             let time = this.parse(this.state.left);
-            contents = time.min + ':' + time.sec;
+            contents = (
+                <div>
+                    <p className="ic-time">{time.min}:{time.sec}</p>
+                    <div className="ic-timer-action dangerous" onClick={this.stop}>
+                        <p>stop</p>
+                    </div>
+                </div>
+            );
         } else {
-            contents = 'timebox';
+            contents = <p>timebox</p>;
         }
 
-        if (this.state.flash) style = {background: 'palevioletred'};
-
         return (
-            <button name="timer" className="ic-action" onClick={this.handleClick} style={style}>
+            <button name="timer" className="ic-action" onClick={this.handleClick}>
                 <i className="material-icons">timer</i>
-                <p>{contents}</p>
+                {contents}
             </button>
         );
     }

@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { PROMPTS } from 'Lib/constants';
+
 class TimerForm extends Component {
     constructor(props) {
         super(props);
@@ -13,6 +15,10 @@ class TimerForm extends Component {
 
     submit(m, s) {
         if (m === 0 && s === 0) return;
+        if (m === 30 && s > 0) return alert(PROMPTS.TIMEBOX_TOO_LONG);
+        if (m > 30) return alert(PROMPTS.TIMEBOX_TOO_LONG);
+        if (m < 0 || s < 0) return alert(PROMPTS.TIMEBOX_NEGATIVE_VALUES);
+        if (s > 59) return alert(PROMPTS.TIMEBOX_TOO_MANY_SECONDS);
         this.props.ship(m, s);
         this.props.close();
     }

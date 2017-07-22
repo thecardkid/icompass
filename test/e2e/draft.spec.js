@@ -67,7 +67,7 @@ module.exports = {
         .getCssProperty('#ic-form-text', 'background', function(result) {
             this.assert.equal(result.value.includes('rgb(128, 128, 128)'), true);
         })
-        .assert.containsText('#ic-form-title', 'Create a draft')
+        .assert.containsText('h1.ic-modal-title', 'Create a draft')
         .setValue('#ic-form-text', NOTE_TEXT)
         .click('button[name=ship]')
         .pause(200)
@@ -113,7 +113,7 @@ module.exports = {
         .moveToElement('#note0', 10, 10)
         .doubleClick()
         .assert.elementPresent('#ic-note-form')
-        .assert.containsText('#ic-form-title', 'Edit this draft')
+        .assert.containsText('h1.ic-modal-title', 'Edit this draft')
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', EDITED_TEXT)
         .click('button[name=bold]').click('button[name=underline]')

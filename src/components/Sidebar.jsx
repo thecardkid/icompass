@@ -185,7 +185,7 @@ class Sidebar extends Component {
                     <i className="material-icons">chat_bubble</i>
                     <p>feedback</p>
                 </button>
-                <Timer />
+                <Timer stop={this.props.stop}/>
                 <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>
                     <i className="material-icons" style={{color:'white'}}>delete</i>
                     <p>delete</p>
@@ -244,7 +244,8 @@ class Sidebar extends Component {
 Sidebar.propTypes = {
     connected: PropTypes.bool.isRequired,
     destroy: PropTypes.func.isRequired,
-    exportCompass: PropTypes.func,
+    exportCompass: PropTypes.func.isRequired,
+    stop: PropTypes.func.isRequired,
 
     compass: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,

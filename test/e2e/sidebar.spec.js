@@ -87,7 +87,64 @@ module.exports = {
         });
     },
 
-    'actions': function(browser) {
+    'timer': function(browser) {
+        browser
+            .assert.visible('button[name=timer]')
+            .click('button[name=timer]')
+            .pause(100)
+            .assert.elementPresent('#ic-timer-form')
+            .assert.elementPresent('button[name=ic-30s]')
+            .assert.elementPresent('button[name=ic-1m]')
+            .assert.elementPresent('button[name=ic-3m]')
+            .click('button[name=ic-3m]')
+            .pause(100)
+            .getAlertText(function(result) {
+                this.assert.equal(result.value, PROMPTS.TIMEBOX(3,0))
+            })
+            .acceptAlert()
+            .assert.containsText('button[name=timer] div p', '03:00')
+            .assert.containsText('div.ic-timer-action p', 'stop')
+            .click('div.ic-timer-action')
+            .assert.containsText('button[name=timer]', 'timebox')
+            .click('button[name=timer]')
+            .pause(100)
+            .clearValue('input#ic-timer-min')
+            .setValue('input#ic-timer-min', -2)
+            .click('button[name=ship]')
+            .pause(100)
+            .getAlertText(function(result) {
+                this.assert.equal(result.value, PROMPTS.TIMEBOX_NEGATIVE_VALUES);
+            })
+            .acceptAlert()
+            .clearValue('input#ic-timer-min')
+            .setValue('input#ic-timer-min', 31)
+            .click('button[name=ship]')
+            .pause(100)
+            .getAlertText(function(result) {
+                this.assert.equal(result.value, PROMPTS.TIMEBOX_TOO_LONG);
+            })
+            .acceptAlert()
+            .clearValue('input#ic-timer-min')
+            .setValue('input#ic-timer-min', 0)
+            .clearValue('input#ic-timer-sec')
+            .setValue('input#ic-timer-sec', 61)
+            .click('button[name=ship]')
+            .pause(100)
+            .getAlertText(function(result) {
+                this.assert.equal(result.value, PROMPTS.TIMEBOX_TOO_MANY_SECONDS);
+            })
+            .acceptAlert()
+            .clearValue('input#ic-timer-sec')
+            .setValue('input#ic-timer-sec', 2)
+            .click('button[name=ship]')
+            .pause(100)
+            .acceptAlert()
+            .pause(2000)
+            .click('button[name=timer]')
+            .assert.elementNotPresent('#ic-timer-form');
+    },
+
+    'other actions': function(browser) {
         browser
         .assert.elementPresent('div.ic-sidebar-list[name=actions]')
         .assert.visible('button[name=sucks]')

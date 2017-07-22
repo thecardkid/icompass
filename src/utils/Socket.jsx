@@ -14,6 +14,7 @@ export default class Socket {
 
         // socket event emitters
         this.emitCreateTimer = this.emitCreateTimer.bind(this);
+        this.emitCancelTimer = this.emitCancelTimer.bind(this);
         this.emitNewNote = this.emitNewNote.bind(this);
         this.emitDragNote = this.emitDragNote.bind(this);
         this.emitEditNote = this.emitEditNote.bind(this);
@@ -41,6 +42,7 @@ export default class Socket {
         this.handleUpdateNotes = this.handleUpdateNotes.bind(this);
         this.handleDeletedNotes = this.handleDeletedNotes.bind(this);
         this.handleStartTimer = this.handleStartTimer.bind(this);
+        this.handleCancelTimer = this.handleCancelTimer.bind(this);
 
         // socket event handlers
         this.socket.on('user joined', this.handleUserJoined);
@@ -55,6 +57,7 @@ export default class Socket {
         this.socket.on('update notes', this.handleUpdateNotes);
         this.socket.on('deleted notes', this.handleDeletedNotes);
         this.socket.on('start timer', this.handleStartTimer);
+        this.socket.on('all cancel timer', this.handleCancelTimer);
     }
 
     disconnect() {
@@ -76,6 +79,11 @@ export default class Socket {
     emitCreateTimer(min, sec) {
         if (this.socket.disconnected) return this.alertInvalidAction();
         this.socket.emit('create timer', min, sec);
+    }
+
+    emitCancelTimer() {
+        if (this.socket.disconnected) return this.alertInvalidAction();
+        this.socket.emit('cancel timer');
     }
 
     emitNewNote(note) {
@@ -260,5 +268,9 @@ export default class Socket {
     handleStartTimer(min, sec) {
         this.component.props.workspaceActions.setTimer({ min, sec });
         alert(PROMPTS.TIMEBOX(min, sec));
+    }
+
+    handleCancelTimer() {
+        this.component.props.workspaceActions.setTimer(null);
     }
 }
