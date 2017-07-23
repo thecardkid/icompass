@@ -30,6 +30,7 @@ class StickyNote extends Component {
 
         this.hasEditingRights = !this.props.compass.viewOnly;
         this.compactMode = this.visualMode = this.draftMode = false;
+        this.lastClick = 0;
     }
 
     shouldComponentUpdate(nextProps) {
@@ -134,6 +135,10 @@ class StickyNote extends Component {
     }
 
     handleClick() {
+        let now = Date.now();
+        if (now - this.lastClick < 500) return;
+
+        this.lastClick = now;
         if (this.visualMode)
             this.props.workspaceActions.selectNote(this.props.i);
         else
