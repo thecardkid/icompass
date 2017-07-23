@@ -61,24 +61,31 @@
 
 button.ic-corner-btn {
     position:absolute;
-    background:@dark;
-    color:@light;
+    background:@light;
+    color:@dark;
     z-index:2;
+    padding:1px 3px;
+    font-size:12px;
 }
 
+@corner-margin: 5px;
+
 button#ic-show-sidebar {
-    top:20px;
-    left:20px;
+    top:@corner-margin;
+    left:@corner-margin;
+    border:1px solid black;
 }
 
 button#ic-show-chat {
-    bottom:20px;
-    right:20px;
+    bottom:@corner-margin;
+    right:@corner-margin;
+    border:1px solid black;
 }
 
 button#ic-show-doodle {
-    left:20px;
-    bottom:20px;
+    left:@corner-margin;
+    bottom:@corner-margin;
+    border:1px solid black;
 }
 
 div#ic-modes {

@@ -294,7 +294,8 @@ class Workspace extends Component {
     renderCornerButtons() {
         let actions = this.props.uiActions;
         let showChatStyle = {
-            background: this.props.chat.unread ? COLORS.RED : COLORS.DARK
+            background: this.props.chat.unread ? COLORS.RED : COLORS.LIGHT,
+            color: this.props.chat.unread ? COLORS.LIGHT : COLORS.DARK
         };
 
         return (
