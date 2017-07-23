@@ -136,7 +136,7 @@ class StickyNote extends Component {
 
     handleClick() {
         let now = Date.now();
-        if (now - this.lastClick < 500) return;
+        if (now - this.lastClick < 40) return;
 
         this.lastClick = now;
         if (this.visualMode)

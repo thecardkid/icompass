@@ -78,7 +78,7 @@ module.exports = {
         .waitForElementVisible('#ic-toast span', 100)
         .assert.cssClassPresent('#ic-toast span', 'warning')
         .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE)
-        .click('#note0'); // de-select the note
+        .pause(50).click('#note0').pause(50);
     },
 
     'visual toolbar displays correctly': function(browser) {
@@ -110,7 +110,6 @@ module.exports = {
     'bulk font styling': function(browser) {
         browser
         .click('#ic-mode-visual')
-        .pause(100)
         .click('#note0')
         .assert.cssProperty('#note0', 'border', '3px solid rgb(40, 138, 255)')
         .click('button.bold')
@@ -122,10 +121,12 @@ module.exports = {
         .assert.cssClassNotPresent('#note1 span a p', 'bold')
         .assert.cssClassNotPresent('#note1 span a p', 'italic')
         .assert.cssClassNotPresent('#note1 span a p', 'underline')
+        .pause(50)
         .click('#note1')
         .assert.cssClassPresent('#note1 span a p', 'bold')
         .assert.cssClassPresent('#note1 span a p', 'italic')
         .assert.cssClassPresent('#note1 span a p', 'underline')
+        .pause(50)
         .click('#note1')
         .assert.cssClassNotPresent('#note1 span a p', 'bold')
         .assert.cssClassNotPresent('#note1 span a p', 'italic')
@@ -172,6 +173,7 @@ module.exports = {
 
     'submitting with no edits should cause no change': function(browser) {
         browser
+        .pause(50)
         .click('#note1')
         .click('button.bold').click('button.italic')
         .click('button#ic-bulk-submit')

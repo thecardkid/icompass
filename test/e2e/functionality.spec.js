@@ -47,7 +47,7 @@ module.exports = {
         .keys(['s', 'c', 'p'])
         .pause(500)
         .assert.cssProperty('#ic-sidebar', 'left', '-240px')
-        .assert.cssProperty('#ic-chat', 'bottom', '-265px')
+        .assert.cssProperty('#ic-chat', 'bottom', '-270px')
         .assert.elementPresent('#ic-about')
         .keys(['p', 's'])
         .keys(['n'])
