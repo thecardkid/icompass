@@ -42,18 +42,18 @@ module.exports = {
             browser.moveTo(null, -100, 0);
         })
         .mouseButtonUp(0, function() {
-            browser.getAlertText(function(result) {
-                this.assert.equal(result.value, PROMPTS.DRAFT_MODE_NO_CHANGE);
-            })
-            .acceptAlert();
+            browser
+            .waitForElementVisible('#ic-toast span', 100)
+            .assert.cssClassPresent('#ic-toast span', 'warning')
+            .assert.containsText('#ic-toast span', PROMPTS.DRAFT_MODE_NO_CHANGE);
         })
         .moveToElement('#note0', 10, 10)
         .doubleClick()
         .pause(100)
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.DRAFT_MODE_NO_CHANGE);
-        })
-        .acceptAlert();
+        .waitForElementVisible('#ic-toast span', 100)
+        .assert.cssClassPresent('#ic-toast span', 'warning')
+        .assert.containsText('#ic-toast span', PROMPTS.DRAFT_MODE_NO_CHANGE)
+        .click('#ic-toast span');
     },
 
     'creating drafts': function(browser) {
@@ -125,10 +125,9 @@ module.exports = {
         // try to edit doodle
         .moveToElement('#note2', 10, 10)
         .doubleClick()
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.CANNOT_EDIT_DOODLE);
-        })
-        .acceptAlert();
+        .waitForElementVisible('#ic-toast span', 100)
+        .assert.cssClassPresent('#ic-toast span', 'warning')
+        .assert.containsText('#ic-toast span', PROMPTS.CANNOT_EDIT_DOODLE)
     },
 
     'delete a draft': function(browser) {
@@ -159,7 +158,7 @@ module.exports = {
         .getCssProperty('#note1 span a', 'background', function(result) {
             this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
         })
-    // changing mode should trigger warning
+        // changing mode should trigger warning
         .click('#ic-mode-normal')
         .getAlertText(function(result) {
             this.assert.equal(result.value, PROMPTS.EXIT_DRAFT_WARNING);

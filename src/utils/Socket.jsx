@@ -270,11 +270,11 @@ export default class Socket {
 
     handleStartTimer(min, sec) {
         this.component.props.workspaceActions.setTimer({ min, sec });
-        this.toast.success(PROMPTS.TIMEBOX(min, sec));
+        this.toast.info(PROMPTS.TIMEBOX(min, sec));
     }
 
     handleCancelTimer() {
         this.component.props.workspaceActions.setTimer(null);
-        this.toast.success(PROMPTS.TIMEBOX_CANCELED);
+        this.toast.info(PROMPTS.TIMEBOX_CANCELED);
     }
 }

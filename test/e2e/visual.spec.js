@@ -58,12 +58,9 @@ module.exports = {
         .waitForElementVisible('#ic-note-form', 100)
         .setValue('#ic-form-text', TEXT)
         .click('button[name=ship]')
-        .pause(100)
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.VISUAL_MODE_NO_CREATE);
-        })
-        .acceptAlert()
-        .pause(200)
+        .waitForElementVisible('#ic-toast span', 100)
+        .assert.cssClassPresent('#ic-toast span', 'warning')
+        .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CREATE)
         // try dragging
         .assert.elementPresent('#note0')
         .moveToElement('#note0', 10, 10)
@@ -71,18 +68,16 @@ module.exports = {
             browser.moveTo(null, -100, 0);
         })
         .mouseButtonUp(0, function() {
-            browser.getAlertText(function(result) {
-                this.assert.equal(result.value, PROMPTS.VISUAL_MODE_NO_CHANGE);
-            })
-            .acceptAlert();
+            browser
+            .waitForElementVisible('#ic-toast span', 100)
+            .assert.cssClassPresent('#ic-toast span', 'warning')
+            .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE)
         })
         .moveToElement('#note0', 10, 10)
         .doubleClick()
-        .pause(100)
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.VISUAL_MODE_NO_CHANGE);
-        })
-        .acceptAlert()
+        .waitForElementVisible('#ic-toast span', 100)
+        .assert.cssClassPresent('#ic-toast span', 'warning')
+        .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE)
         .click('#note0'); // de-select the note
     },
 

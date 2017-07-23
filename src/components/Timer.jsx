@@ -81,6 +81,7 @@ class Timer extends Component {
     }
 
     flash() {
+        if (this.interval) clearInterval(this.interval);
         this.interval = setInterval(this.toggleBackground, 600);
     }
 

@@ -91,54 +91,50 @@ module.exports = {
         browser
             .assert.visible('button[name=timer]')
             .click('button[name=timer]')
-            .pause(100)
-            .assert.elementPresent('#ic-timer-form')
+            .waitForElementVisible('#ic-timer-form', 100)
             .assert.elementPresent('button[name=ic-30s]')
             .assert.elementPresent('button[name=ic-1m]')
             .assert.elementPresent('button[name=ic-3m]')
             .click('button[name=ic-3m]')
-            .pause(100)
-            .getAlertText(function(result) {
-                this.assert.equal(result.value, PROMPTS.TIMEBOX(3,0))
-            })
-            .acceptAlert()
+            .waitForElementVisible('#ic-toast span', 100)
+            .assert.cssClassPresent('#ic-toast span', 'info')
+            .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX(3,0))
             .assert.containsText('button[name=timer] div p', '03:00')
             .assert.containsText('div.ic-timer-action p', 'stop')
             .click('div.ic-timer-action')
             .assert.containsText('button[name=timer]', 'timebox')
             .click('button[name=timer]')
-            .pause(100)
+            .waitForElementVisible('#ic-timer-form', 100)
+            // negative values
             .clearValue('input#ic-timer-min')
             .setValue('input#ic-timer-min', -2)
             .click('button[name=ship]')
-            .pause(100)
-            .getAlertText(function(result) {
-                this.assert.equal(result.value, PROMPTS.TIMEBOX_NEGATIVE_VALUES);
-            })
-            .acceptAlert()
+            .waitForElementVisible('#ic-toast span', 100)
+            .assert.cssClassPresent('#ic-toast span', 'error')
+            .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_NEGATIVE_VALUES)
+            // timer too long (>30 mins)
             .clearValue('input#ic-timer-min')
             .setValue('input#ic-timer-min', 31)
             .click('button[name=ship]')
-            .pause(100)
-            .getAlertText(function(result) {
-                this.assert.equal(result.value, PROMPTS.TIMEBOX_TOO_LONG);
-            })
-            .acceptAlert()
+            .waitForElementVisible('#ic-toast span', 100)
+            .assert.cssClassPresent('#ic-toast span', 'error')
+            .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_TOO_LONG)
+            // invalid seconds (>60)
             .clearValue('input#ic-timer-min')
             .setValue('input#ic-timer-min', 0)
             .clearValue('input#ic-timer-sec')
             .setValue('input#ic-timer-sec', 61)
             .click('button[name=ship]')
-            .pause(100)
-            .getAlertText(function(result) {
-                this.assert.equal(result.value, PROMPTS.TIMEBOX_TOO_MANY_SECONDS);
-            })
-            .acceptAlert()
+            .waitForElementVisible('#ic-toast span', 100)
+            .assert.cssClassPresent('#ic-toast span', 'error')
+            .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_TOO_MANY_SECONDS)
+            // valid timer
             .clearValue('input#ic-timer-sec')
             .setValue('input#ic-timer-sec', 2)
             .click('button[name=ship]')
-            .pause(100)
-            .acceptAlert()
+            .waitForElementVisible('#ic-toast span', 100)
+            .assert.cssClassPresent('#ic-toast span', 'info')
+            .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX(0,2))
             .pause(2000)
             .click('button[name=timer]')
             .assert.elementNotPresent('#ic-timer-form');
@@ -158,24 +154,22 @@ module.exports = {
             this.assert.equal(result.value, 'http://localhost:8080/tutorial');
         })
         .click('button[name=save]')
-        .pause(200)
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.SAVE_SUCCESS);
-        })
-        .acceptAlert()
-        .pause(200)
+        .waitForElementVisible('#ic-toast span', 100)
+        .assert.cssClassPresent('#ic-toast span', 'success')
+        .assert.containsText('#ic-toast span', PROMPTS.SAVE_SUCCESS)
+        .click('#ic-toast span')
         .click('button[name=logout]')
-        .waitForElementVisible('div.ic-saved', 1000)
+        .waitForElementVisible('div.ic-saved', 200)
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/');
         })
         .click('div.ic-saved a')
-        .waitForElementVisible('#ic-sidebar', 500)
+        .waitForElementVisible('#ic-sidebar', 100)
         .url(function(result) {
             this.assert.equal(result.value, editURL);
         })
         .click('button[name=logout]')
-        .waitForElementVisible('div.ic-saved', 1000)
+        .waitForElementVisible('div.ic-saved', 100)
         .moveToElement('div.ic-saved', 100, 10, function() {
             browser.mouseButtonClick();
         })

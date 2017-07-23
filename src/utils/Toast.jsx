@@ -10,6 +10,11 @@ export default class Toaster {
         setTimeout(this.clear, 5000);
     }
 
+    info(msg) {
+        $('#ic-toast').empty().append(this.getSpan('info', msg));
+        setTimeout(this.clear, 5000);
+    }
+
     warn(msg) {
         $('#ic-toast').empty().append(this.getSpan('warning', msg));
         setTimeout(this.clear, 5000);
