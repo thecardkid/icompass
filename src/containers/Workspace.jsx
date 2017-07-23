@@ -143,9 +143,8 @@ class Workspace extends Component {
 
         if (this.draftMode && !note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
         if (note.draft) this.props.workspaceActions.dragDraft(i, x, y);
-        else {
+        else if (this.socket.emitDragNote(note)) {
             this.props.noteActions.drag(i, x, y);
-            this.socket.emitDragNote(note);
         }
     }
 

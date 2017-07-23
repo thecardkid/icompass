@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import _ from 'underscore';
 
 import * as workspaceActions from 'Actions/workspace';
 import * as uiActions from 'Actions/ui';
@@ -31,24 +32,24 @@ class Timer extends Component {
     }
 
     componentDidUpdate() {
-        let timer = this.props.timer;
-        if (this.running && timer === null) {
+        let empty = _.isEmpty(this.props.timer);
+        if (this.running && empty) {
             this.running = false;
             this.setState({left: null});
             return;
         }
 
-        if (!this.running && timer !== null) {
-            this.start(timer.min, timer.sec);
+        if (!this.running && !empty) {
+            this.start(this.props.timer);
         }
     }
 
-    start(min, sec) {
+    start(t) {
         if (this.running) return;
         if (this.interval) this.removeInterval();
 
-        this.duration = min * 60 + sec;
-        this.startTime = Date.now();
+        this.duration = t.min * 60 + t.sec;
+        this.startTime = t.startTime;
         this.running = true;
         this.tick();
     }
@@ -74,7 +75,7 @@ class Timer extends Component {
             left = 0;
             this.flash();
             this.running = false;
-            this.props.workspaceActions.setTimer(null);
+            this.props.workspaceActions.setTimer({});
             this.props.uiActions.setSidebarVisible(true);
         }
 
@@ -142,7 +143,7 @@ Timer.propTypes = {
 
 function mapStateToProps(state) {
     return {
-        workspace: state.workspace
+        timer: state.workspace.timer || {}
     };
 }
 

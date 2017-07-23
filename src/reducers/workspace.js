@@ -6,7 +6,7 @@ const defaultState = {
     selected: [],
     drafts: [],
     color: null, bold: null, italic: null, underline: null,
-    timer: null
+    timer: {}
 };
 
 const colorAll = (state, action) => {

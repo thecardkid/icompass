@@ -115,8 +115,12 @@ export default class Socket {
     }
 
     emitDragNote(note) {
-        if (this.socket.disconnected) return this.alertInvalidAction();
+        if (this.socket.disconnected) {
+            this.alertInvalidAction();
+            return false;
+        }
         this.socket.emit('update note', note);
+        return true;
     }
 
     emitNewDoodle(user) {
@@ -268,13 +272,13 @@ export default class Socket {
             this.component.props.workspaceActions.removeNotesIfSelected(deletedIdx);
     }
 
-    handleStartTimer(min, sec) {
-        this.component.props.workspaceActions.setTimer({ min, sec });
+    handleStartTimer(min, sec, startTime) {
+        this.component.props.workspaceActions.setTimer({ min, sec, startTime });
         this.toast.info(PROMPTS.TIMEBOX(min, sec));
     }
 
     handleCancelTimer() {
-        this.component.props.workspaceActions.setTimer(null);
+        this.component.props.workspaceActions.setTimer({});
         this.toast.info(PROMPTS.TIMEBOX_CANCELED);
     }
 }
