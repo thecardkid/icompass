@@ -136,8 +136,7 @@ module.exports = {
             .assert.cssClassPresent('#ic-toast span', 'info')
             .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX(0,2))
             .pause(2000)
-            .click('button[name=timer]')
-            .assert.elementNotPresent('#ic-timer-form');
+            .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_OVER);
     },
 
     'other actions': function(browser) {

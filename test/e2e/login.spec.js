@@ -40,12 +40,15 @@ module.exports = {
         .setValue('#compass-center', 'nightwatchjs')
         .click('button[name=next]')
         .waitForElementVisible('.third', 1000)
-        .getText('.third h1', function(result) {
-            this.assert.equal(result.value.length, 8);
-            code = result.value;
-        })
+        .assert.containsText('.third h1', 'success')
         .assert.elementPresent('#email')
-        .assert.elementPresent('button[name=to-workspace]');
+        .assert.elementPresent('button[name=to-workspace]')
+        .click('button[name=to-workspace]')
+        .url(function(result) {
+            var parts = result.value.split('/');
+            code = parts[5];
+        })
+        .url('http://localhost:8080');
     },
 
     'find path': function(browser) {
@@ -87,12 +90,12 @@ module.exports = {
         .setValue('#compass-code', code)
         .setValue('#username', 'sandbox')
         .click('button[name=next]')
-        .waitForElementVisible('.third', 50000)
+        .waitForElementVisible('.third', 5000)
         .assert.containsText('.third h1', 'Edit access')
         .assert.containsText('.third h2', 'You will be logged in as sandbox')
         .assert.elementPresent('button[name=to-workspace]')
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 10000)
+        .waitForElementVisible('#ic-sidebar', 1000)
         .click('#ic-sidebar button[name=destroyer]')
         .acceptAlert()
         .pause(500)
