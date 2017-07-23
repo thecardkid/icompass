@@ -83,12 +83,13 @@ export default (state = {}, action) => {
         case 'normalMode':
         case 'compactMode':
         case 'draftMode':
-            return defaultState;
+            return {...defaultState, timer: state.timer};
 
         case 'visualMode':
             return {
                 ...defaultState,
-                selected: (new Array(action.len)).fill(false)
+                selected: (new Array(action.len)).fill(false),
+                timer: state.timer
             };
 
         case 'selectNote':
