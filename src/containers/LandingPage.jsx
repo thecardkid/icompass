@@ -160,11 +160,11 @@ class LandingPage extends Component {
         }
     }
 
-    getMakeSuccessNotification(code) {
+    getMakeSuccessNotification() {
         return (
             <div className="section third">
-                <h1>{code}</h1>
-                <h2>This is your compass code. If you would like me to email you a link to your compass, enter your email below. I will not send you spam.</h2>
+                <h1>success</h1>
+                <h2>Your workspace is ready. If you would like me to email you a link to your workspace, enter your email below. I will not send you spam.</h2>
                 <input id="email" type="text" />
                 <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>let&apos;s go</button>
             </div>
@@ -189,7 +189,7 @@ class LandingPage extends Component {
             return this.getNullNotification();
 
         if (this.state.loginType === LOGIN_TYPE.MAKE)
-            return this.getMakeSuccessNotification(this.state.data.code);
+            return this.getMakeSuccessNotification();
 
         if (this.state.loginType === LOGIN_TYPE.FIND)
             return this.getFindSuccessNotification(this.state.data.viewOnly);
