@@ -22,6 +22,7 @@ import Feedback from 'Components/Feedback.jsx';
 import Compass from 'Components/Compass.jsx';
 import VisualModeToolbar from 'Components/VisualModeToolbar.jsx';
 import TimerForm from 'Components/TimerForm.jsx';
+import Modal from 'Components/Modal.jsx';
 
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
@@ -192,8 +193,9 @@ class Workspace extends Component {
             close: this.props.uiActions.closeForm
         };
 
+        let form;
         if (this.props.ui.newNote) {
-            return <NoteForm style={this.center(300,230)}
+            form = <NoteForm style={this.center(300,230)}
                 mode={this.draftMode ? 'make draft' : 'make'}
                 note={{}}
                 position={this.props.ui.newNote}
@@ -201,7 +203,7 @@ class Workspace extends Component {
                 {...commonAttrs}
             />;
         } else if (typeof this.props.ui.editNote === 'number') {
-            return <NoteForm style={this.center(300,230)}
+            form = <NoteForm style={this.center(300,230)}
                 mode={this.draftMode ? 'edit draft' : 'edit'}
                 idx={this.props.ui.editNote}
                 note={this.notes[this.props.ui.editNote]}
@@ -209,16 +211,18 @@ class Workspace extends Component {
                 {...commonAttrs}
             />;
         } else if (this.props.ui.doodleNote) {
-            return <DoodleForm style={this.center(450, 345)}
+            form = <DoodleForm style={this.center(450, 345)}
                 ship={this.draftMode ? this.props.workspaceActions.createDoodleDraft : this.socket.emitNewDoodle}
                 {...commonAttrs}
             />;
         } else if (this.props.ui.timerConfig) {
-            return <TimerForm style={this.center(300,150)}
+            form = <TimerForm style={this.center(300,150)}
                 ship={this.socket.emitCreateTimer}
                 {...commonAttrs}
             />;
         }
+
+        if (form) return Modal(form);
         return null;
     }
 
@@ -229,7 +233,7 @@ class Workspace extends Component {
 
     getFeedback() {
         if (this.props.ui.showFeedback)
-            return <Feedback style={this.center(400,250)} close={this.props.uiActions.toggleFeedback}/>;
+            return Modal(<Feedback style={this.center(400,250)} close={this.props.uiActions.toggleFeedback}/>);
     }
 
     showChat() {
