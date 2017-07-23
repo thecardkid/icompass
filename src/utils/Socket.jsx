@@ -81,7 +81,7 @@ export default class Socket {
 
     emitCreateTimer(min, sec) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        this.socket.emit('create timer', min, sec);
+        this.socket.emit('create timer', min, sec, Date.now());
     }
 
     emitCancelTimer() {
