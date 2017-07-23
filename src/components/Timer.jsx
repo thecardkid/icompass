@@ -6,15 +6,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 
+import Toast from 'Utils/Toast.jsx';
+import { PROMPTS } from 'Lib/constants';
+
 import * as workspaceActions from 'Actions/workspace';
 import * as uiActions from 'Actions/ui';
-
-const GREY = 'rgb(221, 221, 221)',
-    RED = 'rgb(219, 112, 147)';
 
 class Timer extends Component {
     constructor(props) {
         super(props);
+        this.toast = new Toast();
 
         this.granularity = 1000;
         this.running = false;
@@ -54,12 +55,6 @@ class Timer extends Component {
         this.tick();
     }
 
-    removeInterval() {
-        clearInterval(this.interval);
-        this.interval = null;
-        $('button[name=timer]').css('background', '');
-    }
-
     handleClick() {
         if (this.running) return;
         if (this.interval) return this.removeInterval();
@@ -73,27 +68,13 @@ class Timer extends Component {
             setTimeout(this.tick, this.granularity);
         } else {
             left = 0;
-            this.flash();
             this.running = false;
             this.props.workspaceActions.setTimer({});
             this.props.uiActions.setSidebarVisible(true);
+            this.toast.info(PROMPTS.TIMEBOX_OVER);
         }
 
         this.setState({ left });
-    }
-
-    flash() {
-        if (this.interval) clearInterval(this.interval);
-        this.interval = setInterval(this.toggleBackground, 600);
-    }
-
-    toggleBackground() {
-        let btn = $('button[name=timer]');
-        if (btn.css('background').includes(GREY)) {
-            btn.css('background', RED);
-        } else {
-            btn.css('background', GREY);
-        }
     }
 
     parse(seconds) {
