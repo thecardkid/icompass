@@ -23,32 +23,51 @@ function clearDB(cb) {
     cb();
 }
 
-before((done) => {
-    if (mongoose.connection.readyState === 0) {
-        mongoose.connect('mongodb://localhost/test', (err) => {
-            if (err) throw err;
-            done();
-        });
-    }
-});
+function addNotes(DUT, n, cb) {
+    let i = 0;
+    let incr = (compass) => {
+        i += 1;
+        if (i === n) cb(compass);
+    };
 
-after((done) => {
-    clearDB(done);
-    mongoose.disconnect();
-});
+    for (let j=0; j<n; j++)
+        Compass.addNote(DUT._id, NOTE, incr);
+}
 
 describe('Compass: models', () => {
     let DUT;
 
-    it('#makeCompass', (done) => {
-        Compass.makeCompass(CENTER, (c) => {
+    before(done => {
+        if (mongoose.connection.readyState === 0) {
+            mongoose.connect('mongodb://localhost/test', (err) => {
+                if (err) throw err;
+                done();
+            });
+        }
+    });
+
+    after(done => {
+        clearDB(done);
+        mongoose.disconnect();
+    });
+
+    beforeEach(done => {
+        Compass.makeCompass(CENTER, c => {
             DUT = c;
-            expect(DUT.editCode).to.have.lengthOf(8);
-            expect(DUT.viewCode).to.have.lengthOf(8);
-            expect(DUT.center).to.equal(CENTER);
-            expect(DUT.notes).to.be.empty;
             done();
         });
+    });
+
+    afterEach(done => {
+        Compass.remove({_id: DUT._id}, done);
+    });
+
+    it('#makeCompass', (done) => {
+        expect(DUT.editCode).to.have.lengthOf(8);
+        expect(DUT.viewCode).to.have.lengthOf(8);
+        expect(DUT.center).to.equal(CENTER);
+        expect(DUT.notes).to.be.empty;
+        done();
     });
 
     it('#findByEditCode', (done) => {
@@ -96,13 +115,15 @@ describe('Compass: models', () => {
     });
 
     it('#updateNote', (done) => {
-        let updated = Object.assign({}, DUT.notes[0]._doc);
-        updated.text = 'Updated';
-        updated._id = updated._id.toString(); // emulate client side request
-        Compass.updateNote(DUT._id, updated, (c) => {
-            expect(c.notes).to.have.lengthOf(1);
-            expect(c.notes[0].text).to.equal('Updated');
-            done();
+        addNotes(DUT, 3, compass => {
+            let updated = Object.assign({}, compass.notes[1]._doc);
+            updated.text = 'Updated';
+            updated._id = updated._id.toString(); // emulate client side request
+            Compass.updateNote(compass._id, updated, (c) => {
+                expect(c.notes).to.have.lengthOf(3);
+                expect(c.notes[1].text).to.equal('Updated'); // expect no ordering changes
+                done();
+            });
         });
     });
 
@@ -126,24 +147,28 @@ describe('Compass: models', () => {
     });
 
     it('#deleteNote', (done) => {
-        Compass.deleteNote(DUT._id, DUT.notes[1]._id.toString(), (notes, deletedIdx) => {
-            expect(notes).to.have.lengthOf(1);
-            expect(deletedIdx).to.have.lengthOf(1);
-            expect(deletedIdx[0]).to.equal(1);
-            done();
+        addNotes(DUT, 2, compass => {
+            Compass.deleteNote(compass._id, compass.notes[1]._id.toString(), (notes, deletedIdx) => {
+                expect(notes).to.have.lengthOf(1);
+                expect(deletedIdx).to.have.lengthOf(1);
+                expect(deletedIdx[0]).to.equal(1);
+                done();
+            });
         });
     });
 
     it('#deleteNotes', (done) => {
-        Compass.addNote(DUT._id, NOTE, (c) => {
-            let noteIds = _.map(c.notes, note => note._id.toString());
-            expect(noteIds).to.have.lengthOf(2);
+        addNotes(DUT, 4, compass => {
+            let noteIds = _.map(compass.notes, note => note._id.toString());
+            noteIds.splice(1, 1);
+            expect(noteIds).to.have.lengthOf(3);
 
             Compass.deleteNotes(DUT._id, noteIds, (notes, deletedIdx) => {
-                expect(notes).to.have.lengthOf(0);
-                expect(deletedIdx).to.have.lengthOf(2);
+                expect(notes).to.have.lengthOf(1);
+                expect(deletedIdx).to.have.lengthOf(3);
                 expect(deletedIdx[0]).to.equal(0);
-                expect(deletedIdx[1]).to.equal(1);
+                expect(deletedIdx[1]).to.equal(2);
+                expect(deletedIdx[2]).to.equal(3);
                 done();
             });
         });
