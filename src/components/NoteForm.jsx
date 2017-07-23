@@ -117,7 +117,7 @@ export default class NoteForm extends Component {
             case 'make draft': return 'Create a draft';
             case 'edit': return 'Edit this note';
             case 'edit draft': return 'Edit this draft';
-            default: return ''
+            default: return '';
         }
     }
 

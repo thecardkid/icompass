@@ -71,7 +71,7 @@ class VisualModeToolbar extends Component {
 
     render() {
         let w = this.props.workspace,
-        wx = this.props.workspaceActions;
+            wx = this.props.workspaceActions;
 
         return (
             <Draggable><div id="ic-visual-toolbar">

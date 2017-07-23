@@ -72,7 +72,7 @@ class StickyNote extends Component {
         if (n.draft) {
             return <p className="ic-tooltip submit" onClick={this.submitDraft}>submit</p>;
         } else {
-            return <p className="ic-tooltip">{n.user}</p>
+            return <p className="ic-tooltip">{n.user}</p>;
         }
     }
 
@@ -181,6 +181,7 @@ StickyNote.propTypes = {
     i: PropTypes.number.isRequired,
     destroy: PropTypes.func,
     compass: PropTypes.object.isRequired,
+    submitDraft: PropTypes.func,
     ui: PropTypes.object.isRequired,
     workspace: PropTypes.object.isRequired,
     uiActions: PropTypes.objectOf(PropTypes.func).isRequired,

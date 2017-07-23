@@ -81,7 +81,7 @@ module.exports = {
         .setValue('#ic-form-text', DOG_PHOTO_LINK)
         .click('button[name=ship]')
         .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK)
+            this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
         })
         .acceptAlert()
         .pause(200)
@@ -127,7 +127,7 @@ module.exports = {
         .doubleClick()
         .waitForElementVisible('#ic-toast span', 100)
         .assert.cssClassPresent('#ic-toast span', 'warning')
-        .assert.containsText('#ic-toast span', PROMPTS.CANNOT_EDIT_DOODLE)
+        .assert.containsText('#ic-toast span', PROMPTS.CANNOT_EDIT_DOODLE);
     },
 
     'delete a draft': function(browser) {

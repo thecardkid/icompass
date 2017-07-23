@@ -57,7 +57,7 @@ export const createDoodleDraft = (user) => {
     return {
         type: 'createDoodleDraft',
         user
-    }
+    };
 };
 
 export const undraft = (idx) => {

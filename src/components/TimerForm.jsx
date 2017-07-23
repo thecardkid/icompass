@@ -59,7 +59,9 @@ class TimerForm extends Component {
 }
 
 TimerForm.propTypes = {
-    style: PropTypes.object.isRequired
+    close: PropTypes.func.isRequired,
+    ship: PropTypes.func.isRequired,
+    style: PropTypes.object.isRequired,
 };
 
 export default TimerForm;

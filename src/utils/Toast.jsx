@@ -2,7 +2,7 @@
 
 export default class Toaster {
     getSpan(clazz, msg) {
-        return "<span class='" + clazz + "'>" + msg + "</span>";
+        return '<span class="' + clazz + '">' + msg + '</span>';
     }
 
     success(msg) {
@@ -27,4 +27,4 @@ export default class Toaster {
     clear() {
         $('#ic-toast').empty();
     }
-};
+}

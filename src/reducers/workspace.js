@@ -9,6 +9,11 @@ const defaultState = {
     timer: null
 };
 
+const colorAll = (state, action) => {
+    let color = (action.color === state.color ? null : action.color);
+    return {...state, color};
+};
+
 const removeNotesIfSelected = (state, action) => {
     let selected = _.filter(state.selected, (e, i) => {
         return !_.contains(action.deletedIdx, i);
@@ -112,8 +117,7 @@ export default (state = {}, action) => {
             return {...state, underline: !state.underline};
 
         case 'colorAll':
-            let color = (action.color === state.color ? null : action.color);
-            return {...state, color};
+            return colorAll(state, action);
 
         case 'removeNotesIfSelected':
             return removeNotesIfSelected(state, action);

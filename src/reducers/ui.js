@@ -16,21 +16,25 @@ const defaultState = {
     editingMode: EDITING_MODE.NORMAL
 };
 
+const showNewNote = (state, action) => {
+    let newNote = true;
+    let e = action.event;
+    if (e) {
+        // mobile touch events come with touches[] array
+        let touchX = e.clientX || e.touches[0].clientX,
+            touchY = e.clientY || e.touches[0].clientY;
+        newNote = {
+            x: touchX / state.vw,
+            y: touchY / state.vh
+        };
+    }
+    return {...state, editNote: false, doodleNote: false, newNote, timerConfig: false};
+};
+
 export default (state = defaultState, action) => {
     switch(action.type) {
         case 'showNewNote':
-            let newNote = true;
-            let e = action.event;
-            if (e) {
-                // mobile touch events come with touches[] array
-                let touchX = e.clientX || e.touches[0].clientX,
-                    touchY = e.clientY || e.touches[0].clientY;
-                newNote = {
-                    x: touchX / state.vw,
-                    y: touchY / state.vh
-                };
-            }
-            return {...state, editNote: false, doodleNote: false, newNote, timerConfig: false};
+            return showNewNote(state, action);
         case 'showEdit':
             return {...state, newNote: false, doodleNote: false, editNote: action.noteIdx, timerConfig: false};
         case 'showDoodle':

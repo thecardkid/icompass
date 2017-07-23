@@ -71,7 +71,7 @@ module.exports = {
             browser
             .waitForElementVisible('#ic-toast span', 100)
             .assert.cssClassPresent('#ic-toast span', 'warning')
-            .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE)
+            .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE);
         })
         .moveToElement('#note0', 10, 10)
         .doubleClick()
@@ -191,7 +191,7 @@ module.exports = {
         .click('button#ic-bulk-submit')
         .pause(200)
         .assert.cssClassNotPresent('#note1 span a p', 'bold')
-        .assert.cssClassNotPresent('#note1 span a p', 'italic')
+        .assert.cssClassNotPresent('#note1 span a p', 'italic');
     },
 
     'submitting': function(browser) {

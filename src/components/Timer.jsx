@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -8,7 +9,7 @@ import * as workspaceActions from 'Actions/workspace';
 import * as uiActions from 'Actions/ui';
 
 const GREY = 'rgb(221, 221, 221)',
-      RED = 'rgb(219, 112, 147)';
+    RED = 'rgb(219, 112, 147)';
 
 class Timer extends Component {
     constructor(props) {
@@ -25,12 +26,12 @@ class Timer extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.workspace.timer !== this.props.workspace.timer ||
+        return nextProps.timer !== this.props.timer ||
             nextState.left !== this.state.left;
     }
 
     componentDidUpdate() {
-        let timer = this.props.workspace.timer;
+        let timer = this.props.timer;
         if (this.running && timer === null) {
             this.running = false;
             this.setState({left: null});
@@ -131,6 +132,13 @@ class Timer extends Component {
         );
     }
 }
+
+Timer.propTypes = {
+    timer: PropTypes.objectOf(PropTypes.number).isRequired,
+    stop: PropTypes.func.isRequired,
+    workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
+    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
+};
 
 function mapStateToProps(state) {
     return {
