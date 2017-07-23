@@ -11,6 +11,7 @@ import _ from 'underscore';
 import Timer from 'Components/Timer.jsx';
 
 import Storage from 'Utils/Storage.jsx';
+import Toast from 'Utils/Toast.jsx';
 
 import * as uiActions from 'Actions/ui';
 
@@ -20,6 +21,7 @@ class Sidebar extends Component {
 
     constructor(props, context) {
         super(props, context);
+        this.toast = new Toast();
 
         this.showSavePrompt = this.showSavePrompt.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
@@ -165,8 +167,8 @@ class Sidebar extends Component {
     save() {
         let name = this.props.you.replace(/\d+/g, '');
         let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, name);
-        if (saved) alert(PROMPTS.SAVE_SUCCESS);
-        else alert(PROMPTS.SAVE_FAIL);
+        if (saved) this.toast.success(PROMPTS.SAVE_SUCCESS);
+        else this.toast.error(PROMPTS.SAVE_FAIL);
     }
 
     logout() {

@@ -25,6 +25,7 @@ import TimerForm from "Components/TimerForm.jsx";
 
 import Validator from 'Utils/Validator.jsx';
 import Socket from 'Utils/Socket.jsx';
+import Toast from 'Utils/Toast.jsx';
 
 import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
 
@@ -33,6 +34,7 @@ class Workspace extends Component {
     constructor(props) {
         super(props);
         this.socket = new Socket(this);
+        this.toast = new Toast();
 
         if (this.props.route.viewOnly) {
             this.socket.emitFindCompassView();
@@ -130,7 +132,7 @@ class Workspace extends Component {
     }
 
     dragEnd(e) {
-        if (this.visualMode) return alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+        if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
         this.setTranslation(e.target, 0, 0);
 
@@ -139,7 +141,7 @@ class Workspace extends Component {
             y = this.notes[i].y + e.dy / this.props.ui.vh;
         let note = Object.assign({}, this.notes[i], { x, y });
 
-        if (this.draftMode && !note.draft) return alert(PROMPTS.DRAFT_MODE_NO_CHANGE);
+        if (this.draftMode && !note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
         if (note.draft) this.props.workspaceActions.dragDraft(i, x, y);
         else {
             this.props.noteActions.drag(i, x, y);
@@ -372,6 +374,7 @@ class Workspace extends Component {
                          stop={this.socket.emitCancelTimer}
                          exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
+                <div id="ic-toast" onClick={this.toast.clear} />
                 {this.getFeedback()}
                 {this.getForm()}
                 {this.getAbout()}

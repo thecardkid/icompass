@@ -3,12 +3,15 @@
 import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 
+import Toast from 'Utils/Toast.jsx';
+
 import { PROMPTS } from 'Lib/constants';
 
 export default class Socket {
     constructor(component) {
         this.component = component;
         this.socket = new SocketIOClient();
+        this.toast = new Toast();
 
         this.disconnect = this.disconnect.bind(this);
 
@@ -65,15 +68,15 @@ export default class Socket {
     }
 
     alertInvalidAction() {
-        alert(PROMPTS.NOT_CONNECTED);
+        this.toast.error(PROMPTS.NOT_CONNECTED);
     }
 
     alertVisualMode() {
-        alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+        this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
     }
 
     alertVisualModeNoCreate() {
-        alert(PROMPTS.VISUAL_MODE_NO_CREATE);
+        this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
     }
 
     emitCreateTimer(min, sec) {
@@ -252,8 +255,8 @@ export default class Socket {
     }
 
     handleMailStatus(status) {
-        if (status) alert(PROMPTS.EMAIL_SENT);
-        else alert(PROMPTS.EMAIL_NOT_SENT);
+        if (status) this.toast.success(PROMPTS.EMAIL_SENT);
+        else this.toast.error(PROMPTS.EMAIL_NOT_SENT);
     }
 
     handleCompassReady(data) {
@@ -267,10 +270,11 @@ export default class Socket {
 
     handleStartTimer(min, sec) {
         this.component.props.workspaceActions.setTimer({ min, sec });
-        alert(PROMPTS.TIMEBOX(min, sec));
+        this.toast.success(PROMPTS.TIMEBOX(min, sec));
     }
 
     handleCancelTimer() {
         this.component.props.workspaceActions.setTimer(null);
+        this.toast.success(PROMPTS.TIMEBOX_CANCELED);
     }
 }

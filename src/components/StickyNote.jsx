@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Toast from 'Utils/Toast.jsx';
+
 import * as uiActions from 'Actions/ui';
 import * as workspaceActions from 'Actions/workspace';
 
@@ -15,6 +17,7 @@ import { PROMPTS, COLORS, EDITING_MODE } from 'Lib/constants';
 class StickyNote extends Component {
     constructor(props) {
         super(props);
+        this.toast = new Toast();
 
         this.confirmDelete = this.confirmDelete.bind(this);
         this.getContents = this.getContents.bind(this);
@@ -48,14 +51,14 @@ class StickyNote extends Component {
     }
 
     confirmDelete() {
-        if (this.visualMode) return alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
+        if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
         let n = this.props.note;
         if (n.draft && confirm(PROMPTS.CONFIRM_DISCARD_DRAFT))
             return this.props.workspaceActions.undraft(this.props.i);
 
         if (this.draftMode)
-            return alert(PROMPTS.DRAFT_MODE_NO_CHANGE);
+            return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
 
         if (confirm(PROMPTS.CONFIRM_DELETE_NOTE))
             return this.props.destroy(n._id);
@@ -124,9 +127,9 @@ class StickyNote extends Component {
     }
 
     edit() {
-        if (this.props.note.doodle) return alert(PROMPTS.CANNOT_EDIT_DOODLE);
-        if (this.visualMode) return alert(PROMPTS.VISUAL_MODE_NO_CHANGE);
-        if (this.draftMode && !this.props.note.draft) return alert(PROMPTS.DRAFT_MODE_NO_CHANGE);
+        if (this.props.note.doodle) return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
+        if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+        if (this.draftMode && !this.props.note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
         if (this.hasEditingRights) this.props.uiActions.showEdit(this.props.i);
     }
 

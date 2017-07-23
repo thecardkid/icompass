@@ -3,11 +3,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Toast from 'Utils/Toast.jsx';
+
 import { PROMPTS } from 'Lib/constants';
 
 class TimerForm extends Component {
     constructor(props) {
         super(props);
+        this.toast = new Toast();
 
         this.submit = this.submit.bind(this);
         this.retrieveValuesAndSubmit = this.retrieveValuesAndSubmit.bind(this);
@@ -15,10 +18,10 @@ class TimerForm extends Component {
 
     submit(m, s) {
         if (m === 0 && s === 0) return;
-        if (m === 30 && s > 0) return alert(PROMPTS.TIMEBOX_TOO_LONG);
-        if (m > 30) return alert(PROMPTS.TIMEBOX_TOO_LONG);
-        if (m < 0 || s < 0) return alert(PROMPTS.TIMEBOX_NEGATIVE_VALUES);
-        if (s > 59) return alert(PROMPTS.TIMEBOX_TOO_MANY_SECONDS);
+        if (m === 30 && s > 0) return this.toast.error(PROMPTS.TIMEBOX_TOO_LONG);
+        if (m > 30) return this.toast.error(PROMPTS.TIMEBOX_TOO_LONG);
+        if (m < 0 || s < 0) return this.toast.error(PROMPTS.TIMEBOX_NEGATIVE_VALUES);
+        if (s > 59) return this.toast.error(PROMPTS.TIMEBOX_TOO_MANY_SECONDS);
         this.props.ship(m, s);
         this.props.close();
     }

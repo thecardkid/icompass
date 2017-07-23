@@ -10,6 +10,7 @@ import * as uiActions from 'Actions/ui';
 
 import BookmarkList from 'Components/BookmarkList.jsx';
 import Socket from 'Utils/Socket.jsx';
+import Toast from 'Utils/Toast.jsx';
 import Validator from 'Utils/Validator.jsx';
 
 import { ERROR_MSG } from 'Lib/constants';
@@ -22,6 +23,7 @@ const LOGIN_TYPE = {
 class LandingPage extends Component {
     constructor(props) {
         super(props);
+        this.toast = new Toast();
 
         this.socket = new Socket(this);
         this.state = {loginType: null};
@@ -147,7 +149,7 @@ class LandingPage extends Component {
         let d = this.state.data, u = this.state.username;
         let mode = d.viewOnly ? 'view' : 'edit';
 
-        if (email && !valid[0]) return alert(ERROR_MSG.INVALID('Email'));
+        if (email && !valid[0]) return this.toast.error(ERROR_MSG.INVALID('Email'));
         if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, u, email);
 
         switch(this.state.loginType) {

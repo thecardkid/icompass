@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Toast from 'Utils/Toast.jsx';
 import Validator from 'Utils/Validator.jsx';
 
 import { PROMPTS, COLORS } from 'Lib/constants';
@@ -10,6 +11,7 @@ import { PROMPTS, COLORS } from 'Lib/constants';
 export default class NoteForm extends Component {
     constructor(props) {
         super(props);
+        this.toast = new Toast();
 
         this.state = {
             bold: false,
@@ -47,8 +49,10 @@ export default class NoteForm extends Component {
 
         if (validText[0])
             isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
-        else if (!validText[1])
-            return alert(PROMPTS.POST_IT_TOO_LONG);
+        else if (!validText[1]) {
+            this.toast.error(PROMPTS.POST_IT_TOO_LONG);
+            text = null;
+        }
 
         return { text, isImage };
     }

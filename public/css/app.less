@@ -162,3 +162,35 @@ div#container {
     overflow:hidden;
 }
 
+div#ic-toast {
+    position:absolute;
+    border-radius:4px;
+    height:17px;
+    width:100%;
+    text-align:center;
+    top:20px;
+
+    span {
+        border-radius:4px;
+        padding:3px 12px;
+        font-size:15px;
+        cursor:pointer;
+    }
+
+    @opacity: 0.8;
+
+    span.success {
+        background:#DFF0D8;
+        color:#3C763D;
+    }
+
+    span.warning {
+        background:#FCF8E3;
+        color:#8A6D3B;
+    }
+
+    span.error {
+        background:#F2DEDE;
+        color:#A94442;
+    }
+}
