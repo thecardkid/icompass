@@ -1,0 +1,17 @@
+---
+resources:
+- name: icompass
+  type: git
+  source:
+    uri: https://github.com/thecardkid/icompass.git
+    branch: ci
+
+jobs:
+- name: test
+  serial: true
+  plan:
+  - aggregate:
+    - get: icompass
+      trigger: true
+  - task: test
+    file: icompass/ci/test/test.yml

@@ -38,11 +38,15 @@ describe('Compass: models', () => {
     let DUT;
 
     before(done => {
+        let cb = (err) => {
+            if (err) throw err;
+            done();
+        };
         if (mongoose.connection.readyState === 0) {
-            mongoose.connect('mongodb://localhost/test', (err) => {
-                if (err) throw err;
-                done();
-            });
+            if (process.env.NODE_ENV === 'test')
+                mongoose.connect('mongodb://icompass:compass78@ds133311.mlab.com:33311/innovatorscompasshieu', cb);
+            else
+                mongoose.connect('mongodb://localhost/test', cb);
         }
     });
 
