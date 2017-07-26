@@ -9,3 +9,5 @@ tags
 mocha.opts
 reports/
 bin/
+selenium-debug.log
+screenshots/

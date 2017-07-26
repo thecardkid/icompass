@@ -97,6 +97,7 @@ class Workspace extends Component {
 
         // set up draggable sticky notes
         if (!this.props.route.viewOnly) {
+            // eslint-disable-next-line no-undef
             interact('.draggable').draggable({
                 restrict: DRAGGABLE_RESTRICTIONS,
                 autoScroll: true,
@@ -179,6 +180,7 @@ class Workspace extends Component {
         setTimeout(() => {
             window.html2canvas(document.body).then((canvas) => {
                 let imgData = canvas.toDataURL('image/png');
+                // eslint-disable-next-line no-undef
                 let doc = new jsPDF('l', 'cm', 'a4');
                 doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
                 doc.save('compass.pdf');

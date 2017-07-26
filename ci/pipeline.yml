@@ -4,10 +4,11 @@ resources:
   type: git
   source:
     uri: https://github.com/thecardkid/icompass.git
+    # TODO change branch
     branch: ci
 
 jobs:
-- name: test
+- name: test:mocha
   serial: true
   plan:
   - aggregate:
@@ -15,3 +16,11 @@ jobs:
       trigger: true
   - task: test
     file: icompass/ci/test/test.yml
+- name: test:e2e
+  serial: true
+  plan:
+  - aggregate:
+    - get: icompass
+      trigger: true
+  - task: frontend
+    file: icompass/ci/frontend/frontend.yml

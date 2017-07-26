@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack -d --watch",
-    "build": "NODE_ENV=production webpack -p --config ./webpack.production.config.js",
+    "watch": "webpack -d --watch --config ./config/webpack.config.js",
+    "build": "NODE_ENV=production webpack -p --config ./config/webpack.production.config.js",
     "start": "nodemon compass-server.js",
     "production": "NODE_ENV=production forever start compass-server.js",
-    "test": "nightwatch test/e2e && mocha --compilers js:babel-core/register test/server",
+    "test:e2e": "nightwatch --config config/nightwatch.conf.js test/e2e",
+    "test:mocha": "mocha --compilers js:babel-core/register test/server",
     "selenium": "java -jar bin/selenium-server-standalone-3.4.0.jar",
-    "btest": "mocha --compilers js:babel-core/register test/server",
-    "lint": "eslint src/*/* test/*/* lib/* models/*"
+    "lint": "eslint --config config/.eslintrc.js src/*/* test/*/* lib/* models/*"
   },
   "author": "Hieu Nguyen",
   "license": "ISC",
@@ -21,9 +21,13 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "chai": "^3.5.0",
+    "env2": "^2.2.0",
+    "eslint": "^4.3.0",
     "mocha": "^3.3.0",
     "mockgoose": "^7.3.1",
+    "nightwatch": "^0.9.16",
     "nodemon": "^1.11.0",
+    "selenium-download": "^2.0.10",
     "serve": "^2.1.2",
     "webpack": "^1.14.0"
   },

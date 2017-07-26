@@ -39,6 +39,10 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "react/no-string-refs": 0,
+        "react/jsx-indent": 0,
+        "indent": 0,
+        "no-useless-escape": 0
     }
 };
