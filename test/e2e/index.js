@@ -1,7 +1,7 @@
 const exec = require('child_process').exec;
 
 const serverProc = exec('npm start &');
-exec('sleep 5; npm run test:e2e', function(error) {
+exec('sleep 5; npm run test:e2e-concourse', function(error) {
     serverProc.kill('SIGINT');
     if (error) {
         // eslint-disable-next-line no-console

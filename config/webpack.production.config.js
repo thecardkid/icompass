@@ -62,6 +62,9 @@ var config = {
             }
         ]
     },
+    stats: {
+        warnings: false,
+    },
 };
 
 module.exports = config;

@@ -3,8 +3,11 @@
 set -eux
 
 pushd icompass
-    export NODE_ENV=test
-    npm install --quiet > /dev/null
+    pushd bin
+        wget https://goo.gl/s4o9Vx
+        mv s4o9Vx selenium.jar
+    popd
+
     npm install -gq nightwatch > /dev/null
 
     node test/e2e/index.js

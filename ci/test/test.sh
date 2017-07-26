@@ -11,3 +11,5 @@ pushd icompass
     npm run build
     npm run test:mocha
 popd
+
+cp icompass/public/bundle.js bundle/bundle.js

@@ -1,4 +1,3 @@
-'use strict';
 
 var editURL = 'http://localhost:8080/compass/edit/',
     viewURL = 'http://localhost:8080/compass/view/',

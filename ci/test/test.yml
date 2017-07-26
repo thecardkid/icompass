@@ -8,7 +8,9 @@ image_resource:
 
 inputs:
 - name: icompass
-  path: icompass
+
+outputs:
+- name: bundle
 
 run:
   path: icompass/ci/test/test.sh

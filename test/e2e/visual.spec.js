@@ -1,4 +1,3 @@
-'use strict';
 
 const PROMPTS = require('../../lib/constants').PROMPTS;
 const STICKY_COLORS = require('../../lib/constants').STICKY_COLORS;

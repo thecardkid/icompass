@@ -9,6 +9,7 @@
     "start": "nodemon compass-server.js",
     "production": "NODE_ENV=production forever start compass-server.js",
     "test:e2e": "nightwatch --config config/nightwatch.conf.js test/e2e",
+    "test:e2e-concourse": "xvfb-run --server-args=\"-screen 0 1600x1200x24\" nightwatch -e chrome -a login -c config/nightwatch.conf.js",
     "test:mocha": "mocha --compilers js:babel-core/register test/server",
     "selenium": "java -jar bin/selenium-server-standalone-3.4.0.jar",
     "lint": "eslint --config config/.eslintrc.js src/*/* test/*/* lib/* models/*"

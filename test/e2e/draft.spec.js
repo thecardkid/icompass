@@ -1,8 +1,8 @@
 'use strict';
 
-const PROMPTS = require('../../lib/constants').PROMPTS;
-const DOG_PHOTO_LINK = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
-const TEXT = 'this is a note',
+var PROMPTS = require('../../lib/constants').PROMPTS;
+var DOG_PHOTO_LINK = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
+var TEXT = 'this is a note',
     POSITIONS = [ {x: 400, y: 200}, {x: 500, y: 200} ];
 
 module.exports = {
@@ -57,7 +57,7 @@ module.exports = {
     },
 
     'creating drafts': function(browser) {
-        const NOTE_TEXT = 'A draft text note';
+        var NOTE_TEXT = 'A draft text note';
         browser
         .click('#ic-mode-draft')
         // create text note
@@ -108,7 +108,7 @@ module.exports = {
     },
 
     'edit drafts': function(browser) {
-        const EDITED_TEXT = 'Edited text';
+        var EDITED_TEXT = 'Edited text';
         browser
         .moveToElement('#note0', 10, 10)
         .doubleClick()
