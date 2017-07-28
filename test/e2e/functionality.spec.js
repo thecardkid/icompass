@@ -1,3 +1,5 @@
+'use strict';
+
 var PROMPTS = require('../../lib/constants.js').PROMPTS;
 var top, left, newTop, newLeft;
 

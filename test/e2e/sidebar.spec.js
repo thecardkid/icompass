@@ -1,3 +1,4 @@
+'use strict';
 
 var editURL;
 const PROMPTS = require('../../lib/constants').PROMPTS;

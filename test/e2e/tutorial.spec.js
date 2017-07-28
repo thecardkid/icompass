@@ -1,3 +1,4 @@
+'use strict';
 
 var originalTranslation;
 var STEPS = 20;
