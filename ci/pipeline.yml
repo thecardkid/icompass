@@ -4,8 +4,7 @@ resources:
   type: git
   source:
     uri: https://github.com/thecardkid/icompass.git
-    # TODO change branch
-    branch: ci
+    branch: develop
 
 jobs:
 - name: tests
@@ -16,5 +15,3 @@ jobs:
       trigger: true
   - task: mocha
     file: icompass/ci/test/test.yml
-  - task: e2e
-    file: icompass/ci/frontend/frontend.yml
