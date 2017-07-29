@@ -11,12 +11,17 @@ module.exports = {
         .url('http://localhost:8080')
         .waitForElementVisible('body', 1000)
         .click('button[name=make]')
-        .setValue('#compass-center', 'nightwatchjs')
-        .setValue('#username', 'sandbox')
+        .click('#compass-center')
+        .keys('nightwatchjs'.split(''))
+        .click('#username')
+        .keys('sandbox'.split(''))
         .click('button[name=next]')
-        .waitForElementVisible('.third', 1000)
+        .source(function(result) {
+            console.log(result.value);
+        })
+        .waitForElementVisible('.third', 10000)
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
+        .waitForElementVisible('#ic-sidebar', 10000)
         .windowMaximize();
     },
 

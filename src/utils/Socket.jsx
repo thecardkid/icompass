@@ -10,7 +10,8 @@ import { PROMPTS } from 'Lib/constants';
 export default class Socket {
     constructor(component) {
         this.component = component;
-        this.socket = new SocketIOClient();
+        // TODO change this
+        this.socket = new SocketIOClient('http://localhost:8080', {'force new connection': true});
         this.toast = new Toast();
 
         this.disconnect = this.disconnect.bind(this);

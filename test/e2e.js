@@ -1,9 +1,9 @@
 const exec = require('child_process').exec;
 
-const serverProc = exec('npm start &');
-const seleniumProc = exec('java -jar bin/selenium.jar &');
+const serverProc = exec('NODE_ENV=test node compass-server.js &').stdout.pipe(process.stdout);
+const seleniumProc = exec('java -jar /opt/selenium/selenium-server-standalone.jar');
 
-exec('sleep 5; nightwatch -c config/nightwatch.conf.js', function(error) {
+exec('sleep 5; nightwatch -c config/nightwatch.concourse.conf.js', function(error) {
     serverProc.kill('SIGINT');
     seleniumProc.kill('SIGINT');
     if (error) {

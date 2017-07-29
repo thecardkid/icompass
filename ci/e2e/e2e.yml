@@ -4,7 +4,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: fengzhou/java-node
+    repository: kenfehling/node-selenium-chrome
 
 inputs:
 - name: icompass

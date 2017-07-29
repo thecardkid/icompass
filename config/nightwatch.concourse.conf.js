@@ -4,17 +4,11 @@ module.exports = {
     "test/e2e"
   ],
   "output_folder": "./test/e2e/reports",
-  "selenium": {
-    "start_process": true,
-    "server_path": "./bin/selenium.jar",
-    "host": "127.0.0.1",
-    "port": 4444,
-    "cli_args": {
-      "webdriver.chrome.driver" : "./bin/chromedriver"
-    }
-  },
   "test_settings": {
     "default": {
+      "silent": true,
+      "selenium_port": 4444,
+      "selenium_host": "localhost",
       "globals": {
         "waitForConditionTimeout": 5000
       },
@@ -22,7 +16,9 @@ module.exports = {
         "browserName": "chrome",
         "chromeOptions": {
           "args": [
-            "--no-sandbox"
+            "--no-sandbox",
+            "headless",
+            "disable-gpu"
           ]
         }
       }
