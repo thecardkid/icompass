@@ -95,6 +95,7 @@ module.exports = {
         browser
         .keys('n')
         .assert.elementNotPresent('a.ic-img')
+        // TODO
         .setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg')
         .click('button[name=ship]')
         .getAlertText(function(result) {
@@ -210,7 +211,7 @@ module.exports = {
         .click('button[name=ship]')
         .waitForElementVisible('#note1', 1000)
         .getAttribute('#note1 .ic-img img', 'src', function(result) {
-            this.assert.equal(result.value.indexOf('data:image/png;base64'), 0);
+            this.assert.equal(result.value.includes('data:image/png;base64'), true);
         });
     },
 

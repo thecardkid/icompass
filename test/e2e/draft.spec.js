@@ -11,17 +11,12 @@ module.exports = {
         .url('http://localhost:8080')
         .waitForElementVisible('body', 1000)
         .click('button[name=make]')
-        .click('#compass-center')
-        .keys('nightwatchjs'.split(''))
-        .click('#username')
-        .keys('sandbox'.split(''))
+        .setValue('#compass-center', 'nightwatchjs')
+        .setValue('#username', 'sandbox')
         .click('button[name=next]')
-        .source(function(result) {
-            console.log(result.value);
-        })
-        .waitForElementVisible('.third', 10000)
+        .waitForElementVisible('.third', 1000)
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 10000)
+        .waitForElementVisible('#ic-sidebar', 1000)
         .windowMaximize();
     },
 
@@ -54,48 +49,52 @@ module.exports = {
         })
         .moveToElement('#note0', 10, 10)
         .doubleClick()
-        .pause(100)
         .waitForElementVisible('#ic-toast span', 100)
         .assert.cssClassPresent('#ic-toast span', 'warning')
         .assert.containsText('#ic-toast span', PROMPTS.DRAFT_MODE_NO_CHANGE)
         .click('#ic-toast span');
     },
 
-    'creating drafts': function(browser) {
+    'create text draft': function(browser) {
         var NOTE_TEXT = 'A draft text note';
         browser
+        .keys(['s', 'c'])
         .click('#ic-mode-draft')
         // create text note
         .moveToElement('body', 200, 500)
         .doubleClick()
-        .assert.elementPresent('#ic-note-form')
-        .getCssProperty('#ic-form-text', 'background', function(result) {
+        .waitForElementVisible('#ic-note-form', 5000)
+        .getCssProperty('#ic-form-text', 'background', function (result) {
             this.assert.equal(result.value.includes('rgb(128, 128, 128)'), true);
         })
         .assert.containsText('h1.ic-modal-title', 'Create a draft')
         .setValue('#ic-form-text', NOTE_TEXT)
         .click('button[name=ship]')
-        .pause(200)
-        .assert.elementPresent('#note0') // drafts come first
+        .waitForElementVisible('#note2', 5000) // drafts come first
         .assert.containsText('#note0', NOTE_TEXT)
-        .assert.elementPresent('#note0 span a p.submit')
-        // create image
+        .assert.elementPresent('#note0 span a p.submit');
+    },
+
+    'create image drafts': function(browser) {
+        browser
         .moveToElement('body', 400, 500)
         .doubleClick()
-        .assert.elementPresent('#ic-note-form')
+        .waitForElementVisible('#ic-note-form', 5000)
         .setValue('#ic-form-text', DOG_PHOTO_LINK)
         .click('button[name=ship]')
-        .getAlertText(function(result) {
+        .getAlertText(function (result) {
             this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
         })
         .acceptAlert()
         .pause(200)
         .assert.elementPresent('#note1 span a img')
-        .assert.elementPresent('#note1 span a p.submit')
-        // create doodle
-        .keys(['s', 'c', 'd'])
-        .pause(100)
-        .assert.elementPresent('#ic-doodle-form')
+        .assert.elementPresent('#note1 span a p.submit');
+    },
+
+    'create doodle drafts': function(browser) {
+        browser
+        .keys(['d'])
+        .waitForElementVisible('#ic-doodle-form', 5000)
         .moveToElement('#ic-doodle', 155, 75, function() {
             browser
             .mouseButtonDown(0, function() {
@@ -109,7 +108,6 @@ module.exports = {
         .getAttribute('#note2 span a img', 'src', function(result) {
             this.assert.equal(result.value.indexOf('data:image/png;base64'), 0);
         })
-        .keys('s');
     },
 
     'edit drafts': function(browser) {
@@ -117,7 +115,7 @@ module.exports = {
         browser
         .moveToElement('#note0', 10, 10)
         .doubleClick()
-        .assert.elementPresent('#ic-note-form')
+        .waitForElementVisible('#ic-note-form', 5000)
         .assert.containsText('h1.ic-modal-title', 'Edit this draft')
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', EDITED_TEXT)
@@ -177,6 +175,7 @@ module.exports = {
 
     'cleanup': function(browser) {
         browser
+        .keys('s') // show sidebar
         .click('#ic-sidebar button[name=destroyer]')
         .acceptAlert()
         .pause(500)
