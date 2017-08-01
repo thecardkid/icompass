@@ -63,6 +63,29 @@ export default class Modal {
         });
     }
 
+    generatePrompt(text) {
+        return '<div id="ic-modal">' +
+            '<div id="ic-modal-body"><h3>' + text + '</h3><input id="ic-modal-input" /></div>' +
+            '<div id="ic-modal-footer"><hr /><button id="ic-modal-confirm">Submit</button>';
+    }
+
+    prompt(text, cb) {
+        $('#ic-modal-container').empty().append(this.generatePrompt(text));
+        this.addBackdropIfNecessary();
+
+        let name;
+        $('#ic-modal-confirm').on('click', () => {
+            name = $('#ic-modal-input').val();
+            this.close();
+            cb(name);
+        });
+        $('#ic-backdrop').on('click', () => {
+            name = $('#ic-modal-input').val();
+            this.close();
+            cb(name);
+        });
+    }
+
     close() {
         $('#ic-modal-cancel').off('click');
         $('#ic-modal-confirm').off('click');
