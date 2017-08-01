@@ -22,13 +22,13 @@ import Feedback from 'Components/Feedback.jsx';
 import Compass from 'Components/Compass.jsx';
 import VisualModeToolbar from 'Components/VisualModeToolbar.jsx';
 import TimerForm from 'Components/TimerForm.jsx';
-import Modal from 'Components/Modal.jsx';
 
-import Validator from 'Utils/Validator.jsx';
+import Modal from 'Utils/Modal.jsx';
 import Socket from 'Utils/Socket.jsx';
 import Toast from 'Utils/Toast.jsx';
+import Validator from 'Utils/Validator.jsx';
 
-import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
+import { KEYCODES, PROMPTS, EDITING_MODE, MODALS, COLORS, DRAGGABLE_RESTRICTIONS } from 'Lib/constants';
 
 /* eslint react/prop-types: 0 */
 class Workspace extends Component {
@@ -36,6 +36,7 @@ class Workspace extends Component {
         super(props);
         this.socket = new Socket(this);
         this.toast = new Toast();
+        this.modal = new Modal();
 
         if (this.props.route.viewOnly) {
             this.socket.emitFindCompassView();
@@ -53,6 +54,7 @@ class Workspace extends Component {
         this.getVisualModeToolbar = this.getVisualModeToolbar.bind(this);
         this.center = this.center.bind(this);
         this.handleChangeMode = this.handleChangeMode.bind(this);
+        this.changeMode = this.changeMode.bind(this);
         this.submitDraft = this.submitDraft.bind(this);
 
         this.normalMode = this.compactMode = this.visualMode = this.draftMode = false;
@@ -224,7 +226,7 @@ class Workspace extends Component {
             />;
         }
 
-        if (form) return Modal(form);
+        if (form) return <div id="ic-backdrop">{form}</div>;
         return null;
     }
 
@@ -234,8 +236,13 @@ class Workspace extends Component {
     }
 
     getFeedback() {
-        if (this.props.ui.showFeedback)
-            return Modal(<Feedback style={this.center(400,250)} close={this.props.uiActions.toggleFeedback}/>);
+        if (this.props.ui.showFeedback) {
+            return (
+                <div id="ic-backdrop">
+                    <Feedback style={this.center(400, 250)} close={this.props.uiActions.toggleFeedback}/>)
+                </div>
+            );
+        }
     }
 
     showChat() {
@@ -250,13 +257,8 @@ class Workspace extends Component {
         };
     }
 
-    handleChangeMode(e) {
-        if (this.draftMode && e.target.id !== 'ic-mode-draft'
-            && !_.isEmpty(this.props.workspace.drafts)) {
-            if (!confirm(PROMPTS.EXIT_DRAFT_WARNING)) return;
-        }
-
-        switch (e.target.id) {
+    changeMode(mode) {
+        switch (mode) {
             case 'ic-mode-normal':
                 return this.props.uiActions.normalMode();
             case 'ic-mode-compact':
@@ -267,6 +269,18 @@ class Workspace extends Component {
                 return this.props.uiActions.draftMode();
             default:
                 return;
+        }
+    }
+
+    handleChangeMode(e) {
+        let elemId = e.target.id;
+        if (this.draftMode && elemId !== 'ic-mode-draft'
+            && !_.isEmpty(this.props.workspace.drafts)) {
+            this.modal.confirm(MODALS.EXIT_DRAFT_MODE, (exit) => {
+                if (exit) this.changeMode(elemId);
+            });
+        } else {
+            this.changeMode(elemId);
         }
     }
 
@@ -381,6 +395,7 @@ class Workspace extends Component {
                          exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 <div id="ic-toast" onClick={this.toast.clear} />
+                <div id="ic-modal-container" />
                 {this.getFeedback()}
                 {this.getForm()}
                 {this.getAbout()}

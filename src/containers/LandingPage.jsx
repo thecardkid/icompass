@@ -213,6 +213,7 @@ class LandingPage extends Component {
                         {this.getThird()}
                     </div>
                 </div>
+                <div id="ic-modal-container" />
             </div>
         );
     }

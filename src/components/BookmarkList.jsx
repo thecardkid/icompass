@@ -4,13 +4,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import _ from 'underscore';
 
+import Modal from 'Utils/Modal.jsx';
 import Storage from 'Utils/Storage.jsx';
 
-import { PROMPTS } from 'Lib/constants';
+import { PROMPTS, MODALS } from 'Lib/constants';
 
 export default class BookmarkList extends Component {
     constructor(props) {
         super(props);
+        this.modal = new Modal();
 
         let b = Storage.getBookmarks();
         this.state = {
@@ -25,11 +27,13 @@ export default class BookmarkList extends Component {
 
     remove(e, idx) {
         e.stopPropagation();
-        if (confirm(PROMPTS.CONFIRM_DELETE_BOOKMARK)) {
-            let bookmarks = Storage.removeBookmark(idx);
-            let show = this.state.show.splice(idx, 1);
-            this.setState({ bookmarks, show });
-        }
+        this.modal.confirm(MODALS.DELETE_BOOKMARK, (deleteBookmark) => {
+            if (deleteBookmark) {
+                let bookmarks = Storage.removeBookmark(idx);
+                let show = this.state.show.splice(idx, 1);
+                this.setState({bookmarks, show});
+            }
+        });
     }
 
     expand(idx) {

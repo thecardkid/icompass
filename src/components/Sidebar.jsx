@@ -10,18 +10,20 @@ import _ from 'underscore';
 
 import Timer from 'Components/Timer.jsx';
 
+import Modal from 'Utils/Modal.jsx';
 import Storage from 'Utils/Storage.jsx';
 import Toast from 'Utils/Toast.jsx';
 
 import * as uiActions from 'Actions/ui';
 
-import { VERSION, TWEET, HOST, PROMPTS, PIXELS, COLORS } from 'Lib/constants';
+import { VERSION, TWEET, HOST, PROMPTS, MODALS, PIXELS, COLORS } from 'Lib/constants';
 
 class Sidebar extends Component {
 
     constructor(props, context) {
         super(props, context);
         this.toast = new Toast();
+        this.modal = new Modal();
 
         this.showSavePrompt = this.showSavePrompt.bind(this);
         this.confirmDelete = this.confirmDelete.bind(this);
@@ -60,7 +62,9 @@ class Sidebar extends Component {
     }
 
     showSavePrompt() {
-        if (confirm(PROMPTS.EXPORT)) this.props.exportCompass();
+        this.modal.confirm(MODALS.EXPORT_PDF, (exportAsPDF) => {
+            if (exportAsPDF) this.props.exportCompass();
+        });
     }
 
     shareEditLink() {
@@ -77,10 +81,12 @@ class Sidebar extends Component {
     }
 
     confirmDelete() {
-        if (confirm(PROMPTS.CONFIRM_DELETE_COMPASS)) {
-            Storage.removeBookmarkByCenter(this.props.compass.center);
-            this.props.destroy();
-        }
+        this.modal.confirm(MODALS.DELETE_COMPASS, (deleteCompass) => {
+            if (deleteCompass) {
+                Storage.removeBookmarkByCenter(this.props.compass.center);
+                this.props.destroy();
+            }
+        });
     }
 
     renderShareList() {

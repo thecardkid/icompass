@@ -7,10 +7,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 
+import Modal from 'Utils/Modal.jsx';
+
 import * as uiActions from 'Actions/ui';
 import * as workspaceActions from 'Actions/workspace';
 
-import { COLORS, PROMPTS, STICKY_COLORS } from 'Lib/constants';
+import { COLORS, PROMPTS, STICKY_COLORS, MODALS } from 'Lib/constants';
 
 const SELECTED = {background: COLORS.DARK, color: 'white', border: '2px solid white'},
     SELECTED_COLOR_BORDER = '2px solid orangered';
@@ -18,6 +20,7 @@ const SELECTED = {background: COLORS.DARK, color: 'white', border: '2px solid wh
 class VisualModeToolbar extends Component {
     constructor(props) {
         super(props);
+        this.modal = new Modal();
 
         this.getSelectedNotes = this.getSelectedNotes.bind(this);
         this.bulkDelete = this.bulkDelete.bind(this);
@@ -35,10 +38,12 @@ class VisualModeToolbar extends Component {
     }
 
     bulkDelete() {
-        if (confirm(PROMPTS.CONFIRM_BULK_DELETE_NOTES)) {
-            this.props.socket.emitBulkDeleteNotes(this.getSelectedNotes());
-            this.cancel();
-        }
+        this.modal.confirm(MODALS.BULK_DELETE_NOTES, (deleteNotes) => {
+            if (deleteNotes) {
+                this.props.socket.emitBulkDeleteNotes(this.getSelectedNotes());
+                this.cancel();
+            }
+        });
     }
 
     cancel() {
