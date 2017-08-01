@@ -1,6 +1,7 @@
 'use strict';
 
 var PROMPTS = require('../../lib/constants').PROMPTS;
+var MODALS = require('../../lib/constants').MODALS;
 var DOG_PHOTO_LINK = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
 var TEXT = 'this is a note',
     POSITIONS = [ {x: 400, y: 200}, {x: 500, y: 200} ];
@@ -82,10 +83,9 @@ module.exports = {
         .waitForElementVisible('#ic-note-form', 5000)
         .setValue('#ic-form-text', DOG_PHOTO_LINK)
         .click('button[name=ship]')
-        .getAlertText(function (result) {
-            this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
-        })
-        .acceptAlert()
+        .waitForElementVisible('#ic-modal', 1000)
+        .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
+        .click('#ic-modal-confirm')
         .pause(200)
         .assert.elementPresent('#note1 span a img')
         .assert.elementPresent('#note1 span a p.submit');
@@ -141,7 +141,7 @@ module.exports = {
         .click('button[name=ship]')
         .moveToElement('#note3', 20, 20)
         .click('#note3 button.ic-close-window')
-        .acceptAlert()
+        .click('#ic-modal-confirm')
         .pause(100)
         .getCssProperty('#note3 span a', 'background', function(result) {
             this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
@@ -163,11 +163,9 @@ module.exports = {
         })
         // changing mode should trigger warning
         .click('#ic-mode-normal')
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.EXIT_DRAFT_WARNING);
-        })
-        // accepting alert should discard remaining drafts
-        .acceptAlert()
+        .waitForElementVisible('#ic-modal', 1000)
+        .assert.containsText('#ic-modal-body', MODALS.EXIT_DRAFT_MODE.text)
+        .click('#ic-modal-confirm') // accepting alert should discard remaining drafts
         .getCssProperty('#note0 span a', 'background', function(result) {
             this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
         });
@@ -176,10 +174,12 @@ module.exports = {
     'cleanup': function(browser) {
         browser
         .keys('s') // show sidebar
+        .waitForElementVisible('#ic-sidebar button[name=destroyer]', 1000)
         .click('#ic-sidebar button[name=destroyer]')
-        .acceptAlert()
-        .pause(500)
-        .acceptAlert()
+        .waitForElementVisible('#ic-modal', 1000)
+        .click('#ic-modal-confirm')
+        .pause(200)
+        .click('#ic-modal-confirm')
         .pause(500)
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/');
