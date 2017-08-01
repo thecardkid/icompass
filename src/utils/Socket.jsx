@@ -3,6 +3,7 @@
 import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 
+import Modal from 'Utils/Modal.jsx';
 import Toast from 'Utils/Toast.jsx';
 
 import { PROMPTS } from 'Lib/constants';
@@ -13,6 +14,7 @@ export default class Socket {
         // TODO change this
         this.socket = new SocketIOClient('http://localhost:8080', {'force new connection': true});
         this.toast = new Toast();
+        this.modal = new Modal();
 
         this.disconnect = this.disconnect.bind(this);
 
@@ -198,8 +200,9 @@ export default class Socket {
 
     handleCompassFound(data) {
         if (data.compass === null) {
-            alert(PROMPTS.COMPASS_NOT_FOUND);
-            return browserHistory.push('/');
+            return this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => {
+                browserHistory.push('/');
+            });
         }
         this.component.props.compassActions.set(data.compass, data.viewOnly);
         this.component.props.noteActions.updateAll(data.compass.notes);
@@ -231,8 +234,9 @@ export default class Socket {
     }
 
     handleCompassDeleted() {
-        alert(PROMPTS.COMPASS_DELETED);
-        browserHistory.push('/');
+        this.modal.alert(PROMPTS.COMPASS_DELETED, () => {
+            browserHistory.push('/');
+        });
     }
 
     handleUserJoined(data) {

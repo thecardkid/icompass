@@ -41,8 +41,8 @@ class Workspace extends Component {
         if (this.props.route.viewOnly) {
             this.socket.emitFindCompassView();
         } else {
-            this.validateRouteParams(this.props.params);
-            this.socket.emitFindCompassEdit();
+            if (this.validateRouteParams(this.props.params))
+                this.socket.emitFindCompassEdit();
         }
 
         // user events
@@ -88,9 +88,13 @@ class Workspace extends Component {
             if (!validCode[0]) err += validCode[1];
             if (!validUsername[0]) err += validUsername[1];
             err += '\n\nYou will now be directed to the login page';
-            alert(err);
-            browserHistory.push('/');
+            this.modal.alert(err, () => {
+                browserHistory.push('/');
+            });
+            return false;
         }
+
+        return true;
     }
 
     componentDidMount() {
@@ -395,7 +399,6 @@ class Workspace extends Component {
                          exportCompass={this.exportCompass} />
                 <Chat socket={this.socket} />
                 <div id="ic-toast" onClick={this.toast.clear} />
-                <div id="ic-modal-container" />
                 {this.getFeedback()}
                 {this.getForm()}
                 {this.getAbout()}

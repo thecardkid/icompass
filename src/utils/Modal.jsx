@@ -33,6 +33,20 @@ export default class Modal {
         });
     }
 
+    generateAlert(text) {
+        return '<div id="ic-modal">' +
+            '<div id="ic-modal-body">' + text + '</div>' +
+            '<div id="ic-modal-footer"><hr /><button id="ic-modal-confirm">OK</button>';
+    }
+
+    alert(text, cb) {
+        $('#ic-modal-container').empty().append(this.generateAlert(text));
+        $('#ic-modal-confirm').on('click', () => {
+            this.close();
+            cb();
+        });
+    }
+
     close() {
         $('#ic-modal-cancel').off('click');
         $('#ic-modal-confirm').off('click');
