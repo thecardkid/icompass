@@ -75,7 +75,7 @@ module.exports = {
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', 'A principle')
         .click('button[name=ship]')
-        .pause(500)
+        .pause(1000)
         .assert.containsText('.ic-sticky-note', 'A principle');
     },
 
