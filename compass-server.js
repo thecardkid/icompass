@@ -9,7 +9,6 @@ var bodyParser = require('body-parser');
 var db = require('./lib/db.js');
 var logger = require('./lib/logger.js');
 
-// process.env.NODE_ENV === 'test' ? require('./lib/test-socket') :
 var socket = require('./lib/sockets');
 // serve static assets normally
 app.use(express.static(__dirname + '/public'));

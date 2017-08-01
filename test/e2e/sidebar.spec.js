@@ -33,7 +33,6 @@ module.exports = {
         .click('button[name=export]')
         .waitForElementVisible('#ic-modal', 1000)
         .getText('#ic-modal-body h3', function(result) {
-            console.log(result.value);
             this.assert.equal(result.value.indexOf('I see you want to save this compass as a PDF'), 0);
         })
         .click('#ic-modal-cancel')

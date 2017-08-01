@@ -138,7 +138,7 @@ module.exports = {
             .waitForElementVisible('#ic-modal', 1000)
             .assert.containsText('#ic-modal-body', MODALS.DELETE_NOTE.text)
             .click('#ic-modal-cancel')
-            .assert.elementPresent('#note1')
+            .assert.elementPresent('#note1');
         })
         .moveToElement('#note1', 158, 3, function() {
             browser

@@ -13,7 +13,7 @@ export default class Modal {
 
     addBackdropIfNecessary() {
         if ($('#ic-backdrop').length === 0) {
-            $('#ic-modal-container').append('<div id="ic-backdrop"></div>')
+            $('#ic-modal-container').append('<div id="ic-backdrop"></div>');
         }
     }
 

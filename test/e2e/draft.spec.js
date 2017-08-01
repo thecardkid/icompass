@@ -95,7 +95,7 @@ module.exports = {
         .waitForElementVisible('#note2', 500)
         .getAttribute('#note2 span a img', 'src', function(result) {
             this.assert.equal(result.value.indexOf('data:image/png;base64'), 0);
-        })
+        });
     },
 
     'edit drafts': function(browser) {

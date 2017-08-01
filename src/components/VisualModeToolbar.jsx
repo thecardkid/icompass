@@ -12,7 +12,7 @@ import Modal from 'Utils/Modal.jsx';
 import * as uiActions from 'Actions/ui';
 import * as workspaceActions from 'Actions/workspace';
 
-import { COLORS, PROMPTS, STICKY_COLORS, MODALS } from 'Lib/constants';
+import { COLORS, STICKY_COLORS, MODALS } from 'Lib/constants';
 
 const SELECTED = {background: COLORS.DARK, color: 'white', border: '2px solid white'},
     SELECTED_COLOR_BORDER = '2px solid orangered';
