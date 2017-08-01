@@ -84,10 +84,10 @@ class Workspace extends Component {
         let validUsername = Validator.validateUsername(params.username);
 
         if (!validCode[0] || !validUsername[0]) {
-            let err = 'There was a problem with your login info:\n\n';
-            if (!validCode[0]) err += validCode[1];
-            if (!validUsername[0]) err += validUsername[1];
-            err += '\n\nYou will now be directed to the login page';
+            let err = '<h3>There was a problem with your login info</h3>';
+            if (!validCode[0]) err += '<p>' + validCode[1] + '</p>';
+            if (!validUsername[0]) err += '<p>' + validUsername[1] + '</p>';
+            err += '<p>You will now be directed to the login page</p>';
             this.modal.alert(err, () => {
                 browserHistory.push('/');
             });
