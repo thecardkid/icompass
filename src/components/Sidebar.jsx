@@ -68,11 +68,11 @@ class Sidebar extends Component {
     }
 
     shareEditLink() {
-        window.prompt('Share this link below:', HOST + 'compass/edit/' + this.props.compass.editCode);
+        this.modal.alert(MODALS.SHARE_LINK(HOST + 'compass/edit/' + this.props.compass.editCode));
     }
 
     shareViewOnlyLink() {
-        window.prompt('Share this link below:', HOST + 'compass/view/' + this.props.compass.viewCode);
+        this.modal.alert(MODALS.SHARE_LINK(HOST + 'compass/view/' + this.props.compass.viewCode));
     }
 
     tweetThis() {
