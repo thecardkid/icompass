@@ -5,12 +5,16 @@ let modalInstance;
 export default class Modal {
     constructor() {
         if (!modalInstance) {
-            this.confirm = this.confirm.bind(this);
-            this.close = this.close.bind(this);
             modalInstance = this;
         }
 
         return modalInstance;
+    }
+
+    addBackdropIfNecessary() {
+        if ($('#ic-backdrop').length === 0) {
+            $('#ic-modal-container').append('<div id="ic-backdrop"></div>')
+        }
     }
 
     generateConfirm(modal) {
@@ -23,11 +27,17 @@ export default class Modal {
 
     confirm(modal, cb) {
         $('#ic-modal-container').empty().append(this.generateConfirm(modal));
+        this.addBackdropIfNecessary();
+
         $('#ic-modal-confirm').on('click', () => {
             this.close();
             cb(true);
         });
         $('#ic-modal-cancel').on('click', () => {
+            this.close();
+            cb(false);
+        });
+        $('#ic-backdrop').on('click', () => {
             this.close();
             cb(false);
         });
@@ -41,15 +51,22 @@ export default class Modal {
 
     alert(text, cb) {
         $('#ic-modal-container').empty().append(this.generateAlert(text));
+        this.addBackdropIfNecessary();
+
         $('#ic-modal-confirm').on('click', () => {
             this.close();
-            cb();
+            if (cb) cb();
+        });
+        $('#ic-backdrop').on('click', () => {
+            this.close();
+            if (cb) cb();
         });
     }
 
     close() {
         $('#ic-modal-cancel').off('click');
         $('#ic-modal-confirm').off('click');
+        $('#ic-backdrop').off('click');
         $('#ic-modal-container').empty();
     }
 }

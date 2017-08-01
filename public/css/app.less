@@ -190,15 +190,20 @@ div#ic-toast {
 
 div#ic-modal-container {
     position:absolute;
-    top:15px;
+    top:0;
     width:100%;
     z-index:10;
+
+    div#ic-backdrop {
+        z-index:-1;
+    }
 
     div#ic-modal {
         width:350px;
         padding:20px;
         background:white;
-        margin: 0 auto;
+        margin:0 auto;
+        margin-top:15px;
         border-radius:2px;
         .boxshadow(3px, 7px, rgba(33,33,33,0.7));
 
