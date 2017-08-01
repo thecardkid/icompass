@@ -17,7 +17,7 @@ module.exports = {
     'make path': function(browser) {
         browser
         .click('button[name=make]')
-        .pause(500)
+        .pause(100)
         .assert.containsText('div.prompt', 'Who are the PEOPLE involved, at the center of your compass?')
         .assert.elementPresent('#compass-center')
         .assert.elementPresent('#username');
@@ -90,20 +90,13 @@ module.exports = {
         .setValue('#compass-code', code)
         .setValue('#username', 'sandbox')
         .click('button[name=next]')
-        .waitForElementVisible('.third', 5000)
+        .waitForElementVisible('.third', 1000)
         .assert.containsText('.third h1', 'Edit access')
         .assert.containsText('.third h2', 'You will be logged in as sandbox')
         .assert.elementPresent('button[name=to-workspace]')
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
-        .click('#ic-sidebar button[name=destroyer]')
-        .acceptAlert()
-        .pause(500)
-        .acceptAlert()
-        .pause(500)
-        .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/');
-        })
-        .end();
-    }
+        .waitForElementVisible('#ic-sidebar', 1000);
+    },
+
+    'cleanup': require('./utils').cleanup
 };

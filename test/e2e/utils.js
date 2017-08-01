@@ -16,7 +16,6 @@ module.exports.setup = function(browser) {
 
 module.exports.cleanup = function(browser) {
     browser
-    .waitForElementVisible('#ic-sidebar button[name=destroyer]', 1000)
     .click('#ic-sidebar button[name=destroyer]')
     .waitForElementVisible('#ic-modal', 1000)
     .click('#ic-modal-confirm')

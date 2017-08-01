@@ -160,7 +160,7 @@ module.exports = {
     },
 
     'cleanup': function(browser) {
-        browser.keys('s'); // show sidebar
+        browser.keys('s').waitForElementVisible('#ic-sidebar button[name=destroyer]', 1000); // show sidebar
         require('./utils').cleanup(browser);
     }
 };
