@@ -19,7 +19,8 @@ module.exports.cleanup = function(browser) {
     .click('#ic-sidebar button[name=destroyer]')
     .waitForElementVisible('#ic-modal', 1000)
     .click('#ic-modal-confirm')
-    .pause(200)
+    .pause(100)
+    .waitForElementVisible('#ic-modal', 5000)
     .click('#ic-modal-confirm')
     .pause(500)
     .url(function(result) {

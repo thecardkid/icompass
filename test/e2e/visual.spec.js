@@ -1,24 +1,13 @@
 'use strict';
 
 const PROMPTS = require('../../lib/constants').PROMPTS;
+const MODALS = require('../../lib/constants').MODALS;
 const STICKY_COLORS = require('../../lib/constants').STICKY_COLORS;
 const TEXT = 'this is a note',
     POSITIONS = [ {x: 300, y: 200}, {x: 400, y: 200}, {x: 500, y: 200}, {x: 600, y: 200} ];
 
 module.exports = {
-    'creates successfully': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body', 1000)
-        .click('button[name=make]')
-        .setValue('#compass-center', 'nightwatchjs')
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third', 1000)
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
-        .windowMaximize();
-    },
+    'creates successfully': require('./utils').setup,
 
     'create all notes': function(browser) {
         var p;
@@ -96,10 +85,9 @@ module.exports = {
         .assert.cssProperty('button.ic-visual-color', 'border', '2px solid rgb(255, 69, 0)')
         .click('button.ic-visual-color')
         .click('button#ic-bulk-delete')
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.CONFIRM_BULK_DELETE_NOTES);
-        })
-        .acceptAlert()
+        .waitForElementVisible('#ic-modal', 1000)
+        .assert.containsText('#ic-modal-body', MODALS.BULK_DELETE_NOTES.text)
+        .click('#ic-modal-confirm')
         .pause(100)
         .assert.elementNotPresent('#ic-visual-toolbar')
         .click('#ic-mode-visual')
@@ -176,6 +164,9 @@ module.exports = {
         .pause(50)
         .click('#note1')
         .click('button.bold').click('button.italic')
+        .source(function(result) {
+            console.log(result.value);
+        })
         .click('button#ic-bulk-submit')
         .pause(200)
         .assert.cssClassPresent('#note1 span a p', 'bold')
@@ -254,29 +245,17 @@ module.exports = {
         .click('#note2')
         .click('#note3')
         .click('button#ic-bulk-delete')
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.CONFIRM_BULK_DELETE_NOTES);
-        })
-        .acceptAlert()
+        .waitForElementVisible('#ic-modal', 1000)
+        .assert.containsText('#ic-modal-body', MODALS.BULK_DELETE_NOTES.text)
+        .click('#ic-modal-confirm')
+        .pause(100)
         .assert.elementNotPresent('#ic-visual-toolbar')
-        .pause(500)
         .assert.elementNotPresent('#note0')
         .assert.elementNotPresent('#note1')
         .assert.elementNotPresent('#note2')
         .assert.elementNotPresent('#note3');
     },
 
-    'cleanup': function(browser) {
-        browser
-        .click('#ic-sidebar button[name=destroyer]')
-        .acceptAlert()
-        .pause(500)
-        .acceptAlert()
-        .pause(500)
-        .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/');
-        })
-        .end();
-    }
+    'cleanup': require('./utils').cleanup
 };
 

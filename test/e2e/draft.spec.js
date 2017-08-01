@@ -123,7 +123,7 @@ module.exports = {
 
     'delete a draft': function(browser) {
         browser
-        .moveToElement('body', 600, 600)
+        .moveToElement('body', 100, 100)
         .doubleClick()
         .setValue('#ic-form-text', 'To be deleted')
         .click('button[name=ship]')

@@ -88,7 +88,7 @@ module.exports = {
         .waitForElementVisible('#ic-modal', 1000)
         .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
         .click('#ic-modal-confirm')
-        .pause(200)
+        .pause(1000)
         .assert.elementPresent('a.ic-img')
         // render as text not image
         .moveToElement('a.ic-img', 50, 50, function() {
@@ -100,7 +100,7 @@ module.exports = {
         .waitForElementVisible('#ic-modal', 1000)
         .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
         .click('#ic-modal-cancel')
-        .pause(200)
+        .pause(1000)
         .assert.elementNotPresent('a.ic-img');
     },
 
@@ -145,7 +145,7 @@ module.exports = {
             .mouseButtonClick(0)
             .waitForElementVisible('#ic-modal', 1000)
             .click('#ic-modal-confirm')
-            .assert.elementNotPresent('#note1');
+            .waitForElementNotPresent('#note1', 5000);
         });
     },
 
