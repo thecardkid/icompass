@@ -1,22 +1,10 @@
 'use strict';
 
-var PROMPTS = require('../../lib/constants.js').PROMPTS;
+var MODALS = require('../../lib/constants.js').MODALS;
 var top, left, newTop, newLeft;
 
 module.exports = {
-    'creates successfully': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body', 1000)
-        .click('button[name=make]')
-        .setValue('#compass-center', 'nightwatchjs')
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third', 1000)
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
-        .windowMaximize();
-    },
+    'creates successfully': require('./utils').setup,
 
     'renders correctly': function(browser) {
         browser
@@ -95,15 +83,12 @@ module.exports = {
         browser
         .keys('n')
         .assert.elementNotPresent('a.ic-img')
-        // TODO
         .setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg')
         .click('button[name=ship]')
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
-        })
-        .pause(500)
-        .acceptAlert()
-        .pause(500)
+        .waitForElementVisible('#ic-modal', 1000)
+        .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
+        .click('#ic-modal-confirm')
+        .pause(200)
         .assert.elementPresent('a.ic-img')
         // render as text not image
         .moveToElement('a.ic-img', 50, 50, function() {
@@ -112,11 +97,10 @@ module.exports = {
         .pause(500)
         .assert.elementPresent('#ic-form-text')
         .click('button[name=ship]')
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.CONFIRM_IMAGE_LINK);
-        })
-        .dismissAlert()
-        .pause(500)
+        .waitForElementVisible('#ic-modal', 1000)
+        .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
+        .click('#ic-modal-cancel')
+        .pause(200)
         .assert.elementNotPresent('a.ic-img');
     },
 
@@ -151,16 +135,16 @@ module.exports = {
         .moveToElement('#note1', 158, 3, function() {
             browser
             .mouseButtonClick(0)
-            .pause(500)
-            .getAlertText(function(result) {
-                this.assert.equal(result.value, PROMPTS.CONFIRM_DELETE_NOTE);
-            })
-            .dismissAlert()
+            .waitForElementVisible('#ic-modal', 1000)
+            .assert.containsText('#ic-modal-body', MODALS.DELETE_NOTE.text)
+            .click('#ic-modal-cancel')
             .assert.elementPresent('#note1')
+        })
+        .moveToElement('#note1', 158, 3, function() {
+            browser
             .mouseButtonClick(0)
-            .pause(500)
-            .acceptAlert()
-            .pause(500)
+            .waitForElementVisible('#ic-modal', 1000)
+            .click('#ic-modal-confirm')
             .assert.elementNotPresent('#note1');
         });
     },
@@ -267,16 +251,5 @@ module.exports = {
         .assert.cssClassPresent('.bubble', 'mine');
     },
 
-    'cleanup': function(browser) {
-        browser
-        .click('#ic-sidebar button[name=destroyer]')
-        .acceptAlert()
-        .pause(500)
-        .acceptAlert()
-        .pause(500)
-        .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/');
-        })
-        .end();
-    }
+    'cleanup': require('./utils').cleanup
 };

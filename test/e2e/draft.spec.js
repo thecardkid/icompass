@@ -7,19 +7,7 @@ var TEXT = 'this is a note',
     POSITIONS = [ {x: 400, y: 200}, {x: 500, y: 200} ];
 
 module.exports = {
-    'creates successfully': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body', 1000)
-        .click('button[name=make]')
-        .setValue('#compass-center', 'nightwatchjs')
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third', 1000)
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
-        .windowMaximize();
-    },
+    'creates successfully': require('./utils').setup,
 
     'create normal notes': function(browser) {
         var p;
@@ -172,19 +160,7 @@ module.exports = {
     },
 
     'cleanup': function(browser) {
-        browser
-        .keys('s') // show sidebar
-        .waitForElementVisible('#ic-sidebar button[name=destroyer]', 1000)
-        .click('#ic-sidebar button[name=destroyer]')
-        .waitForElementVisible('#ic-modal', 1000)
-        .click('#ic-modal-confirm')
-        .pause(200)
-        .click('#ic-modal-confirm')
-        .pause(500)
-        .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/');
-        })
-        .end();
+        browser.keys('s'); // show sidebar
+        require('./utils').cleanup(browser);
     }
 };
-
