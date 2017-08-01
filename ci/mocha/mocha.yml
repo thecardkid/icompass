@@ -9,8 +9,5 @@ image_resource:
 inputs:
 - name: icompass
 
-outputs:
-- name: bundle
-
 run:
-  path: icompass/ci/test/test.sh
+  path: icompass/ci/mocha/mocha.sh

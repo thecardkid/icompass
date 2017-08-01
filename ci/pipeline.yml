@@ -7,13 +7,17 @@ resources:
     branch: ci
 
 jobs:
-- name: tests
+- name: mocha
   serial: true
   plan:
-  - aggregate:
-    - get: icompass
-      trigger: true
+  - get: icompass
+    trigger: true
   - task: mocha
-    file: icompass/ci/test/test.yml
+    file: icompass/ci/mocha/mocha.yml
+- name: e2e
+  serial: true
+  plan:
+  - get: icompass
+    trigger: true
   - task: e2e
     file: icompass/ci/e2e/e2e.yml
