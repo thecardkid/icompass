@@ -305,7 +305,7 @@ class Workspace extends Component {
                     data-tip data-for="visual-tooltip"
                     className={this.visualMode ? 'selected' : 'unselected'}
                     onClick={this.handleChangeMode}>
-                    Visual
+                    Select
                 </button>
                 <ReactTooltip id="visual-tooltip" place="left" effect="solid">
                     <span>Click to select and edit multiple notes at once</span>

@@ -80,6 +80,8 @@ class VisualModeToolbar extends Component {
 
         return (
             <Draggable><div id="ic-visual-toolbar">
+                <div id="ic-visual-hint">Click on stickies to select them</div>
+                <hr />
                 <div className="ic-visual-group">
                     <button className="ic-bulk-edit bold"
                         style={w.bold ? SELECTED : null}
