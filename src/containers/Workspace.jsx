@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
+import ReactTooltip from 'react-tooltip';
 
 import * as noteActions from 'Actions/notes';
 import * as compassActions from 'Actions/compass';
@@ -292,25 +293,41 @@ class Workspace extends Component {
         return (
             <div id="ic-modes">
                 <button id="ic-mode-draft"
-                        className={this.draftMode ? 'selected' : 'unselected'}
-                        onClick={this.handleChangeMode}>
+                    data-tip data-for="draft-tooltip"
+                    className={this.draftMode ? 'selected' : 'unselected'}
+                    onClick={this.handleChangeMode}>
                     Draft
                 </button>
+                <ReactTooltip id="draft-tooltip" place="left" effect="solid">
+                    <span>Create drafts and release them one at a time</span>
+                </ReactTooltip>
                 <button id="ic-mode-visual"
+                    data-tip data-for="visual-tooltip"
                     className={this.visualMode ? 'selected' : 'unselected'}
                     onClick={this.handleChangeMode}>
                     Visual
                 </button>
+                <ReactTooltip id="visual-tooltip" place="left" effect="solid">
+                    <span>Click to select and edit multiple notes at once</span>
+                </ReactTooltip>
                 <button id="ic-mode-compact"
+                    data-tip data-for="compact-tooltip"
                     className={this.compactMode ? 'selected' : 'unselected'}
                     onClick={this.handleChangeMode}>
                     Compact
                 </button>
+                <ReactTooltip id="compact-tooltip" place="bottom" effect="solid">
+                    <span>Notes take up less space - for smaller devices</span>
+                </ReactTooltip>
                 <button id="ic-mode-normal"
+                    data-tip data-for="normal-tooltip"
                     className={this.normalMode ? 'selected' : 'unselected'}
                     onClick={this.handleChangeMode}>
                     Normal
                 </button>
+                <ReactTooltip id="normal-tooltip" place="bottom" effect="solid">
+                    <span>Traditional ship-as-you-go</span>
+                </ReactTooltip>
             </div>
         );
     }
