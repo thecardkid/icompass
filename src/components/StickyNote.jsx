@@ -31,7 +31,7 @@ class StickyNote extends Component {
         this.submitDraft = this.submitDraft.bind(this);
 
         this.hasEditingRights = !this.props.compass.viewOnly;
-        this.compactMode = this.visualMode = this.draftMode = false;
+        this.setModes(this.props);
         this.lastClick = 0;
     }
 
@@ -48,9 +48,13 @@ class StickyNote extends Component {
     }
 
     componentWillUpdate(nextProps) {
-        this.compactMode = nextProps.ui.editingMode === EDITING_MODE.COMPACT || false;
-        this.visualMode = nextProps.ui.editingMode === EDITING_MODE.VISUAL || false;
-        this.draftMode = nextProps.ui.editingMode === EDITING_MODE.DRAFT || false;
+        this.setModes(nextProps);
+    }
+
+    setModes(props) {
+        this.compactMode = props.ui.editingMode === EDITING_MODE.COMPACT || false;
+        this.visualMode = props.ui.editingMode === EDITING_MODE.VISUAL || false;
+        this.draftMode = props.ui.editingMode === EDITING_MODE.DRAFT || false;
     }
 
     confirmDelete() {
