@@ -299,7 +299,7 @@ class Workspace extends Component {
                     Draft
                 </button>
                 <ReactTooltip id="draft-tooltip" place="left" effect="solid">
-                    <span>Create drafts and release them one at a time</span>
+                    <span>Draft notes and release them one at a time</span>
                 </ReactTooltip>
                 <button id="ic-mode-visual"
                     data-tip data-for="visual-tooltip"
@@ -308,7 +308,7 @@ class Workspace extends Component {
                     Select
                 </button>
                 <ReactTooltip id="visual-tooltip" place="left" effect="solid">
-                    <span>Click to select and edit multiple notes at once</span>
+                    <span>Select and format many notes at once</span>
                 </ReactTooltip>
                 <button id="ic-mode-compact"
                     data-tip data-for="compact-tooltip"
@@ -317,7 +317,7 @@ class Workspace extends Component {
                     Compact
                 </button>
                 <ReactTooltip id="compact-tooltip" place="bottom" effect="solid">
-                    <span>Notes take up less space - for smaller devices</span>
+                    <span>For smaller devices</span>
                 </ReactTooltip>
                 <button id="ic-mode-normal"
                     data-tip data-for="normal-tooltip"
@@ -326,7 +326,7 @@ class Workspace extends Component {
                     Normal
                 </button>
                 <ReactTooltip id="normal-tooltip" place="bottom" effect="solid">
-                    <span>Traditional ship-as-you-go</span>
+                    <span>Ship notes as you go</span>
                 </ReactTooltip>
             </div>
         );
