@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "watch": "webpack -d --watch --config ./config/webpack.config.js",
-    "build": "NODE_ENV=production webpack -p --config ./config/webpack.production.config.js",
+    "build": "npm i && NODE_ENV=production webpack -p --config ./config/webpack.production.config.js",
     "start": "nodemon compass-server.js",
     "production": "NODE_ENV=production forever start compass-server.js",
     "test:e2e": "nightwatch --config config/nightwatch.conf.js",
