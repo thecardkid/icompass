@@ -11,8 +11,7 @@ import { PROMPTS } from 'Lib/constants';
 export default class Socket {
     constructor(component) {
         this.component = component;
-        // TODO change this
-        this.socket = new SocketIOClient('http://localhost:8080', {'force new connection': true});
+        this.socket = new SocketIOClient();
         this.toast = new Toast();
         this.modal = new Modal();
 
