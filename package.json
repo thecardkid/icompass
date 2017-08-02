@@ -12,7 +12,7 @@
     "test:mocha": "mocha --compilers js:babel-core/register test/server",
     "selenium": "java -jar bin/selenium.jar",
     "lint": "eslint --config config/.eslintrc.js src/*/* test/*/* lib/* models/*",
-    "test": "export NODE_ENV=test && npm run test:mocha && node test/e2e && npm run lint"
+    "test": "export NODE_ENV=test && npm run test:mocha && node test/e2e"
   },
   "author": "Hieu Nguyen",
   "license": "ISC",

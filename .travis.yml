@@ -8,8 +8,9 @@ install:
 - npm install --depth 0
 - npm run build
 - npm install -gq --depth 0 mocha eslint eslint-plugin-react@latest
-- cd ..
 script:
-- docker run --name dc thecardkid/e2e & sleep 5
+- npm run lint
+- cd ..
+- docker run -d --log-driver=none --name dc thecardkid/e2e & sleep 5
 - docker cp icompass dc:.
 - docker exec dc bash -c "cd icompass; npm test"
