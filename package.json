@@ -11,7 +11,8 @@
     "test:e2e": "nightwatch --config config/nightwatch.conf.js test/e2e",
     "test:mocha": "mocha --compilers js:babel-core/register test/server",
     "selenium": "java -jar bin/selenium.jar",
-    "lint": "eslint --config config/.eslintrc.js src/*/* test/*/* lib/* models/*"
+    "lint": "eslint --config config/.eslintrc.js src/*/* test/*/* lib/* models/*",
+    "test": "export NODE_ENV=test && npm run lint && npm run test:mocha && node test/e2e"
   },
   "author": "Hieu Nguyen",
   "license": "ISC",

@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- '6'
+services:
+- docker
+install:
+- docker pull thecardkid/e2e:latest
+- npm install --depth 0
+- npm install -g mocha
+- cd icompass; npm install --depth 0; npm run build; cd ..
+script:
+- docker run --name dc thecardkid/e2e & sleep 5
+- docker cp icompass dc:.
+- docker exec dc bash -c "cd icompass; npm test"
