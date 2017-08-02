@@ -6,8 +6,9 @@ services:
 install:
 - docker pull thecardkid/e2e:latest
 - npm install --depth 0
-- npm install -gq mocha eslint eslint-plugin-react
-- cd icompass; npm install --depth 0; npm run build; cd ..
+- npm run build
+- npm install -gq --depth 0 mocha eslint eslint-plugin-react@latest
+- cd ..
 script:
 - docker run --name dc thecardkid/e2e & sleep 5
 - docker cp icompass dc:.
