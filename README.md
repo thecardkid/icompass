@@ -12,7 +12,7 @@ When creating a compass, you can have me email you the codes. The email will com
 
 # Getting started
 
-Go to [http://icompass.hieuqn.com](http://icompass.hieuqn.com) and follow the login steps.
+Go to [https://icompass.hieuqn.com](https://icompass.hieuqn.com) and follow the login steps.
 
-There is also a [tutorial](http://icompass.hieuqn.com/tutorial); some of its information will be repeated below.
+There is also a [tutorial](https://icompass.hieuqn.com/tutorial); some of its information will be repeated below.
 
