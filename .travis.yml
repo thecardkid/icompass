@@ -7,9 +7,10 @@ install:
 - docker pull thecardkid/e2e:latest
 - npm install --depth 0
 - npm run build
-- npm install -gq --depth 0 mocha eslint eslint-plugin-react@latest
+- npm install -gq --depth 0 mocha
 script:
-- npm run lint
+- npm i -q --depth 0 eslint eslint-plugin-react@latest
+- ./node_modules/eslint/bin/eslint.js -c config/.eslintrc.js src/*/* test/*/* lib/* models/*
 - cd ..
 - docker run -d --log-driver=none --name dc thecardkid/e2e & sleep 5
 - docker cp icompass dc:.
