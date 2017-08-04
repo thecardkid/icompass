@@ -6,11 +6,13 @@ import PropTypes from 'prop-types';
 
 export default class About extends Component {
 
-    shouldComponentUpdate() {
-        return false;
+    shouldComponentUpdate(nextProps) {
+        return this.props.show !== nextProps.show;
     }
 
     render() {
+        if (!this.props.show) return null;
+
         return (
             <div id="ic-about">
                 <button className="ic-close-window" onClick={this.props.close}>x</button>
@@ -53,6 +55,7 @@ export default class About extends Component {
 }
 
 About.propTypes = {
-    close: PropTypes.func.isRequired
+    close: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired
 };
 

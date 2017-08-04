@@ -75,6 +75,8 @@ class VisualModeToolbar extends Component {
     }
 
     render() {
+        if (!this.props.show) return null;
+
         let w = this.props.workspace,
             wx = this.props.workspaceActions;
 
@@ -122,6 +124,7 @@ class VisualModeToolbar extends Component {
 
 VisualModeToolbar.propTypes = {
     socket: PropTypes.object.isRequired,
+    show: PropTypes.bool.isRequired,
     notes: PropTypes.arrayOf(PropTypes.object).isRequired,
     ui: PropTypes.object.isRequired,
     workspace: PropTypes.object.isRequired,
