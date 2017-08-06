@@ -93,13 +93,13 @@ export default class Socket {
 
     emitNewNote(note) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        if (this.component.visualMode) return this.alertVisualModeNoCreate();
+        if (this.component.props.visualMode) return this.alertVisualModeNoCreate();
         this.socket.emit('new note', note);
     }
 
     emitEditNote(edited) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        if (this.component.visualMode) return this.alertVisualMode();
+        if (this.component.props.visualMode) return this.alertVisualMode();
         let original = this.component.props.notes[this.component.props.ui.editNote];
         let before = Object.assign({}, original);
         let after = Object.assign({}, before, edited);
@@ -127,7 +127,7 @@ export default class Socket {
 
     emitNewDoodle(user) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        if (this.component.visualMode) return this.alertVisualMode();
+        if (this.component.props.visualMode) return this.alertVisualMode();
 
         this.socket.emit('new note', {
             text: null,
@@ -146,7 +146,7 @@ export default class Socket {
 
     emitDeleteNote(noteId) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        if (this.component.visualMode) return this.alertVisualMode();
+        if (this.component.props.visualMode) return this.alertVisualMode();
 
         this.socket.emit('delete note', noteId);
     }
@@ -228,7 +228,7 @@ export default class Socket {
     handleUpdateNotes(notes) {
         this.component.props.noteActions.updateAll(notes);
 
-        if (this.component.visualMode)
+        if (this.component.props.visualMode)
             this.component.props.workspaceActions.updateSelected(notes.length);
     }
 
@@ -272,7 +272,7 @@ export default class Socket {
     }
 
     handleDeletedNotes(deletedIdx) {
-        if (this.component.visualMode)
+        if (this.component.props.visualMode)
             this.component.props.workspaceActions.removeNotesIfSelected(deletedIdx);
     }
 
