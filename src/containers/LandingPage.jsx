@@ -118,7 +118,7 @@ class LandingPage extends Component {
             <div className="section">
                 <h1>I need some info</h1>
                 <div className="response"><input id={inputId} placeholder={firstPrompt} /></div>
-                <div className="response"><input id="username" placeholder={"Your name"} /></div>
+                <div className="response"><input id="username" placeholder={'Your name'} /></div>
                 <button className="ic-button" name="next" onClick={cb}>next</button>
             </div>
         );
