@@ -17,10 +17,13 @@ module.exports = {
     'make path': function(browser) {
         browser
         .click('button[name=make]')
-        .pause(100)
-        .assert.containsText('div.prompt', 'Who are the PEOPLE involved, at the center of your compass?')
-        .assert.elementPresent('#compass-center')
-        .assert.elementPresent('#username');
+        .waitForElementVisible('input#compass-center', 1000)
+        .getAttribute('input#compass-center', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'Who/what is at the center of your compass?');
+        })
+        .getAttribute('input#username', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'Your name');
+        });
     },
 
     'make path errors': function(browser) {
@@ -58,10 +61,13 @@ module.exports = {
     'find path': function(browser) {
         browser
         .click('button[name=find]')
-        .pause(500)
-        .assert.containsText('div.prompt', 'What is the code you were given?')
-        .assert.elementPresent('#compass-code')
-        .assert.elementPresent('#username');
+        .waitForElementVisible('input#compass-code', 1000)
+        .getAttribute('input#compass-code', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'The code of your compass');
+        })
+        .getAttribute('input#username', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'Your name');
+        });
     },
 
     'find path errors': function(browser) {

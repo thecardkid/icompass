@@ -105,11 +105,11 @@ class LandingPage extends Component {
         let firstPrompt, inputId, cb;
 
         if (this.state.loginType === LOGIN_TYPE.FIND) {
-            firstPrompt = 'What is the code you were given?';
+            firstPrompt = 'The code of your compass';
             inputId = 'compass-code';
             cb = this.validateFindInput;
         } else {
-            firstPrompt = 'Who are the PEOPLE involved, at the center of your compass?';
+            firstPrompt = 'Who/what is at the center of your compass?';
             inputId = 'compass-center';
             cb = this.validateMakeInput;
         }
@@ -117,10 +117,8 @@ class LandingPage extends Component {
         return (
             <div className="section">
                 <h1>I need some info</h1>
-                <div className="prompt">{firstPrompt}</div>
-                <div className="response"><input id={inputId} /></div>
-                <div className="prompt">Your name (how others will see you)</div>
-                <div className="response"><input id="username" /></div>
+                <div className="response"><input id={inputId} placeholder={firstPrompt} /></div>
+                <div className="response"><input id="username" placeholder={"Your name"} /></div>
                 <button className="ic-button" name="next" onClick={cb}>next</button>
             </div>
         );
