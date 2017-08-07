@@ -76,15 +76,14 @@ module.exports = {
     'url with bad params is rejected': function(browser) {
         browser
         .url('http://localhost:8080/compass/edit/' + editCode.substring(1,5) + '/,,,')
-        .pause(500)
-        .getAlertText(function(result) {
+        .waitForElementVisible('#ic-modal')
+        .getText('#ic-modal-body', function(result) {
             this.assert.equal(result.value.indexOf('There was a problem with your login info') > -1, true);
             this.assert.equal(result.value.indexOf('Your code is not valid') > -1, true);
             this.assert.equal(result.value.indexOf('Username can only contain a-zA-Z') > -1, true);
         })
-        .acceptAlert()
-        .pause(500)
-        .assert.elementPresent('#ic-landing')
+        .click('#ic-modal-confirm')
+        .waitForElementVisible('#ic-landing', 1000)
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/');
         });
@@ -93,13 +92,12 @@ module.exports = {
     'view url with wrong editCode is rejected': function(browser) {
         browser
         .url('http://localhost:8080/compass/view/'+editCode+'/sandbox')
-        .pause(500)
-        .getAlertText(function(result) {
+        .waitForElementVisible('#ic-modal', 1000)
+        .getText('#ic-modal-body', function(result) {
             this.assert.equal(result.value.indexOf('I couldn\'t find your compass'), 0);
         })
-        .acceptAlert()
-        .pause(500)
-        .assert.elementPresent('#ic-landing')
+        .click('#ic-modal-confirm')
+        .waitForElementVisible('#ic-landing')
         .url(function(result) {
             this.assert.equal(result.value, 'http://localhost:8080/');
         });
@@ -122,24 +120,27 @@ module.exports = {
     'edit access from url without username': function(browser) {
         browser
         .url(editURL)
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, 'Enter your name:');
-        })
-        .setAlertText('sandbox2')
-        .acceptAlert()
-        .pause(500)
-        .getAlertText(function(result) {
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body h3', 'Enter your name:')
+        .setValue('#ic-modal-input', 'sandbox2')
+        .click('#ic-modal-confirm')
+        .pause(100)
+        .getText('#ic-modal-body', function(result) {
             this.assert.equal(result.value.indexOf(ERROR_MSG.UNAME_HAS_NON_CHAR), 0);
         })
-        .acceptAlert()
-        .pause(500)
-        .getAlertText(function(result) {
+
+        .url(editURL)
+        .waitForElementVisible('#ic-modal')
+        .click('#ic-modal-confirm')
+        .pause(100)
+        .getText('#ic-modal-body', function(result) {
             this.assert.equal(result.value.indexOf(ERROR_MSG.REQUIRED('Username')), 0);
         })
-        .setAlertText('sandbox')
-        .acceptAlert()
-        .pause(500)
-        .assert.elementPresent('#center')
+
+        .url(editURL)
+        .setValue('#ic-modal-input', 'sandbox')
+        .click('#ic-modal-confirm')
+        .waitForElementVisible('#center', 1000)
         .assert.elementPresent('#vline')
         .assert.elementPresent('#hline')
         .assert.elementPresent('#ic-sidebar')
@@ -149,17 +150,6 @@ module.exports = {
         .assert.elementPresent('#ic-modes');
     },
 
-    'clean up': function(browser) {
-        browser
-        .click('#ic-sidebar button[name=destroyer]')
-        .acceptAlert()
-        .pause(500)
-        .acceptAlert()
-        .pause(500)
-        .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/');
-        })
-        .end();
-    }
+    'clean up': require('./utils').cleanup
 };
 

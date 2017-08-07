@@ -9,6 +9,8 @@ import { bindActionCreators } from 'redux';
 import * as uiActions from 'Actions/ui';
 
 import BookmarkList from 'Components/BookmarkList.jsx';
+
+import Modal from 'Utils/Modal.jsx';
 import Socket from 'Utils/Socket.jsx';
 import Toast from 'Utils/Toast.jsx';
 import Validator from 'Utils/Validator.jsx';
@@ -24,6 +26,7 @@ class LandingPage extends Component {
     constructor(props) {
         super(props);
         this.toast = new Toast();
+        this.modal = new Modal();
 
         this.socket = new Socket(this);
         this.state = {loginType: null};
@@ -65,24 +68,22 @@ class LandingPage extends Component {
     }
 
     validateFindInput() {
-        $('#error-message').text('');
         let code = Validator.validateCompassCode($('#compass-code').val());
         let username = Validator.validateUsername($('#username').val());
 
-        if (!code[0]) return $('#error-message').text(code[1]);
-        if (!username[0]) return $('#error-message').text(username[1]);
+        if (!code[0]) return this.modal.alert(code[1]);
+        if (!username[0]) return this.modal.alert(username[1]);
 
         this.setState({username: username[1]});
         this.socket.emitFindCompass(code[1], username[1]);
     }
 
     validateMakeInput() {
-        $('#error-message').text('');
         let center = Validator.validateCenter($('#compass-center').val());
         let username = Validator.validateUsername($('#username').val());
 
-        if (!center[0]) return $('#error-message').text(center[1]);
-        if (!username[0]) return $('#error-message').text(username[1]);
+        if (!center[0]) return this.modal.alert(center[1]);
+        if (!username[0]) return this.modal.alert(username[1]);
 
         this.setState({username: username[1]});
         this.socket.emitCreateCompass(center[1], username[1]);
@@ -104,11 +105,11 @@ class LandingPage extends Component {
         let firstPrompt, inputId, cb;
 
         if (this.state.loginType === LOGIN_TYPE.FIND) {
-            firstPrompt = 'What is the code you were given?';
+            firstPrompt = 'The code of your compass';
             inputId = 'compass-code';
             cb = this.validateFindInput;
         } else {
-            firstPrompt = 'Who are the PEOPLE involved, at the center of your compass?';
+            firstPrompt = 'Who/what is at the center of your compass?';
             inputId = 'compass-center';
             cb = this.validateMakeInput;
         }
@@ -116,11 +117,8 @@ class LandingPage extends Component {
         return (
             <div className="section">
                 <h1>I need some info</h1>
-                <div className="prompt">{firstPrompt}</div>
-                <div className="response"><input id={inputId} /></div>
-                <div className="prompt">Your name (how others will see you)</div>
-                <div className="response"><input id="username" /></div>
-                <div id="error-message" />
+                <div className="response"><input id={inputId} placeholder={firstPrompt} /></div>
+                <div className="response"><input id="username" placeholder={'Your name'} /></div>
                 <button className="ic-button" name="next" onClick={cb}>next</button>
             </div>
         );

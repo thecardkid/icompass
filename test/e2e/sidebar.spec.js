@@ -2,48 +2,40 @@
 
 var editURL;
 const PROMPTS = require('../../lib/constants').PROMPTS;
+const MODALS = require('../../lib/constants').MODALS;
 
 module.exports = {
-    'creates successfully': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body', 500)
-        .click('button[name=make]')
-        .setValue('#compass-center', 'nightwatchjs')
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third', 1000)
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 500)
-        .url(function(result) {
+    'creates successfully': require('./utils').setup,
+
+    'save url': function(browser) {
+        browser.url(function(result) {
             editURL = result.value;
-        })
-        .windowMaximize();
+        });
     },
 
     'share list': function(browser) {
         browser
         .assert.elementPresent('div.ic-sidebar-list[name=share]')
         .click('button[name=share-edit]')
-        .pause(200)
-        .getAlertText(function(result) {
+        .waitForElementVisible('#ic-modal', 1000)
+        .getText('#ic-modal-body h3', function(result) {
             this.assert.equal(result.value.indexOf('Share this link below'), 0);
         })
-        .dismissAlert()
-        .pause(200)
+        .click('#ic-modal-confirm')
+        .pause(100)
         .click('button[name=share-view]')
-        .pause(200)
-        .getAlertText(function(result) {
+        .waitForElementVisible('#ic-modal', 1000)
+        .getText('#ic-modal-body h3', function(result) {
             this.assert.equal(result.value.indexOf('Share this link below'), 0);
         })
-        .dismissAlert()
-        .pause(200)
+        .click('#ic-modal-confirm')
+        .pause(100)
         .click('button[name=export]')
-        .pause(200)
-        .getAlertText(function(result) {
-            this.assert.equal(result.value, PROMPTS.EXPORT);
+        .waitForElementVisible('#ic-modal', 1000)
+        .getText('#ic-modal-body h3', function(result) {
+            this.assert.equal(result.value.indexOf('I see you want to save this compass as a PDF'), 0);
         })
-        .dismissAlert()
+        .click('#ic-modal-cancel')
         .assert.elementPresent('button[name=tweet]');
     },
 
@@ -172,7 +164,7 @@ module.exports = {
         .moveToElement('div.ic-saved', 100, 10, function() {
             browser.mouseButtonClick();
         })
-        .pause(600)
+        .pause(100)
         .getText('div.ic-saved a', function(result) {
             this.assert.equal(result.value, 'nightwatchjs');
         })
@@ -180,25 +172,17 @@ module.exports = {
             this.assert.equal(result.value, 'as "sandbox"');
         })
         .click('button.remove')
-        .pause(200)
-        .acceptAlert()
-        .pause(200)
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body', MODALS.DELETE_BOOKMARK.text)
+        .click('#ic-modal-confirm')
+        .pause(100)
         .assert.elementNotPresent('div.ic-saved');
     },
 
     'delete': function(browser) {
         browser
         .url(editURL)
-        .waitForElementVisible('#ic-sidebar', 500)
-        .click('#ic-sidebar button[name=destroyer]')
-        .acceptAlert()
-        .pause(200)
-        .acceptAlert()
-        .pause(200)
-        .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/');
-        })
-        .assert.elementNotPresent('div.ic-saved')
-        .end();
+        .waitForElementVisible('#ic-sidebar', 500);
+        require('./utils').cleanup(browser);
     }
 };

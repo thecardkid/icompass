@@ -3,15 +3,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Modal from 'Utils/Modal.jsx';
 import Toast from 'Utils/Toast.jsx';
 import Validator from 'Utils/Validator.jsx';
 
-import { PROMPTS, COLORS } from 'Lib/constants';
+import { PROMPTS, COLORS, MODALS } from 'Lib/constants';
 
 export default class NoteForm extends Component {
     constructor(props) {
         super(props);
         this.toast = new Toast();
+        this.modal = new Modal();
 
         this.state = {
             bold: false,
@@ -41,57 +43,64 @@ export default class NoteForm extends Component {
         this.setState({underline: !this.state.underline});
     }
 
-    getText() {
+    getText(cb) {
         let text = $('#ic-form-text').val();
-        if (!text) return {};
+        if (!text) cb({});
         let validText = Validator.validateStickyText(text);
-        let isImage = false;
 
-        if (validText[0])
-            isImage = confirm(PROMPTS.CONFIRM_IMAGE_LINK);
-        else if (!validText[1]) {
+        let isImage = false;
+        if (validText[0]) {
+            this.modal.confirm(MODALS.IMPORT_IMAGE, (isImage) => {
+                cb({ text, isImage });
+            });
+        } else if (!validText[1]) {
             this.toast.error(PROMPTS.POST_IT_TOO_LONG);
             text = null;
+            cb({ text, isImage });
+        } else if (validText[1]) {
+            cb({ text, isImage });
         }
-
-        return { text, isImage };
     }
 
     make() {
-        let { text, isImage } = this.getText();
-        if (!text) return;
+        this.getText((data) => {
+            let { text, isImage } = data;
+            if (!text) return;
 
-        let x = 0.5, y = 0.5;
-        if (typeof this.props.position === 'object') {
-            x = this.props.position.x;
-            y = this.props.position.y;
-        }
+            let x = 0.5, y = 0.5;
+            if (typeof this.props.position === 'object') {
+                x = this.props.position.x;
+                y = this.props.position.y;
+            }
 
-        let style = Object.assign({}, this.state);
-        delete style.charCount;
+            let style = Object.assign({}, this.state);
+            delete style.charCount;
 
-        let note = {
-            text, isImage, x, y,
-            doodle: null,
-            color: this.props.bg,
-            style,
-            user: this.props.user
-        };
+            let note = {
+                text, isImage, x, y,
+                doodle: null,
+                color: this.props.bg,
+                style,
+                user: this.props.user
+            };
 
-        this.props.ship(note);
-        this.props.close();
+            this.props.ship(note);
+            this.props.close();
+        });
     }
 
     edit() {
-        let { text, isImage } = this.getText();
-        if (!text) return;
+        this.getText((data) => {
+            let { text, isImage } = data;
+            if (!text) return;
 
-        let style = Object.assign({}, this.state);
-        delete style.charCount;
-        let edited = { text, isImage, style };
+            let style = Object.assign({}, this.state);
+            delete style.charCount;
+            let edited = { text, isImage, style };
 
-        this.props.ship(edited, this.props.idx);
-        this.props.close();
+            this.props.ship(edited, this.props.idx);
+            this.props.close();
+        });
     }
 
     renderToolbar() {

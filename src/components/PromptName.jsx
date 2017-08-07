@@ -4,17 +4,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 
+import Modal from 'Utils/Modal.jsx';
 import Validator from 'Utils/Validator.jsx';
 
 export default class PromptName extends Component {
     componentDidMount() {
-        let valid = Validator.validateUsername(window.prompt('Enter your name:'));
+        let modal = new Modal();
 
-        while (!valid[0])
-            valid = Validator.validateUsername(window.prompt(valid[1] + '. Enter your name:'));
+        modal.prompt('Enter your name:', (name) => {
+            let valid = Validator.validateUsername(name);
 
-        let newUrl = '/compass/edit/' + this.props.params.code + '/' + valid[1];
-        browserHistory.push(newUrl);
+            if (valid[0]) {
+                let newUrl = '/compass/edit/' + this.props.params.code + '/' + valid[1];
+                browserHistory.push(newUrl);
+            } else {
+                modal.alert(valid[1] + '. You will now be taken back to the login page.', () => {
+                    browserHistory.push('/');
+                });
+            }
+        });
     }
 
     render() {

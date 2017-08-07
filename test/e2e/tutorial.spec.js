@@ -9,8 +9,7 @@ module.exports = {
         .url('http://localhost:8080')
         .waitForElementVisible('body', 1000)
         .click('#ic-tour a')
-        .pause(1000)
-        .assert.elementPresent('#ic-tutorial');
+        .waitForElementVisible('#ic-tutorial', 5000);
     },
 
     'can drag blurb': function(browser) {

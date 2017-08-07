@@ -29,23 +29,10 @@
     word-wrap: break-word;          // IE
 }
 
-// utility funcs
-.tilt (@x) {
-    -webkit-transform:rotate(@x);
-    -o-transform:rotate(@x);
-    -moz-transform:rotate(@x);
-}
-
 .boxshadow (@offset, @spread, @rgba) {
     -moz-box-shadow:@offset @offset @spread @rgba;
     -webkit-box-shadow:@offset @offset @spread @rgba;
     box-shadow:@offset @offset @spread @rgba;
-}
-
-.scale (@s) {
-    -webkit-transform:scale(@s);
-    -moz-transform:scale(@s);
-    -o-transform:scale(@s);
 }
 
 .hasTransition (@s) {
@@ -198,5 +185,71 @@ div#ic-toast {
     span.error {
         background:#F2DEDE;
         color:#A94442;
+    }
+}
+
+div#ic-modal-container {
+    position:absolute;
+    top:0;
+    width:100%;
+    z-index:10;
+
+    div#ic-backdrop {
+        z-index:-1;
+    }
+
+    div#ic-modal {
+        width:350px;
+        padding:20px;
+        background:white;
+        margin:0 auto;
+        margin-top:15px;
+        border-radius:2px;
+        .boxshadow(3px, 7px, rgba(33,33,33,0.7));
+
+        div#ic-modal-body {
+            font-size:18px;
+            text-align:left;
+            padding:10px 0;
+            margin-top:10px;
+
+            p {
+                margin-top:10px;
+                font-size:15px;
+            }
+
+            input {
+                border:1px solid grey;
+                width:93%;
+                font-size:15px;
+                margin-top:15px;
+                border-radius:2px;
+                padding:5px 10px;
+            }
+        }
+
+        div#ic-modal-footer {
+            height:30px;
+            margin-top:15px;
+
+            button {
+                float:right;
+                height:28px;
+                font-size:13px;
+                margin-left:10px;
+                padding:0 10px;
+                border-radius:2px;
+                background:@dark;
+                color:@light;
+            }
+
+            button.danger {
+                background:@red;
+            }
+
+            button.confirm {
+                background:@blue;
+            }
+        }
     }
 }

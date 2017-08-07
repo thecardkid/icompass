@@ -7,17 +7,19 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import Modal from 'Utils/Modal.jsx';
 import Toast from 'Utils/Toast.jsx';
 
 import * as uiActions from 'Actions/ui';
 import * as workspaceActions from 'Actions/workspace';
 
-import { PROMPTS, COLORS, EDITING_MODE } from 'Lib/constants';
+import { PROMPTS, COLORS, EDITING_MODE, MODALS } from 'Lib/constants';
 
 class StickyNote extends Component {
     constructor(props) {
         super(props);
         this.toast = new Toast();
+        this.modal = new Modal();
 
         this.confirmDelete = this.confirmDelete.bind(this);
         this.getContents = this.getContents.bind(this);
@@ -29,7 +31,7 @@ class StickyNote extends Component {
         this.submitDraft = this.submitDraft.bind(this);
 
         this.hasEditingRights = !this.props.compass.viewOnly;
-        this.compactMode = this.visualMode = this.draftMode = false;
+        this.setModes(this.props);
         this.lastClick = 0;
     }
 
@@ -46,23 +48,30 @@ class StickyNote extends Component {
     }
 
     componentWillUpdate(nextProps) {
-        this.compactMode = nextProps.ui.editingMode === EDITING_MODE.COMPACT || false;
-        this.visualMode = nextProps.ui.editingMode === EDITING_MODE.VISUAL || false;
-        this.draftMode = nextProps.ui.editingMode === EDITING_MODE.DRAFT || false;
+        this.setModes(nextProps);
+    }
+
+    setModes(props) {
+        this.compactMode = props.ui.editingMode === EDITING_MODE.COMPACT || false;
+        this.visualMode = props.ui.editingMode === EDITING_MODE.VISUAL || false;
+        this.draftMode = props.ui.editingMode === EDITING_MODE.DRAFT || false;
     }
 
     confirmDelete() {
         if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
         let n = this.props.note;
-        if (n.draft && confirm(PROMPTS.CONFIRM_DISCARD_DRAFT))
-            return this.props.workspaceActions.undraft(this.props.i);
-
-        if (this.draftMode)
-            return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
-
-        if (confirm(PROMPTS.CONFIRM_DELETE_NOTE))
-            return this.props.destroy(n._id);
+        if (this.draftMode) {
+            if (n.draft) {
+                this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
+                    if (discard) this.props.workspaceActions.undraft(this.props.i);
+                });
+            } else this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
+        } else {
+            this.modal.confirm(MODALS.DELETE_NOTE, (deleteNote) => {
+                if (deleteNote) this.props.destroy(n._id);
+            });
+        }
     }
 
     submitDraft() {

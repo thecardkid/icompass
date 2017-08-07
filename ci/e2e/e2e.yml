@@ -1,0 +1,13 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: thecardkid/e2e
+
+inputs:
+- name: icompass
+
+run:
+  path: icompass/ci/e2e/e2e.sh

@@ -8,4 +8,10 @@ public/bundle.js.map
 tags
 mocha.opts
 reports/
-bin/
+bin/selenium.jar
+selenium-debug.log
+screenshots/
+
+reports
+screenshots
+selenium-debug.log

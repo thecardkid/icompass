@@ -1,0 +1,13 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: jvdploeg/node-mocha
+
+inputs:
+- name: icompass
+
+run:
+  path: icompass/ci/mocha/mocha.sh

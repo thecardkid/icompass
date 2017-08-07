@@ -18,6 +18,7 @@ import Sidebar from 'Components/Sidebar.jsx';
 import Chat from 'Components/Chat.jsx';
 import NoteForm from 'Components/NoteForm.jsx';
 import DoodleForm from 'Components/DoodleForm.jsx';
+import ModesToolbar from 'Components/ModesToolbar.jsx';
 
 import DefaultCompass from 'Models/defaultCompass';
 
@@ -79,17 +80,12 @@ const STEPS = [
     {
         header: 'Working with notes',
         text: 'Click once on a note to bring it to the front, twice to edit its contents. Click and drag notes to move them.',
-        prep: (root) => root.showOnly(1, [2])
-    },
-    {
-        header: 'Compact mode',
-        text: 'When things get crowded, try compact mode. You can see four lines of note text and scroll for more. Doodles are shown smaller. (Note: compact mode only applies to your own view; check that others see it the same way before moving notes.)',
-        prep: (root) => root.showOnly(1, [3, 4])
+        prep: (root) => root.showOnly(1, [2,3])
     },
     {
         header: 'Toggling the sidebar or chat',
         text: 'Press “s” or “c” to show/hide the sidebar or chat. Or, click the “X” at the top right of the box to hide. On handheld devices you can also swipe left from the sidebar, or down from the chat box, to hide them.',
-        prep: (root) => root.showOnly(1, [5])
+        prep: (root) => root.showOnly(1, [4])
     },
     {
         header: 'Compass prompts',
@@ -126,7 +122,7 @@ const STEPS = [
             $('#ic-chat').css('bottom', '-265px');
             $('#ic-show-chat').css('z-index', 4);
             $('#ic-show-sidebar').css('z-index', 4);
-            $('#ic-compact').css('z-index', 4);
+            $('#ic-show-doodle').css('z-index', 4);
         }
     },
     {
@@ -135,13 +131,19 @@ const STEPS = [
         prep: () => {
             $('#ic-show-chat').css('z-index', 2);
             $('#ic-show-sidebar').css('z-index', 2);
-            $('#ic-compact').css('z-index', 2);
+            $('#ic-show-doodle').css('z-index', 2);
+            $('#ic-modes').css('z-index', 4);
         }
+    },
+    {
+        header: 'Editing modes',
+        text: 'Different editing modes will allow you to do different things, like compact notes, format multiple, or work only in drafts. Hover over them to get hints.',
+        prep: () => $('#ic-modes').css('z-index', 2)
     },
     {
         header: 'That\'s it!',
         text: 'You\'re ready to try out the real thing :)'
-    }
+    },
 ];
 
 class Tutorial extends Component {
@@ -228,10 +230,10 @@ class Tutorial extends Component {
     render() {
         return (
             <div id="ic-tutorial">
-                <div className="ic-screen" id="ic-tutorial-cover"></div>
-                <div className="ic-screen" id="ic-tutorial-prevent"></div>
+                <div className="ic-screen" id="ic-tutorial-cover" />
+                <div className="ic-screen" id="ic-tutorial-prevent" />
                 <Draggable>
-                    <div id="ic-tutorial-text" style={this.center(300,200)}>
+                    <div id="ic-tutorial-text" style={this.center(350,220)}>
                         <h1>{STEPS[this.state.i].header}</h1>
                         <h3>{STEPS[this.state.i].text}</h3>
                         <button name="next-step" className="ic-button" onClick={this.next}>
@@ -239,11 +241,12 @@ class Tutorial extends Component {
                         </button>
                     </div>
                 </Draggable>
-                <button className="ic-corner-btn" id="ic-compact">Compact</button>
                 <button className="ic-corner-btn" id="ic-show-sidebar">Show Sidebar</button>
+                <button className="ic-corner-btn" id="ic-show-doodle">Doodle</button>
                 <button className="ic-corner-btn" id="ic-show-chat">Show Chat</button>
-                <div id="circle"></div>
+                <div id="circle" />
                 <Compass />
+                <ModesToolbar />
                 <Sidebar connected={true} />
                 <Chat />
                 {this.getForm()}

@@ -17,20 +17,27 @@ module.exports = {
     'make path': function(browser) {
         browser
         .click('button[name=make]')
-        .pause(500)
-        .assert.containsText('div.prompt', 'Who are the PEOPLE involved, at the center of your compass?')
-        .assert.elementPresent('#compass-center')
-        .assert.elementPresent('#username');
+        .waitForElementVisible('input#compass-center', 1000)
+        .getAttribute('input#compass-center', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'Who/what is at the center of your compass?');
+        })
+        .getAttribute('input#username', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'Your name');
+        });
     },
 
     'make path errors': function(browser) {
         browser
         .setValue('#username', 'sandbox')
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.REQUIRED('People group'))
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('People group'))
+        .click('#ic-modal-confirm')
         .setValue('#compass-center', 'This is a really long people group that will hopefully exceed char limit')
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.TEXT_TOO_LONG('People group', 30))
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('People group', 30))
+        .click('#ic-modal-confirm')
         .clearValue('#compass-center');
     },
 
@@ -54,33 +61,48 @@ module.exports = {
     'find path': function(browser) {
         browser
         .click('button[name=find]')
-        .pause(500)
-        .assert.containsText('div.prompt', 'What is the code you were given?')
-        .assert.elementPresent('#compass-code')
-        .assert.elementPresent('#username');
+        .waitForElementVisible('input#compass-code', 1000)
+        .getAttribute('input#compass-code', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'The code of your compass');
+        })
+        .getAttribute('input#username', 'placeholder', function(result) {
+            this.assert.equal(result.value, 'Your name');
+        });
     },
 
     'find path errors': function(browser) {
         browser
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.REQUIRED('A code'))
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('A code'))
+        .click('#ic-modal-confirm')
         .setValue('#compass-code', '1234567')
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.INVALID('Your code'))
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.INVALID('Your code'))
+        .click('#ic-modal-confirm')
         .setValue('#compass-code', '8') //append to current
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.REQUIRED('Username'))
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('Username'))
+        .click('#ic-modal-confirm')
         .setValue('#username', 'sandbox5')
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NON_CHAR)
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.UNAME_HAS_NON_CHAR)
+        .click('#ic-modal-confirm')
         .clearValue('#username')
         .setValue('#username', ',,,###')
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.UNAME_HAS_NON_CHAR)
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.UNAME_HAS_NON_CHAR)
+        .click('#ic-modal-confirm')
         .clearValue('#username')
         .setValue('#username', 'sandboxsandboxsandboxsandboxsandboxsandbox')
         .click('button[name=next]')
-        .assert.containsText('#error-message', ERROR_MSG.TEXT_TOO_LONG('Username', 15))
+        .waitForElementVisible('#ic-modal', 500)
+        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('Username', 15))
+        .click('#ic-modal-confirm')
         .clearValue('#username')
         .clearValue('#compass-code');
     },
@@ -90,20 +112,13 @@ module.exports = {
         .setValue('#compass-code', code)
         .setValue('#username', 'sandbox')
         .click('button[name=next]')
-        .waitForElementVisible('.third', 5000)
+        .waitForElementVisible('.third', 1000)
         .assert.containsText('.third h1', 'Edit access')
         .assert.containsText('.third h2', 'You will be logged in as sandbox')
         .assert.elementPresent('button[name=to-workspace]')
         .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar', 1000)
-        .click('#ic-sidebar button[name=destroyer]')
-        .acceptAlert()
-        .pause(500)
-        .acceptAlert()
-        .pause(500)
-        .url(function(result) {
-            this.assert.equal(result.value, 'http://localhost:8080/');
-        })
-        .end();
-    }
+        .waitForElementVisible('#ic-sidebar', 1000);
+    },
+
+    'cleanup': require('./utils').cleanup
 };
