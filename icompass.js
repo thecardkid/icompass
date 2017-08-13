@@ -6,7 +6,7 @@ const port = 8080;
 const app = express();
 
 var bodyParser = require('body-parser');
-require('./lib/db.js');
+var db = require('./lib/db.js');
 var logger = require('./lib/logger.js');
 
 var socket = require('./lib/sockets');
@@ -25,3 +25,11 @@ var server = app.listen(port, function() {
 });
 
 socket.connect(server);
+
+function cleanup() {
+    logger.info('Disconnecting from MongoDB');
+    db.disconnect();
+}
+
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);
