@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import Tappable from 'react-tappable/lib/Tappable';
 import _ from 'underscore';
 
 import * as noteActions from 'Actions/notes';
@@ -271,7 +272,9 @@ class Workspace extends Component {
 
         return (
             <div>
-                <div id="ic-toast" onClick={this.toast.clear} />
+                <Tappable onTap={this.toast.clear}>
+                    <div id="ic-toast" onClick={this.toast.clear} />
+                </Tappable>
                 {this.renderCornerButtons()}
                 <Compass destroy={this.socket.emitDeleteNote}
                          notes={this.notes}
