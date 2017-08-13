@@ -14,4 +14,4 @@ script:
 - cd ..
 - docker run -d --log-driver=none --name dc thecardkid/e2e & sleep 5
 - docker cp icompass dc:.
-- docker exec dc bash -c "cd icompass; npm test"
+- docker exec dc bash -c "export MONGO_UNAME=icompass; export MONGO_PWD=compass78; cd icompass; npm test"
