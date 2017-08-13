@@ -24,7 +24,7 @@ export default class DoodleForm extends Component {
         this.canvas = $('#ic-doodle');
         $(document).on('touchstart', this.preventDefaultIfCanvas);
         $(document).on('touchmove', this.preventDefaultIfCanvas);
-        this.state = { x: [], y: [], drag: [] };
+        this.setState({ x: [], y: [], drag: [] });
     }
 
     componentWillUnmount() {
