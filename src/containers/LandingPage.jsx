@@ -102,22 +102,28 @@ class LandingPage extends Component {
     getSecond() {
         if (typeof this.state.loginType !== 'number') return;
 
-        let firstPrompt, inputId, cb;
+        let firstInput, cb;
 
         if (this.state.loginType === LOGIN_TYPE.FIND) {
-            firstPrompt = 'The code of your compass';
-            inputId = 'compass-code';
+            firstInput = (
+                <div className="response">
+                    <input id="compass-code" placeholder="The code of your compass" autoCorrect="off" autoCapitalize="none" />
+                </div>
+            );
             cb = this.validateFindInput;
         } else {
-            firstPrompt = 'Who/what is at the center of your compass?';
-            inputId = 'compass-center';
+            firstInput = (
+                <div className="response">
+                    <input id="compass-center" placeholder="Who/what is at the center of your compass?" />
+                </div>
+            );
             cb = this.validateMakeInput;
         }
 
         return (
             <div className="section">
                 <h1>I need some info</h1>
-                <div className="response"><input id={inputId} placeholder={firstPrompt} /></div>
+                {firstInput}
                 <div className="response"><input id="username" placeholder={'Your name'} /></div>
                 <button className="ic-button" name="next" onClick={cb}>next</button>
             </div>
