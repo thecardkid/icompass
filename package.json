@@ -6,8 +6,7 @@
   "scripts": {
     "watch": "webpack -d --watch --config ./config/webpack.config.js",
     "build": "npm i && NODE_ENV=production webpack -p --config ./config/webpack.production.config.js",
-    "start": "nodemon compass-server.js",
-    "production": "NODE_ENV=production forever start compass-server.js",
+    "start": "nodemon icompass.js",
     "test:e2e": "nightwatch --config config/nightwatch.conf.js",
     "test:mocha": "mocha --compilers js:babel-core/register test/server",
     "selenium": "java -jar bin/selenium.jar",
