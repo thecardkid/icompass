@@ -15,6 +15,7 @@ function generateUUID() {
     return uuid;
 }
 
+mongoose.Promise = global.Promise;
 var compassSchema = mongoose.Schema({
     editCode: String,
     viewCode: String,

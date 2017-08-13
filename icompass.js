@@ -6,7 +6,7 @@ const port = 8080;
 const app = express();
 
 var bodyParser = require('body-parser');
-var db = require('./lib/db.js');
+require('./lib/db.js');
 var logger = require('./lib/logger.js');
 
 var socket = require('./lib/sockets');
