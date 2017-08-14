@@ -121,7 +121,7 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="controls">
                 <h2>Controls</h2>
-                <button className="ic-action" onClick={this.props.uiActions.showNewNote}>
+                <button className="ic-action" onClick={() => this.props.uiActions.showNewNote()}>
                     <span className='ic-ctrl-key'>n</span>
                     <p>new note</p>
                 </button>
