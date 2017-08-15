@@ -23,8 +23,6 @@ module.exports.cleanup = function(browser) {
     .waitForElementVisible('#ic-modal', 5000)
     .click('#ic-modal-confirm')
     .pause(500)
-    .url(function(result) {
-        this.assert.equal(result.value, 'http://localhost:8080/');
-    })
+    .assert.urlEquals('http://localhost:8080/')
     .end();
 };
