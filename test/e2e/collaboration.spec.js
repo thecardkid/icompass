@@ -13,7 +13,7 @@ module.exports = {
         browser
         // get assigned color
         .getCssProperty('.ic-user', 'background-color', function(result) {
-            browser.assert.equal(result.value !== '', true);
+            this.assert.equal(result.value !== '', true);
             users['nightwatchjs'] = result.value;
         })
         // grab editing link
@@ -26,22 +26,22 @@ module.exports = {
             // open a new window by going to the tutorial
             .click('button[name=tutorial]')
             .windowHandles(function (result) {
-                browser.assert.equal(result.value.length, 2, 'There should be two windows open.');
+                this.assert.equal(result.value.length, 2, 'There should be two windows open.');
                 windows = result.value;
                 browser.switchWindow(windows[1]);
             })
-            .waitForElementVisible('#ic-tutorial', 2000)
+            .waitForElementVisible('#ic-tutorial')
             .url(editLink)
-            .waitForElementVisible('#ic-modal', 1000000)
+            .waitForElementVisible('#ic-modal')
             .setValue('#ic-modal-input', 'friendo')
             .click('button#ic-modal-confirm')
-            .waitForElementVisible('#compass', 5000)
+            .waitForElementVisible('#compass')
             // grab friendo's color
             .elements('css selector', '.ic-user', function(result) {
                 this.assert.equal(2, result.value.length);
             })
             .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
-                browser.assert.equal(result.value !== '', true);
+                this.assert.equal(result.value !== '', true);
                 users['friendo'] = result.value;
             });
         });
@@ -54,9 +54,7 @@ module.exports = {
         .setValue('#ic-form-text', 'Friendo\'s note')
         .click('button[name=ship]')
         .waitForElementVisible('#note0')
-        .getCssProperty('#note0 span a', 'background-color', function(result) {
-            this.assert.equal(users['friendo'], result.value);
-        })
+        .assert.cssProperty('#note0 span a', 'background-color', users['friendo'])
         .moveToElement('#note0', 10, 10, function() {
             browser.doubleClick();
         })
