@@ -23,26 +23,34 @@ module.exports = {
             editLink = result.value;
             browser
             .click('button#ic-modal-confirm')
-            // open a new window by going to the tutorial
-            .click('button[name=tutorial]')
+            // open a new window
+            .execute(function() {
+                window.open('http://localhost:8080/tutorial', '_blank');
+            }, [])
+            .pause(2000)
             .windowHandles(function (result) {
                 this.assert.equal(result.value.length, 2, 'There should be two windows open.');
                 windows = result.value;
-                browser.switchWindow(windows[1]);
-            })
-            .waitForElementVisible('#ic-tutorial')
-            .url(editLink)
-            .waitForElementVisible('#ic-modal')
-            .setValue('#ic-modal-input', 'friendo')
-            .click('button#ic-modal-confirm')
-            .waitForElementVisible('#compass')
-            // grab friendo's color
-            .elements('css selector', '.ic-user', function(result) {
-                this.assert.equal(2, result.value.length);
-            })
-            .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
-                this.assert.equal(result.value !== '', true);
-                users['friendo'] = result.value;
+                browser.switchWindow(windows[1], function() {
+                    // eslint-disable-next-line no-console
+                    console.log(editLink + '/friendo');
+                    browser
+                    .url(editLink + '/friendo')
+                        .pause(10000)
+                        .source(function(result) {
+                            // eslint-disable-next-line no-console
+                            console.log(result.value);
+                        })
+                    .waitForElementVisible('#compass')
+                    // grab friendo's color
+                    .elements('css selector', '.ic-user', function(result) {
+                        this.assert.equal(2, result.value.length);
+                    })
+                    .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
+                        this.assert.equal(result.value !== '', true);
+                        users['friendo'] = result.value;
+                    });
+                });
             });
         });
     },
@@ -77,12 +85,14 @@ module.exports = {
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', 'first edit')
         .click('button[name=ship]')
+        .pause(1000)
 
         .switchWindow(windows[0])
         .assert.containsText('#note0', 'first edit')
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', 'second edit')
         .click('button[name=ship]')
+        .pause(1000)
         .assert.containsText('#note0', 'second edit');
     },
 
