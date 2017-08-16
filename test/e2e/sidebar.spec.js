@@ -41,7 +41,32 @@ module.exports = {
 
     'control list': function(browser) {
         browser
-        .assert.elementPresent('div.ic-sidebar-list[name=controls]');
+        .assert.elementPresent('div.ic-sidebar-list[name=controls]')
+        .elements('css selector', 'div.ic-sidebar-list[name=controls] .ic-action', function(result) {
+            var controls = result.value;
+
+            browser
+            .elementIdClick(controls[0].ELEMENT)
+            .assert.elementPresent('#ic-note-form')
+            .click('button[name=nvm]')
+            .elementIdClick(controls[1].ELEMENT)
+            .assert.elementPresent('#ic-doodle-form')
+            .click('button[name=nvm]')
+            .elementIdClick(controls[2].ELEMENT)
+            .pause(500)
+            .assert.cssProperty('#ic-sidebar', 'left', '-240px')
+            .click('#ic-show-sidebar')
+            .pause(500)
+            .elementIdClick(controls[3].ELEMENT)
+            .pause(500)
+            .assert.cssProperty('#ic-chat', 'bottom', '-270px')
+            .elementIdClick(controls[3].ELEMENT)
+            .pause(500)
+            .assert.cssProperty('#ic-chat', 'bottom', '0px')
+            .elementIdClick(controls[4].ELEMENT)
+            .assert.elementPresent('#ic-about')
+            .click('#ic-about button.ic-close-window');
+        });
     },
 
     'user list': function(browser) {
