@@ -8,8 +8,6 @@ module.exports = {
     'creates successfully': require('./utils').setup,
 
     'second user login': function(browser) {
-        var editLink;
-
         browser
         // get assigned color
         .getCssProperty('.ic-user', 'background-color', function(result) {
@@ -20,7 +18,8 @@ module.exports = {
         .click('button[name=share-edit]')
         .waitForElementVisible('#ic-modal', 100)
         .getText('#ic-modal-body p', function(result) {
-            editLink = result.value;
+            var editCode = result.value.substr(result.value.length - 8);
+            var editLink = 'http://localhost:8080/compass/edit/' + editCode + '/friendo';
             browser
             .click('button#ic-modal-confirm')
             // open a new window
@@ -33,14 +32,8 @@ module.exports = {
                 windows = result.value;
                 browser.switchWindow(windows[1], function() {
                     // eslint-disable-next-line no-console
-                    console.log(editLink + '/friendo');
                     browser
-                    .url(editLink + '/friendo')
-                        .pause(10000)
-                        .source(function(result) {
-                            // eslint-disable-next-line no-console
-                            console.log(result.value);
-                        })
+                    .url(editLink)
                     .waitForElementVisible('#compass')
                     // grab friendo's color
                     .elements('css selector', '.ic-user', function(result) {
