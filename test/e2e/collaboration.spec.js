@@ -30,6 +30,7 @@ module.exports = {
             .windowHandles(function (result) {
                 this.assert.equal(result.value.length, 2, 'There should be two windows open.');
                 windows = result.value;
+                browser.windowSize(windows[1], 1440, 780);
                 browser.switchWindow(windows[1], function() {
                     // eslint-disable-next-line no-console
                     browser
@@ -164,6 +165,74 @@ module.exports = {
         .assert.elementPresent('div.theirs')
         .assert.containsText('div.theirs', 'second message')
         .assert.cssProperty('div.theirs', 'background-color', users['nightwatchjs']);
+    },
+
+    'select and draft mode simultaneously': function(browser) {
+        var draftText = 'friendo draft';
+
+        browser
+            // put friendo in draft mode
+            .click('#ic-mode-draft')
+            .moveToElement('body', 300, 200)
+            .doubleClick()
+            .waitForElementVisible('#ic-note-form')
+            .setValue('#ic-form-text', draftText)
+            .click('button[name=ship]')
+            .waitForElementVisible('#note1')
+            .assert.cssProperty('#note0 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Draft has grey background')
+            .assert.containsText('#note0', draftText, 'Draft contains correct text')
+
+            .switchWindow(windows[0])
+            .elements('css selector', '.ic-sticky-note', function(result) {
+                this.assert.equal(1, result.value.length, 'Drafts by other users do not show up');
+            })
+            .moveToElement('body', 300, 600)
+            .doubleClick()
+            .waitForElementVisible('#ic-note-form')
+            .setValue('#ic-form-text', 'note while in draft')
+            .click('button[name=ship]')
+            .waitForElementVisible('#note1')
+            .click('#ic-mode-visual')
+            .waitForElementVisible('#ic-visual-toolbar')
+
+            .switchWindow(windows[1])
+            .elements('css selector', '.ic-sticky-note', function(result) {
+                this.assert.equal(3, result.value.length, 'New notes by other users still show up in draft mode');
+            })
+            .click('#note0 span a p.submit')
+            .pause(500)
+            .assert.containsText('#note2', draftText, 'A new note has been created from the draft')
+
+            .switchWindow(windows[0])
+            .elements('css selector', '.ic-sticky-note', function(result) {
+                this.assert.equal(3, result.value.length, 'New notes by other users still show up in visual mode');
+            })
+            .click('button.bold')
+            .click('#note0')
+            .click('#note2')
+            .assert.cssClassPresent('#note0 span a p', 'bold', 'Note 0 should be bulk formatted')
+            .assert.cssClassPresent('#note2 span a p', 'bold', 'Note 2 should be bulk formatted')
+
+            .switchWindow(windows[1])
+            .assert.cssClassNotPresent('#note0 span a p', 'bold', 'Visual edit should not affect other users')
+            .assert.cssClassNotPresent('#note2 span a p', 'bold', 'Visual edit should not affect other users')
+            .click('#ic-mode-visual')
+            .waitForElementVisible('#ic-visual-toolbar')
+            .click('#note2')
+            .click('#ic-bulk-delete')
+            .waitForElementVisible('#ic-modal')
+            .click('#ic-modal-confirm')
+            .pause(500)
+            .elements('css selector', '.ic-sticky-note', function(result) {
+                this.assert.equal(2, result.value.length, 'One note should have been deleted');
+            })
+
+            .switchWindow(windows[0])
+            .elements('css selector', '.ic-sticky-note', function(result) {
+                this.assert.equal(2, result.value.length, 'Notes can be deleted by other users in visual mode');
+            })
+            .assert.cssProperty('#note0', 'border-color', 'rgb(40, 138, 255)', 'Note 0 should still be selected')
+            .assert.cssProperty('#note1', 'border-color', 'rgb(0, 0, 0)', 'Note 1 should still be unselected');
     },
 
     'redirected to home page on compass delete': function(browser) {
