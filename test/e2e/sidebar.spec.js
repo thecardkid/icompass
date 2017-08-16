@@ -142,6 +142,10 @@ module.exports = {
         .click('#ic-feedback button.ic-close-window')
         .assert.elementNotPresent('#ic-feedback')
         .assert.attributeEquals('button[name=tutorial] a', 'href', 'http://localhost:8080/tutorial')
+            .source(function(result) {
+                // eslint-disable-next-line no-console
+                console.log(result.value);
+            })
         .click('button[name=save]')
         .waitForElementVisible('#ic-toast span')
         .assert.cssClassPresent('#ic-toast span', 'success')

@@ -49,7 +49,6 @@ module.exports = {
         browser
         .keys(['s', 'c'])
         .click('#ic-mode-draft')
-        // create text note
         .moveToElement('body', 200, 500)
         .doubleClick()
         .waitForElementVisible('#ic-note-form')
@@ -57,7 +56,7 @@ module.exports = {
         .assert.containsText('h1.ic-modal-title', 'Create a draft', '#ic-note-form should have correct header')
         .setValue('#ic-form-text', NOTE_TEXT)
         .click('button[name=ship]')
-        .waitForElementVisible('#note2') // drafts come first
+        .waitForElementVisible('#note2')
         .assert.containsText('#note0', NOTE_TEXT, 'Created draft should contain correct text')
         .assert.elementPresent('#note0 span a p.submit', 'There should be a submit button on the draft');
     },
@@ -111,7 +110,6 @@ module.exports = {
         .assert.containsText('#note0', EDITED_TEXT, 'Created draft should contain correct text')
         .assert.cssClassPresent('#note0 span a p', 'bold', 'Created draft should be bold')
         .assert.cssClassPresent('#note0 span a p', 'underline', 'Created draft should be underlined')
-        // try to edit doodle
         .moveToElement('#note2', 10, 10)
         .doubleClick()
         .waitForElementVisible('#ic-toast span')
@@ -130,7 +128,7 @@ module.exports = {
         .click('#ic-modal-confirm')
         .pause(100)
         .getCssProperty('#note3 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
+            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'));
         });
     },
 
@@ -139,19 +137,25 @@ module.exports = {
         browser
         .click('#note2 span a p.submit')
         .pause(100)
-        .assert.cssProperty('#note2 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Note 2 should no longer be a draft')
+        .getCssProperty('#note2 span a', 'background', function(result) {
+            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'), 'Note 2 should no longer be a draft');
+        })
         .click('#note1 span a p.submit')
         .pause(100)
-        .assert.cssProperty('#note1 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Note 1 should no longer be a draft')
+        .getCssProperty('#note1 span a', 'background', function(result) {
+            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'), 'Note 1 should no longer be a draft');
+        })
         .click('#ic-mode-normal')
         .waitForElementVisible('#ic-modal')
         .assert.containsText('#ic-modal-body', MODALS.EXIT_DRAFT_MODE.text, 'Changing mode from draft mode should trigger warning')
         .click('#ic-modal-confirm')
-        .assert.cssProperty('#note0 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Accepting alert should discard remaining drafts');
+        .getCssProperty('#note0 span a', 'background', function(result) {
+            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'), 'Accepting alert should discard remaining drafts');
+        });
     },
 
     'cleanup': function(browser) {
-        browser.keys('s').waitForElementVisible('#ic-sidebar button[name=destroyer]'); // show sidebar
+        browser.keys('s').waitForElementVisible('#ic-sidebar button[name=destroyer]');
         require('./utils').cleanup(browser);
     }
 };
