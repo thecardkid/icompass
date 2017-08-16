@@ -16,7 +16,7 @@ module.exports = {
             browser
             .moveToElement('body', p.x, p.y)
             .doubleClick()
-            .waitForElementVisible('#ic-note-form', 100)
+            .waitForElementVisible('#ic-note-form')
             .setValue('#ic-form-text', TEXT)
             .click('button[name=ship]')
             .pause(500);
@@ -32,15 +32,15 @@ module.exports = {
         })
         .mouseButtonUp(0, function() {
             browser
-            .waitForElementVisible('#ic-toast span', 100)
-            .assert.cssClassPresent('#ic-toast span', 'warning')
-            .assert.containsText('#ic-toast span', PROMPTS.DRAFT_MODE_NO_CHANGE);
+            .waitForElementVisible('#ic-toast span')
+            .assert.cssClassPresent('#ic-toast span', 'warning', 'Toast should be a warning')
+            .assert.containsText('#ic-toast span', PROMPTS.DRAFT_MODE_NO_CHANGE, 'Toast should contain correct warning message');
         })
         .moveToElement('#note0', 10, 10)
         .doubleClick()
-        .waitForElementVisible('#ic-toast span', 100)
-        .assert.cssClassPresent('#ic-toast span', 'warning')
-        .assert.containsText('#ic-toast span', PROMPTS.DRAFT_MODE_NO_CHANGE)
+        .waitForElementVisible('#ic-toast span')
+        .assert.cssClassPresent('#ic-toast span', 'warning', 'Toast should be a warning')
+        .assert.containsText('#ic-toast span', PROMPTS.DRAFT_MODE_NO_CHANGE, 'Toast should contain correct warning message')
         .click('#ic-toast span');
     },
 
@@ -52,37 +52,35 @@ module.exports = {
         // create text note
         .moveToElement('body', 200, 500)
         .doubleClick()
-        .waitForElementVisible('#ic-note-form', 5000)
-        .getCssProperty('#ic-form-text', 'background', function (result) {
-            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), true);
-        })
-        .assert.containsText('h1.ic-modal-title', 'Create a draft')
+        .waitForElementVisible('#ic-note-form')
+        .assert.cssProperty('#ic-form-text', 'background-color', 'rgba(128, 128, 128, 1)', 'Background of draft should be grey')
+        .assert.containsText('h1.ic-modal-title', 'Create a draft', '#ic-note-form should have correct header')
         .setValue('#ic-form-text', NOTE_TEXT)
         .click('button[name=ship]')
-        .waitForElementVisible('#note2', 5000) // drafts come first
-        .assert.containsText('#note0', NOTE_TEXT)
-        .assert.elementPresent('#note0 span a p.submit');
+        .waitForElementVisible('#note2') // drafts come first
+        .assert.containsText('#note0', NOTE_TEXT, 'Created draft should contain correct text')
+        .assert.elementPresent('#note0 span a p.submit', 'There should be a submit button on the draft');
     },
 
     'create image drafts': function(browser) {
         browser
         .moveToElement('body', 400, 500)
         .doubleClick()
-        .waitForElementVisible('#ic-note-form', 5000)
+        .waitForElementVisible('#ic-note-form')
         .setValue('#ic-form-text', DOG_PHOTO_LINK)
         .click('button[name=ship]')
-        .waitForElementVisible('#ic-modal', 1000)
-        .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text, 'Modal should contain correct text')
         .click('#ic-modal-confirm')
         .pause(200)
-        .assert.elementPresent('#note1 span a img')
-        .assert.elementPresent('#note1 span a p.submit');
+        .assert.elementPresent('#note1 span a img', 'There should be an image tag')
+        .assert.elementPresent('#note1 span a p.submit', 'There should be a submit button on the draft');
     },
 
     'create doodle drafts': function(browser) {
         browser
         .keys(['d'])
-        .waitForElementVisible('#ic-doodle-form', 5000)
+        .waitForElementVisible('#ic-doodle-form')
         .moveToElement('#ic-doodle', 155, 75, function() {
             browser
             .mouseButtonDown(0, function() {
@@ -92,9 +90,9 @@ module.exports = {
         })
         .pause(1000)
         .click('button[name=ship]')
-        .waitForElementVisible('#note2', 500)
+        .waitForElementVisible('#note2')
         .getAttribute('#note2 span a img', 'src', function(result) {
-            this.assert.equal(result.value.indexOf('data:image/png;base64'), 0);
+            this.assert.equal(0, result.value.indexOf('data:image/png;base64'), 'Image should be base64 encoded doodle');
         });
     },
 
@@ -103,22 +101,22 @@ module.exports = {
         browser
         .moveToElement('#note0', 10, 10)
         .doubleClick()
-        .waitForElementVisible('#ic-note-form', 5000)
-        .assert.containsText('h1.ic-modal-title', 'Edit this draft')
+        .waitForElementVisible('#ic-note-form')
+        .assert.containsText('h1.ic-modal-title', 'Edit this draft', '#ic-note-form should have correct header')
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', EDITED_TEXT)
         .click('button[name=bold]').click('button[name=underline]')
         .click('button[name=ship]')
         .pause(200)
-        .assert.containsText('#note0', EDITED_TEXT)
-        .assert.cssClassPresent('#note0 span a p', 'bold')
-        .assert.cssClassPresent('#note0 span a p', 'underline')
+        .assert.containsText('#note0', EDITED_TEXT, 'Created draft should contain correct text')
+        .assert.cssClassPresent('#note0 span a p', 'bold', 'Created draft should be bold')
+        .assert.cssClassPresent('#note0 span a p', 'underline', 'Created draft should be underlined')
         // try to edit doodle
         .moveToElement('#note2', 10, 10)
         .doubleClick()
-        .waitForElementVisible('#ic-toast span', 100)
-        .assert.cssClassPresent('#ic-toast span', 'warning')
-        .assert.containsText('#ic-toast span', PROMPTS.CANNOT_EDIT_DOODLE);
+        .waitForElementVisible('#ic-toast span')
+        .assert.cssClassPresent('#ic-toast span', 'warning', 'Toast should be a warning')
+        .assert.containsText('#ic-toast span', PROMPTS.CANNOT_EDIT_DOODLE, 'Toast should contain correct text');
     },
 
     'delete a draft': function(browser) {
@@ -141,26 +139,19 @@ module.exports = {
         browser
         .click('#note2 span a p.submit')
         .pause(100)
-        .getCssProperty('#note2 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
-        })
+        .assert.cssProperty('#note2 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Note 2 should no longer be a draft')
         .click('#note1 span a p.submit')
         .pause(100)
-        .getCssProperty('#note1 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
-        })
-        // changing mode should trigger warning
+        .assert.cssProperty('#note1 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Note 1 should no longer be a draft')
         .click('#ic-mode-normal')
-        .waitForElementVisible('#ic-modal', 1000)
-        .assert.containsText('#ic-modal-body', MODALS.EXIT_DRAFT_MODE.text)
-        .click('#ic-modal-confirm') // accepting alert should discard remaining drafts
-        .getCssProperty('#note0 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
-        });
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body', MODALS.EXIT_DRAFT_MODE.text, 'Changing mode from draft mode should trigger warning')
+        .click('#ic-modal-confirm')
+        .assert.cssProperty('#note0 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Accepting alert should discard remaining drafts');
     },
 
     'cleanup': function(browser) {
-        browser.keys('s').waitForElementVisible('#ic-sidebar button[name=destroyer]', 1000); // show sidebar
+        browser.keys('s').waitForElementVisible('#ic-sidebar button[name=destroyer]'); // show sidebar
         require('./utils').cleanup(browser);
     }
 };

@@ -7,9 +7,9 @@ module.exports = {
     'creates successfully': function(browser) {
         browser
         .url('http://localhost:8080')
-        .waitForElementVisible('body', 1000)
+        .waitForElementVisible('body')
         .click('#ic-tour a')
-        .waitForElementVisible('#ic-tutorial', 5000);
+        .waitForElementVisible('#ic-tutorial');
     },
 
     'can drag blurb': function(browser) {
@@ -24,7 +24,7 @@ module.exports = {
             })
             .mouseButtonUp(0, function() {
                 browser.getCssProperty('#ic-tutorial-text', 'transform', function(result) {
-                    this.assert.equal(result.value !== originalTranslation, true);
+                    this.assert.equal(true, result.value !== originalTranslation, 'Blurb should have been moved');
                 });
             });
         });
@@ -34,8 +34,6 @@ module.exports = {
         for (var i=0; i<STEPS; i++)
             browser.click('button[name=next-step]').pause(500);
 
-        browser
-        .assert.elementPresent('#ic-landing')
-        .end();
+        browser.assert.elementPresent('#ic-landing').end();
     }
 };

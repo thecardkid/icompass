@@ -9,9 +9,8 @@ module.exports = {
 
     'second user login': function(browser) {
         browser
-        // get assigned color
         .getCssProperty('.ic-user', 'background-color', function(result) {
-            this.assert.equal(result.value !== '', true);
+            this.assert.equal(true, result.value !== '', 'Background color is not null');
             users['nightwatchjs'] = result.value;
         })
         // grab editing link
@@ -28,20 +27,18 @@ module.exports = {
             }, [])
             .pause(2000)
             .windowHandles(function (result) {
-                this.assert.equal(result.value.length, 2, 'There should be two windows open.');
+                this.assert.equal(2, result.value.length, 'There should be two windows open');
                 windows = result.value;
-                browser.windowSize(windows[1], 1440, 780);
+                browser.windowSize(windows[1], 2000, 1500);
                 browser.switchWindow(windows[1], function() {
-                    // eslint-disable-next-line no-console
                     browser
                     .url(editLink)
                     .waitForElementVisible('#compass')
-                    // grab friendo's color
                     .elements('css selector', '.ic-user', function(result) {
-                        this.assert.equal(2, result.value.length);
+                        this.assert.equal(2, result.value.length, 'There should be two users in the workspace');
                     })
                     .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
-                        this.assert.equal(result.value !== '', true);
+                        this.assert.equal(true, result.value !== '', 'Second user tag should have background color');
                         users['friendo'] = result.value;
                     });
                 });
@@ -56,15 +53,15 @@ module.exports = {
         .setValue('#ic-form-text', 'Friendo\'s note')
         .click('button[name=ship]')
         .waitForElementVisible('#note0')
-        .assert.cssProperty('#note0 span a', 'background-color', users['friendo'])
+        .assert.cssProperty('#note0 span a', 'background-color', users['friendo'], 'Note should have friendo color')
         .moveToElement('#note0', 10, 10, function() {
             browser.doubleClick();
         })
         .waitForElementVisible('#ic-note-form')
 
         .switchWindow(windows[0])
-        .assert.elementPresent('#note0')
-        .assert.containsText('#note0', 'Friendo\'s note')
+        .assert.elementPresent('#note0', 'Note 0 should be present')
+        .assert.containsText('#note0', 'Friendo\'s note', 'Note 0 should contain correct text')
         .moveToElement('#note0', 10, 10, function() {
             browser
             .mouseButtonDown(0, function() {
@@ -82,12 +79,12 @@ module.exports = {
         .pause(1000)
 
         .switchWindow(windows[0])
-        .assert.containsText('#note0', 'first edit')
+        .assert.containsText('#note0', 'first edit', 'Note 0 should contain edited text')
         .clearValue('#ic-form-text')
         .setValue('#ic-form-text', 'second edit')
         .click('button[name=ship]')
         .pause(1000)
-        .assert.containsText('#note0', 'second edit');
+        .assert.containsText('#note0', 'second edit', 'Note 0 should contain edited text');
     },
 
     'logouts': function(browser) {
@@ -95,21 +92,19 @@ module.exports = {
         .click('button[name=save]')
         .waitForElementVisible('#ic-toast')
         .click('button[name=logout]')
-        .assert.urlEquals('http://localhost:8080/')
+        .assert.urlEquals('http://localhost:8080/', 'URL should be home page')
 
         .switchWindow(windows[1])
         .elements('css selector', '.ic-user', function(result) {
-            this.assert.equal(1, result.value.length);
+            this.assert.equal(1, result.value.length, 'There should be only one user');
         })
-        .getCssProperty('.ic-user', 'background-color', function(result) {
-            this.assert.equal(users['friendo'], result.value);
-        })
+        .assert.cssProperty('.ic-user', 'background-color', users['friendo'], 'User tag should have correct color')
 
         .switchWindow(windows[0])
         .click('div.ic-saved')
         .waitForElementVisible('#compass')
         .elements('css selector', '.ic-user', function(result) {
-            this.assert.equal(2, result.value.length);
+            this.assert.equal(2, result.value.length, 'There should be two users');
         })
         .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
             users['nightwatchjs'] = result.value;
@@ -124,15 +119,15 @@ module.exports = {
         .waitForElementVisible('#ic-toast')
 
         .switchWindow(windows[1])
-        .assert.containsText('#ic-toast', 'A timebox for 3m0s has been created')
+        .assert.containsText('#ic-toast', 'A timebox for 3m0s has been created', 'There should be a toast notifying timebox creation')
         .pause(1000)
-        .assert.containsText('button[name=timer] p.ic-time', '02:')
+        .assert.containsText('button[name=timer] p.ic-time', '02:', 'Timer should be accurate')
         .click('button[name=timer] div div p') // cancel timer
         .waitForElementVisible('#ic-toast')
 
         .switchWindow(windows[0])
-        .assert.containsText('#ic-toast', 'Timebox has been canceled')
-        .assert.elementNotPresent('button[name=timer] p.ic-time');
+        .assert.containsText('#ic-toast', 'Timebox has been canceled', 'There should be a toast notifiying that timebox was canceled')
+        .assert.elementNotPresent('button[name=timer] p.ic-time', 'Timer should not be present');
     },
 
     'chat': function(browser) {
@@ -140,31 +135,31 @@ module.exports = {
         .assert.elementPresent('#ic-chat')
         .click('#ic-chat button.ic-close-window')
         .pause(1000)
-        .assert.cssProperty('#ic-chat', 'bottom', '-270px')
+        .assert.cssProperty('#ic-chat', 'bottom', '-270px', 'Chat area should be hidden')
 
         .switchWindow(windows[1])
         .setValue('#message-text', ['first message', browser.Keys.ENTER])
         .waitForElementVisible('div.mine')
-        .assert.containsText('div.mine', 'first message')
-        .assert.cssProperty('div.mine', 'background-color', users['friendo'])
+        .assert.containsText('div.mine', 'first message', 'There should be a message')
+        .assert.cssProperty('div.mine', 'background-color', users['friendo'], 'Message should have correct background color')
 
         .switchWindow(windows[0])
-        .assert.cssProperty('button#ic-show-chat', 'background-color', 'rgba(194, 26, 3, 1)')
+        .assert.cssProperty('button#ic-show-chat', 'background-color', 'rgba(194, 26, 3, 1)', 'Show chat button should notify there is an unread message')
         .click('button#ic-show-chat')
         .pause(1000)
-        .assert.cssProperty('#ic-chat', 'bottom', '0px')
-        .assert.elementPresent('div.theirs')
-        .assert.containsText('div.theirs', 'first message')
-        .assert.cssProperty('div.theirs', 'background-color', users['friendo'])
+        .assert.cssProperty('#ic-chat', 'bottom', '0px', 'Chat area should be visible')
+        .assert.elementPresent('div.theirs', 'New message should be present')
+        .assert.containsText('div.theirs', 'first message', 'New message should contain correct text')
+        .assert.cssProperty('div.theirs', 'background-color', users['friendo'], 'New message should have correct background color')
         .setValue('#message-text', ['second message', browser.Keys.ENTER])
         .waitForElementVisible('div.mine')
-        .assert.containsText('div.mine', 'second message')
-        .assert.cssProperty('div.mine', 'background-color', users['nightwatchjs'])
+        .assert.containsText('div.mine', 'second message', 'New message should contain correct text')
+        .assert.cssProperty('div.mine', 'background-color', users['nightwatchjs'], 'New message should have correct background color')
 
         .switchWindow(windows[1])
-        .assert.elementPresent('div.theirs')
-        .assert.containsText('div.theirs', 'second message')
-        .assert.cssProperty('div.theirs', 'background-color', users['nightwatchjs']);
+        .assert.elementPresent('div.theirs', 'New message should appear')
+        .assert.containsText('div.theirs', 'second message', 'New message should contain correct text')
+        .assert.cssProperty('div.theirs', 'background-color', users['nightwatchjs'], 'New message should have correct background color');
     },
 
     'select and draft mode simultaneously': function(browser) {
