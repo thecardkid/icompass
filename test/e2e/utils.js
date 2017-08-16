@@ -11,7 +11,9 @@ module.exports.setup = function(browser) {
     .waitForElementVisible('.third', 1000)
     .click('button[name=to-workspace]')
     .waitForElementVisible('#ic-sidebar', 1000)
-    .windowMaximize();
+    .windowHandle(function(result) {
+        browser.windowSize(result.value, 1440, 780);
+    });
 };
 
 module.exports.cleanup = function(browser) {
@@ -23,8 +25,6 @@ module.exports.cleanup = function(browser) {
     .waitForElementVisible('#ic-modal', 5000)
     .click('#ic-modal-confirm')
     .pause(500)
-    .url(function(result) {
-        this.assert.equal(result.value, 'http://localhost:8080/');
-    })
+    .assert.urlEquals('http://localhost:8080/')
     .end();
 };
