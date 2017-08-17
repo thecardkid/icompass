@@ -11,7 +11,9 @@ export default class PromptName extends Component {
     componentDidMount() {
         let modal = new Modal();
 
-        modal.prompt('Enter your name:', (name) => {
+        modal.prompt('Enter your name:', (submit, name) => {
+            if (!submit) return browserHistory.push('/');
+
             let valid = Validator.validateUsername(name);
 
             if (valid[0]) {

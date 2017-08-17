@@ -143,7 +143,12 @@ module.exports = {
         .assert.elementNotPresent('#ic-feedback')
         .assert.attributeEquals('button[name=tutorial] a', 'href', 'http://localhost:8080/tutorial')
         .click('#ic-toast span') // dismiss toast
+
         .click('button[name=save]')
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body', MODALS.SAVE_BOOKMARK)
+        .setValue('#ic-modal-input', 'My bookmark')
+        .click('#ic-modal-confirm')
         .waitForElementVisible('#ic-toast span')
         .assert.cssClassPresent('#ic-toast span', 'success')
         .assert.containsText('#ic-toast span', PROMPTS.SAVE_SUCCESS, 'User should be able to bookmark workspaces')
@@ -151,16 +156,12 @@ module.exports = {
         .click('button[name=logout]')
         .waitForElementVisible('div.ic-saved')
         .assert.urlEquals('http://localhost:8080/')
-        .click('div.ic-saved a')
-        .waitForElementVisible('#ic-sidebar')
-        .assert.urlContains('http://localhost:8080/compass/edit')
-        .click('button[name=logout]')
-        .waitForElementVisible('div.ic-saved')
+        .assert.attributeContains('div.ic-saved a', 'href', 'http://localhost:8080/compass/edit')
         .moveToElement('div.ic-saved', 100, 10, function() {
             browser.mouseButtonClick(0);
         })
         .pause(100)
-        .assert.containsText('div.ic-saved a', 'nightwatchjs')
+        .assert.containsText('div.ic-saved a', 'My bookmark')
         .assert.containsText('div.ic-saved div.ic-saved-info p', 'as "sandbox"')
         .click('button.remove')
         .waitForElementVisible('#ic-modal')
