@@ -156,6 +156,8 @@ class Workspace extends Component {
     }
 
     handleKeyDown(e) {
+        if (this.modal.show && e.which === KEYCODES.ESC) return this.modal.close();
+
         if (this.props.ui.newNote || this.props.ui.doodleNote ||
             typeof this.props.ui.editNote === 'number') {
             if (e.which === KEYCODES.ESC) this.props.uiActions.closeForm();
@@ -163,6 +165,7 @@ class Workspace extends Component {
         }
 
         if (document.activeElement.id === 'message-text') return;
+        if (document.activeElement.id === 'ic-modal-input') return;
 
         if (this.isControlKey(e.which) && !this.isModifierKey(e)) {
             e.preventDefault();

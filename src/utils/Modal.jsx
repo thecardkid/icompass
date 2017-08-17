@@ -5,6 +5,7 @@ let modalInstance;
 export default class Modal {
     constructor() {
         if (!modalInstance) {
+            this.show = false;
             modalInstance = this;
         }
 
@@ -28,6 +29,7 @@ export default class Modal {
     confirm(modal, cb) {
         $('#ic-modal-container').empty().append(this.generateConfirm(modal));
         this.addBackdropIfNecessary();
+        this.show = true;
 
         $('#ic-modal-confirm').on('click', () => {
             this.close();
@@ -52,6 +54,7 @@ export default class Modal {
     alert(text, cb) {
         $('#ic-modal-container').empty().append(this.generateAlert(text));
         this.addBackdropIfNecessary();
+        this.show = true;
 
         $('#ic-modal-confirm').on('click', () => {
             this.close();
@@ -73,6 +76,7 @@ export default class Modal {
     prompt(text, cb) {
         $('#ic-modal-container').empty().append(this.generatePrompt(text));
         this.addBackdropIfNecessary();
+        this.show = true;
 
         let response;
         $('#ic-modal-confirm').on('click', () => {
@@ -96,5 +100,6 @@ export default class Modal {
         $('#ic-modal-confirm').off('click');
         $('#ic-backdrop').off('click');
         $('#ic-modal-container').empty();
+        this.show = false;
     }
 }

@@ -17,7 +17,7 @@ export default class BookmarkList extends Component {
         let b = Storage.getBookmarks();
         this.state = {
             bookmarks: b,
-            show: Array(b.length).fill(false)
+            show: new Array(b.length).fill(false)
         };
 
         this.renderBookmark = this.renderBookmark.bind(this);
@@ -30,7 +30,8 @@ export default class BookmarkList extends Component {
         this.modal.confirm(MODALS.DELETE_BOOKMARK, (deleteBookmark) => {
             if (deleteBookmark) {
                 let bookmarks = Storage.removeBookmark(idx);
-                let show = this.state.show.splice(idx, 1);
+                let show = this.state.show;
+                show.splice(idx, 1);
                 this.setState({bookmarks, show});
             }
         });
