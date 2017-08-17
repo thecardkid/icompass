@@ -171,10 +171,13 @@ class Sidebar extends Component {
     }
 
     save() {
-        let name = this.props.you.replace(/\d+/g, '');
-        let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, name);
-        if (saved) this.toast.success(PROMPTS.SAVE_SUCCESS);
-        else this.toast.error(PROMPTS.SAVE_FAIL);
+        this.modal.prompt(MODALS.SAVE_BOOKMARK,(submit, bookmarkName) => {
+            if (submit) {
+                let username = this.props.you.replace(/\d+/g, '');
+                Storage.addBookmark(bookmarkName, this.props.compass.editCode, username);
+                this.toast.success(PROMPTS.SAVE_SUCCESS);
+            }
+        });
     }
 
     logout() {

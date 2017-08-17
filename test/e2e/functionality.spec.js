@@ -1,7 +1,7 @@
 'use strict';
 
 var MODALS = require('../../lib/constants.js').MODALS;
-var top, left, newTop, newLeft;
+var top, left;
 
 module.exports = {
     'creates successfully': require('./utils').setup,
@@ -100,11 +100,9 @@ module.exports = {
 
     'dragging': function(browser) {
         browser
-        .getCssProperty('#note1', 'top', function (result) {
-            top = Number(result.value.substring(0, result.value.length - 2));
-        })
-        .getCssProperty('#note1', 'left', function (result) {
-            left = Number(result.value.substring(0, result.value.length - 2));
+        .getLocation('#note1', function(result) {
+            top = result.value.y;
+            left = result.value.x;
         })
         .moveToElement('#note1', 10, 10, function() {
             browser
@@ -112,14 +110,9 @@ module.exports = {
                 browser.moveTo(null, -300, -300);
             })
             .mouseButtonUp(0, function() {
-                browser
-                .getCssProperty('#note1', 'top', function (result) {
-                    newTop = Number(result.value.substring(0, result.value.length - 2));
-                    this.assert.equal(300, top - newTop, 'Element top should have changed by 300px');
-                })
-                .getCssProperty('#note1', 'left', function (result) {
-                    newLeft = Number(result.value.substring(0, result.value.length - 2));
-                    this.assert.equal(300, left - newLeft, 'Element left should have changed by 300px');
+                browser.getLocation('#note1', function(result) {
+                    this.assert.equal(top - result.value.y, 300);
+                    this.assert.equal(left - result.value.x, 300);
                 });
             });
         });
