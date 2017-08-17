@@ -87,9 +87,7 @@ module.exports = {
 
     'logouts': function(browser) {
         browser
-        .click('button[name=save]')
-        .waitForElementVisible('#ic-toast')
-        .click('button[name=logout]')
+        .back()
         .assert.urlEquals('http://localhost:8080/', 'URL should be home page')
 
         .switchWindow(windows[1])
@@ -99,7 +97,7 @@ module.exports = {
         .assert.cssProperty('.ic-user', 'background-color', users['friendo'], 'User tag should have correct color')
 
         .switchWindow(windows[0])
-        .click('div.ic-saved')
+        .forward()
         .waitForElementVisible('#compass')
         .elements('css selector', '.ic-user', function(result) {
             this.assert.equal(2, result.value.length, 'There should be two users');
@@ -213,10 +211,6 @@ module.exports = {
         .click('#note2')
         .click('#ic-bulk-delete')
         .waitForElementVisible('#ic-modal')
-        .source(function(result) {
-            // eslint-disable-next-line no-console
-            console.log(result.value);
-        })
         .click('#ic-modal-confirm')
         .pause(1000)
         .elements('css selector', '.ic-sticky-note', function(result) {
