@@ -12,7 +12,7 @@ module.exports.setup = function(browser) {
     .click('button[name=to-workspace]')
     .waitForElementVisible('#ic-sidebar', 1000)
     .windowHandle(function(result) {
-        browser.windowSize(result.value, 1440, 780);
+        browser.windowSize(result.value, 2000, 1500);
     });
 };
 
