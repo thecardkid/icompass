@@ -113,6 +113,8 @@ class Workspace extends Component {
         this.props.userActions.reset();
         $(window).off('resize', this.props.uiActions.resize);
         $(window).off('keydown', this.handleKeyDown);
+        this.modal.close();
+        this.toast.clear();
     }
 
     setTranslation(target, x, y) {
