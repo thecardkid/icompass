@@ -52,10 +52,6 @@ module.exports = {
         .click('button[name=ship]')
         .waitForElementVisible('#note0')
         .assert.cssProperty('#note0 span a', 'background-color', users['friendo'], 'Note should have friendo color')
-            .source(function(result) {
-                // eslint-disable-next-line no-console
-                console.log(result.value);
-            })
         .moveToElement('#note0', 10, 10, function() {
             browser.doubleClick();
         })

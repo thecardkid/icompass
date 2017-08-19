@@ -23,7 +23,6 @@
     "chai": "3.5.0",
     "env2": "2.2.0",
     "eslint": "4.3.0",
-    "extract-text-webpack-plugin": "3.0.0",
     "mocha": "3.3.0",
     "mockgoose": "7.3.1",
     "nightwatch": "0.9.16",

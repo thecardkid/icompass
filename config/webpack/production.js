@@ -1,14 +1,9 @@
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const path = require('path');
 
 var HOME = path.resolve(__dirname, '../../');
 var PUBLIC = path.resolve(HOME, 'public/');
 var SRC = path.resolve(HOME, 'src/');
-
-const extractLess = new ExtractTextPlugin({
-    filename: 'main.css',
-});
 
 module.exports = {
     devtool: 'cheap-module-source-map',
@@ -46,8 +41,7 @@ module.exports = {
                 beautify: false
             }
         }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        extractLess
+        new webpack.optimize.ModuleConcatenationPlugin()
     ],
     module: {
         rules: [
@@ -61,14 +55,11 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: extractLess.extract({
-                    use: [{
-                        loader: 'css-loader',
-                    }, {
-                        loader: 'less-loader'
-                    }],
-                    fallback: 'style-loader'
-                })
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    { loader: 'less-loader' }
+                ]
             }
         ]
     },
