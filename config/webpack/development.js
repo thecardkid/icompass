@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var HOME = path.resolve(__dirname, '../');
+var HOME = path.resolve(__dirname, '../../');
 var PUBLIC = path.resolve(HOME, 'public/');
 var SRC = path.resolve(HOME, 'src/');
 

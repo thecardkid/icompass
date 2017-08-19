@@ -134,7 +134,11 @@ module.exports = {
         .assert.elementPresent('#ic-chat')
         .assert.elementPresent('#ic-show-chat')
         .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-modes');
+        .assert.elementPresent('#ic-modes')
+        .source(function(result) {
+            // eslint-disable-next-line no-console
+            console.log(result.value);
+        });
     },
 
     'clean up': require('./utils').cleanup

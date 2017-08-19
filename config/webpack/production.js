@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const path = require('path');
 
-var HOME = path.resolve(__dirname, '../');
+var HOME = path.resolve(__dirname, '../../');
 var PUBLIC = path.resolve(HOME, 'public/');
 var SRC = path.resolve(HOME, 'src/');
 
