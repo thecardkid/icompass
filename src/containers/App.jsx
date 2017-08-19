@@ -1,7 +1,6 @@
 'use strict';
 
-// eslint-disable-next-line no-unused-vars
-import css from 'style-loader!css-loader!less-loader!./../../public/css/app.less';
+import './../../public/css/app.less';
 
 import React, { Component } from 'react';
 import { render } from 'react-dom';

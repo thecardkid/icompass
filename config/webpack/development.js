@@ -1,12 +1,15 @@
-var webpack = require('webpack');
 var path = require('path');
+var webpack = require('webpack');
 
 var HOME = path.resolve(__dirname, '../');
 var PUBLIC = path.resolve(HOME, 'public/');
 var SRC = path.resolve(HOME, 'src/');
 
-var config = {
-    devtool: 'cheap-module-source-map',
+module.exports = {
+    plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ],
+    devtool: 'eval',
     entry: SRC + '/containers/App.jsx',
     output: {
         path: PUBLIC,
@@ -22,49 +25,24 @@ var config = {
             Models: path.resolve(HOME, 'models')
         }
     },
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify('production')
-            }
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            beautify: false,
-            mangle: {
-                screw_ie8: true,
-                keep_fnames: true
-            },
-            compress: {
-                screw_ie8: true
-            },
-            comments: false
-        })
-    ],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?/,
                 include: SRC,
-                loader: 'babel',
+                loader: 'babel-loader',
                 query: {
                     presets: ['es2015', 'react', 'stage-2']
                 }
-            }
-            ],
-        rules: [
+            },
             {
                 test: /\.less$/,
                 use: [
-                    'style-loader',
+                    { loader: 'style-loader' },
                     { loader: 'css-loader', options: { importLoaders: 1 } },
-                    'less-loader'
+                    { loader: 'less-loader' }
                 ]
             }
         ]
     },
-    stats: {
-        warnings: false,
-    },
 };
-
-module.exports = config;

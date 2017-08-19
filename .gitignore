@@ -1,9 +1,12 @@
 .DS_Store
 .idea/
 node_modules/
-compass.log
-public/bundle.js
-public/bundle.js.map
+
+bundle.js
+bundle.js.map
+main.css
+main.css.map
+
 .ctagsignore
 tags
 mocha.opts
@@ -11,8 +14,6 @@ reports/
 bin/selenium.jar
 selenium-debug.log
 screenshots/
-
 reports
 screenshots
-selenium-debug.log
 runner.sh
