@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Tappable from 'react-tappable/lib/Tappable';
 import _ from 'underscore';
+import jsPDF from 'jspdf';
+import interact from 'interactjs';
+import $ from 'jquery';
+import html2canvas from 'html2canvas';
 
 import * as noteActions from 'Actions/notes';
 import * as compassActions from 'Actions/compass';
@@ -45,7 +49,6 @@ class Workspace extends Component {
                 this.socket.emitFindCompassEdit();
         }
 
-        // user events
         this.exportCompass = this.exportCompass.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.showChat = this.showChat.bind(this);
@@ -92,9 +95,7 @@ class Workspace extends Component {
         $(window).on('resize', this.props.uiActions.resize);
         $(window).on('keydown', this.handleKeyDown);
 
-        // set up draggable sticky notes
         if (!this.props.route.viewOnly) {
-            // eslint-disable-next-line no-undef
             interact('.draggable').draggable({
                 restrict: DRAGGABLE_RESTRICTIONS,
                 autoScroll: true,
@@ -113,6 +114,8 @@ class Workspace extends Component {
         this.props.userActions.reset();
         $(window).off('resize', this.props.uiActions.resize);
         $(window).off('keydown', this.handleKeyDown);
+        this.modal.close();
+        this.toast.clear();
     }
 
     setTranslation(target, x, y) {
@@ -156,6 +159,8 @@ class Workspace extends Component {
     }
 
     handleKeyDown(e) {
+        if (this.modal.show && e.which === KEYCODES.ESC) return this.modal.close();
+
         if (this.props.ui.newNote || this.props.ui.doodleNote ||
             typeof this.props.ui.editNote === 'number') {
             if (e.which === KEYCODES.ESC) this.props.uiActions.closeForm();
@@ -163,6 +168,7 @@ class Workspace extends Component {
         }
 
         if (document.activeElement.id === 'message-text') return;
+        if (document.activeElement.id === 'ic-modal-input') return;
 
         if (this.isControlKey(e.which) && !this.isModifierKey(e)) {
             e.preventDefault();
@@ -175,9 +181,8 @@ class Workspace extends Component {
         this.props.uiActions.setChatVisible(false);
 
         setTimeout(() => {
-            window.html2canvas(document.body).then((canvas) => {
+            html2canvas(document.body).then((canvas) => {
                 let imgData = canvas.toDataURL('image/png');
-                // eslint-disable-next-line no-undef
                 let doc = new jsPDF('l', 'cm', 'a4');
                 doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
                 doc.save('compass.pdf');
@@ -258,7 +263,6 @@ class Workspace extends Component {
     }
 
     render() {
-        // not ready
         if (_.isEmpty(this.props.compass)) return <div />;
 
         if (this.props.route.viewOnly) return <Compass notes={this.notes}/>;

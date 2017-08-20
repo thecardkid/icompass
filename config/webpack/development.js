@@ -1,10 +1,19 @@
-var path = require('path');
+let path = require('path');
+let webpack = require('webpack');
 
-var HOME = path.resolve(__dirname, '../');
-var PUBLIC = path.resolve(HOME, 'public/');
-var SRC = path.resolve(HOME, 'src/');
+let HOME = path.resolve(__dirname, '../../');
+let PUBLIC = path.resolve(HOME, 'public/');
+let SRC = path.resolve(HOME, 'src/');
 
-var config = {
+module.exports = {
+    plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
+        })
+    ],
     devtool: 'eval',
     entry: SRC + '/containers/App.jsx',
     output: {
@@ -22,27 +31,23 @@ var config = {
         }
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?/,
                 include: SRC,
-                loader: 'babel',
+                loader: 'babel-loader',
                 query: {
                     presets: ['es2015', 'react', 'stage-2']
                 }
-            }
-        ],
-        rules: [
+            },
             {
                 test: /\.less$/,
                 use: [
-                    'style-loader',
+                    { loader: 'style-loader' },
                     { loader: 'css-loader', options: { importLoaders: 1 } },
-                    'less-loader'
+                    { loader: 'less-loader' }
                 ]
             }
         ]
     },
 };
-
-module.exports = config;

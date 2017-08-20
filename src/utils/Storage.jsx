@@ -11,16 +11,14 @@ export default {
         localStorage.setItem('bookmarks', JSON.stringify(b));
     },
 
-    addAllBookmarks(bookmarks) {
-        let withDups = (this.getBookmarks()).concat(bookmarks);
-        let unique = _.uniq(withDups, (item) => item.center);
-        this.setBookmarks(unique);
-        return true;
+    addAllBookmarks(newBookmarks) {
+        let bookmarks = (this.getBookmarks()).concat(newBookmarks);
+        this.setBookmarks(bookmarks);
     },
 
     addBookmark(center, code, name) {
-        let href = '/compass/edit/'+code+'/'+name;
-        return this.addAllBookmarks([
+        let href = '/compass/edit/' + code + '/' + name;
+        this.addAllBookmarks([
             { center, href, name }
         ]);
     },

@@ -16,7 +16,7 @@ module.exports = {
             browser
             .moveToElement('body', p.x, p.y)
             .doubleClick()
-            .waitForElementVisible('#ic-note-form', 100)
+            .waitForElementVisible('#ic-note-form')
             .setValue('#ic-form-text', TEXT)
             .click('button[name=ship]')
             .pause(500);
@@ -27,15 +27,14 @@ module.exports = {
         browser
         .assert.elementNotPresent('#ic-visual-toolbar')
         .click('#ic-mode-visual')
-        .pause(100)
-        .assert.elementPresent('#ic-visual-toolbar')
+        .waitForElementVisible('#ic-visual-toolbar')
         .assert.cssProperty('#ic-visual-toolbar', 'transform', 'matrix(1, 0, 0, 1, 0, 0)')
         .moveToElement('#ic-visual-toolbar', 3, 3)
         .mouseButtonDown(0, function() {
             browser.moveTo(null, -150, 0);
         })
         .mouseButtonUp(0, function() {
-            browser.assert.cssProperty('#ic-visual-toolbar', 'transform', 'matrix(1, 0, 0, 1, -150, 0)');
+            browser.assert.cssProperty('#ic-visual-toolbar', 'transform', 'matrix(1, 0, 0, 1, -150, 0)'), 'Visual toolbar should be draggable';
         })
         .pause(100);
     },
@@ -44,13 +43,13 @@ module.exports = {
         browser
         .moveToElement('body', 200, 500)
         .doubleClick()
-        .waitForElementVisible('#ic-note-form', 100)
+        .waitForElementVisible('#ic-note-form')
         .setValue('#ic-form-text', TEXT)
         .click('button[name=ship]')
-        .waitForElementVisible('#ic-toast span', 100)
+        .waitForElementVisible('#ic-toast span')
         .assert.cssClassPresent('#ic-toast span', 'warning')
         .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CREATE)
-        // try dragging
+
         .assert.elementPresent('#note0')
         .moveToElement('#note0', 10, 10)
         .mouseButtonDown(0, function() {
@@ -58,37 +57,36 @@ module.exports = {
         })
         .mouseButtonUp(0, function() {
             browser
-            .waitForElementVisible('#ic-toast span', 100)
+            .waitForElementVisible('#ic-toast span')
             .assert.cssClassPresent('#ic-toast span', 'warning')
-            .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE);
+            .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE, 'Notes should not be draggable in select mode');
         })
         .moveToElement('#note0', 10, 10)
         .doubleClick()
-        .waitForElementVisible('#ic-toast span', 100)
+        .waitForElementVisible('#ic-toast span')
         .assert.cssClassPresent('#ic-toast span', 'warning')
-        .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE)
+        .assert.containsText('#ic-toast span', PROMPTS.VISUAL_MODE_NO_CHANGE, 'Notes should not be editable in select mode')
         .pause(50).click('#note0').pause(50);
     },
 
     'visual toolbar displays correctly': function(browser) {
         browser
         .click('button.bold')
-        .assert.cssProperty('button.bold', 'border', '2px solid rgb(255, 255, 255)')
+        .assert.cssProperty('button.bold', 'border', '2px solid rgb(255, 255, 255)', 'Clicking on a style should make it stand out')
         .click('button.bold')
         .click('button.italic')
-        .assert.cssProperty('button.italic', 'border', '2px solid rgb(255, 255, 255)')
+        .assert.cssProperty('button.italic', 'border', '2px solid rgb(255, 255, 255)', 'Clicking on a style should make it stand out')
         .click('button.italic')
         .click('button.underline')
-        .assert.cssProperty('button.underline', 'border', '2px solid rgb(255, 255, 255)')
+        .assert.cssProperty('button.underline', 'border', '2px solid rgb(255, 255, 255)', 'Clicking on a style should make it stand out')
         .click('button.underline')
         .click('button.ic-visual-color')
-        .assert.cssProperty('button.ic-visual-color', 'border', '2px solid rgb(255, 69, 0)')
+        .assert.cssProperty('button.ic-visual-color', 'border', '2px solid rgb(255, 69, 0)', 'Clicking on a color should highlight it')
         .click('button.ic-visual-color')
         .click('button#ic-bulk-delete')
-        .waitForElementVisible('#ic-modal', 1000)
-        .assert.containsText('#ic-modal-body', MODALS.BULK_DELETE_NOTES.text)
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body', MODALS.BULK_DELETE_NOTES.text, 'Trying to delete note should prompt for confirmation')
         .click('#ic-modal-confirm')
-        .pause(100)
         .assert.elementNotPresent('#ic-visual-toolbar')
         .click('#ic-mode-visual')
         .click('button#ic-bulk-cancel')
@@ -99,7 +97,7 @@ module.exports = {
         browser
         .click('#ic-mode-visual')
         .click('#note0')
-        .assert.cssProperty('#note0', 'border', '3px solid rgb(40, 138, 255)')
+        .assert.cssProperty('#note0', 'border', '3px solid rgb(40, 138, 255)', 'Selecting a note should put a border on it')
         .click('button.bold')
         .click('button.italic')
         .click('button.underline')
@@ -128,35 +126,26 @@ module.exports = {
     'bulk font coloring': function(browser) {
         var defaultBackground = '';
         browser
-        .getCssProperty('#note0 span a', 'background', function(result) {
+        .getCssProperty('#note0 span a', 'background-color', function(result) {
             defaultBackground = result.value;
         })
         .click('#note0')
         .click('#note1')
         .click('button' + STICKY_COLORS[2])
-        .getCssProperty('#note0 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(255, 204, 255)'), true);
-        })
-        .getCssProperty('#note1 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(255, 204, 255)'), true);
-        })
+        .assert.cssProperty('#note0 span a', 'background-color', 'rgba(255, 204, 255, 1)', 'Note 0 background color should change')
+        .assert.cssProperty('#note1 span a', 'background-color', 'rgba(255, 204, 255, 1)', 'Note 1 background color should change')
         .click('button' + STICKY_COLORS[4])
-        .getCssProperty('#note0 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(204, 255, 255)'), true);
-        })
-        .getCssProperty('#note1 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(204, 255, 255)'), true);
-        })
+        .assert.cssProperty('#note0 span a', 'background-color', 'rgba(204, 255, 255, 1)', 'Note 0 background color should change')
+        .assert.cssProperty('#note1 span a', 'background-color', 'rgba(204, 255, 255, 1)', 'Note 1 background color should change')
         .click('button' + STICKY_COLORS[4])
-        .pause(500)
-        .getCssProperty('#note0 span a', 'background', function(result) {
-            this.assert.equal(result.value, defaultBackground);
-        })
-        .getCssProperty('#note1 span a', 'background', function(result) {
-            this.assert.equal(result.value, defaultBackground);
-        })
-        .click('#note0')
-        .click('#note1');
+        .perform(function(client, done) {
+            browser
+            .assert.cssProperty('#note0 span a', 'background-color', defaultBackground, 'Note 0 background should be its default')
+            .assert.cssProperty('#note1 span a', 'background-color', defaultBackground, 'Note 1 background should be its default')
+            .click('#note0')
+            .click('#note1');
+            done();
+        });
     },
 
     'submitting with no edits should cause no change': function(browser) {
@@ -194,16 +183,12 @@ module.exports = {
         .click('button' + STICKY_COLORS[3])
         .click('button#ic-bulk-submit')
         .pause(1000)
-        .assert.cssClassPresent('#note1 span a p', 'bold')
-        .assert.cssClassPresent('#note1 span a p', 'underline')
-        .assert.cssClassPresent('#note2 span a p', 'bold')
-        .assert.cssClassPresent('#note2 span a p', 'underline')
-        .getCssProperty('#note1 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(204, 204, 255)'), true);
-        })
-        .getCssProperty('#note2 span a', 'background', function(result) {
-            this.assert.equal(result.value.includes('rgb(204, 204, 255)'), true);
-        });
+        .assert.cssClassPresent('#note1 span a p', 'bold', 'Note 1 should have correct formatting')
+        .assert.cssClassPresent('#note1 span a p', 'underline', 'Note 1 should have correct formatting')
+        .assert.cssProperty('#note1 span a', 'background-color', 'rgba(204, 204, 255, 1)', 'Note 1 should have correct formatting')
+        .assert.cssClassPresent('#note2 span a p', 'bold', 'Note 2 should have correct formatting')
+        .assert.cssClassPresent('#note2 span a p', 'underline', 'Note 2 should have correct formatting')
+        .assert.cssProperty('#note2 span a', 'background-color', 'rgba(204, 204, 255, 1)', 'Note 2 should have correct formatting');
     },
 
     'canceling': function(browser) {
@@ -242,10 +227,10 @@ module.exports = {
         .click('#note2')
         .click('#note3')
         .click('button#ic-bulk-delete')
-        .waitForElementVisible('#ic-modal', 1000)
+        .waitForElementVisible('#ic-modal')
         .assert.containsText('#ic-modal-body', MODALS.BULK_DELETE_NOTES.text)
         .click('#ic-modal-confirm')
-        .waitForElementNotPresent('#note0', 5000)
+        .waitForElementNotPresent('#note0')
         .assert.elementNotPresent('#ic-visual-toolbar')
         .assert.elementNotPresent('#note0')
         .assert.elementNotPresent('#note1')

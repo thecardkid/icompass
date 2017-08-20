@@ -122,10 +122,11 @@ describe('Compass: models', () => {
         addNotes(DUT, 3, compass => {
             let updated = Object.assign({}, compass.notes[1]._doc);
             updated.text = 'Updated';
-            updated._id = updated._id.toString(); // emulate client side request
+            // emulate client side request
+            updated._id = updated._id.toString();
             Compass.updateNote(compass._id, updated, (c) => {
                 expect(c.notes).to.have.lengthOf(3);
-                expect(c.notes[1].text).to.equal('Updated'); // expect no ordering changes
+                expect(c.notes[1].text).to.equal('Updated');
                 done();
             });
         });

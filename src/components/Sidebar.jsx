@@ -121,7 +121,7 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="controls">
                 <h2>Controls</h2>
-                <button className="ic-action" onClick={this.props.uiActions.showNewNote}>
+                <button className="ic-action" onClick={() => this.props.uiActions.showNewNote()}>
                     <span className='ic-ctrl-key'>n</span>
                     <p>new note</p>
                 </button>
@@ -171,10 +171,13 @@ class Sidebar extends Component {
     }
 
     save() {
-        let name = this.props.you.replace(/\d+/g, '');
-        let saved = Storage.addBookmark(this.props.compass.center, this.props.compass.editCode, name);
-        if (saved) this.toast.success(PROMPTS.SAVE_SUCCESS);
-        else this.toast.error(PROMPTS.SAVE_FAIL);
+        this.modal.prompt(MODALS.SAVE_BOOKMARK,(submit, bookmarkName) => {
+            if (submit) {
+                let username = this.props.you.replace(/\d+/g, '');
+                Storage.addBookmark(bookmarkName, this.props.compass.editCode, username);
+                this.toast.success(PROMPTS.SAVE_SUCCESS);
+            }
+        });
     }
 
     logout() {

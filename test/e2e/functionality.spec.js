@@ -1,7 +1,7 @@
 'use strict';
 
 var MODALS = require('../../lib/constants.js').MODALS;
-var top, left, newTop, newLeft;
+var top, left;
 
 module.exports = {
     'creates successfully': require('./utils').setup,
@@ -34,36 +34,30 @@ module.exports = {
         browser
         .keys(['s', 'c', 'p'])
         .pause(500)
-        .assert.cssProperty('#ic-sidebar', 'left', '-240px')
-        .assert.cssProperty('#ic-chat', 'bottom', '-270px')
-        .assert.elementPresent('#ic-about')
+        .assert.cssProperty('#ic-sidebar', 'left', '-240px', 'Sidebar should be hidden')
+        .assert.cssProperty('#ic-chat', 'bottom', '-270px', 'Chat should be hidden')
+        .assert.elementPresent('#ic-about', 'Prompt should be visible')
         .keys(['p', 's'])
         .keys(['n'])
-        .assert.elementPresent('#ic-note-form')
+        .assert.elementPresent('#ic-note-form', 'Pressing "n" should show the note create form')
         .click('button[name=ship]')
-        .assert.elementPresent('#ic-note-form')
+        .assert.elementPresent('#ic-note-form', 'Submitting empty form should not dismiss the form')
         .click('button[name=nvm]')
-        .assert.elementNotPresent('#ic-note-form')
+        .assert.elementNotPresent('#ic-note-form', 'Clicking "never mind" should dismiss the form')
         .keys(['d'])
-        .assert.elementPresent('#ic-doodle-form')
+        .assert.elementPresent('#ic-doodle-form', 'Pressing "d" should show the doodle create form')
         .click('button[name=nvm]')
-        .assert.elementNotPresent('#ic-doodle-form');
+        .assert.elementNotPresent('#ic-doodle-form', 'Clicking "never mind" should dismiss the form');
     },
 
     'create sticky': function(browser) {
         browser
-        // open and close form
         .keys(['n'])
-        .waitForElementVisible('#ic-note-form', 500)
-        .click('button[name=nvm]')
-        .assert.elementNotPresent('ic-note-form')
-        // reopen form and submit sticky
-        .keys('n')
         .assert.elementNotPresent('ic-sticky-note')
         .setValue('#ic-form-text', 'An observation')
         .click('button[name=ship]')
-        .waitForElementVisible('.ic-sticky-note', 500)
-        .assert.containsText('.ic-sticky-note', 'An observation');
+        .waitForElementVisible('.ic-sticky-note')
+        .assert.containsText('.ic-sticky-note', 'An observation', 'Created note should contain correct text');
     },
 
     'edit sticky': function(browser) {
@@ -76,55 +70,49 @@ module.exports = {
         .setValue('#ic-form-text', 'A principle')
         .click('button[name=ship]')
         .pause(1000)
-        .assert.containsText('.ic-sticky-note', 'A principle');
+        .assert.containsText('.ic-sticky-note', 'A principle', 'Edited note should contain correct text');
     },
 
     'images': function(browser) {
         browser
         .keys('n')
-        .assert.elementNotPresent('a.ic-img')
+        .assert.elementNotPresent('a.ic-img', 'Image tag should not exist yet')
         .setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg')
         .click('button[name=ship]')
-        .waitForElementVisible('#ic-modal', 1000)
-        .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text, 'Modal should confirm that user wants to import an image')
         .click('#ic-modal-confirm')
         .pause(1000)
-        .assert.elementPresent('a.ic-img')
-        // render as text not image
+        .assert.elementPresent('a.ic-img', 'Accepting the prompt should import and render the image')
+
         .moveToElement('a.ic-img', 50, 50, function() {
             browser.doubleClick();
         })
         .pause(500)
         .assert.elementPresent('#ic-form-text')
         .click('button[name=ship]')
-        .waitForElementVisible('#ic-modal', 1000)
+        .waitForElementVisible('#ic-modal')
         .assert.containsText('#ic-modal-body', MODALS.IMPORT_IMAGE.text)
         .click('#ic-modal-cancel')
         .pause(1000)
-        .assert.elementNotPresent('a.ic-img');
+        .assert.elementNotPresent('a.ic-img', 'Rejecting the prompt should just import regular text');
     },
 
     'dragging': function(browser) {
         browser
-        .getCssProperty('#note1', 'top', function(result) {
-            top = Number(result.value.substring(0,result.value.length-2));
-        })
-        .getCssProperty('#note1', 'left', function(result) {
-            left = Number(result.value.substring(0,result.value.length-2));
+        .getLocation('#note1', function(result) {
+            top = result.value.y;
+            left = result.value.x;
         })
         .moveToElement('#note1', 10, 10, function() {
             browser
             .mouseButtonDown(0, function() {
-                browser.moveTo(null,-300,-300);
+                browser.moveTo(null, -300, -300);
             })
             .mouseButtonUp(0, function() {
-                browser.getCssProperty('#note1', 'top', function(result) {
-                    newTop = Number(result.value.substring(0,result.value.length-2));
-                    browser.getCssProperty('#note1', 'left', function(result) {
-                        newLeft = Number(result.value.substring(0,result.value.length-2));
-                        this.assert.equal(top - newTop, 300);
-                        this.assert.equal(left - newLeft, 300);
-                    });
+                browser.getLocation('#note1', function(result) {
+                    this.assert.equal(top - result.value.y, 300);
+                    this.assert.equal(left - result.value.x, 300);
                 });
             });
         });
@@ -135,15 +123,15 @@ module.exports = {
         .moveToElement('#note1', 158, 3, function() {
             browser
             .mouseButtonClick(0)
-            .waitForElementVisible('#ic-modal', 1000)
+            .waitForElementVisible('#ic-modal')
             .assert.containsText('#ic-modal-body', MODALS.DELETE_NOTE.text)
             .click('#ic-modal-cancel')
-            .assert.elementPresent('#note1');
+            .assert.elementPresent('#note1', 'Rejecting the delete modal should preserve the note');
         })
         .moveToElement('#note1', 158, 3, function() {
             browser
             .mouseButtonClick(0)
-            .waitForElementVisible('#ic-modal', 1000)
+            .waitForElementVisible('#ic-modal')
             .click('#ic-modal-confirm')
             .waitForElementNotPresent('#note1', 5000);
         });
@@ -152,26 +140,20 @@ module.exports = {
     'compact mode': function(browser) {
         browser
         .getCssProperty('#note0 a', 'letter-spacing', function(result) {
-            this.assert.notEqual(result.value, '-1px');
+            this.assert.notEqual('1px', result.value, 'Compact mode CSS should not apply');
         })
         .getCssProperty('#note0 a', 'overflow', function(result) {
-            this.assert.notEqual(result.value, 'auto');
+            this.assert.notEqual('auto', result.value, 'Compact mode CSS should not apply');
         })
         .getCssProperty('#note0 a', 'height', function(result) {
-            this.assert.notEqual(result.value, '70px');
+            this.assert.notEqual('70px', result.value, 'Compact mode CSS should not apply');
         })
         .pause(100)
         .click('#ic-mode-compact')
         .pause(100)
-        .getCssProperty('#note0 a', 'letter-spacing', function(result) {
-            this.assert.equal(result.value, '-1px');
-        })
-        .getCssProperty('#note0 a', 'overflow', function(result) {
-            this.assert.equal(result.value, 'auto');
-        })
-        .getCssProperty('#note0 a', 'max-height', function(result) {
-            this.assert.equal(result.value, '70px');
-        })
+        .assert.cssProperty('#note0 a', 'letter-spacing', '-1px')
+        .assert.cssProperty('#note0 a', 'overflow', 'auto')
+        .assert.cssProperty('#note0 a', 'max-height', '70px')
         .pause(100)
         .click('#ic-mode-normal')
         .pause(100);
@@ -181,9 +163,9 @@ module.exports = {
         browser
         .keys('d')
         .pause(500)
-        .assert.elementPresent('#ic-doodle-form')
+        .waitForElementVisible('#ic-doodle-form')
         .click('button[name=ship]')
-        .assert.elementPresent('#ic-doodle-form')
+        .assert.elementPresent('#ic-doodle-form', 'Shipping an empty doodle should not dismiss the form')
         .moveToElement('#ic-doodle', 155, 75, function() {
             browser
             .mouseButtonDown(0, function() {
@@ -193,62 +175,56 @@ module.exports = {
         })
         .pause(1000)
         .click('button[name=ship]')
-        .waitForElementVisible('#note1', 1000)
+        .waitForElementVisible('#note1')
         .getAttribute('#note1 .ic-img img', 'src', function(result) {
-            this.assert.equal(result.value.includes('data:image/png;base64'), true);
+            this.assert.equal(true, result.value.includes('data:image/png;base64'), 'Image tag should contain base64 encoded doodle');
         });
     },
 
     'styling': function(browser) {
         browser
         .keys('n')
-        .waitForElementVisible('#ic-note-form', 100)
+        .waitForElementVisible('#ic-note-form')
         .setValue('#ic-form-text', 'Text styling example')
-        .assert.cssClassNotPresent('#ic-form-text', 'bold')
+        .assert.cssClassNotPresent('#ic-form-text', 'bold', 'Text should not be bold')
         .click('button[name=bold]')
         .pause(100)
-        .assert.cssClassPresent('#ic-form-text', 'bold')
+        .assert.cssClassPresent('#ic-form-text', 'bold', 'Text should be bold')
         .click('button[name=bold]')
         .pause(100)
-        .assert.cssClassNotPresent('#ic-form-text', 'bold')
+        .assert.cssClassNotPresent('#ic-form-text', 'bold', 'Text should not be bold')
         .click('button[name=italic]')
         .click('button[name=underline]')
         .pause(100)
         .click('button[name=ship]')
         .pause(500)
-        .assert.elementPresent('#note2')
-        .assert.cssClassNotPresent('#note2', 'bold')
-        .assert.cssClassPresent('#note2 a p', 'italic')
-        .assert.cssClassPresent('#note2 a p', 'underline');
+        .assert.elementPresent('#note2', 'New note should have been created')
+        .assert.cssClassNotPresent('#note2', 'bold', 'Note should be bold')
+        .assert.cssClassPresent('#note2 a p', 'italic', 'Note should be italic')
+        .assert.cssClassPresent('#note2 a p', 'underline', 'Note should be underlined');
     },
 
     'double click create': function(browser) {
         browser
         .moveToElement('body', 300, 200)
         .doubleClick()
-        .waitForElementVisible('#ic-note-form', 100)
+        .waitForElementVisible('#ic-note-form')
         .setValue('#ic-form-text', 'Double click to create')
         .click('button[name=ship]')
-        .pause(500)
-        .assert.elementPresent('#note3')
-        .getCssProperty('#note3', 'left', function(result) {
-            this.assert.equal(result.value, '300px');
-        })
-        .getCssProperty('#note3', 'top', function(result) {
-            this.assert.equal(result.value, '200px');
-        })
-        .pause(500);
+        .waitForElementVisible('#note3')
+        .assert.cssProperty('#note3', 'left', '300px', 'Note 3 should have been created at the click location')
+        .assert.cssProperty('#note3', 'top', '200px', 'Note 3 should have been created at the click location');
     },
 
     'chat events': function(browser) {
         browser
         .keys('c').pause(500)
-        .assert.cssProperty('#ic-chat', 'bottom', '0px')
+        .assert.cssProperty('#ic-chat', 'bottom', '0px', 'Sidebar should be visible')
         .setValue('#message-text', 'Hello world!')
         .keys(browser.Keys.ENTER)
-        .waitForElementVisible('.bubble', 500)
-        .assert.containsText('.bubble', 'Hello world!')
-        .assert.cssClassPresent('.bubble', 'mine');
+        .waitForElementVisible('.bubble')
+        .assert.containsText('.bubble', 'Hello world!', 'Message should contain correct texet')
+        .assert.cssClassPresent('.bubble', 'mine', 'Message should have correct class');
     },
 
     'cleanup': require('./utils').cleanup
