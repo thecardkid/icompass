@@ -26,7 +26,6 @@
     "chai": "3.5.0",
     "compression-webpack-plugin": "1.0.0",
     "css-loader": "0.28.5",
-    "env2": "2.2.0",
     "less-loader": "4.0.5",
     "mocha": "3.3.0",
     "mockgoose": "7.3.1",
