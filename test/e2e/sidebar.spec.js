@@ -142,7 +142,7 @@ module.exports = {
         .click('#ic-feedback button.ic-close-window')
         .assert.elementNotPresent('#ic-feedback')
         .assert.attributeEquals('button[name=tutorial] a', 'href', 'http://localhost:8080/tutorial')
-        .click('#ic-toast span') // dismiss toast
+        .click('#ic-toast span')
 
         .click('button[name=save]')
         .waitForElementVisible('#ic-modal')

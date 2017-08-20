@@ -17,7 +17,6 @@ export default class Socket {
 
         this.disconnect = this.disconnect.bind(this);
 
-        // socket event emitters
         this.emitCreateTimer = this.emitCreateTimer.bind(this);
         this.emitCancelTimer = this.emitCancelTimer.bind(this);
         this.emitNewNote = this.emitNewNote.bind(this);
@@ -49,7 +48,6 @@ export default class Socket {
         this.handleStartTimer = this.handleStartTimer.bind(this);
         this.handleCancelTimer = this.handleCancelTimer.bind(this);
 
-        // socket event handlers
         this.socket.on('user joined', this.handleUserJoined);
         this.socket.on('user left', this.handleUserLeft);
         this.socket.on('disconnect', this.handleDisconnect);
