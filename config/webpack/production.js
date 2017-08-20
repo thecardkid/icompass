@@ -25,9 +25,6 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.optimize.AggressiveMergingPlugin(),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.DedupePlugin(),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
@@ -60,8 +57,7 @@ module.exports = {
             test: /\.js$|\.css$|\.html$/,
             threshold: 10240,
             minRatio: 0
-        }),
-        new webpack.optimize.ModuleConcatenationPlugin()
+        })
     ],
     module: {
         rules: [
