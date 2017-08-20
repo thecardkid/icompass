@@ -1,13 +1,18 @@
-var path = require('path');
-var webpack = require('webpack');
+let path = require('path');
+let webpack = require('webpack');
 
-var HOME = path.resolve(__dirname, '../../');
-var PUBLIC = path.resolve(HOME, 'public/');
-var SRC = path.resolve(HOME, 'src/');
+let HOME = path.resolve(__dirname, '../../');
+let PUBLIC = path.resolve(HOME, 'public/');
+let SRC = path.resolve(HOME, 'src/');
 
 module.exports = {
     plugins: [
-        new webpack.optimize.ModuleConcatenationPlugin()
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        })
     ],
     devtool: 'eval',
     entry: SRC + '/containers/App.jsx',

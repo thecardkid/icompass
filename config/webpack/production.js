@@ -1,9 +1,10 @@
-const webpack = require('webpack');
-const path = require('path');
+let webpack = require('webpack');
+let CompressionPlugin = require('compression-webpack-plugin');
+let path = require('path');
 
-var HOME = path.resolve(__dirname, '../../');
-var PUBLIC = path.resolve(HOME, 'public/');
-var SRC = path.resolve(HOME, 'src/');
+let HOME = path.resolve(__dirname, '../../');
+let PUBLIC = path.resolve(HOME, 'public/');
+let SRC = path.resolve(HOME, 'src/');
 
 module.exports = {
     devtool: 'cheap-module-source-map',
@@ -23,6 +24,15 @@ module.exports = {
         }
     },
     plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        new webpack.optimize.AggressiveMergingPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production')
@@ -33,13 +43,23 @@ module.exports = {
             mangle: true,
 
             compress: {
+                warnings: false,
                 screw_ie8: true
             },
 
             output: {
                 comments: false,
                 beautify: false
-            }
+            },
+
+            exclude: [/\.min\.js$/gi] // skip pre-minified libs
+        }),
+        new CompressionPlugin({
+            asset: "[path].gz[query]",
+            algorithm: "gzip",
+            test: /\.js$|\.css$|\.html$/,
+            threshold: 10240,
+            minRatio: 0
         }),
         new webpack.optimize.ModuleConcatenationPlugin()
     ],

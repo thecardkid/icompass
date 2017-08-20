@@ -4,6 +4,7 @@ node_modules/
 
 bundle.js
 bundle.js.map
+bundle.js.gz
 main.css
 main.css.map
 

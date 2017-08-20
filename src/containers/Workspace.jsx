@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Tappable from 'react-tappable/lib/Tappable';
 import _ from 'underscore';
+import jsPDF from 'jspdf';
+import interact from 'interactjs';
+import $ from 'jquery';
+import html2canvas from 'html2canvas';
 
 import * as noteActions from 'Actions/notes';
 import * as compassActions from 'Actions/compass';
@@ -45,7 +49,6 @@ class Workspace extends Component {
                 this.socket.emitFindCompassEdit();
         }
 
-        // user events
         this.exportCompass = this.exportCompass.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.showChat = this.showChat.bind(this);
@@ -92,9 +95,7 @@ class Workspace extends Component {
         $(window).on('resize', this.props.uiActions.resize);
         $(window).on('keydown', this.handleKeyDown);
 
-        // set up draggable sticky notes
         if (!this.props.route.viewOnly) {
-            // eslint-disable-next-line no-undef
             interact('.draggable').draggable({
                 restrict: DRAGGABLE_RESTRICTIONS,
                 autoScroll: true,
@@ -180,9 +181,8 @@ class Workspace extends Component {
         this.props.uiActions.setChatVisible(false);
 
         setTimeout(() => {
-            window.html2canvas(document.body).then((canvas) => {
+            html2canvas(document.body).then((canvas) => {
                 let imgData = canvas.toDataURL('image/png');
-                // eslint-disable-next-line no-undef
                 let doc = new jsPDF('l', 'cm', 'a4');
                 doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
                 doc.save('compass.pdf');
@@ -263,7 +263,6 @@ class Workspace extends Component {
     }
 
     render() {
-        // not ready
         if (_.isEmpty(this.props.compass)) return <div />;
 
         if (this.props.route.viewOnly) return <Compass notes={this.notes}/>;
