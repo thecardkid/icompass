@@ -1,6 +1,6 @@
 'use strict';
 
-import './../../public/css/app.less';
+import '../css/app.less';
 
 import React, { Component } from 'react';
 import { render } from 'react-dom';
