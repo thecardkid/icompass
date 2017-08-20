@@ -1,21 +1,25 @@
+cache:
+  directories:
+  - node_modules
+
 matrix:
   include:
-    - language: node_js
-      nodejs:
-        - '7'
-      services:
-        - docker
-      env:
-        - TEST_ENV=mocha
-        - NODE_ENV=test
-    - language: node_js
-      nodejs:
-        - '7'
-      services:
-        - docker
-      env:
-        - TEST_ENV=e2e
-        - NODE_ENV=test
+  - language: node_js
+    nodejs:
+    - '7'
+    services:
+    - docker
+    env:
+    - TEST_ENV=mocha
+    - NODE_ENV=test
+  - language: node_js
+    nodejs:
+    - '7'
+    services:
+    - docker
+    env:
+    - TEST_ENV=e2e
+    - NODE_ENV=test
 
 install:
 - if [ "$TEST_ENV" = "mocha" ]; then
@@ -31,7 +35,7 @@ install:
 script:
 - if [ "$TEST_ENV" = "mocha" ]; then
     npm i -q --depth 0 eslint eslint-plugin-react@latest;
-    ./node_modules/eslint/bin/eslint.js -c config/.eslintrc.js src/*/* test/*/* lib/* models/*;
+    npm run lint;
     npm run test:mocha;
   fi
 - if [ "$TEST_ENV" = "e2e" ]; then
