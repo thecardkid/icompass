@@ -10,7 +10,7 @@ module.exports = {
     'second user login': function(browser) {
         browser
         .getCssProperty('.ic-user', 'background-color', function(result) {
-            this.assert.equal(true, result.value !== '', 'Background color is not null');
+            this.assert.equal(result.value !== '', true, 'Background color is not null');
             users['nightwatchjs'] = result.value;
         })
         .click('button[name=share-edit]')
@@ -25,7 +25,7 @@ module.exports = {
             }, [])
             .pause(2000)
             .windowHandles(function (result) {
-                this.assert.equal(2, result.value.length, 'There should be two windows open');
+                this.assert.equal(result.value.length, 2, 'There should be two windows open');
                 windows = result.value;
                 browser.windowSize(windows[1], 2000, 1500);
                 browser.switchWindow(windows[1], function() {
@@ -33,10 +33,10 @@ module.exports = {
                     .url(editLink)
                     .waitForElementVisible('#compass')
                     .elements('css selector', '.ic-user', function(result) {
-                        this.assert.equal(2, result.value.length, 'There should be two users in the workspace');
+                        this.assert.equal(result.value.length, 2, 'There should be two users in the workspace');
                     })
                     .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
-                        this.assert.equal(true, result.value !== '', 'Second user tag should have background color');
+                        this.assert.equal(result.value !== '', true, 'Second user tag should have background color');
                         users['friendo'] = result.value;
                     });
                 });
@@ -92,7 +92,7 @@ module.exports = {
 
         .switchWindow(windows[1])
         .elements('css selector', '.ic-user', function(result) {
-            this.assert.equal(1, result.value.length, 'There should be only one user');
+            this.assert.equal(result.value.length, 1, 'There should be only one user');
         })
         .assert.cssProperty('.ic-user', 'background-color', users['friendo'], 'User tag should have correct color')
 
@@ -100,7 +100,7 @@ module.exports = {
         .forward()
         .waitForElementVisible('#compass')
         .elements('css selector', '.ic-user', function(result) {
-            this.assert.equal(2, result.value.length, 'There should be two users');
+            this.assert.equal(result.value.length, 2, 'There should be two users');
         })
         .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
             users['nightwatchjs'] = result.value;

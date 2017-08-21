@@ -177,7 +177,7 @@ module.exports = {
         .click('button[name=ship]')
         .waitForElementVisible('#note1')
         .getAttribute('#note1 .ic-img img', 'src', function(result) {
-            this.assert.equal(true, result.value.includes('data:image/png;base64'), 'Image tag should contain base64 encoded doodle');
+            this.assert.equal(result.value.includes('data:image/png;base64'), true, 'Image tag should contain base64 encoded doodle');
         });
     },
 

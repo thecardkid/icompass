@@ -75,9 +75,9 @@ module.exports = {
         .url('http://localhost:8080/compass/edit/' + editCode.substring(1,5) + '/,,,')
         .waitForElementVisible('#ic-modal')
         .getText('#ic-modal-body', function(result) {
-            this.assert.equal(true, result.value.indexOf('There was a problem with your login info') > -1, 'Error messsage should display correctly');
-            this.assert.equal(true, result.value.indexOf('Your code is not valid') > -1, 'Error messsage should display correctly');
-            this.assert.equal(true, result.value.indexOf('Username can only contain a-zA-Z') > -1, 'Error messsage should display correctly');
+            this.assert.equal(result.value.indexOf('There was a problem with your login info') > -1, true, 'Error messsage should display correctly');
+            this.assert.equal(result.value.indexOf('Your code is not valid') > -1, true, 'Error messsage should display correctly');
+            this.assert.equal(result.value.indexOf('Username can only contain a-zA-Z') > -1, true, 'Error messsage should display correctly');
         })
         .click('#ic-modal-confirm')
         .waitForElementVisible('#ic-landing')
