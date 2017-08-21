@@ -1,24 +1,36 @@
 'use strict';
 
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const port = process.env.NODE_PORT || 8080;
+let express = require('express');
+let path = require('path');
+let bodyParser = require('body-parser');
+let helmet = require('helmet');
 
 let app = express();
 let logger = require('./lib/logger.js');
 let db;
+const PORT = process.env.NODE_PORT || 8080;
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(helmet({
+    frameguard: {
+        action: 'deny',
+    },
+    hidePoweredBy: {
+        setTo: 'ASP.NET'
+    },
+    xssFilter: {
+        setOnOldIE: true
+    }
+}));
 
 app.get('*', function (request, response) {
     response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
-let server = app.listen(port, function() {
-    logger.info('Listening on port:', port);
+let server = app.listen(PORT, function() {
+    logger.info('Listening on port:', PORT);
     db = require('./lib/db.js');
 });
 
