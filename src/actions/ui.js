@@ -102,6 +102,12 @@ export const toggleFeedback = () => {
     };
 };
 
+export const togglePrivacyStatement = () => {
+    return {
+        type: 'togglePrivacyStatement'
+    };
+};
+
 export const resize = (e) => {
     return {
         type: 'resize',
