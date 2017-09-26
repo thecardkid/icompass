@@ -171,7 +171,7 @@ class Sidebar extends Component {
     }
 
     save() {
-        this.modal.prompt(MODALS.SAVE_BOOKMARK,(submit, bookmarkName) => {
+        this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
             if (submit) {
                 let username = this.props.you.replace(/\d+/g, '');
                 Storage.addBookmark(bookmarkName, this.props.compass.editCode, username);

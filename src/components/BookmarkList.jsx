@@ -21,8 +21,19 @@ export default class BookmarkList extends Component {
         };
 
         this.renderBookmark = this.renderBookmark.bind(this);
+        this.edit = this.edit.bind(this);
         this.remove = this.remove.bind(this);
         this.expand = this.expand.bind(this);
+    }
+
+    edit(e, idx) {
+        e.stopPropagation();
+        this.modal.prompt(MODALS.EDIT_BOOKMARK, (updated, newName) => {
+            if (updated && newName) {
+                let bookmarks = Storage.updateName(idx, newName);
+                this.setState({bookmarks});
+            }
+        });
     }
 
     remove(e, idx) {
@@ -44,17 +55,26 @@ export default class BookmarkList extends Component {
     }
 
     renderBookmark(w, idx) {
-        let style = {height: this.state.show[idx] ? '20px' : '0px'};
+        let style = {
+            height: this.state.show[idx] ? '20px' : '0px',
+            marginTop: this.state.show[idx] ? '15px' : '0px'
+        };
         let info = (
             <div className="ic-saved-info" style={style}>
                 <p>as &quot;{w.name}&quot;</p>
                 <button className="remove" onClick={(e) => this.remove(e, idx)}>remove</button>
+                <button className="edit" onClick={(e) => this.edit(e, idx)}>edit</button>
             </div>
         );
+
+        let arrow = this.state.show[idx] ?
+            <span id="arrow">&#9664;</span> :
+            <span id="arrow">&#9660;</span>;
 
         return (
             <div className="ic-saved" key={'saved'+idx} onClick={() => this.expand(idx)}>
                 <Link to={w.href}>{w.center}</Link>
+                {arrow}
                 {info}
             </div>
         );

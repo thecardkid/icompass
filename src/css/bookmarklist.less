@@ -24,8 +24,14 @@ div#ic-bookmarks {
             cursor:pointer;
             border-radius:5px;
 
+            span#arrow {
+                float:right;
+                font-size:10px;
+                margin-right:5px;
+                margin-top:3px;
+            }
+
             div.ic-saved-info {
-                margin-top:5px;
                 height:20px;
                 overflow:hidden;
                 .hasTransition(0.2s);
@@ -38,13 +44,17 @@ div#ic-bookmarks {
                 button {
                     float:right;
                     font-weight:bold;
-                    padding:0 2px;
+                    padding:0 5px;
                     height:100%;
                     color:white;
                 }
 
                 button.remove {
                     background:@red;
+                }
+
+                button.edit {
+                    color:black;
                 }
             }
         }
