@@ -163,6 +163,14 @@ module.exports = {
         .pause(100)
         .assert.containsText('div.ic-saved a', 'My bookmark')
         .assert.containsText('div.ic-saved div.ic-saved-info p', 'as "sandbox"')
+
+        .click('button.edit')
+        .waitForElementVisible('#ic-modal')
+        .assert.containsText('#ic-modal-body', MODALS.EDIT_BOOKMARK)
+        .setValue('#ic-modal-input', 'Changed name')
+        .click('#ic-modal-confirm')
+        .assert.containsText('div.ic-saved a', 'Changed name')
+
         .click('button.remove')
         .waitForElementVisible('#ic-modal')
         .assert.containsText('#ic-modal-body', MODALS.DELETE_BOOKMARK.text)
