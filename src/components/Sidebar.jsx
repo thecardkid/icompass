@@ -188,6 +188,10 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="actions">
                 <h2>Actions</h2>
+                <button name="privacy" className="ic-action" onClick={this.props.uiActions.togglePrivacyStatement}>
+                    <i className="material-icons">lock</i>
+                    <p>privacy</p>
+                </button>
                 <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">
                     <i className="material-icons">info</i>
                     <p>tutorial</p>

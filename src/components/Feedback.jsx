@@ -14,9 +14,9 @@ export default class Feedback extends Component {
         if (!this.props.show) return null;
 
         return (
-            <div id="ic-backdrop"><div id="ic-feedback" style={this.props.style}>
+            <div id="ic-backdrop"><div id="ic-feedback" className="ic-smallform" style={this.props.style}>
                 <button className="ic-close-window" onClick={this.props.close}>x</button>
-                <div id="ic-feedback-contents">
+                <div id="ic-feedback-contents" className="ic-smallform-contents">
                     <h1>Hi there!</h1>
                     <p>Please reach out to us (under credits) with your <b>experiences and questions</b> about using the Innovators&#39; Compass - they are a huge help!</p>
                     <p>If you would like to report a bug or request a feature, go <Link to="https://github.com/thecardkid/innovators-compass/issues" target="_blank" rel="noopener noreferrer">here</Link> and click <em>New issue</em>.</p>
