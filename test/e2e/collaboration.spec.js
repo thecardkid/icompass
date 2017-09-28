@@ -27,7 +27,7 @@ module.exports = {
             .windowHandles(function (result) {
                 this.assert.equal(result.value.length, 2, 'There should be two windows open');
                 windows = result.value;
-                browser.windowSize(windows[1], 2000, 1500);
+                browser.windowSize(windows[1], 1300, 1200);
                 browser.switchWindow(windows[1], function() {
                     browser
                     .url(editLink)

@@ -17,11 +17,11 @@ export default class Feedback extends Component {
                 <button className="ic-close-window" onClick={this.props.close}>x</button>
                 <div id="ic-privacy-contents" className="ic-smallform-contents">
                     <h1>Privacy Statement</h1>
-                    <p>iCompass will not distribute your code, data, or any personal information included in your compass with any third party.</p>
+                    <p>iCompass will not share your Compass, code, data, or any personal information included in your compass with any third party.</p>
                     <p>
-                        Anyone in possession of your compass&apos; edit code with will be able to modify, add,
-                        or delete any and all data in your compass. It is in your interest to keep this code secret,
-                        and share it carefully.
+                        Anyone who has your Compass&apos; edit code with will be able to modify, add,
+                        or delete any and all data in your Compass. Save and share your Compass link with care,
+                        and ask any collaborator to do the same.
                     </p>
                 </div>
             </div></div>
