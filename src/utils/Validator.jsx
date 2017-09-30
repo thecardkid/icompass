@@ -48,7 +48,7 @@ export default {
         // return [ validAsHyperlink, validAsText ]
         let isUrl = REGEX.URL.test(text);
         let hasWhitespace = REGEX.HAS_WHITESPACE.test(text);
-        let validLength = text.length < MAX_STICKY_LEN;
+        let validLength = text.length <= MAX_STICKY_LEN;
         if (isUrl) {
             return [ !hasWhitespace, validLength ];
         } else {

@@ -18,6 +18,7 @@ export default class Toaster {
     }
 
     getSpan(clazz, msg) {
+        if (clazz === 'error') msg += ' [ Click to dismiss ]';
         return '<span class="' + clazz + '">' + msg + '</span>';
     }
 
