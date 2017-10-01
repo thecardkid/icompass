@@ -10,7 +10,7 @@ export default {
     validateCompassCode(code) {
         if (!code)
             return [ false, ERROR_MSG.REQUIRED('A code') ];
-        else if (code.length != 8)
+        else if (code.length !== 8)
             return [ false, ERROR_MSG.INVALID('Your code') ];
 
         return [ true, code ];
