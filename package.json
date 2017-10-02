@@ -40,6 +40,7 @@
     "deep-equal": "1.0.1",
     "emailjs": "1.0.8",
     "express": "4.14.0",
+    "helmet": "3.8.1",
     "html2canvas": "0.5.0-beta4",
     "interactjs": "1.2.9",
     "jquery": "3.2.1",

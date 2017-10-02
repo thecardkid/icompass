@@ -171,7 +171,7 @@ class Sidebar extends Component {
     }
 
     save() {
-        this.modal.prompt(MODALS.SAVE_BOOKMARK,(submit, bookmarkName) => {
+        this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
             if (submit) {
                 let username = this.props.you.replace(/\d+/g, '');
                 Storage.addBookmark(bookmarkName, this.props.compass.editCode, username);
@@ -188,6 +188,10 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="actions">
                 <h2>Actions</h2>
+                <button name="privacy" className="ic-action" onClick={this.props.uiActions.togglePrivacyStatement}>
+                    <i className="material-icons">lock</i>
+                    <p>privacy</p>
+                </button>
                 <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">
                     <i className="material-icons">info</i>
                     <p>tutorial</p>

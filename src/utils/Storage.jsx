@@ -35,6 +35,13 @@ export default {
         b = _.reject(b, e => e.center === center);
         this.setBookmarks(b);
         return b;
+    },
+
+    updateName(idx, name) {
+        let b = this.getBookmarks();
+        b[idx].center = name;
+        this.setBookmarks(b);
+        return b;
     }
 };
 

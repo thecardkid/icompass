@@ -24,7 +24,7 @@ module.exports = {
             })
             .mouseButtonUp(0, function() {
                 browser.getCssProperty('#ic-tutorial-text', 'transform', function(result) {
-                    this.assert.equal(true, result.value !== originalTranslation, 'Blurb should have been moved');
+                    this.assert.equal(result.value !== originalTranslation, true, 'Blurb should have been moved');
                 });
             });
         });

@@ -18,10 +18,10 @@ module.exports = {
         .click('button[name=make]')
         .waitForElementVisible('input#compass-center')
         .getAttribute('input#compass-center', 'placeholder', function(result) {
-            this.assert.equal('Who/what is at the center of your compass?', result.value);
+            this.assert.equal(result.value, 'Who/what is at the center of your compass?');
         })
         .getAttribute('input#username', 'placeholder', function(result) {
-            this.assert.equal('Your name', result.value);
+            this.assert.equal(result.value, 'Your name');
         });
     },
 
@@ -62,10 +62,10 @@ module.exports = {
         .click('button[name=find]')
         .waitForElementVisible('input#compass-code')
         .getAttribute('input#compass-code', 'placeholder', function(result) {
-            this.assert.equal('The code of your compass', result.value);
+            this.assert.equal(result.value, 'The code of your compass');
         })
         .getAttribute('input#username', 'placeholder', function(result) {
-            this.assert.equal('Your name', result.value);
+            this.assert.equal(result.value, 'Your name');
         });
     },
 

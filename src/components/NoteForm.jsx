@@ -132,7 +132,7 @@ export default class NoteForm extends Component {
 
     render() {
         let header = this.getHeader(this.props.mode);
-        header += ' /' + this.state.charCount;
+        header += ' ' + this.state.charCount + '/300';
         let click = this.props.mode.includes('make') ? this.make : this.edit;
         let color = this.props.note.color || this.props.bg;
 

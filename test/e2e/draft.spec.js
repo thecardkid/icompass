@@ -91,7 +91,7 @@ module.exports = {
         .click('button[name=ship]')
         .waitForElementVisible('#note2')
         .getAttribute('#note2 span a img', 'src', function(result) {
-            this.assert.equal(0, result.value.indexOf('data:image/png;base64'), 'Image should be base64 encoded doodle');
+            this.assert.equal(result.value.indexOf('data:image/png;base64'), 0, 'Image should be base64 encoded doodle');
         });
     },
 
@@ -128,7 +128,7 @@ module.exports = {
         .click('#ic-modal-confirm')
         .pause(100)
         .getCssProperty('#note3 span a', 'background', function(result) {
-            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'));
+            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false);
         });
     },
 
@@ -138,19 +138,19 @@ module.exports = {
         .click('#note2 span a p.submit')
         .pause(100)
         .getCssProperty('#note2 span a', 'background', function(result) {
-            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'), 'Note 2 should no longer be a draft');
+            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false, 'Note 2 should no longer be a draft');
         })
         .click('#note1 span a p.submit')
         .pause(100)
         .getCssProperty('#note1 span a', 'background', function(result) {
-            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'), 'Note 1 should no longer be a draft');
+            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false, 'Note 1 should no longer be a draft');
         })
         .click('#ic-mode-normal')
         .waitForElementVisible('#ic-modal')
         .assert.containsText('#ic-modal-body', MODALS.EXIT_DRAFT_MODE.text, 'Changing mode from draft mode should trigger warning')
         .click('#ic-modal-confirm')
         .getCssProperty('#note0 span a', 'background', function(result) {
-            this.assert.equal(false, result.value.includes('rgb(128, 128, 128)'), 'Accepting alert should discard remaining drafts');
+            this.assert.equal(result.value.includes('rgb(128, 128, 128)'), false, 'Accepting alert should discard remaining drafts');
         });
     },
 

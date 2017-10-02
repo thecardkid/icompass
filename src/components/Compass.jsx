@@ -53,6 +53,20 @@ class Compass extends Component {
         );
     }
 
+        renderLabels() {
+            let left = this.props.ui.vw / 2 - 35,
+                top = this.props.ui.vh / 2 - 9;
+
+            return (
+                <div>
+                    <div className="ic-compass-label" style={{left: '5px', top: top}}>PRESENT</div>
+                    <div className="ic-compass-label" style={{left: left, top: '5px'}}>BIG PICTURE</div>
+                    <div className="ic-compass-label" style={{right: '5px', top: top}}>FUTURE</div>
+                    <div className="ic-compass-label" style={{left: left, bottom: '5px'}}>DETAILS</div>
+                </div>
+            );
+        }
+
     center(w, h) {
         return {
             top: Math.max((this.props.ui.vh - h) / 2, 0),
@@ -78,6 +92,7 @@ class Compass extends Component {
                 <div id="hline" style={{top: this.props.ui.vh/2 - 2}} />
                 <div id="vline" style={{left: this.props.ui.vw/2 - 2}} />
                 {this.quadrants}
+                {this.renderLabels()}
             </div>
         );
     }

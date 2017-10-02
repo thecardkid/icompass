@@ -22,6 +22,7 @@ import Sidebar from 'Components/Sidebar.jsx';
 import About from 'Components/About.jsx';
 import Chat from 'Components/Chat.jsx';
 import Feedback from 'Components/Feedback.jsx';
+import PrivacyStatement from 'Components/PrivacyStatement.jsx';
 import Compass from 'Components/Compass.jsx';
 import VisualModeToolbar from 'Components/VisualModeToolbar.jsx';
 import ModesToolbar from 'Components/ModesToolbar.jsx';
@@ -290,6 +291,7 @@ class Workspace extends Component {
                 <ModesToolbar />
                 <Chat socket={this.socket} />
                 <Feedback show={ui.showFeedback} style={this.center(400, 250)} close={this.props.uiActions.toggleFeedback} />
+                <PrivacyStatement show={ui.showPrivacyStatement} style={this.center(400, 200)} close={this.props.uiActions.togglePrivacyStatement} />
                 <About show={ui.showAbout} close={this.props.uiActions.toggleAbout} />;
                 <VisualModeToolbar show={this.props.visualMode} socket={this.socket} />;
                 <FormChooser socket={this.socket}

@@ -10,7 +10,7 @@ export default {
     validateCompassCode(code) {
         if (!code)
             return [ false, ERROR_MSG.REQUIRED('A code') ];
-        else if (code.length != 8)
+        else if (code.length !== 8)
             return [ false, ERROR_MSG.INVALID('Your code') ];
 
         return [ true, code ];
@@ -48,7 +48,7 @@ export default {
         // return [ validAsHyperlink, validAsText ]
         let isUrl = REGEX.URL.test(text);
         let hasWhitespace = REGEX.HAS_WHITESPACE.test(text);
-        let validLength = text.length < MAX_STICKY_LEN;
+        let validLength = text.length <= MAX_STICKY_LEN;
         if (isUrl) {
             return [ !hasWhitespace, validLength ];
         } else {
