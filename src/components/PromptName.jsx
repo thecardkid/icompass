@@ -6,12 +6,13 @@ import { browserHistory } from 'react-router';
 
 import Modal from 'Utils/Modal.jsx';
 import Validator from 'Utils/Validator.jsx';
+import { PROMPTS } from 'Lib/constants';
 
 export default class PromptName extends Component {
     componentDidMount() {
         let modal = new Modal();
 
-        modal.prompt('Enter your name:', (submit, name) => {
+        modal.prompt(PROMPTS.PROMPT_NAME, (submit, name) => {
             if (!submit) return browserHistory.push('/');
 
             let valid = Validator.validateUsername(name);
