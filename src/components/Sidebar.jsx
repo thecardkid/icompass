@@ -93,6 +93,12 @@ class Sidebar extends Component {
         return (
             <div className="ic-sidebar-list" name="share">
                 <h2>Share</h2>
+                <Link target="_blank" to={`${HOST}`}>
+                  <button name="new" className="ic-action" onClick={this.openNew}>
+                      <i className="material-icons">add_circle</i>
+                      <p>create new</p>
+                  </button>
+                </Link>
                 <button name="save" className="ic-action bookmark" onClick={this.save}>
                     <i className="material-icons">star</i>
                     <p>bookmark</p>

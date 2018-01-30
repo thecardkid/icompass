@@ -43,7 +43,7 @@ export default class About extends Component {
                         Ask more deeply, in new ways. Look, listen, feel; use words, draw, move, make.
                     </p>
                     <p>
-                        Explore anything on your mind or to-do list. Do it alone or with others. On paper, tablet or in your head. You&pos;ll see more and more ways to navigate new challenges.
+                        Explore anything on your mind or to-do list. Do it alone or with others. On paper, tablet or in your head. You'll see more and more ways to navigate new challenges.
                     </p>
                     <p id="footnote">
                         More at <Link target="_blank" to="http://innovatorscompass.org" rel="noopener noreferrer"><span>innovatorscompass.org</span></Link>

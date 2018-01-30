@@ -4,6 +4,7 @@ var editURL = 'http://localhost:8080/compass/edit/',
     viewURL = 'http://localhost:8080/compass/view/',
     editCode, viewCode;
 var ERROR_MSG = require('../../lib/constants').ERROR_MSG;
+var PROMPTS = require('../../lib/constants').PROMPTS;
 
 module.exports = {
     'creates successfully': function(browser) {
@@ -112,7 +113,7 @@ module.exports = {
         browser
         .url(editURL)
         .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body h3', 'Enter your name:')
+        .assert.containsText('#ic-modal-body h3', PROMPTS.PROMPT_NAME)
         .setValue('#ic-modal-input', 'sandbox2')
         .click('#ic-modal-confirm')
         .pause(100)

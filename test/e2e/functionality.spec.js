@@ -24,10 +24,10 @@ module.exports = {
             .assert.containsText('#principles h2', 'What matters most?')
         .assert.elementPresent('#ideas')
             .assert.containsText('#ideas h1', 'IDEAS')
-            .assert.containsText('#ideas h2', 'What could happen?')
+            .assert.containsText('#ideas h2', 'What ways are there?')
         .assert.elementPresent('#experiments')
             .assert.containsText('#experiments h1', 'EXPERIMENTS')
-            .assert.containsText('#experiments h2', 'What\'s a way to try?');
+            .assert.containsText('#experiments h2', 'What\'s a step to try?');
     },
 
     'key bindings': function(browser) {
