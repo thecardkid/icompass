@@ -18,7 +18,7 @@ module.exports = {
         .click('button[name=make]')
         .waitForElementVisible('input#compass-center')
         .getAttribute('input#compass-center', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'Who/what is at the center of your compass?');
+            this.assert.equal(result.value, 'Topic: Who\'s involved');
         })
         .getAttribute('input#username', 'placeholder', function(result) {
             this.assert.equal(result.value, 'Your name');
