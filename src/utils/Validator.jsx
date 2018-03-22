@@ -29,9 +29,9 @@ export default {
 
     validateCenter(center) {
         if (!center)
-            return [ false, ERROR_MSG.REQUIRED('People group') ];
+            return [ false, ERROR_MSG.REQUIRED('Topic') ];
         else if (center.length > 30)
-            return [ false, ERROR_MSG.TEXT_TOO_LONG('People group', MAX_PPL_GROUP_LEN) ];
+            return [ false, ERROR_MSG.TEXT_TOO_LONG('Topic', MAX_PPL_GROUP_LEN) ];
 
         return [ true, center ];
     },

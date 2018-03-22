@@ -71,8 +71,8 @@ class LandingPage extends Component {
         let code = Validator.validateCompassCode($('#compass-code').val());
         let username = Validator.validateUsername($('#username').val());
 
-        if (!code[0]) return this.modal.alert(code[1]);
         if (!username[0]) return this.modal.alert(username[1]);
+        if (!code[0]) return this.modal.alert(code[1]);
 
         this.setState({username: username[1]});
         this.socket.emitFindCompass(code[1], username[1]);
@@ -82,8 +82,8 @@ class LandingPage extends Component {
         let center = Validator.validateCenter($('#compass-center').val());
         let username = Validator.validateUsername($('#username').val());
 
-        if (!center[0]) return this.modal.alert(center[1]);
         if (!username[0]) return this.modal.alert(username[1]);
+        if (!center[0]) return this.modal.alert(center[1]);
 
         this.setState({username: username[1]});
         this.socket.emitCreateCompass(center[1], username[1]);
@@ -107,14 +107,14 @@ class LandingPage extends Component {
         if (this.state.loginType === LOGIN_TYPE.FIND) {
             firstInput = (
                 <div className="response">
-                    <input id="compass-code" placeholder="The code of your compass" autoCorrect="off" autoCapitalize="none" />
+                    <input id="compass-code" placeholder="The code of the compass you're looking for" autoCorrect="off" autoCapitalize="none" />
                 </div>
             );
             cb = this.validateFindInput;
         } else {
             firstInput = (
                 <div className="response">
-                    <input id="compass-center" placeholder="Who/what is at the center of your compass?" />
+                    <input id="compass-center" placeholder="Topic: Who's involved?" />
                 </div>
             );
             cb = this.validateMakeInput;
@@ -123,8 +123,8 @@ class LandingPage extends Component {
         return (
             <div className="section">
                 <h1>I need some info</h1>
+                <div className="response"><input id="username" placeholder={'Your name (as you\'d like it to appear, no spaces)'} /></div>
                 {firstInput}
-                <div className="response"><input id="username" placeholder={'Your name'} /></div>
                 <button className="ic-button" name="next" onClick={cb}>next</button>
             </div>
         );
@@ -168,7 +168,7 @@ class LandingPage extends Component {
         return (
             <div className="section third">
                 <h1>success</h1>
-                <h2>Your workspace is ready. If you would like me to email you a link to your workspace, enter your email below. I will not send you spam.</h2>
+                <h2>Your workspace is ready. If you would like me to email you a link to your workspace, enter your email below. I won&apos; keep your email address or send you spam.</h2>
                 <input id="email" type="text" />
                 <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>let&apos;s go</button>
             </div>
@@ -211,6 +211,7 @@ class LandingPage extends Component {
                 <BookmarkList />
                 <div id="ic-landing-container" style={{width:w}}>
                     <div id="ic-landing" style={loginStyle}>
+                        <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to make anything better</h1>
                         <div id="ic-tour"><Link to="/tutorial">First-timer? Take the tour!</Link></div>
                         {this.getFirst()}
                         {this.getSecond()}

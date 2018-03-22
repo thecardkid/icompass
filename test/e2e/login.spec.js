@@ -30,12 +30,12 @@ module.exports = {
         .setValue('#username', 'sandbox')
         .click('button[name=next]')
         .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('People group'))
+        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('Topic'))
         .click('#ic-modal-confirm')
-        .setValue('#compass-center', 'This is a really long people group that will hopefully exceed char limit')
+        .setValue('#compass-center', 'This is a really long topic name that will hopefully exceed char limit')
         .click('button[name=next]')
         .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('People group', 30))
+        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('Topic', 30))
         .click('#ic-modal-confirm')
         .clearValue('#compass-center');
     },
