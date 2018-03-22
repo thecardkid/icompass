@@ -4,7 +4,8 @@ module.exports = {
         "browser": true,
         "node": true,
         "jquery": true,
-        "mocha": true
+        "mocha": true,
+        "webdriverio/wdio": true,
     },
     "extends": [
         "eslint:recommended",
@@ -19,7 +20,8 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "webdriverio"
     ],
     "rules": {
         "indent": [
