@@ -1,7 +1,7 @@
-'use strict';
+const expect = require('chai').expect;
 
-module.exports.setup = (browser) => {
-    browser.setViewportSize({ width: 1500, height: 1500 });
+const setup = (browser) => {
+    browser.setViewportSize({ width: 2000, height: 2000 });
     browser.url('http://localhost:8080');
     browser.waitForVisible('body', 1000);
     browser.click('button[name=make]');
@@ -13,10 +13,18 @@ module.exports.setup = (browser) => {
     browser.waitForVisible('#ic-sidebar', 1000);
 };
 
-module.exports.cleanup = function(browser) {
+const cleanup = () => {
     browser.click('#ic-sidebar button[name=destroyer]');
     browser.waitForVisible('#ic-modal', 1000);
     browser.click('#ic-modal-confirm');
     browser.waitForVisible('#ic-modal', 5000);
     browser.click('#ic-modal-confirm');
 };
+
+const expectErrorMessage = (val) => {
+    browser.waitForVisible('#ic-modal');
+    expect(browser.getText('#ic-modal-body')).to.equal(val);
+    browser.click('#ic-modal-confirm');
+};
+
+module.exports = { setup, cleanup, expectErrorMessage };

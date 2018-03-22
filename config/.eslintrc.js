@@ -5,6 +5,7 @@ module.exports = {
         "node": true,
         "jquery": true,
         "mocha": true,
+        "jasmine": true,
         "webdriverio/wdio": true,
     },
     "extends": [
@@ -21,16 +22,11 @@ module.exports = {
     },
     "plugins": [
         "react",
-        "webdriverio"
+        "webdriverio",
+        "jasmine"
     ],
     "rules": {
-        "indent": [
-            "error",
-            4,
-            {
-                "SwitchCase": 1
-            }
-        ],
+        "indent": 0,
         "linebreak-style": [
             "error",
             "unix"
@@ -45,7 +41,6 @@ module.exports = {
         ],
         "react/no-string-refs": 0,
         "react/jsx-indent": 0,
-        "indent": 0,
         "no-useless-escape": 0,
         "react/no-unescaped-entities": 0
     }

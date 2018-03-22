@@ -7,16 +7,13 @@ const b = browser;
 
 const ERROR_MSG = require('../../../lib/constants.js').ERROR_MSG;
 
+const expectErrorMessage = require('./utils').expectErrorMessage;
+
 describe('login',() => {
     let code;
 
-    const expectErrorMessage = (val) => {
-      b.waitForVisible('#ic-modal');
-      expect(b.getText('#ic-modal-body')).to.equal(val);
-      b.click('#ic-modal-confirm');
-    };
-
     it('loads correctly', () => {
+        b.setViewportSize({ width: 2000, height: 2000 });
         b.url('http://localhost:8080');
         b.waitForVisible('body');
         expect(b.getTitle()).to.equal('The Innovators\' Compass');
@@ -107,6 +104,6 @@ describe('login',() => {
     it('cleanup', () => {
         b.click('button[name=to-workspace]');
         b.waitForVisible('#ic-sidebar');
-        require('./utils').cleanup(b);
+        require('./utils').cleanup();
     });
 });
