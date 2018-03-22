@@ -13,24 +13,32 @@ describe('sidebar', () => {
       require('./utils').setup(b);
     });
 
-    it('share section', () => {
-        expect('div.ic-sidebar-list[name="share"]').to.be.visible();
-        b.click('button[name="share-edit"]');
-        b.waitForVisible('#ic-modal');
-        expect(b.getText('#ic-modal-body h3')).to.equal('Share this link below:');
-        b.click('#ic-modal-confirm');
+    describe('share section', () => {
+        it('share edit mode', () => {
+            expect('div.ic-sidebar-list[name="share"]').to.be.visible();
+            b.click('button[name="share-edit"]');
+            b.waitForVisible('#ic-modal');
+            expect(b.getText('#ic-modal-body h3')).to.equal('Share this link below:');
+            b.click('#ic-modal-confirm');
+        });
 
-        b.click('button[name="share-view"]');
-        b.waitForVisible('#ic-modal');
-        expect(b.getText('#ic-modal-body h3')).to.equal('Share this link below:');
-        b.click('#ic-modal-confirm');
+        it('share view mode', () => {
+            b.click('button[name="share-view"]');
+            b.waitForVisible('#ic-modal');
+            expect(b.getText('#ic-modal-body h3')).to.equal('Share this link below:');
+            b.click('#ic-modal-confirm');
+        });
 
-        b.click('button[name="export"]');
-        b.waitForVisible('#ic-modal');
-        expect(b.getText('#ic-modal-body h3')).to.contain('I see you want to save this compass as a PDF');
-        b.click('#ic-modal-cancel');
+        it('export button', () => {
+            b.click('button[name="export"]');
+            b.waitForVisible('#ic-modal');
+            expect(b.getText('#ic-modal-body h3')).to.contain('I see you want to save this compass as a PDF');
+            b.click('#ic-modal-cancel');
+        });
 
-        expect('button[name=tweet]').to.be.visible();
+        it('tweet button is there', () => {
+            expect('button[name=tweet]').to.be.visible();
+        });
     });
 
     it('controls section', () => {
@@ -139,50 +147,67 @@ describe('sidebar', () => {
         expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_OVER, 'i'));
     });
 
-    it('other actions section', () => {
-        expect('button[name=privacy]').to.be.visible();
-        b.click('button[name=privacy]');
-        b.waitForVisible('#ic-privacy-statement');
-        b.click('#ic-privacy-statement button.ic-close-window');
+    describe('other actions section', () => {
+        it('privacy statement', () => {
+            expect('button[name=privacy]').to.be.visible();
+            b.click('button[name=privacy]');
+            b.waitForVisible('#ic-privacy-statement');
+            b.click('#ic-privacy-statement button.ic-close-window');
+        });
 
-        expect('button[name=sucks]').to.be.visible();
-        b.click('button[name=sucks]');
-        b.waitForVisible('#ic-feedback');
-        b.click('#ic-feedback button.ic-close-window');
+        it('feedback form', () => {
+            expect('button[name=sucks]').to.be.visible();
+            b.click('button[name=sucks]');
+            b.waitForVisible('#ic-feedback');
+            b.click('#ic-feedback button.ic-close-window');
+        });
 
-        expect(b.getAttribute('button[name=tutorial] a', 'href')).to.equal('http://localhost:8080/tutorial');
-        b.click('#ic-toast span');
+        it('tutorial button has link', () => {
+            expect(b.getAttribute('button[name=tutorial] a', 'href')).to.equal('http://localhost:8080/tutorial');
+            b.click('#ic-toast span');
+        });
 
-        b.click('button[name=save]');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.SAVE_BOOKMARK, 'i'));
-        b.setValue('#ic-modal-input', 'My bookmark');
-        b.click('#ic-modal-confirm');
-        b.waitForVisible('#ic-toast span');
-        expect(b.getAttribute('#ic-toast span', 'class')).to.equal('success');
-        expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.SAVE_SUCCESS, 'i'));
-        b.click('#ic-toast span');
-        b.click('button[name=logout]');
-        b.waitForVisible('div.ic-saved');
-        expect(b.getUrl()).to.equal('http://localhost:8080/');
-        expect(b.getAttribute('div.ic-saved a', 'href')).to.contain('http://localhost:8080/compass/edit');
-        b.click('div.ic-saved #arrow');
-        b.pause(100);
-        expect('div.ic-saved a').to.have.text('My bookmark');
-        expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
+        describe('bookmarking', () => {
+            it('toast displays success status', () => {
+                b.click('button[name=save]');
+                b.waitForVisible('#ic-modal');
+                expect('#ic-modal-body').to.have.text(new RegExp(MODALS.SAVE_BOOKMARK, 'i'));
+                b.setValue('#ic-modal-input', 'My bookmark');
+                b.click('#ic-modal-confirm');
+                b.waitForVisible('#ic-toast span');
+                expect(b.getAttribute('#ic-toast span', 'class')).to.equal('success');
+                expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.SAVE_SUCCESS, 'i'));
+                b.click('#ic-toast span');
+            });
 
-        b.click('button.edit');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
-        b.setValue('#ic-modal-input', 'Changed name');
-        b.click('#ic-modal-confirm');
-        expect('div.ic-saved a').to.have.text('Changed name');
+            it('bookmark has correct info', () => {
+                b.click('button[name=logout]');
+                b.waitForVisible('div.ic-saved');
+                expect(b.getUrl()).to.equal('http://localhost:8080/');
+                expect(b.getAttribute('div.ic-saved a', 'href')).to.contain('http://localhost:8080/compass/edit');
+                b.click('div.ic-saved #arrow');
+                b.pause(100);
+                expect('div.ic-saved a').to.have.text('My bookmark');
+                expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
+            });
 
-        b.click('button.remove');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
-        b.click('#ic-modal-confirm');
-        expect('div.ic-saved').to.not.be.there();
+            it('can edit bookmark', () => {
+                b.click('button.edit');
+                b.waitForVisible('#ic-modal');
+                expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
+                b.setValue('#ic-modal-input', 'Changed name');
+                b.click('#ic-modal-confirm');
+                expect('div.ic-saved a').to.have.text('Changed name');
+            });
+
+            it('can remove bookmark', () => {
+                b.click('button.remove');
+                b.waitForVisible('#ic-modal');
+                expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
+                b.click('#ic-modal-confirm');
+                expect('div.ic-saved').to.not.be.there();
+            });
+        });
     });
 
     it('cleanup', () => {
