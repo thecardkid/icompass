@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
 
-const setup = (browser) => {
+const setup = () => {
     browser.setViewportSize({ width: 2000, height: 2000 });
     browser.url('http://localhost:8080');
     browser.waitForVisible('body', 1000);
     browser.click('button[name=make]');
-    browser.setValue('#compass-center', 'nightwatchjs');
+    browser.setValue('#compass-center', 'webdriverio');
     browser.setValue('#username', 'sandbox');
     browser.click('button[name=next]');
     browser.waitForVisible('.third', 1000);

@@ -10,7 +10,7 @@ const MODALS = require('../../../lib/constants').MODALS;
 
 describe('sidebar', () => {
     beforeAll(() => {
-      require('./utils').setup(b);
+        require('./utils').setup();
     });
 
     describe('share section', () => {
