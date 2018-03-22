@@ -13,7 +13,8 @@
     "test:mocha": "mocha --compilers js:babel-core/register test/server",
     "selenium": "java -jar bin/selenium.jar",
     "lint": "./node_modules/.bin/eslint --config config/.eslintrc.js src/*/* test/*/* lib/* models/* --ignore-pattern=*.less --quiet",
-    "test": "export NODE_ENV=test && npm run test:mocha && node test/e2e"
+    "test": "export NODE_ENV=test && npm run test:mocha && node test/e2e",
+    "wdio": "./node_modules/.bin/wdio config/wdio.conf.js"
   },
   "author": "Hieu Nguyen",
   "license": "ISC",
