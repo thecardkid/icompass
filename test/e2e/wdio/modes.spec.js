@@ -113,7 +113,7 @@ describe('view modes', () => {
       expect(b.getUrl()).to.equal('http://localhost:8080/');
     });
 
-    describe('without username', () => {
+    describe('username input', () => {
       beforeEach(() => {
         b.url(editURL);
         b.waitForVisible('#ic-modal');

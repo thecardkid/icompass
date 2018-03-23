@@ -149,7 +149,7 @@ describe('sidebar', () => {
     b.waitForVisible('#ic-toast span');
     expect(b.getAttribute('#ic-toast span', 'class')).to.equal('info');
     expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX(0, 2), 'i'));
-    b.pause(2000);
+    b.pause(3000);
     expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_OVER, 'i'));
   });
 
