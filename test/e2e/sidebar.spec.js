@@ -1,195 +1,218 @@
-'use strict';
+const chai = require('chai');
+const chaiWebdriver = require('chai-webdriverio').default;
+chai.use(chaiWebdriver(browser));
+
+const expect = chai.expect;
+const b = browser;
 
 const PROMPTS = require('../../lib/constants').PROMPTS;
 const MODALS = require('../../lib/constants').MODALS;
 
-module.exports = {
-    'creates successfully': require('./utils').setup,
+describe('sidebar', () => {
+  beforeAll(() => {
+    require('./utils').setup();
+  });
 
-    'share list': function(browser) {
-        browser
-        .assert.elementPresent('div.ic-sidebar-list[name=share]')
-        .click('button[name=share-edit]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body h3', 'Share this link below')
-        .click('#ic-modal-confirm')
-        .pause(100)
-        .click('button[name=share-view]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body h3', 'Share this link below')
-        .click('#ic-modal-confirm')
-        .pause(100)
-        .click('button[name=export]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body h3', 'I see you want to save this compass as a PDF')
-        .click('#ic-modal-cancel')
-        .assert.elementPresent('button[name=tweet]');
-    },
+  afterAll(() => {
+    b.back();
+    b.waitForVisible('#ic-sidebar');
+    require('./utils').cleanup();
+  });
 
-    'control list': function(browser) {
-        browser
-        .assert.elementPresent('div.ic-sidebar-list[name=controls]')
-        .elements('css selector', 'div.ic-sidebar-list[name=controls] .ic-action', function(result) {
-            var controls = result.value;
+  describe('share section', () => {
+    it('share edit mode', () => {
+      expect('div.ic-sidebar-list[name="share"]').to.be.visible();
+      b.click('button[name="share-edit"]');
+      b.waitForVisible('#ic-modal');
+      expect(b.getText('#ic-modal-body h3')).to.equal('Share this link below:');
+      b.click('#ic-modal-confirm');
+    });
 
-            browser
-            .elementIdClick(controls[0].ELEMENT)
-            .assert.elementPresent('#ic-note-form')
-            .click('button[name=nvm]')
-            .elementIdClick(controls[1].ELEMENT)
-            .assert.elementPresent('#ic-doodle-form')
-            .click('button[name=nvm]')
-            .elementIdClick(controls[2].ELEMENT)
-            .pause(500)
-            .assert.cssProperty('#ic-sidebar', 'left', '-240px')
-            .click('#ic-show-sidebar')
-            .pause(500)
-            .elementIdClick(controls[3].ELEMENT)
-            .pause(500)
-            .assert.cssProperty('#ic-chat', 'bottom', '-270px')
-            .elementIdClick(controls[3].ELEMENT)
-            .pause(500)
-            .assert.cssProperty('#ic-chat', 'bottom', '0px')
-            .elementIdClick(controls[4].ELEMENT)
-            .assert.elementPresent('#ic-about')
-            .click('#ic-about button.ic-close-window');
-        });
-    },
+    it('share view mode', () => {
+      b.click('button[name="share-view"]');
+      b.waitForVisible('#ic-modal');
+      expect(b.getText('#ic-modal-body h3')).to.equal('Share this link below:');
+      b.click('#ic-modal-confirm');
+    });
 
-    'user list': function(browser) {
-        browser
-        .assert.elementPresent('div.ic-sidebar-list[name=users]')
-        .assert.containsText('div.ic-sidebar-list[name=users] p', 'You');
-    },
+    it('export button', () => {
+      b.click('button[name="export"]');
+      b.waitForVisible('#ic-modal');
+      expect(b.getText('#ic-modal-body h3')).to.contain('I see you want to save this compass as a PDF');
+      b.click('#ic-modal-cancel');
+    });
 
-    'status display': function(browser) {
-        browser
-        .assert.elementPresent('div.ic-sidebar-list[name=status]')
-        .assert.containsText('div.ic-sidebar-list[name=status] h2', 'Status - connected');
-    },
+    it('tweet button is there', () => {
+      expect('button[name=tweet]').to.be.visible();
+    });
+  });
 
-    'credits': function(browser) {
-        browser
-        .assert.elementPresent('div.ic-sidebar-list[name=credits]')
-        .assert.attributeEquals('div.ic-sidebar-list[name=credits] p[name=ela] a', 'href', 'http://innovatorscompass.org/')
-        .assert.attributeEquals('div.ic-sidebar-list[name=credits] p[name=hieu] a', 'href', 'http://hieuqn.com/');
-    },
+  it('controls section', () => {
+    expect('div.ic-sidebar-list[name=controls]').to.be.visible();
 
-    'version': function(browser) {
-        browser
-        .assert.elementPresent('div.ic-sidebar-list[name=version]')
-        .assert.attributeEquals('div.ic-sidebar-list[name=version] p a', 'href', 'https://github.com/thecardkid/innovators-compass/releases');
-    },
+    const buttons = b.elements('div.ic-sidebar-list[name=controls] .ic-action').value;
 
-    'timer': function(browser) {
-        browser
-        .assert.visible('button[name=timer]')
-        .click('button[name=timer]')
-        .waitForElementVisible('#ic-timer-form')
-        .assert.elementPresent('button[name=ic-30s]', 'Quick timer 30s should exist')
-        .assert.elementPresent('button[name=ic-1m]', 'Quick timer 1m should exist')
-        .assert.elementPresent('button[name=ic-3m]', 'Quick timer 3m should exist')
-        .click('button[name=ic-3m]')
-        .waitForElementVisible('#ic-toast span')
-        .assert.cssClassPresent('#ic-toast span', 'info')
-        .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX(3,0))
-        .assert.containsText('button[name=timer] div p', '03:00', 'Timer should appear')
-        .assert.containsText('div.ic-timer-action p', 'stop', 'There should be a stop button')
-        .click('div.ic-timer-action')
-        .assert.containsText('button[name=timer]', 'timebox')
-        .click('button[name=timer]')
-        .waitForElementVisible('#ic-timer-form')
+    buttons[0].click();
+    expect('#ic-note-form').to.be.visible();
+    b.click('button[name="nvm"]');
 
-        .clearValue('input#ic-timer-min')
-        .setValue('input#ic-timer-min', -2)
-        .click('button[name=ship]')
-        .waitForElementVisible('#ic-toast span')
-        .assert.cssClassPresent('#ic-toast span', 'error', 'Error message should be displayed')
-        .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_NEGATIVE_VALUES, 'Negative values should not be accepted')
+    buttons[1].click();
+    expect('#ic-doodle-form').to.be.visible();
+    b.click('button[name="nvm"]');
 
-        .clearValue('input#ic-timer-min')
-        .setValue('input#ic-timer-min', 31)
-        .click('button[name=ship]')
-        .waitForElementVisible('#ic-toast span')
-        .assert.cssClassPresent('#ic-toast span', 'error')
-        .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_TOO_LONG, 'User should not be able to create a timer longer than 30m')
+    buttons[2].click();
+    b.pause(500);
+    expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('-240px');
+    b.click('#ic-show-sidebar');
+    b.pause(500);
 
-        .clearValue('input#ic-timer-min')
-        .setValue('input#ic-timer-min', 0)
-        .clearValue('input#ic-timer-sec')
-        .setValue('input#ic-timer-sec', 61)
-        .click('button[name=ship]')
-        .waitForElementVisible('#ic-toast span')
-        .assert.cssClassPresent('#ic-toast span', 'error')
-        .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_TOO_MANY_SECONDS, 'User should not be able to enter invalid value for seconds (61)')
+    buttons[3].click();
+    b.pause(500);
+    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
+    buttons[3].click();
+    b.pause(500);
+    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('0px');
 
-        .clearValue('input#ic-timer-sec')
-        .setValue('input#ic-timer-sec', 2)
-        .click('button[name=ship]')
-        .waitForElementVisible('#ic-toast span')
-        .assert.cssClassPresent('#ic-toast span', 'info')
-        .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX(0,2))
-        .pause(2000)
-        .assert.containsText('#ic-toast span', PROMPTS.TIMEBOX_OVER);
-    },
+    buttons[4].click();
+    expect('#ic-about').to.be.visible();
+    b.click('#ic-about button.ic-close-window');
+  });
 
-    'other actions': function(browser) {
-        browser
-        .assert.elementPresent('div.ic-sidebar-list[name=actions]')
+  it('user section', () => {
+    expect('div.ic-sidebar-list[name=users]').to.be.visible();
+    expect('div.ic-sidebar-list[name=users] p').to.have.text(/You/);
+  });
 
-        .assert.visible('button[name=privacy]')
-        .click('button[name=privacy]')
-        .waitForElementVisible('#ic-privacy-statement')
-        .click('#ic-privacy-statement button.ic-close-window')
-        .assert.elementNotPresent('#ic-privacy-statement')
+  it('status section', () => {
+    expect('div.ic-sidebar-list[name=status]').to.be.visible();
+    expect('div.ic-sidebar-list[name=status] h2').to.have.text(/Status - connected/);
+  });
 
-        .assert.visible('button[name=sucks]')
-        .click('button[name=sucks]')
-        .waitForElementVisible('#ic-feedback')
-        .click('#ic-feedback button.ic-close-window')
-        .assert.elementNotPresent('#ic-feedback')
+  it('credits section', () => {
+    expect('div.ic-sidebar-list[name=credits]').to.be.visible();
+    expect(b.getAttribute('div.ic-sidebar-list[name=credits] p[name=ela] a', 'href')).to.equal('http://innovatorscompass.org/');
+    expect(b.getAttribute('div.ic-sidebar-list[name=credits] p[name=hieu] a', 'href')).to.equal('http://hieuqn.com/');
+  });
 
-        .assert.attributeEquals('button[name=tutorial] a', 'href', 'http://localhost:8080/tutorial')
-        .click('#ic-toast span')
+  it('version section', () => {
+    expect('div.ic-sidebar-list[name=version]').to.be.visible();
+    expect(b.getAttribute('div.ic-sidebar-list[name=version] p a', 'href')).to.equal('https://github.com/thecardkid/innovators-compass/releases');
+  });
 
-        .click('button[name=save]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', MODALS.SAVE_BOOKMARK)
-        .setValue('#ic-modal-input', 'My bookmark')
-        .click('#ic-modal-confirm')
-        .waitForElementVisible('#ic-toast span')
-        .assert.cssClassPresent('#ic-toast span', 'success')
-        .assert.containsText('#ic-toast span', PROMPTS.SAVE_SUCCESS, 'User should be able to bookmark workspaces')
-        .click('#ic-toast span')
-        .click('button[name=logout]')
-        .waitForElementVisible('div.ic-saved')
-        .assert.urlEquals('http://localhost:8080/')
-        .assert.attributeContains('div.ic-saved a', 'href', 'http://localhost:8080/compass/edit')
-        .moveToElement('div.ic-saved', 100, 10, function() {
-            browser.mouseButtonClick(0);
-        })
-        .pause(100)
-        .assert.containsText('div.ic-saved a', 'My bookmark')
-        .assert.containsText('div.ic-saved div.ic-saved-info p', 'as "sandbox"')
+  it('timer section', () => {
+    expect('button[name=timer]').to.be.visible();
+    b.click('button[name=timer]');
+    b.waitForVisible('#ic-timer-form');
 
-        .click('button.edit')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', MODALS.EDIT_BOOKMARK)
-        .setValue('#ic-modal-input', 'Changed name')
-        .click('#ic-modal-confirm')
-        .assert.containsText('div.ic-saved a', 'Changed name')
+    expect('button[name=ic-30s]').to.be.visible();
+    expect('button[name=ic-1m]').to.be.visible();
+    expect('button[name=ic-3m]').to.be.visible();
 
-        .click('button.remove')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', MODALS.DELETE_BOOKMARK.text)
-        .click('#ic-modal-confirm')
-        .assert.elementNotPresent('div.ic-saved');
-    },
+    b.click('button[name=ic-3m]');
+    b.waitForVisible('#ic-toast span');
+    expect(b.getAttribute('#ic-toast span', 'class')).to.equal('info');
+    expect('#ic-toast span').to.have.text(PROMPTS.TIMEBOX(3, 0));
+    expect('button[name=timer] div p').to.have.text('03:00');
+    expect('div.ic-timer-action p').to.have.text('stop');
 
-    'delete': function(browser) {
-        browser
-        .back()
-        .waitForElementVisible('#ic-sidebar');
-        require('./utils').cleanup(browser);
-    }
-};
+    b.click('div.ic-timer-action');
+    expect('button[name=timer]').to.have.text(/timebox/);
+    b.click('button[name=timer]');
+    b.waitForVisible('#ic-timer-form');
+
+    b.clearElement('input#ic-timer-min');
+    b.setValue('input#ic-timer-min', -2);
+    b.click('button[name=ship]');
+    b.waitForVisible('#ic-toast span');
+    expect(b.getAttribute('#ic-toast span', 'class')).to.equal('error');
+    expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_NEGATIVE_VALUES, 'i'));
+
+    b.clearElement('input#ic-timer-min');
+    b.setValue('input#ic-timer-min', 31);
+    b.click('button[name=ship]');
+    b.waitForVisible('#ic-toast span');
+    expect(b.getAttribute('#ic-toast span', 'class')).to.equal('error');
+    expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_TOO_LONG, 'i'));
+
+    b.clearElement('input#ic-timer-min');
+    b.setValue('input#ic-timer-min', 0);
+    b.clearElement('input#ic-timer-sec');
+    b.setValue('input#ic-timer-sec', 61);
+    b.click('button[name=ship]');
+    b.waitForVisible('#ic-toast span');
+    expect(b.getAttribute('#ic-toast span', 'class')).to.equal('error');
+    expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_TOO_MANY_SECONDS, 'i'));
+
+    b.clearElement('input#ic-timer-sec');
+    b.setValue('input#ic-timer-sec', 2);
+    b.click('button[name=ship]');
+    b.waitForVisible('#ic-toast span');
+    expect(b.getAttribute('#ic-toast span', 'class')).to.equal('info');
+    expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX(0, 2), 'i'));
+    b.pause(3000);
+    expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_OVER, 'i'));
+  });
+
+  describe('other actions section', () => {
+    it('privacy statement', () => {
+      expect('button[name=privacy]').to.be.visible();
+      b.click('button[name=privacy]');
+      b.waitForVisible('#ic-privacy-statement');
+      b.click('#ic-privacy-statement button.ic-close-window');
+    });
+
+    it('feedback form', () => {
+      expect('button[name=sucks]').to.be.visible();
+      b.click('button[name=sucks]');
+      b.waitForVisible('#ic-feedback');
+      b.click('#ic-feedback button.ic-close-window');
+    });
+
+    it('tutorial button has link', () => {
+      expect(b.getAttribute('button[name=tutorial] a', 'href')).to.equal('http://localhost:8080/tutorial');
+      b.click('#ic-toast span');
+    });
+
+    describe('bookmarking', () => {
+      it('toast displays success status', () => {
+        b.click('button[name=save]');
+        b.waitForVisible('#ic-modal');
+        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.SAVE_BOOKMARK, 'i'));
+        b.setValue('#ic-modal-input', 'My bookmark');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast span');
+        expect(b.getAttribute('#ic-toast span', 'class')).to.equal('success');
+        expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.SAVE_SUCCESS, 'i'));
+        b.click('#ic-toast span');
+      });
+
+      it('bookmark has correct info', () => {
+        b.click('button[name=logout]');
+        b.waitForVisible('div.ic-saved');
+        expect(b.getUrl()).to.equal('http://localhost:8080/');
+        expect(b.getAttribute('div.ic-saved a', 'href')).to.contain('http://localhost:8080/compass/edit');
+        b.click('div.ic-saved #arrow');
+        b.pause(100);
+        expect('div.ic-saved a').to.have.text('My bookmark');
+        expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
+      });
+
+      it('can edit bookmark', () => {
+        b.click('button.edit');
+        b.waitForVisible('#ic-modal');
+        expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
+        b.setValue('#ic-modal-input', 'Changed name');
+        b.click('#ic-modal-confirm');
+        expect('div.ic-saved a').to.have.text('Changed name');
+      });
+
+      it('can remove bookmark', () => {
+        b.click('button.remove');
+        b.waitForVisible('#ic-modal');
+        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
+        b.click('#ic-modal-confirm');
+        expect('div.ic-saved').to.not.be.there();
+      });
+    });
+  });
+});

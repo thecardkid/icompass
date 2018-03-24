@@ -1,39 +1,34 @@
-'use strict';
+const chai = require('chai');
+const chaiWebdriver = require('chai-webdriverio').default;
+chai.use(chaiWebdriver(browser));
 
-var originalTranslation;
-var STEPS = 20;
+const expect = chai.expect;
+const b = browser;
 
-module.exports = {
-    'creates successfully': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body')
-        .click('#ic-tour a')
-        .waitForElementVisible('#ic-tutorial');
-    },
+describe('tutorial', () => {
+  it('can drag blurb', () => {
+    b.url('http://localhost:8080');
+    b.waitForVisible('body');
+    b.click('#ic-tour a');
+    b.waitForVisible('#ic-tutorial');
 
-    'can drag blurb': function(browser) {
-        browser
-        .getCssProperty('#ic-tutorial-text', 'transform', function(result) {
-            originalTranslation = result.value;
-        })
-        .moveToElement('#ic-tutorial-text', 10, 10, function() {
-            browser
-            .mouseButtonDown(0, function() {
-                browser.moveTo(null,300,-100);
-            })
-            .mouseButtonUp(0, function() {
-                browser.getCssProperty('#ic-tutorial-text', 'transform', function(result) {
-                    this.assert.equal(result.value !== originalTranslation, true, 'Blurb should have been moved');
-                });
-            });
-        });
-    },
+    const transformBefore = b.getCssProperty('#ic-tutorial-text', 'transform').value;
 
-    'exits correctly': function(browser) {
-        for (var i=0; i<STEPS; i++)
-            browser.click('button[name=next-step]').pause(500);
+    b.moveToObject('#ic-tutorial-text', 10, 10);
+    b.buttonDown(0);
+    b.moveTo(null, 300, -100);
+    b.buttonUp(0);
 
-        browser.assert.elementPresent('#ic-landing').end();
+    const transformAfter = b.getCssProperty('#ic-tutorial-text', 'transform').value;
+
+    expect(transformAfter).to.not.deep.equal(transformBefore);
+  });
+
+  it('goes through tutorial', () => {
+    for (let i = 0; i < 20; i++) {
+      browser.click('button[name="next-step"]');
     }
-};
+
+    expect('#ic-landing').to.be.visible();
+  });
+});

@@ -31,17 +31,6 @@ class LandingPage extends Component {
         this.socket = new Socket(this);
         this.state = {loginType: null};
 
-        this.center = this.center.bind(this);
-        this.setLoginType = this.setLoginType.bind(this);
-        this.getFirst = this.getFirst.bind(this);
-        this.getSecond = this.getSecond.bind(this);
-        this.getThird = this.getThird.bind(this);
-        this.validateFindInput = this.validateFindInput.bind(this);
-        this.validateMakeInput = this.validateMakeInput.bind(this);
-        this.toWorkspace = this.toWorkspace.bind(this);
-        this.getMakeSuccessNotification = this.getMakeSuccessNotification.bind(this);
-        this.getFindSuccessNotification = this.getFindSuccessNotification.bind(this);
-
         this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
     }
 
@@ -53,43 +42,36 @@ class LandingPage extends Component {
         $(window).off('resize', this.props.uiActions.resize);
     }
 
-    center(w, h) {
-        return {
-            top: Math.max((this.props.ui.vh - h) / 2, 0),
-            left: Math.max((this.props.ui.vw - w) / 2, 0)
-        };
-    }
-
-    setLoginType(type) {
+    setLoginType = (type) => {
         $('#compass-center').val('');
         $('#compass-code').val('');
         $('#username').val('');
         this.setState({data: null, loginType: type});
-    }
+    };
 
-    validateFindInput() {
+    validateFindInput = () => {
         let code = Validator.validateCompassCode($('#compass-code').val());
         let username = Validator.validateUsername($('#username').val());
 
-        if (!code[0]) return this.modal.alert(code[1]);
         if (!username[0]) return this.modal.alert(username[1]);
+        if (!code[0]) return this.modal.alert(code[1]);
 
         this.setState({username: username[1]});
         this.socket.emitFindCompass(code[1], username[1]);
-    }
+    };
 
-    validateMakeInput() {
+    validateMakeInput = () => {
         let center = Validator.validateCenter($('#compass-center').val());
         let username = Validator.validateUsername($('#username').val());
 
-        if (!center[0]) return this.modal.alert(center[1]);
         if (!username[0]) return this.modal.alert(username[1]);
+        if (!center[0]) return this.modal.alert(center[1]);
 
         this.setState({username: username[1]});
         this.socket.emitCreateCompass(center[1], username[1]);
-    }
+    };
 
-    getFirst() {
+    renderChooseMode = () => {
         return (
             <div className="section">
                 <h1>Are you making or finding a compass?</h1>
@@ -97,40 +79,45 @@ class LandingPage extends Component {
                 <button className="ic-button" name="find" onClick={() => this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
             </div>
         );
-    }
+    };
 
-    getSecond() {
-        if (typeof this.state.loginType !== 'number') return;
-
-        let firstInput, cb;
-
-        if (this.state.loginType === LOGIN_TYPE.FIND) {
-            firstInput = (
-                <div className="response">
-                    <input id="compass-code" placeholder="The code of your compass" autoCorrect="off" autoCapitalize="none" />
-                </div>
-            );
-            cb = this.validateFindInput;
-        } else {
-            firstInput = (
-                <div className="response">
-                    <input id="compass-center" placeholder="Who/what is at the center of your compass?" />
-                </div>
-            );
-            cb = this.validateMakeInput;
-        }
-
+    renderFindInput = () => {
         return (
             <div className="section">
                 <h1>I need some info</h1>
-                {firstInput}
-                <div className="response"><input id="username" placeholder={'Your name'} /></div>
-                <button className="ic-button" name="next" onClick={cb}>next</button>
+                <div className="response"><input id="username" placeholder={'Your name (as you\'d like it to appear, no spaces)'} /></div>
+                <div className="response">
+                    <input id="compass-code" placeholder="The code of the compass you're looking for" autoCorrect="off" autoCapitalize="none" />
+                </div>
+                <button className="ic-button" name="next" onClick={this.validateFindInput}>next</button>
             </div>
         );
-    }
+    };
 
-    getNullNotification() {
+    renderMakeInput = () => {
+        return (
+            <div className="section">
+                <h1>I need some info</h1>
+                <div className="response"><input id="username" placeholder={'Your name (as you\'d like it to appear, no spaces)'} /></div>
+                <div className="response">
+                    <input id="compass-center" placeholder="Topic: Who's involved?" />
+                </div>
+                <button className="ic-button" name="next" onClick={this.validateMakeInput}>next</button>
+            </div>
+        );
+    };
+
+    renderModeInput = () => {
+        if (this.state.loginType === LOGIN_TYPE.FIND) {
+          return this.renderFindInput();
+        } else if (this.state.loginType === LOGIN_TYPE.MAKE) {
+          return this.renderMakeInput();
+        }
+
+        return null;
+    };
+
+    getNullNotification = () => {
         let error = <h2>I couldn&apos;t find your compass. Do you have the right code?</h2>;
         if (this.state.loginType === LOGIN_TYPE.MAKE)
             error = (
@@ -145,9 +132,9 @@ class LandingPage extends Component {
                 {error}
             </div>
         );
-    }
+    };
 
-    toWorkspace() {
+    toWorkspace = () => {
         let email = $('#email').val();
         let valid = Validator.validateEmail(email);
         let d = this.state.data, u = this.state.username;
@@ -158,24 +145,24 @@ class LandingPage extends Component {
 
         switch(this.state.loginType) {
             case LOGIN_TYPE.MAKE:
-                return browserHistory.push('/compass/edit/' + d.code + '/' + u);
+                return browserHistory.push(`/compass/edit/${d.code}/${u}`);
             case LOGIN_TYPE.FIND:
-                return browserHistory.push('/compass/' + mode + '/' + d.code + '/' + u);
+                return browserHistory.push(`/compass/${mode}/${d.code}/${u}`);
         }
-    }
+    };
 
-    getMakeSuccessNotification() {
+    getMakeSuccessNotification = () => {
         return (
             <div className="section third">
                 <h1>success</h1>
-                <h2>Your workspace is ready. If you would like me to email you a link to your workspace, enter your email below. I will not send you spam.</h2>
+                <h2>Your workspace is ready. If you would like me to email you a link to your workspace, enter your email below. I won&apos; keep your email address or send you spam.</h2>
                 <input id="email" type="text" />
                 <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>let&apos;s go</button>
             </div>
         );
-    }
+    };
 
-    getFindSuccessNotification(viewOnly) {
+    getFindSuccessNotification = (viewOnly) => {
         let mode = viewOnly ? 'View-only' : 'Edit';
         return (
             <div className="section third">
@@ -184,9 +171,9 @@ class LandingPage extends Component {
                 <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
             </div>
         );
-    }
+    };
 
-    getThird() {
+    renderFetchResult = () => {
         if (typeof this.state.data !== 'object' || this.state.data === null) return;
 
         if (!this.state.data.success)
@@ -197,7 +184,7 @@ class LandingPage extends Component {
 
         if (this.state.loginType === LOGIN_TYPE.FIND)
             return this.getFindSuccessNotification(this.state.data.viewOnly);
-    }
+    };
 
     render() {
         let w = this.props.ui.vw - 200;
@@ -211,10 +198,11 @@ class LandingPage extends Component {
                 <BookmarkList />
                 <div id="ic-landing-container" style={{width:w}}>
                     <div id="ic-landing" style={loginStyle}>
+                        <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to make anything better</h1>
                         <div id="ic-tour"><Link to="/tutorial">First-timer? Take the tour!</Link></div>
-                        {this.getFirst()}
-                        {this.getSecond()}
-                        {this.getThird()}
+                        {this.renderChooseMode()}
+                        {this.renderModeInput()}
+                        {this.renderFetchResult()}
                     </div>
                 </div>
             </div>

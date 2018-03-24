@@ -1,123 +1,109 @@
-'use strict';
+const chai = require('chai');
+const chaiWebdriver = require('chai-webdriverio').default;
+chai.use(chaiWebdriver(browser));
 
-var ERROR_MSG = require('../../lib/constants.js').ERROR_MSG;
-var code;
+const expect = chai.expect;
+const b = browser;
 
-module.exports = {
-    'loads correctly': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body')
-        .assert.title('The Innovators\' Compass')
-        .assert.elementPresent('button[name=find]')
-        .assert.elementPresent('button[name=make]');
-    },
+const ERROR_MSG = require('../../lib/constants.js').ERROR_MSG;
 
-    'make path': function(browser) {
-        browser
-        .click('button[name=make]')
-        .waitForElementVisible('input#compass-center')
-        .getAttribute('input#compass-center', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'Who/what is at the center of your compass?');
-        })
-        .getAttribute('input#username', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'Your name');
-        });
-    },
+const expectErrorMessage = require('./utils').expectErrorMessage;
 
-    'make path errors': function(browser) {
-        browser
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('People group'))
-        .click('#ic-modal-confirm')
-        .setValue('#compass-center', 'This is a really long people group that will hopefully exceed char limit')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('People group', 30))
-        .click('#ic-modal-confirm')
-        .clearValue('#compass-center');
-    },
+describe('login', () => {
+  let code;
 
-    'make successful': function(browser) {
-        browser
-        .clearValue('#compass-center')
-        .setValue('#compass-center', 'nightwatchjs')
-        .click('button[name=next]')
-        .waitForElementVisible('.third')
-        .assert.containsText('.third h1', 'success')
-        .assert.elementPresent('#email')
-        .assert.elementPresent('button[name=to-workspace]')
-        .click('button[name=to-workspace]')
-        .url(function(result) {
-            var parts = result.value.split('/');
-            code = parts[5];
-        })
-        .url('http://localhost:8080');
-    },
+  afterAll(() => {
+    b.click('button[name=to-workspace]');
+    b.waitForVisible('#ic-sidebar');
+    require('./utils').cleanup();
+  });
 
-    'find path': function(browser) {
-        browser
-        .click('button[name=find]')
-        .waitForElementVisible('input#compass-code')
-        .getAttribute('input#compass-code', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'The code of your compass');
-        })
-        .getAttribute('input#username', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'Your name');
-        });
-    },
+  it('loads correctly', () => {
+    b.setViewportSize({ width: 2000, height: 2000 });
+    b.url('http://localhost:8080');
+    b.waitForVisible('body');
+    expect(b.getTitle()).to.equal('The Innovators\' Compass');
+    expect('button[name="find"]').to.be.visible();
+    expect('button[name="make"]').to.be.visible();
+  });
 
-    'find path errors': function(browser) {
-        browser
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('A code'))
-        .click('#ic-modal-confirm')
-        .setValue('#compass-code', '1234567')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.INVALID('Your code'))
-        .click('#ic-modal-confirm')
-        .setValue('#compass-code', '8') //append to current
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('Username'))
-        .click('#ic-modal-confirm')
-        .setValue('#username', 'sandbox5')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.UNAME_HAS_NON_CHAR)
-        .click('#ic-modal-confirm')
-        .clearValue('#username')
-        .setValue('#username', ',,,###')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.UNAME_HAS_NON_CHAR)
-        .click('#ic-modal-confirm')
-        .clearValue('#username')
-        .setValue('#username', 'sandboxsandboxsandboxsandboxsandboxsandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('Username', 15))
-        .click('#ic-modal-confirm')
-        .clearValue('#username')
-        .clearValue('#compass-code');
-    },
+  it('make flow shows correct prompts', () => {
+    b.click('button[name="make"]');
+    b.waitForVisible('input#compass-center');
 
-    'find successful': function(browser) {
-        browser
-        .setValue('#compass-code', code)
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third')
-        .assert.containsText('.third h1', 'Edit access')
-        .assert.containsText('.third h2', 'You will be logged in as sandbox')
-        .assert.elementPresent('button[name=to-workspace]')
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar');
-    },
+    const topicPrompt = b.getAttribute('input#compass-center', 'placeholder');
+    expect(topicPrompt).to.equal('Topic: Who\'s involved?');
 
-    'cleanup': require('./utils').cleanup
-};
+    const namePrompt = b.getAttribute('input#username', 'placeholder');
+    expect(namePrompt).to.equal('Your name (as you\'d like it to appear, no spaces)');
+  });
+
+  it('make flow shows correct errors', () => {
+    b.setValue('#username', 'sandbox');
+    b.click('button[name="next"]');
+    expectErrorMessage(ERROR_MSG.REQUIRED('Topic'));
+
+    b.setValue('#compass-center', 'This is a really long topic name that will hopefully exceed char limit');
+    b.click('button[name="next"]');
+    expectErrorMessage(ERROR_MSG.TEXT_TOO_LONG('Topic', 30));
+  });
+
+  it('make flow successful', () => {
+    b.clearElement('#compass-center');
+    b.setValue('#compass-center', 'webdriverio');
+    b.click('button[name="next"]');
+    b.waitForVisible('.third');
+
+    expect(b.getText('.third h1')).to.equal('success');
+    expect('#email').to.be.visible();
+    expect('button[name=to-workspace]').to.be.visible();
+
+    b.click('button[name=to-workspace]');
+    code = b.getUrl().split('/')[5];
+  });
+
+  it('find flow shows correct prompts', () => {
+    b.url('http://localhost:8080');
+    b.click('button[name="find"]');
+    b.waitForVisible('input#compass-code');
+
+    const codePrompt = b.getAttribute('input#compass-code', 'placeholder');
+    expect(codePrompt).to.equal('The code of the compass you\'re looking for');
+
+    const namePrompt = b.getAttribute('input#username', 'placeholder');
+    expect(namePrompt).to.equal('Your name (as you\'d like it to appear, no spaces)');
+  });
+
+  it('find flow shows correct errors', () => {
+    b.click('button[name="next"]');
+    expectErrorMessage(ERROR_MSG.REQUIRED('Username'));
+
+    b.setValue('#username', 'sandbox5');
+    b.click('button[name="next"]');
+    expectErrorMessage(ERROR_MSG.UNAME_HAS_NON_CHAR);
+
+    b.setValue('#username', ',,,###');
+    b.click('button[name="next"]');
+    expectErrorMessage(ERROR_MSG.UNAME_HAS_NON_CHAR);
+
+    b.setValue('#username', 'sandboxsandboxsandboxsandboxsandboxsandbox');
+    b.click('button[name="next"]');
+    expectErrorMessage(ERROR_MSG.TEXT_TOO_LONG('Username', 15));
+
+    b.setValue('#username', 'validusername');
+
+    b.setValue('#compass-code', '1234567');
+    b.click('button[name="next"]');
+    expectErrorMessage(ERROR_MSG.INVALID('Your code'));
+  });
+
+  it('find flow successful', () => {
+    b.setValue('#compass-code', code);
+    b.setValue('#username', 'sandbox');
+    b.click('button[name="next"]');
+    b.waitForVisible('.third');
+    expect(b.getText('.third h1')).to.equal('Edit access');
+    expect(b.getText('.third h2')).to.equal('You will be logged in as sandbox');
+    expect('button[name=to-workspace]').to.be.visible();
+  });
+});

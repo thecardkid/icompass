@@ -1,143 +1,152 @@
-'use strict';
+const chai = require('chai');
+const chaiWebdriver = require('chai-webdriverio').default;
+chai.use(chaiWebdriver(browser));
 
-var editURL = 'http://localhost:8080/compass/edit/',
-    viewURL = 'http://localhost:8080/compass/view/',
-    editCode, viewCode;
-var ERROR_MSG = require('../../lib/constants').ERROR_MSG;
-var PROMPTS = require('../../lib/constants').PROMPTS;
+const expect = chai.expect;
+const b = browser;
 
-module.exports = {
-    'creates successfully': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body')
-        .click('button[name=make]')
-        .setValue('#compass-center', 'nightwatchjs')
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third')
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar')
-        .windowMaximize();
-    },
+const ERROR_MSG = require('../../lib/constants').ERROR_MSG;
+const PROMPTS = require('../../lib/constants').PROMPTS;
 
-    'retrieve codes': function(browser) {
-        browser
-        .getAttribute('button[name=share-edit]', 'id', function(result) {
-            editCode = result.value;
-            editURL += result.value;
-            this.assert.urlEquals(editURL + '/sandbox');
-        })
-        .getAttribute('button[name=share-view]', 'id', function(result) {
-            viewCode = result.value;
-            viewURL += result.value;
-        });
-    },
+describe('view modes', () => {
+  let editURL,
+    viewURL,
+    editCode,
+    viewCode;
 
-    'view-only access from url': function(browser) {
-        browser
-        .url(viewURL)
-        .waitForElementVisible('#compass')
-        .assert.elementPresent('#center')
-        .assert.elementPresent('#vline')
-        .assert.elementPresent('#hline')
-        .assert.elementNotPresent('#ic-modes')
-        .assert.elementNotPresent('#ic-sidebar')
-        .assert.elementNotPresent('#ic-chat')
-        .assert.elementNotPresent('#ic-show-chat')
-        .assert.elementNotPresent('#ic-show-sidebar');
-    },
+  beforeAll(() => {
+    require('./utils').setup();
+    editCode = b.getAttribute('button[name=share-edit]', 'id');
+    editURL = `http://localhost:8080/compass/edit/${editCode}`;
+    expect(b.getUrl()).to.equal(editURL + '/sandbox');
 
-    'view-only from login page': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body')
-        .click('button[name=find]')
-        .setValue('#compass-code', viewCode)
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third')
-        .assert.containsText('.third h1', 'View-only access')
-        .assert.containsText('.third h2', 'You will be logged in as sandbox')
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#compass')
-        .assert.elementPresent('#center')
-        .assert.elementPresent('#vline')
-        .assert.elementPresent('#hline')
-        .assert.elementNotPresent('#ic-modes')
-        .assert.elementNotPresent('#ic-sidebar')
-        .assert.elementNotPresent('#ic-chat')
-        .assert.elementNotPresent('#ic-show-chat')
-        .assert.elementNotPresent('#ic-show-sidebar');
-    },
+    viewCode = b.getAttribute('button[name=share-view]', 'id');
+    viewURL = `http://localhost:8080/compass/view/${viewCode}`;
+  });
 
-    'url with bad params is rejected': function(browser) {
-        browser
-        .url('http://localhost:8080/compass/edit/' + editCode.substring(1,5) + '/,,,')
-        .waitForElementVisible('#ic-modal')
-        .getText('#ic-modal-body', function(result) {
-            this.assert.equal(result.value.indexOf('There was a problem with your login info') > -1, true, 'Error messsage should display correctly');
-            this.assert.equal(result.value.indexOf('Your code is not valid') > -1, true, 'Error messsage should display correctly');
-            this.assert.equal(result.value.indexOf('Username can only contain a-zA-Z') > -1, true, 'Error messsage should display correctly');
-        })
-        .click('#ic-modal-confirm')
-        .waitForElementVisible('#ic-landing')
-        .assert.urlEquals('http://localhost:8080/');
-    },
+  afterAll(() => {
+    require('./utils').cleanup();
+  });
 
-    'view url with wrong editCode is rejected': function(browser) {
-        browser
-        .url('http://localhost:8080/compass/view/'+editCode+'/sandbox')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', 'I couldn\'t find your compass')
-        .click('#ic-modal-confirm')
-        .waitForElementVisible('#ic-landing')
-        .assert.urlEquals('http://localhost:8080/');
-    },
+  describe('view-only mode', () => {
+    it('from url', () => {
+      b.url(viewURL);
+      b.waitForVisible('#compass');
 
-    'edit access from url with username': function(browser) {
-        browser
-        .url(editURL+'/sandbox')
-        .waitForElementVisible('#compass')
-        .assert.elementPresent('#center')
-        .assert.elementPresent('#vline')
-        .assert.elementPresent('#hline')
-        .assert.elementPresent('#ic-sidebar')
-        .assert.elementPresent('#ic-chat')
-        .assert.elementPresent('#ic-show-chat')
-        .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-modes');
-    },
+      expect('#center').to.be.visible();
+      expect('#vline').to.be.visible();
+      expect('#hline').to.be.visible();
 
-    'edit access from url without username': function(browser) {
-        browser
-        .url(editURL)
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body h3', PROMPTS.PROMPT_NAME)
-        .setValue('#ic-modal-input', 'sandbox2')
-        .click('#ic-modal-confirm')
-        .pause(100)
-        .assert.containsText('#ic-modal-body', ERROR_MSG.UNAME_HAS_NON_CHAR, 'Correct error should display')
+      expect('#ic-modes').to.not.be.there();
+      expect('#ic-sidebar').to.not.be.there();
+      expect('#ic-chat').to.not.be.there();
+      expect('#ic-show-chat').to.not.be.there();
+      expect('#ic-show-sidebar').to.not.be.there();
+    });
 
-        .url(editURL)
-        .waitForElementVisible('#ic-modal')
-        .click('#ic-modal-confirm')
-        .pause(100)
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('Username'), 'Correct error should display')
+    it('from login page', () => {
+      b.url('http://localhost:8080');
+      b.waitForVisible('body');
+      b.click('button[name=find]');
+      b.setValue('#compass-code', viewCode);
+      b.setValue('#username', 'sandbox');
+      b.click('button[name=next]');
+      b.waitForVisible('.third');
 
-        .url(editURL)
-        .setValue('#ic-modal-input', 'sandbox')
-        .click('#ic-modal-confirm')
-        .waitForElementVisible('#compass')
-        .assert.elementPresent('#vline')
-        .assert.elementPresent('#hline')
-        .assert.elementPresent('#ic-sidebar')
-        .assert.elementPresent('#ic-chat')
-        .assert.elementPresent('#ic-show-chat')
-        .assert.elementPresent('#ic-show-sidebar')
-        .assert.elementPresent('#ic-modes');
-    },
+      expect('.third h1').to.have.text(/View-only access/);
+      expect('.third h2').to.have.text(/You will be logged in as sandbox/);
 
-    'clean up': require('./utils').cleanup
-};
+      b.click('button[name=to-workspace]');
+      b.waitForVisible('#compass');
 
+      expect('#center').to.be.visible();
+      expect('#vline').to.be.visible();
+      expect('#hline').to.be.visible();
+
+      expect('#ic-modes').to.not.be.there();
+      expect('#ic-sidebar').to.not.be.there();
+      expect('#ic-chat').to.not.be.there();
+      expect('#ic-show-chat').to.not.be.there();
+      expect('#ic-show-sidebar').to.not.be.there();
+    });
+  });
+
+  describe('edit mode', () => {
+    it('with valid username', () => {
+      b.url(`${editURL}/sandbox`);
+      b.waitForVisible('#compass');
+
+      expect('#center').to.be.visible();
+      expect('#vline').to.be.visible();
+      expect('#hline').to.be.visible();
+      expect('#ic-sidebar').to.be.visible();
+      expect('#ic-chat').to.be.visible();
+      expect('#ic-show-chat').to.be.visible();
+      expect('#ic-show-sidebar').to.be.visible();
+      expect('#ic-modes').to.be.visible();
+    });
+
+    it('with bad code and bad username', () => {
+      b.url(`http://localhost:8080/compass/edit/${editCode.substring(1, 5)}/,,,`);
+      b.waitForVisible('#ic-modal');
+
+      expect('#ic-modal-body').to.have.text(/There was a problem with your login info/);
+      expect('#ic-modal-body').to.have.text(/Your code is not valid/);
+      expect('#ic-modal-body').to.have.text(/Username can only contain a-zA-Z/);
+
+      b.click('#ic-modal-confirm');
+      b.waitForVisible('#ic-landing');
+
+      expect(b.getUrl()).to.equal('http://localhost:8080/');
+    });
+
+    it('with editCode for view-only mode', () => {
+      b.url(`http://localhost:8080/compass/view/${editCode}/sandbox`);
+      b.waitForVisible('#ic-modal');
+
+      expect('#ic-modal-body').to.have.text(/I couldn't find your compass/);
+
+      b.click('#ic-modal-confirm');
+      b.waitForVisible('#ic-landing');
+
+      expect(b.getUrl()).to.equal('http://localhost:8080/');
+    });
+
+    describe('username input', () => {
+      beforeEach(() => {
+        b.url(editURL);
+        b.waitForVisible('#ic-modal');
+      });
+
+      it('bad username', () => {
+        expect('#ic-modal-body h3').to.have.text(new RegExp(PROMPTS.PROMPT_NAME, 'i'));
+
+        b.setValue('#ic-modal-input', 'sandbox2');
+        b.click('#ic-modal-confirm');
+        b.pause(100);
+
+        expect('#ic-modal-body').to.have.text(new RegExp(ERROR_MSG.UNAME_HAS_NON_CHAR, 'i'));
+      });
+
+      it('missing username', () => {
+        b.click('#ic-modal-confirm');
+        b.pause(100);
+
+        expect('#ic-modal-body').to.have.text(new RegExp(ERROR_MSG.REQUIRED('Username'), 'i'));
+      });
+
+      it('valid username', () => {
+        b.setValue('#ic-modal-input', 'sandbox');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#compass');
+        expect('#vline').to.be.visible();
+        expect('#hline').to.be.visible();
+        expect('#ic-sidebar').to.be.visible();
+        expect('#ic-chat').to.be.visible();
+        expect('#ic-show-chat').to.be.visible();
+        expect('#ic-show-sidebar').to.be.visible();
+        expect('#ic-modes').to.be.visible();
+      });
+    });
+  });
+});
