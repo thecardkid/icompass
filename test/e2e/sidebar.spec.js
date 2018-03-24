@@ -5,8 +5,8 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const PROMPTS = require('../../../lib/constants').PROMPTS;
-const MODALS = require('../../../lib/constants').MODALS;
+const PROMPTS = require('../../lib/constants').PROMPTS;
+const MODALS = require('../../lib/constants').MODALS;
 
 describe('sidebar', () => {
   beforeAll(() => {

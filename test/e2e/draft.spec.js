@@ -5,8 +5,8 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const PROMPTS = require('../../../lib/constants').PROMPTS;
-const MODALS = require('../../../lib/constants').MODALS;
+const PROMPTS = require('../../lib/constants').PROMPTS;
+const MODALS = require('../../lib/constants').MODALS;
 const DOG_PHOTO_LINK = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
 const POSITIONS = [{ x: 400, y: 200 }, { x: 500, y: 200 }];
 

@@ -5,7 +5,7 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const MODALS = require('../../../lib/constants.js').MODALS;
+const MODALS = require('../../lib/constants.js').MODALS;
 
 describe('basic functionality', () => {
   beforeAll(require('./utils').setup);

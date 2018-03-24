@@ -5,7 +5,7 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const ERROR_MSG = require('../../../lib/constants.js').ERROR_MSG;
+const ERROR_MSG = require('../../lib/constants.js').ERROR_MSG;
 
 const expectErrorMessage = require('./utils').expectErrorMessage;
 

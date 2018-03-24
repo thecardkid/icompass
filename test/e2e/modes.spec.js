@@ -5,8 +5,8 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const ERROR_MSG = require('../../../lib/constants').ERROR_MSG;
-const PROMPTS = require('../../../lib/constants').PROMPTS;
+const ERROR_MSG = require('../../lib/constants').ERROR_MSG;
+const PROMPTS = require('../../lib/constants').PROMPTS;
 
 describe('view modes', () => {
   let editURL,
@@ -75,7 +75,6 @@ describe('view modes', () => {
     it('with valid username', () => {
       b.url(`${editURL}/sandbox`);
       b.waitForVisible('#compass');
-      b.saveScreenshot('test.png');
 
       expect('#center').to.be.visible();
       expect('#vline').to.be.visible();
@@ -139,6 +138,7 @@ describe('view modes', () => {
       it('valid username', () => {
         b.setValue('#ic-modal-input', 'sandbox');
         b.click('#ic-modal-confirm');
+        b.waitForVisible('#compass');
         expect('#vline').to.be.visible();
         expect('#hline').to.be.visible();
         expect('#ic-sidebar').to.be.visible();
