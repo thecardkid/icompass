@@ -60,13 +60,11 @@ describe('login', () => {
     b.clearElement('#compass-center');
     b.setValue('#compass-center', 'webdriverio');
     b.click('button[name="next"]');
-    b.waitForVisible('.third');
+    b.waitForVisible('#ic-modal');
 
-    expect(b.getText('.third h1')).to.equal('success');
-    expect('#email').to.be.visible();
-    expect('button[name=to-workspace]').to.be.visible();
+    expect('#ic-modal-body').to.have.text(/Your workspace is ready/);
 
-    b.click('button[name=to-workspace]');
+    b.click('#ic-modal-confirm');
     code = b.getUrl().split('/')[5];
   });
 
@@ -113,9 +111,7 @@ describe('login', () => {
     b.setValue('#compass-code', code);
     b.setValue('#username', 'sandbox');
     b.click('button[name="next"]');
-    b.waitForVisible('.third');
-    expect(b.getText('.third h1')).to.equal('Edit access');
-    expect(b.getText('.third h2')).to.equal('You will be logged in as sandbox');
-    expect('button[name=to-workspace]').to.be.visible();
+    b.waitForVisible('#ic-modal');
+    expect('#ic-modal-body').to.have.text(/You will be logged in as "sandbox" with edit access/);
   });
 });
