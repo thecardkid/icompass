@@ -50,9 +50,7 @@ describe('sidebar', () => {
 
       it('valid email shows toast', () => {
         b.setValue('#ic-modal-input', 'fakeemail@valid.com');
-        b.saveScreenshot('1.png');
         b.click('#ic-modal-confirm');
-        b.saveScreenshot('2.png');
         b.waitForVisible('#ic-toast span');
         expect('#ic-toast span').to.have.text(/An email has been sent/);
       });

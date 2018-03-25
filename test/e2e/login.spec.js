@@ -92,7 +92,7 @@ describe('login', () => {
       b.setValue('#ic-modal-input', 'fakeemail@test.com');
       b.click('#ic-modal-confirm');
       b.waitForVisible('#ic-toast span');
-      expect('#ic-toast span').to.have.text(/An email has been sent/);
+      expect('#ic-toast span').to.have.text(/email/);
     });
   });
 
