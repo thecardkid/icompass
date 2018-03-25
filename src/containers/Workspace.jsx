@@ -27,9 +27,9 @@ import PrivacyStatement from '../components/PrivacyStatement.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
-import Modal from '../utils/Modal.jsx';
+import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.jsx';
-import Toast from '../utils/Toast.jsx';
+import Toast from '../utils/Toast';
 
 import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS, REGEX } from '../../lib/constants';
 

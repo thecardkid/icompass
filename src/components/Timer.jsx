@@ -6,11 +6,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 
-import Toast from 'Utils/Toast.jsx';
-import { PROMPTS } from 'Lib/constants';
+import Toast from '../utils/Toast';
 
-import * as workspaceActions from 'Actions/workspace';
-import * as uiActions from 'Actions/ui';
+import { PROMPTS } from '../../lib/constants';
+
+import * as workspaceActions from '../actions/workspace';
+import * as uiActions from '../actions/ui';
 
 class Timer extends Component {
     constructor(props) {

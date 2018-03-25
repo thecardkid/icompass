@@ -1,17 +1,18 @@
 'use strict';
 
+import $ from 'jquery';
 import { browserHistory } from 'react-router';
 
-let modalInstance;
+let instance;
 
 export default class Modal {
   constructor() {
-    if (!modalInstance) {
+    if (!instance) {
       this.show = false;
-      modalInstance = this;
+      instance = this;
     }
 
-    return modalInstance;
+    return instance;
   }
 
   addBackdropIfNecessary() {

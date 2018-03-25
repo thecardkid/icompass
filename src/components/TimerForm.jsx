@@ -3,9 +3,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Toast from 'Utils/Toast.jsx';
+import Toast from '../utils/Toast';
 
-import { PROMPTS } from 'Lib/constants';
+import { PROMPTS } from '../../lib/constants';
 
 class TimerForm extends Component {
     constructor(props) {

@@ -11,9 +11,9 @@ import * as uiActions from '../actions/ui';
 
 import BookmarkList from '../components/BookmarkList.jsx';
 
-import Modal from '../utils/Modal.jsx';
+import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.jsx';
-import Toast from '../utils/Toast.jsx';
+import Toast from '../utils/Toast';
 
 import { ERROR_MSG, REGEX } from '../../lib/constants';
 

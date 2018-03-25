@@ -8,16 +8,16 @@ import Swipeable from 'react-swipeable';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 
-import Timer from 'Components/Timer.jsx';
+import Timer from '../components/Timer.jsx';
 
-import Modal from 'Utils/Modal.jsx';
-import Socket from 'Utils/Socket.jsx';
-import Storage from 'Utils/Storage.jsx';
-import Toast from 'Utils/Toast.jsx';
+import Modal from '../utils/Modal';
+import Socket from '../utils/Socket.jsx';
+import Storage from '../utils/Storage';
+import Toast from '../utils/Toast';
 
-import * as uiActions from 'Actions/ui';
+import * as uiActions from '../actions/ui';
 
-import { VERSION, TWEET, HOST, PROMPTS, MODALS, PIXELS, COLORS, REGEX } from 'Lib/constants';
+import { VERSION, TWEET, HOST, PROMPTS, MODALS, PIXELS, COLORS, REGEX } from '../../lib/constants';
 
 class Sidebar extends Component {
 

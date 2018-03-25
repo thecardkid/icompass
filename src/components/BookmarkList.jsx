@@ -4,10 +4,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import _ from 'underscore';
 
-import Modal from 'Utils/Modal.jsx';
-import Storage from 'Utils/Storage.jsx';
+import Modal from '../utils/Modal';
+import Storage from '../utils/Storage';
 
-import { MODALS } from 'Lib/constants';
+import { MODALS } from '../../lib/constants';
 
 export default class BookmarkList extends Component {
     constructor(props) {

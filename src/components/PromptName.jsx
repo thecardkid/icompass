@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 
-import Modal from '../utils/Modal.jsx';
+import Modal from '../utils/Modal';
 import { PROMPTS, REGEX } from '../../lib/constants';
 
 export default class PromptName extends Component {
