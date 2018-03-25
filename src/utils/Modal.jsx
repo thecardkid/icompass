@@ -100,7 +100,7 @@ export default class Modal {
   alertRouteErrors(validCode, validUsername) {
     let err = '<h3>There was a problem with your login info</h3>';
 
-    if (!validCode) err += '<p>Your code was not valid</p>';
+    if (!validCode) err += '<p>Your code is not valid</p>';
     if (!validUsername) err += '<p>Username can only contain letters, and must not be longer than 15 characters</p>';
 
     err += '<p>You will now be directed to the login page</p>';

@@ -94,7 +94,6 @@ class LandingPage extends Component {
                required
                placeholder={'Your name (as you\'d like it to appear, no spaces)'} />
         <input type="submit"
-               name="next"
                value="submit" />
       </form>
     );
@@ -114,7 +113,6 @@ class LandingPage extends Component {
                required
                placeholder={'Your name (as you\'d like it to appear, no spaces)'} />
         <input type="submit"
-               name="next"
                value="submit" />
       </form>
     );
