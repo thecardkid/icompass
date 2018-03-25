@@ -25,7 +25,7 @@ describe('sidebar', () => {
       b.click('button[name="share-edit"]');
       b.waitForVisible('#ic-modal');
       expect('#ic-modal-body h3').to.have.text(/Share this link below/);
-      expect('#ic-modal-body p').to.have.text(/http:\/\/localhost:8080\/compass\/edit/);
+      expect('#ic-modal-body p').to.have.text(/\/compass\/edit/);
       b.click('#ic-modal-confirm');
     });
 
@@ -33,7 +33,7 @@ describe('sidebar', () => {
       b.click('button[name="share-view"]');
       b.waitForVisible('#ic-modal');
       expect('#ic-modal-body h3').to.have.text(/Share this link below/);
-      expect('#ic-modal-body p').to.have.text(/http:\/\/localhost:8080\/compass\/view/);
+      expect('#ic-modal-body p').to.have.text(/\/compass\/view/);
       b.click('#ic-modal-confirm');
     });
 
