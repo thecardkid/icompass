@@ -11,6 +11,7 @@ import _ from 'underscore';
 import Timer from 'Components/Timer.jsx';
 
 import Modal from 'Utils/Modal.jsx';
+import Socket from 'Utils/Socket.jsx';
 import Storage from 'Utils/Storage.jsx';
 import Toast from 'Utils/Toast.jsx';
 
@@ -24,6 +25,7 @@ class Sidebar extends Component {
     super(props, context);
     this.toast = new Toast();
     this.modal = new Modal();
+    this.socket = new Socket(this);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -82,12 +84,11 @@ class Sidebar extends Component {
   };
 
   emailReminder = (text) => {
-    this.modal.prompt(text || 'Enter your emai below to receive a reminder link to this workspace:', (status, email) => {
+    this.modal.prompt(text || 'Enter your email below to receive a reminder link to this workspace:', (status, email) => {
       if (!status) return;
 
       if (REGEX.EMAIL.test(email)) {
-        const { code, center } = this.state.data;
-        return this.socket.emitSendMail(code, center, this.state.username, email);
+        return this.socket.emitSendMail(this.props.compass.editCode, this.props.you, email);
       }
 
       this.emailReminder(`"${email}" does not look right - make sure you typed your email address correctly:`);

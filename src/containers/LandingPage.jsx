@@ -145,8 +145,8 @@ class LandingPage extends Component {
       }
 
       if (REGEX.EMAIL.test(email)) {
-        const { code, center } = this.state.data;
-        this.socket.emitSendMail(code, center, this.state.username, email);
+        const { code } = this.state.data;
+        this.socket.emitSendMail(code, this.state.username, email);
         return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
       }
 

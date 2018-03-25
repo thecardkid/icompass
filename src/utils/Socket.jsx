@@ -171,11 +171,10 @@ export default class Socket {
         this.socket.emit('find compass', { code, username });
     }
 
-    emitSendMail(code, center, username, receiverEmail) {
+    emitSendMail(code, username, receiverEmail) {
         if (this.socket.disconnected) return this.alertInvalidAction();
         this.socket.emit('send mail', {
             editCode: code,
-            center: center,
             username: username,
             email: receiverEmail
         });
