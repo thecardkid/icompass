@@ -8,8 +8,8 @@ const setup = () => {
   browser.setValue('#compass-center', 'webdriverio');
   browser.setValue('#username', 'sandbox');
   browser.click('button[name=next]');
-  browser.waitForVisible('.third', 1000);
-  browser.click('button[name=to-workspace]');
+  browser.waitForVisible('#ic-modal', 1000);
+  browser.click('#ic-modal-confirm');
   browser.waitForVisible('#ic-sidebar', 1000);
 };
 

@@ -15,7 +15,7 @@ import Socket from 'Utils/Socket.jsx';
 import Toast from 'Utils/Toast.jsx';
 import Validator from 'Utils/Validator.jsx';
 
-import { ERROR_MSG } from 'Lib/constants';
+import { REGEX } from 'Lib/constants';
 
 const LOGIN_TYPE = {
   MAKE: 0,
@@ -42,7 +42,7 @@ class LandingPage extends Component {
     $(window).off('resize', this.props.uiActions.resize);
   }
 
-  setLoginType = (type) => {
+  setLoginType = (type) => () => {
     $('#compass-center').val('');
     $('#compass-code').val('');
     $('#username').val('');
@@ -75,8 +75,8 @@ class LandingPage extends Component {
     return (
       <div className="section">
         <h1>Are you making or finding a compass?</h1>
-        <button className="ic-button" name="make" onClick={() => this.setLoginType(LOGIN_TYPE.MAKE)}>making</button>
-        <button className="ic-button" name="find" onClick={() => this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
+        <button className="ic-button" name="make" onClick={this.setLoginType(LOGIN_TYPE.MAKE)}>making</button>
+        <button className="ic-button" name="find" onClick={this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
       </div>
     );
   };
@@ -127,69 +127,45 @@ class LandingPage extends Component {
     return null;
   };
 
-  getNullNotification = () => {
-    let error = <h2>I couldn&apos;t find your compass. Do you have the right code?</h2>;
-    if (this.state.loginType === LOGIN_TYPE.MAKE)
-      error = (
-        <h2>Something went wrong. I&apos;tm not sure what. Please
-          <Link to='https://github.com/thecardkid/innovators-compass/issues'>submit a bug</Link>
-        </h2>
-      );
-
-    return (
-      <div className="section third">
-        <h1>Sorry!</h1>
-        {error}
-      </div>
-    );
-  };
-
-  toWorkspace = () => {
-    let email = $('#email').val();
-    let valid = Validator.validateEmail(email);
-    let d = this.state.data, u = this.state.username;
-    let mode = d.viewOnly ? 'view' : 'edit';
-
-    if (email && !valid[0]) return this.toast.error(ERROR_MSG.INVALID('Email'));
-    if (email && valid[0]) this.socket.emitSendMail(d.code, d.center, u, email);
-
-    switch (this.state.loginType) {
-      case LOGIN_TYPE.MAKE:
-        return browserHistory.push(`/compass/edit/${d.code}/${u}`);
-
-      case LOGIN_TYPE.FIND:
-        return browserHistory.push(`/compass/${mode}/${d.code}/${u}`);
+  alertError = () => {
+    if (this.state.loginType === LOGIN_TYPE.FIND) {
+      this.modal.alert('I couldn\'t find your compass. Do you have the right code?');
+    } else if (this.state.loginType === LOGIN_TYPE.MAKE) {
+      this.modal.alert('Some thing went wrong. Please submit a bug at https://github.com/thecardkid/innovators-compass/issues');
     }
   };
 
-  getMakeSuccessNotification = () => {
-    return (
-      <div className="section third">
-        <h1>success</h1>
-        <h2>Your workspace is ready. If you would like me to email you a link to your workspace, enter your email below.
-          I won&apos; keep your email address or send you spam.</h2>
-        <input id="email" type="text"/>
-        <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>let&apos;s go</button>
-      </div>
-    );
+  getMakeSuccessNotification = (text) => {
+    this.modal.prompt(text || 'Your workspace is ready. If you would like to email you a link to the compass, enter your email below. I will not store your email address or send you spam. Leave blank if you do not want this reminder email', (status, email) => {
+      if (!status) return;
+
+      if (!email.length) {
+        const { code } = this.state.data;
+        return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
+      }
+
+      if (REGEX.EMAIL.test(email)) {
+        const { code } = this.state.data;
+        this.socket.emitSendMail(code, this.state.username, email);
+        return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
+      }
+
+      this.getMakeSuccessNotification(`"${email}" does not look right - make sure you have typed it correctly. Leave blank if you do not want this reminder email`);
+    });
   };
 
   getFindSuccessNotification = (viewOnly) => {
-    let mode = viewOnly ? 'View-only' : 'Edit';
-    return (
-      <div className="section third">
-        <h1>{mode} access</h1>
-        <h2>You will be logged in as {this.state.username}</h2>
-        <button className="ic-button" name="to-workspace" onClick={this.toWorkspace}>to workspace</button>
-      </div>
-    );
+    let mode = viewOnly ? 'view-only' : 'edit';
+    this.modal.alert(`You will be logged in as "${this.state.username}" with ${mode} access.`, () => {
+      browserHistory.push(`/compass/view/${this.state.data.code}/${this.state.username}`);
+    });
   };
 
   renderFetchResult = () => {
     if (typeof this.state.data !== 'object' || this.state.data === null) return;
 
     if (!this.state.data.success)
-      return this.getNullNotification();
+      return this.alertError();
 
     if (this.state.loginType === LOGIN_TYPE.MAKE)
       return this.getMakeSuccessNotification();

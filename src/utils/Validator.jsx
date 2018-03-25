@@ -36,14 +36,6 @@ export default {
         return [ true, center ];
     },
 
-    validateEmail(email) {
-        if (!REGEX.EMAIL.test(email)) {
-            return [ false, null ];
-        }
-
-        return [ true, email ];
-    },
-
     validateStickyText(text) {
         // return [ validAsHyperlink, validAsText ]
         let isUrl = REGEX.URL.test(text);

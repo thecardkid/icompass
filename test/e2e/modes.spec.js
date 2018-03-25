@@ -51,12 +51,12 @@ describe('view modes', () => {
       b.setValue('#compass-code', viewCode);
       b.setValue('#username', 'sandbox');
       b.click('button[name=next]');
-      b.waitForVisible('.third');
+      b.waitForVisible('#ic-modal');
 
-      expect('.third h1').to.have.text(/View-only access/);
-      expect('.third h2').to.have.text(/You will be logged in as sandbox/);
+      expect('#ic-modal-body').to.have.text(/view-only access/);
+      expect('#ic-modal-body').to.have.text(/sandbox/);
 
-      b.click('button[name=to-workspace]');
+      b.click('#ic-modal-confirm');
       b.waitForVisible('#compass');
 
       expect('#center').to.be.visible();
