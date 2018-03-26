@@ -61,6 +61,7 @@ export default class Socket {
         this.socket.on('deleted notes', this.handleDeletedNotes);
         this.socket.on('start timer', this.handleStartTimer);
         this.socket.on('all cancel timer', this.handleCancelTimer);
+        this.socket.on('center set', this.handleCenterSet);
     }
 
     disconnect() {
@@ -161,9 +162,9 @@ export default class Socket {
         });
     }
 
-    emitCreateCompass(center, username) {
+    emitCreateCompass(topic, username) {
         if (this.socket.disconnected) return this.alertInvalidAction();
-        this.socket.emit('create compass', { center, username });
+        this.socket.emit('create compass', { topic, username });
     }
 
     emitFindCompass(code, username) {
@@ -206,6 +207,10 @@ export default class Socket {
         if (this.component.props.userActions)
             this.component.props.userActions.me(data.username);
     }
+
+    emitSetCenter = (id, center) => {
+        this.socket.emit('set center', { id, center });
+    };
 
     handleDisconnect() {
         this.component.props.uiActions.setSidebarVisible(true);
@@ -272,6 +277,10 @@ export default class Socket {
         if (this.component.props.visualMode)
             this.component.props.workspaceActions.removeNotesIfSelected(deletedIdx);
     }
+
+    handleCenterSet = (center) => {
+        this.component.setCompassCenter(center);
+    };
 
     handleStartTimer(min, sec, startTime) {
         this.component.props.workspaceActions.setTimer({ min, sec, startTime });

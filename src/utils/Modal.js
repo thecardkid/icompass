@@ -78,6 +78,7 @@ export default class Modal {
 
   prompt(text, cb) {
     $('#ic-modal-container').empty().append(this.generatePrompt(text));
+    $('#ic-modal-input').focus();
     this.addBackdropIfNecessary();
     this.show = true;
 

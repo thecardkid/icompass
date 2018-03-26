@@ -1,6 +1,6 @@
 'use strict';
 
-import { EDITING_MODE } from 'Lib/constants.js';
+import { EDITING_MODE } from '../../lib/constants.js';
 
 const defaultState = {
     newNote: false,

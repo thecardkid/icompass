@@ -1,5 +1,3 @@
-'use strict';
-
 import html2canvas from 'html2canvas';
 import interact from 'interactjs';
 import $ from 'jquery';
@@ -28,7 +26,7 @@ import Sidebar from '../components/Sidebar.jsx';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket.jsx';
+import Socket from '../utils/Socket.js';
 import Toast from '../utils/Toast';
 
 import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS, REGEX } from '../../lib/constants';
@@ -47,15 +45,7 @@ class Workspace extends Component {
       this.socket.emitFindCompassEdit();
     }
 
-    this.exportCompass = this.exportCompass.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.showChat = this.showChat.bind(this);
-    this.renderCornerButtons = this.renderCornerButtons.bind(this);
-    this.center = this.center.bind(this);
-    this.submitDraft = this.submitDraft.bind(this);
-
     this.notes = null;
-
     this.keypressHandler = {
       78: this.props.uiActions.showNewNote,
       67: this.props.uiActions.toggleChat,
@@ -150,7 +140,7 @@ class Workspace extends Component {
     return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
   }
 
-  handleKeyDown(e) {
+  handleKeyDown = (e) => {
     if (this.modal.show && e.which === KEYCODES.ESC) return this.modal.close();
 
     if (this.props.ui.newNote || this.props.ui.doodleNote ||
@@ -166,9 +156,9 @@ class Workspace extends Component {
       e.preventDefault();
       this.keypressHandler[e.which]();
     }
-  }
+  };
 
-  exportCompass() {
+  exportCompass = () => {
     this.props.uiActions.setSidebarVisible(false);
     this.props.uiActions.setChatVisible(false);
 
@@ -180,21 +170,21 @@ class Workspace extends Component {
         doc.save('compass.pdf');
       });
     }, 500);
-  }
+  };
 
-  showChat() {
+  showChat = () => {
     this.props.chatActions.read();
     this.props.uiActions.toggleChat();
-  }
+  };
 
-  center(w, h) {
+  center = (w, h) => {
     return {
       top: Math.max((this.props.ui.vh - h) / 2, 0),
       left: Math.max((this.props.ui.vw - w) / 2, 0),
     };
-  }
+  };
 
-  renderCornerButtons() {
+  renderCornerButtons = () => {
     let actions = this.props.uiActions;
     let showChatStyle = {
       background: this.props.chat.unread ? COLORS.RED : COLORS.LIGHT,
@@ -221,15 +211,15 @@ class Workspace extends Component {
         </button>
       </div>
     );
-  }
+  };
 
-  submitDraft(note, idx) {
+  submitDraft = (note, idx) => {
     this.props.workspaceActions.undraft(idx);
 
     delete note.draft;
     note.color = this.props.users.nameToColor[this.props.users.me];
     this.socket.emitNewNote(note);
-  }
+  };
 
   chooseDisplayedNotes(w, notes) {
     if (this.props.visualMode) {
@@ -269,27 +259,32 @@ class Workspace extends Component {
     return (
       <div>
         <Tappable onTap={this.toast.clear}>
-          <div id="ic-toast" onClick={this.toast.clear}/>
+          <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
         {this.renderCornerButtons()}
         <Compass destroy={this.socket.emitDeleteNote}
                  notes={this.notes}
-                 submitDraft={this.submitDraft}/>
+                 submitDraft={this.submitDraft} />
         <Sidebar connected={this.socket.socket.connected}
                  destroy={this.socket.emitDeleteCompass}
                  stop={this.socket.emitCancelTimer}
-                 exportCompass={this.exportCompass}/>
-        <ModesToolbar/>
-        <Chat socket={this.socket}/>
-        <Feedback show={ui.showFeedback} style={this.center(400, 250)} close={this.props.uiActions.toggleFeedback}/>
-        <PrivacyStatement show={ui.showPrivacyStatement} style={this.center(400, 200)}
-                          close={this.props.uiActions.togglePrivacyStatement}/>
-        <About show={ui.showAbout} close={this.props.uiActions.toggleAbout}/>;
-        <VisualModeToolbar show={this.props.visualMode} socket={this.socket}/>;
+                 exportCompass={this.exportCompass} />
+        <ModesToolbar />
+        <Chat socket={this.socket} />
+        <Feedback show={ui.showFeedback}
+                  style={this.center(400, 250)}
+                  close={this.props.uiActions.toggleFeedback} />
+        <PrivacyStatement show={ui.showPrivacyStatement}
+                          style={this.center(400, 200)}
+                          close={this.props.uiActions.togglePrivacyStatement} />
+        <About show={ui.showAbout}
+               close={this.props.uiActions.toggleAbout} />
+        <VisualModeToolbar show={this.props.visualMode}
+                           socket={this.socket} />
         <FormChooser socket={this.socket}
                      center={this.center}
                      notes={this.notes}
-                     commonAttrs={formAttrs}/>
+                     commonAttrs={formAttrs} />
       </div>
     );
   }
