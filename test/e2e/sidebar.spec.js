@@ -89,10 +89,10 @@ describe('sidebar', () => {
 
     buttons[3].click();
     b.pause(500);
-    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
+    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('0px');
     buttons[3].click();
     b.pause(500);
-    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('0px');
+    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
 
     buttons[4].click();
     expect('#ic-about').to.be.visible();

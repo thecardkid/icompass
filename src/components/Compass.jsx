@@ -73,13 +73,15 @@ class Compass extends Component {
   setCompassCenter = (center) => {
     this.animateQuadrants = true;
     this.props.compassX.setCenter(center);
+    setTimeout(() => this.props.uiX.setSidebarVisible(true), 3000);
   };
 
   fadeInQuadrants = (deltaTimeMs) => {
-    setTimeout(() => $('#observations').css({opacity: 1}), 50);
-    setTimeout(() => $('#principles').css({opacity: 1}), 50 + deltaTimeMs);
-    setTimeout(() => $('#ideas').css({opacity: 1}), 50 + (2 * deltaTimeMs));
-    setTimeout(() => $('#experiments').css({opacity: 1}), 50 + (3 * deltaTimeMs));
+    const start = 50;
+    setTimeout(() => $('#observations').css({opacity: 1}), start);
+    setTimeout(() => $('#principles').css({opacity: 1}), start + deltaTimeMs);
+    setTimeout(() => $('#ideas').css({opacity: 1}), start + (2 * deltaTimeMs));
+    setTimeout(() => $('#experiments').css({opacity: 1}), start + (3 * deltaTimeMs));
   };
 
   center(w, h) {

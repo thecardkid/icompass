@@ -16,11 +16,11 @@ describe('basic functionality', () => {
     expect('#vline').to.be.visible();
     expect('#hline').to.be.visible();
     expect('#ic-sidebar').to.be.visible();
-    expect('#ic-chat').to.be.visible();
+    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
     expect('#ic-show-chat').to.be.visible();
     expect('#ic-show-sidebar').to.be.visible();
     expect('#ic-modes').to.be.visible();
-    expect('#center').to.have.text('webdriverio');
+    expect('#center').to.have.text('topic');
 
     expect('#observations').to.be.visible();
     expect('#observations h1').to.have.text(/OBSERVATIONS/);
@@ -50,7 +50,8 @@ describe('basic functionality', () => {
     it('chat', () => {
       b.keys(['c']);
       b.pause(500);
-      expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
+      expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('0px');
+      b.keys(['c']);
     });
 
     it('sidebar', () => {
