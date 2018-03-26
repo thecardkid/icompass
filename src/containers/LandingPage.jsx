@@ -1,26 +1,23 @@
 'use strict';
 
-import React, { Component } from 'react';
+import $ from 'jquery';
 import PropTypes from 'prop-types';
-import { browserHistory, Link } from 'react-router';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 
-import * as uiActions from 'Actions/ui';
+import * as uiActions from '../actions/ui';
 
-import BookmarkList from 'Components/BookmarkList.jsx';
+import BookmarkList from '../components/BookmarkList.jsx';
 
-import Modal from 'Utils/Modal.jsx';
-import Socket from 'Utils/Socket.jsx';
-import Toast from 'Utils/Toast.jsx';
-import Validator from 'Utils/Validator.jsx';
+import Modal from '../utils/Modal';
+import Socket from '../utils/Socket.jsx';
+import Toast from '../utils/Toast';
 
-import { REGEX } from 'Lib/constants';
+import { ERROR_MSG, REGEX } from '../../lib/constants';
 
-const LOGIN_TYPE = {
-  MAKE: 0,
-  FIND: 1,
-};
+const FORM_TYPE = { MAKE: 0, FIND: 1 };
 
 class LandingPage extends Component {
   constructor(props) {
@@ -29,7 +26,7 @@ class LandingPage extends Component {
     this.modal = new Modal();
 
     this.socket = new Socket(this);
-    this.state = { loginType: null };
+    this.state = { formType: FORM_TYPE.MAKE };
 
     this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
   }
@@ -42,95 +39,99 @@ class LandingPage extends Component {
     $(window).off('resize', this.props.uiActions.resize);
   }
 
-  setLoginType = (type) => () => {
+  setFormType = (type) => () => {
     $('#compass-center').val('');
     $('#compass-code').val('');
     $('#username').val('');
-    this.setState({ data: null, loginType: type });
+    this.setState({ data: null, formType: type });
   };
 
-  validateFindInput = () => {
-    let code = Validator.validateCompassCode($('#compass-code').val());
-    let username = Validator.validateUsername($('#username').val());
+  validateFindInput = (e) => {
+    e.preventDefault();
 
-    if (!code[0]) return this.modal.alert(code[1]);
-    if (!username[0]) return this.modal.alert(username[1]);
+    const code = this.refs.code.value;
+    const username = this.refs.username.value;
 
-    this.setState({ username: username[1] });
-    this.socket.emitFindCompass(code[1], username[1]);
+    if (code.length !== 8) {
+      return this.modal.alert(ERROR_MSG.INVALID('Your code'));
+    }
+
+    if (!REGEX.CHAR_ONLY.test(username)) {
+      return this.modal.alert(ERROR_MSG.UNAME_HAS_NON_CHAR);
+    }
+
+    this.setState({ username });
+    this.socket.emitFindCompass(code, username);
   };
 
-  validateMakeInput = () => {
-    let center = Validator.validateCenter($('#compass-center').val());
-    let username = Validator.validateUsername($('#username').val());
+  validateMakeInput = (e) => {
+    e.preventDefault();
 
-    if (!center[0]) return this.modal.alert(center[1]);
-    if (!username[0]) return this.modal.alert(username[1]);
+    const topic = this.refs.topic.value;
+    const username = this.refs.username.value;
 
-    this.setState({ username: username[1] });
-    this.socket.emitCreateCompass(center[1], username[1]);
+    if (!REGEX.CHAR_ONLY.test(username)) {
+      return this.modal.alert(ERROR_MSG.UNAME_HAS_NON_CHAR);
+    }
+
+    this.setState({ username });
+    return this.socket.emitCreateCompass(topic, username);
   };
 
-  renderChooseMode = () => {
+  renderFindForm = () => {
     return (
-      <div className="section">
-        <h1>Are you making or finding a compass?</h1>
-        <button className="ic-button" name="make" onClick={this.setLoginType(LOGIN_TYPE.MAKE)}>making</button>
-        <button className="ic-button" name="find" onClick={this.setLoginType(LOGIN_TYPE.FIND)}>finding</button>
-      </div>
+      <form onSubmit={this.validateFindInput}>
+        <input id="compass-code"
+               ref="code"
+               required
+               placeholder="The code of the compass you're looking for"
+               maxLength={8}
+               autoCorrect="off"
+               autoCapitalize="none" />
+        <input id="username"
+               ref="username"
+               maxLength={15}
+               required
+               placeholder={'Your name (as you\'d like it to appear, no spaces)'} />
+        <input type="submit"
+               value="submit" />
+      </form>
     );
   };
 
-  renderFindInput = () => {
+  renderMakeForm = () => {
     return (
-      <div className="section">
-        <h1>I need some info</h1>
-        <div className="response">
-          <input id="compass-code"
-                 placeholder="The code of the compass you're looking for"
-                 autoCorrect="off"
-                 autoCapitalize="none"/>
-        </div>
-        <div className="response">
-          <input id="username"
-                 placeholder={'Your name (as you\'d like it to appear, no spaces)'}/>
-        </div>
-        <button className="ic-button" name="next" onClick={this.validateFindInput}>next</button>
-      </div>
+      <form onSubmit={this.validateMakeInput}>
+        <input id="compass-center"
+               ref="topic"
+               required
+               maxLength={30}
+               placeholder="Topic: Who's involved?" />
+        <input id="username"
+               ref="username"
+               maxLength={15}
+               required
+               placeholder={'Your name (as you\'d like it to appear, no spaces)'} />
+        <input type="submit"
+               value="submit" />
+      </form>
     );
   };
 
-  renderMakeInput = () => {
-    return (
-      <div className="section">
-        <h1>I need some info</h1>
-        <div className="response">
-          <input id="compass-center"
-                 placeholder="Topic: Who's involved?"/>
-        </div>
-        <div className="response">
-          <input id="username"
-                 placeholder={'Your name (as you\'d like it to appear, no spaces)'}/>
-        </div>
-        <button className="ic-button" name="next" onClick={this.validateMakeInput}>next</button>
-      </div>
-    );
-  };
-
-  renderModeInput = () => {
-    if (this.state.loginType === LOGIN_TYPE.FIND) {
-      return this.renderFindInput();
-    } else if (this.state.loginType === LOGIN_TYPE.MAKE) {
-      return this.renderMakeInput();
+  renderForm = () => {
+    if (this.state.formType === FORM_TYPE.FIND) {
+      return this.renderFindForm();
+    } else if (this.state.formType === FORM_TYPE.MAKE) {
+      return this.renderMakeForm();
     }
 
     return null;
   };
 
   alertError = () => {
-    if (this.state.loginType === LOGIN_TYPE.FIND) {
+    if (this.state.formType === FORM_TYPE.FIND) {
       this.modal.alert('I couldn\'t find your compass. Do you have the right code?');
-    } else if (this.state.loginType === LOGIN_TYPE.MAKE) {
+    } else if (this.state.formType === FORM_TYPE.MAKE) {
       this.modal.alert('Some thing went wrong. Please submit a bug at https://github.com/thecardkid/innovators-compass/issues');
     }
   };
@@ -167,30 +168,40 @@ class LandingPage extends Component {
     if (!this.state.data.success)
       return this.alertError();
 
-    if (this.state.loginType === LOGIN_TYPE.MAKE)
+    if (this.state.formType === FORM_TYPE.MAKE)
       return this.getMakeSuccessNotification();
 
-    if (this.state.loginType === LOGIN_TYPE.FIND)
+    if (this.state.formType === FORM_TYPE.FIND)
       return this.getFindSuccessNotification(this.state.data.viewOnly);
   };
 
   render() {
-    let w = this.props.ui.vw - 200;
-    let loginStyle = {
-      width: Math.min(600, w),
-      marginLeft: Math.max(0, this.props.ui.vw - 200 - 600) / 2,
-    };
+    const active = this.state.formType === FORM_TYPE.MAKE;
 
     return (
       <div>
         <BookmarkList/>
-        <div id="ic-landing-container" style={{ width: w }}>
-          <div id="ic-landing" style={loginStyle}>
+        <div id="ic-landing-container" style={{ width: this.props.ui.vw - 200 }}>
+          <div id="ic-landing">
             <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to
               make anything better</h1>
             <div id="ic-tour"><Link to="/tutorial">First-timer? Take the tour!</Link></div>
-            {this.renderChooseMode()}
-            {this.renderModeInput()}
+
+            <div className="form section">
+              <div id="header">
+                <div className={active ? 'active' : ''}
+                     name="make"
+                     onClick={this.setFormType(FORM_TYPE.MAKE)}>
+                  create workspace
+                </div>
+                <div className={active ? '' : 'active'}
+                     name="find"
+                     onClick={this.setFormType(FORM_TYPE.FIND)}>
+                  find workspace
+                </div>
+              </div>
+              {this.renderForm()}
+            </div>
             {this.renderFetchResult()}
           </div>
         </div>

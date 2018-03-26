@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import _ from 'underscore';
 import ReactTooltip from 'react-tooltip';
 
-import Modal from 'Utils/Modal.jsx';
+import Modal from 'Utils/Modal';
 
 import * as uiActions from 'Actions/ui';
 

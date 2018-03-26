@@ -1,38 +1,38 @@
 'use strict';
 
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 
-import Modal from 'Utils/Modal.jsx';
-import Validator from 'Utils/Validator.jsx';
-import { PROMPTS } from 'Lib/constants';
+import Modal from '../utils/Modal';
+import { PROMPTS, REGEX } from '../../lib/constants';
 
 export default class PromptName extends Component {
-    componentDidMount() {
-        let modal = new Modal();
+  componentDidMount() {
+    this.modal = new Modal();
+    this.promptForName('Welcome to Innovators\' Compass. Please enter your name as it would appear to others in this workspace.');
+  }
 
-        modal.prompt(PROMPTS.PROMPT_NAME, (submit, name) => {
-            if (!submit) return browserHistory.push('/');
+  promptForName = (prefix) => {
+    const { code } = this.props.params;
+    const text = `${prefix} ${PROMPTS.PROMPT_NAME}`;
 
-            let valid = Validator.validateUsername(name);
+    this.modal.prompt(text, (submit, name) => {
+      if (!submit) return browserHistory.push('/');
 
-            if (valid[0]) {
-                let newUrl = '/compass/edit/' + this.props.params.code + '/' + valid[1];
-                browserHistory.push(newUrl);
-            } else {
-                modal.alert(valid[1] + '. You will now be taken back to the login page.', () => {
-                    browserHistory.push('/');
-                });
-            }
-        });
-    }
+      if (name.length > 15 || !REGEX.CHAR_ONLY.test(name)) {
+        return this.promptForName(`"${name}" is not valid.`);
+      }
 
-    render() {
-        return <div />;
-    }
+      browserHistory.push(`/compass/edit/${code}/${name}`);
+    });
+  };
+
+  render() {
+    return <div/>;
+  }
 }
 
 PromptName.propTypes = {
-    params: PropTypes.object.isRequired
+  params: PropTypes.object.isRequired,
 };

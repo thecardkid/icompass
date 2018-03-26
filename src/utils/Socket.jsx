@@ -3,10 +3,10 @@
 import SocketIOClient from 'socket.io-client';
 import { browserHistory } from 'react-router';
 
-import Modal from 'Utils/Modal.jsx';
-import Toast from 'Utils/Toast.jsx';
+import Modal from '../utils/Modal';
+import Toast from '../utils/Toast';
 
-import { PROMPTS } from 'Lib/constants';
+import { PROMPTS } from '../../lib/constants';
 
 export default class Socket {
     constructor(component) {

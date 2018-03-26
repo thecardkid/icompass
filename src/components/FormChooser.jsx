@@ -1,17 +1,17 @@
 'use strict';
 
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import NoteForm from 'Components/NoteForm.jsx';
-import DoodleForm from 'Components/DoodleForm.jsx';
-import TimerForm from 'Components/TimerForm.jsx';
+import NoteForm from '../components/NoteForm.jsx';
+import DoodleForm from '../components/DoodleForm.jsx';
+import TimerForm from '../components/TimerForm.jsx';
 
-import * as workspaceActions from 'Actions/workspace';
+import * as workspaceActions from '../actions/workspace';
 
-import { EDITING_MODE } from 'Lib/constants';
+import { EDITING_MODE } from '../../lib/constants';
 
 class FormChooser extends Component {
     constructor(props) {

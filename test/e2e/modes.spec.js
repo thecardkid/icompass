@@ -5,9 +5,6 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const ERROR_MSG = require('../../lib/constants').ERROR_MSG;
-const PROMPTS = require('../../lib/constants').PROMPTS;
-
 describe('view modes', () => {
   let editURL,
     viewURL,
@@ -24,9 +21,7 @@ describe('view modes', () => {
     viewURL = `http://localhost:8080/compass/view/${viewCode}`;
   });
 
-  afterAll(() => {
-    require('./utils').cleanup();
-  });
+  afterAll(() => require('./utils').cleanup);
 
   describe('view-only mode', () => {
     it('from url', () => {
@@ -47,10 +42,10 @@ describe('view modes', () => {
     it('from login page', () => {
       b.url('http://localhost:8080');
       b.waitForVisible('body');
-      b.click('button[name=find]');
+      b.click('div[name=find]');
       b.setValue('#compass-code', viewCode);
       b.setValue('#username', 'sandbox');
-      b.click('button[name=next]');
+      b.click('input[type=submit]');
       b.waitForVisible('#ic-modal');
 
       expect('#ic-modal-body').to.have.text(/view-only access/);
@@ -72,7 +67,7 @@ describe('view modes', () => {
   });
 
   describe('edit mode', () => {
-    it('with valid username', () => {
+    it('valid username', () => {
       b.url(`${editURL}/sandbox`);
       b.waitForVisible('#compass');
 
@@ -86,13 +81,13 @@ describe('view modes', () => {
       expect('#ic-modes').to.be.visible();
     });
 
-    it('with bad code and bad username', () => {
-      b.url(`http://localhost:8080/compass/edit/${editCode.substring(1, 5)}/,,,`);
+    it('invalid code and invalid username', () => {
+      b.url('http://localhost:8080/compass/edit/12345/,,,');
       b.waitForVisible('#ic-modal');
 
       expect('#ic-modal-body').to.have.text(/There was a problem with your login info/);
       expect('#ic-modal-body').to.have.text(/Your code is not valid/);
-      expect('#ic-modal-body').to.have.text(/Username can only contain a-zA-Z/);
+      expect('#ic-modal-body').to.have.text(/Username can only contain letters/);
 
       b.click('#ic-modal-confirm');
       b.waitForVisible('#ic-landing');
@@ -119,20 +114,20 @@ describe('view modes', () => {
       });
 
       it('bad username', () => {
-        expect('#ic-modal-body h3').to.have.text(new RegExp(PROMPTS.PROMPT_NAME, 'i'));
+        expect('#ic-modal-body h3').to.have.text(/Welcome/);
 
         b.setValue('#ic-modal-input', 'sandbox2');
         b.click('#ic-modal-confirm');
-        b.pause(100);
+        b.pause(200);
 
-        expect('#ic-modal-body').to.have.text(new RegExp(ERROR_MSG.UNAME_HAS_NON_CHAR, 'i'));
+        expect('#ic-modal-body').to.have.text(/not valid/);
       });
 
       it('missing username', () => {
         b.click('#ic-modal-confirm');
-        b.pause(100);
+        b.pause(200);
 
-        expect('#ic-modal-body').to.have.text(new RegExp(ERROR_MSG.REQUIRED('Username'), 'i'));
+        expect('#ic-modal-body').to.have.text(/not valid/);
       });
 
       it('valid username', () => {

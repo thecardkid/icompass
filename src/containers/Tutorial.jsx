@@ -1,26 +1,26 @@
 'use strict';
 
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import _ from 'underscore';
 
-import * as noteActions from 'Actions/notes';
-import * as compassActions from 'Actions/compass';
-import * as userActions from 'Actions/users';
-import * as uiActions from 'Actions/ui';
+import * as noteActions from '../actions/notes';
+import * as compassActions from '../actions/compass';
+import * as userActions from '../actions/users';
+import * as uiActions from '../actions/ui';
 
-import Compass from 'Components/Compass.jsx';
-import Sidebar from 'Components/Sidebar.jsx';
-import Chat from 'Components/Chat.jsx';
-import NoteForm from 'Components/NoteForm.jsx';
-import DoodleForm from 'Components/DoodleForm.jsx';
-import ModesToolbar from 'Components/ModesToolbar.jsx';
+import Compass from '../components/Compass.jsx';
+import Sidebar from '../components/Sidebar.jsx';
+import Chat from '../components/Chat.jsx';
+import NoteForm from '../components/NoteForm.jsx';
+import DoodleForm from '../components/DoodleForm.jsx';
+import ModesToolbar from '../components/ModesToolbar.jsx';
 
-import DefaultCompass from 'Models/defaultCompass';
+import DefaultCompass from '../../models/defaultCompass';
 
 const FOCUSED = 1, UNFOCUSED = 0.1;
 const USERS = {usernameToColor: {'sandbox': '#CCFFFF'}, colors: []};

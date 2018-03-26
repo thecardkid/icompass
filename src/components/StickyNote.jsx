@@ -7,13 +7,13 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Modal from 'Utils/Modal.jsx';
-import Toast from 'Utils/Toast.jsx';
+import Modal from '../utils/Modal';
+import Toast from '../utils/Toast';
 
-import * as uiActions from 'Actions/ui';
-import * as workspaceActions from 'Actions/workspace';
+import * as uiActions from '../actions/ui';
+import * as workspaceActions from '../actions/workspace';
 
-import { PROMPTS, COLORS, EDITING_MODE, MODALS } from 'Lib/constants';
+import { PROMPTS, COLORS, EDITING_MODE, MODALS } from '../../lib/constants';
 
 class StickyNote extends Component {
     constructor(props) {

@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'underscore';
 
-import Modal from 'Utils/Modal.jsx';
+import Modal from 'Utils/Modal';
 
 import * as uiActions from 'Actions/ui';
 import * as workspaceActions from 'Actions/workspace';
