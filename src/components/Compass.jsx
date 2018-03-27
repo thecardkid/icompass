@@ -84,29 +84,50 @@ class Compass extends Component {
     setTimeout(() => $('#experiments').css({opacity: 1}), start + (3 * deltaTimeMs));
   };
 
-  center(w, h) {
+  getCenterCss(r) {
     return {
-      top: Math.max((this.props.ui.vh - h) / 2, 0),
-      left: Math.max((this.props.ui.vw - w) / 2, 0),
+      top: Math.max((this.props.ui.vh - r) / 2, 0),
+      left: Math.max((this.props.ui.vw - r) / 2, 0),
+      width: r,
+      height: r,
     };
   }
 
-  calculateTextHeight(center) {
-    let lines = Math.ceil(center.length / 11),
-      textHeight = 13 * lines;
-    this.centerStyle = { marginTop: (100 - textHeight) / 2 };
-  }
+  getCenterTextCss = (charPerLine, r, width) => {
+    const lineHeight = 13;
+
+    const words = this.props.compass.center.split(' ');
+    let currLine = words.shift().length;
+    let numLines = 0;
+
+    while (words.length > 0) {
+      let w = words.shift();
+      if (currLine + w.length + 1 > charPerLine) {
+        numLines++;
+        currLine = w.length;
+      } else {
+        currLine += w.length + 1;
+      }
+    }
+    if (currLine > 0) numLines++;
+
+    let textHeight = lineHeight * numLines;
+    return {
+      marginTop: (r - textHeight) / 2,
+      width,
+    };
+  };
 
   setPeopleInvolved = () => {
     this.modal.prompt('1. Who could be involved, including you? For and with everyone involved, explore!', (res, people) => {
-      if (!res) return;
+      if (!res) return this.setPeopleInvolved();
 
       this.socket.emitSetCenter(this.props.compass._id, people);
     });
   };
 
   renderPromptFirstQuestion() {
-    const style = Object.assign(this.center(100, 100), {zIndex: 5});
+    const style = Object.assign(this.getCenterCss(100, 100), {zIndex: 5});
     return (
       <div>
         <div id="center" className="wordwrap" style={style} onClick={this.setPeopleInvolved}>
@@ -121,21 +142,20 @@ class Compass extends Component {
 
   renderCompassStructure = () => {
     const { center } = this.props.compass;
-    if (this.animateQuadrants) {
-      this.animateQuadrants = false;
-      this.fadeInQuadrants(800);
+
+    let css, length;
+    if (center.length <= 40) {
+      css = this.getCenterTextCss(11, length = 100);
+    } else if (center.length <= 70) {
+      css = this.getCenterTextCss(14, length = 120);
     } else {
-      this.fadeInQuadrants(0);
+      css = this.getCenterTextCss(16, length = 140);
     }
-
-    if (!center) return this.renderPromptFirstQuestion();
-
-    if (!this.centerStyle) this.calculateTextHeight(center);
 
     return (
       <div>
-        <div id="center" className="wordwrap" style={this.center(100, 100)}>
-          <p style={this.centerStyle}>{center}</p>
+        <div id="center" style={this.getCenterCss(length, length)}>
+          <p className="wordwrap" style={css}>{center}</p>
         </div>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
         <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
@@ -146,9 +166,24 @@ class Compass extends Component {
   };
 
   render() {
+    let compass;
+    if (this.props.compass.center.length === 0) {
+      compass = this.renderPromptFirstQuestion();
+    } else {
+      if (this.animateQuadrants) {
+        this.animateQuadrants = false;
+        this.fadeInQuadrants(800);
+      } else {
+        this.fadeInQuadrants(0);
+      }
+
+      compass = this.renderCompassStructure();
+    }
+
+
     return (
       <div id="compass">
-        {this.renderCompassStructure()}
+        {compass}
         {_.map(this.props.notes, this.renderNote)}
       </div>
     );
