@@ -18,7 +18,6 @@ import * as uiActions from '../actions/ui';
 import { VERSION, TWEET, HOST, PROMPTS, MODALS, PIXELS, COLORS, REGEX } from '../../lib/constants';
 
 class Sidebar extends Component {
-
   constructor(props, context) {
     super(props, context);
     this.toast = new Toast();
@@ -188,13 +187,14 @@ class Sidebar extends Component {
   };
 
   save = () => {
+    const { topic, editCode } = this.props.compass;
     this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
       if (submit) {
         let username = this.props.you.replace(/\d+/g, '');
-        Storage.addBookmark(bookmarkName, this.props.compass.editCode, username);
+        Storage.addBookmark(bookmarkName, editCode, username);
         this.toast.success(PROMPTS.SAVE_SUCCESS);
       }
-    });
+    }, topic);
   };
 
   logout() {
