@@ -16,5 +16,4 @@ When creating a compass, you can have me email you the codes. The email will com
 
 Go to [https://icompass.hieuqn.com](https://icompass.hieuqn.com) and follow the login steps.
 
-There is also a [tutorial](https://icompass.hieuqn.com/tutorial); some of its information will be repeated below.
-
+There is also a [tutorial](https://icompass.hieuqn.com/tutorial).
