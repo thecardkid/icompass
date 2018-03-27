@@ -12,3 +12,10 @@ export const reset = () => {
         type: 'resetCompass'
     };
 };
+
+export const setCenter = (center) => {
+    return {
+        type: 'setCenter',
+        center,
+    };
+};

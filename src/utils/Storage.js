@@ -17,7 +17,7 @@ export default {
   },
 
   addBookmark(center, code, name) {
-    let href = '/compass/edit/' + code + '/' + name;
+    let href = `/compass/edit/${code}/${name}`;
     this.addAllBookmarks([
       { center, href, name },
     ]);

@@ -7,12 +7,12 @@ import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 
-import * as uiActions from '../actions/ui';
+import * as uiX from '../actions/ui';
 
 import BookmarkList from '../components/BookmarkList.jsx';
 
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket.jsx';
+import Socket from '../utils/Socket.js';
 import Toast from '../utils/Toast';
 
 import { ERROR_MSG, REGEX } from '../../lib/constants';
@@ -28,15 +28,15 @@ class LandingPage extends Component {
     this.socket = new Socket(this);
     this.state = { formType: FORM_TYPE.MAKE };
 
-    this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
+    this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
   }
 
   componentDidMount() {
-    $(window).on('resize', this.props.uiActions.resize);
+    $(window).on('resize', this.props.uiX.resize);
   }
 
   componentWillUnmount() {
-    $(window).off('resize', this.props.uiActions.resize);
+    $(window).off('resize', this.props.uiX.resize);
   }
 
   setFormType = (type) => () => {
@@ -136,7 +136,7 @@ class LandingPage extends Component {
     }
   };
 
-  getMakeSuccessNotification = (text) => {
+  promptForEmail = (text) => {
     this.modal.prompt(text || 'Your workspace is ready. If you would like to email you a link to the compass, enter your email below. I will not store your email address or send you spam. Leave blank if you do not want this reminder email', (status, email) => {
       if (!status) return;
 
@@ -151,11 +151,11 @@ class LandingPage extends Component {
         return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
       }
 
-      this.getMakeSuccessNotification(`"${email}" does not look right - make sure you have typed it correctly. Leave blank if you do not want this reminder email`);
+      this.promptForEmail(`"${email}" does not look right - make sure you have typed it correctly. Leave blank if you do not want this reminder email`);
     });
   };
 
-  getFindSuccessNotification = (viewOnly) => {
+  notifyPrivileges = (viewOnly) => {
     let mode = viewOnly ? 'view-only' : 'edit';
     this.modal.alert(`You will be logged in as "${this.state.username}" with ${mode} access.`, () => {
       browserHistory.push(`/compass/view/${this.state.data.code}/${this.state.username}`);
@@ -169,10 +169,10 @@ class LandingPage extends Component {
       return this.alertError();
 
     if (this.state.formType === FORM_TYPE.MAKE)
-      return this.getMakeSuccessNotification();
+      return this.promptForEmail();
 
     if (this.state.formType === FORM_TYPE.FIND)
-      return this.getFindSuccessNotification(this.state.data.viewOnly);
+      return this.notifyPrivileges(this.state.data.viewOnly);
   };
 
   render() {
@@ -212,7 +212,7 @@ class LandingPage extends Component {
 
 LandingPage.propTypes = {
   ui: PropTypes.object.isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
+  uiX: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 function mapStateToProps(state) {
@@ -223,7 +223,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    uiActions: bindActionCreators(uiActions, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
   };
 }
 

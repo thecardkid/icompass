@@ -74,8 +74,6 @@ describe('view modes', () => {
       expect('#center').to.be.visible();
       expect('#vline').to.be.visible();
       expect('#hline').to.be.visible();
-      expect('#ic-sidebar').to.be.visible();
-      expect('#ic-chat').to.be.visible();
       expect('#ic-show-chat').to.be.visible();
       expect('#ic-show-sidebar').to.be.visible();
       expect('#ic-modes').to.be.visible();
@@ -136,8 +134,6 @@ describe('view modes', () => {
         b.waitForVisible('#compass');
         expect('#vline').to.be.visible();
         expect('#hline').to.be.visible();
-        expect('#ic-sidebar').to.be.visible();
-        expect('#ic-chat').to.be.visible();
         expect('#ic-show-chat').to.be.visible();
         expect('#ic-show-sidebar').to.be.visible();
         expect('#ic-modes').to.be.visible();

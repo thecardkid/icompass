@@ -129,4 +129,3 @@ export const reset = () => {
         type: 'resetUI'
     };
 };
-

@@ -26,6 +26,8 @@ describe('collaboration', () => {
     b.newWindow(shareUrl, 'friendo', 'width=2000,height=2000');
     b.setViewportSize({ width: 2000, height: 2000 });
     b.waitForVisible('#compass');
+    b.click('#ic-show-sidebar');
+    b.waitForVisible('#ic-sidebar');
     tabs.friendo = b.getCurrentTabId();
     colors.friendo = b.getCssProperty('.ic-user:nth-of-type(2)', 'background-color').value;
     expect('.ic-user').to.have.count(2);
@@ -94,6 +96,8 @@ describe('collaboration', () => {
       b.switchTab(tabs.webdriverio);
       b.back();
       b.waitForVisible('#compass');
+      b.click('#ic-show-sidebar');
+      b.waitForVisible('#ic-sidebar');
       expect('.ic-user').to.have.count(2);
       colors.webdriverio = b.getCssProperty('.ic-user:nth-of-type(2)', 'background-color').value;
 
@@ -130,11 +134,10 @@ describe('collaboration', () => {
   describe('chat', () => {
     it('red alert on chat box if message received while chat is hidden', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('#ic-chat button.ic-close-window');
-      b.pause(500);
       expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
 
       b.switchTab(tabs.friendo);
+      b.click('#ic-show-chat').pause(500);
       b.setValue('#message-text', ['first message', '\uE007']);
       b.waitForVisible('div.mine');
       expect('div.mine').to.have.text(/first message/);

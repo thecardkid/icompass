@@ -7,7 +7,12 @@ const setup = () => {
   browser.click('input[type=submit]');
   browser.waitForVisible('#ic-modal', 1000);
   browser.click('#ic-modal-confirm');
-  browser.waitForVisible('#ic-sidebar', 1000);
+  browser.waitForVisible('#compass', 1000);
+  browser.click('#center');
+  browser.waitForVisible('#ic-modal');
+  browser.setValue('#ic-modal-input', 'topic');
+  browser.click('#ic-modal-confirm');
+  browser.waitForVisible('#ic-sidebar', 4000);
 };
 
 const cleanup = () => {

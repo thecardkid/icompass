@@ -1,6 +1,6 @@
 'use strict';
 
-import { EDITING_MODE } from 'Lib/constants.js';
+import { EDITING_MODE } from '../../lib/constants.js';
 
 const defaultState = {
     newNote: false,
@@ -8,8 +8,8 @@ const defaultState = {
     doodleNote: false,
     focusedNote: -1,
     showAbout: false,
-    showChat: true,
-    showSidebar: true,
+    showChat: false,
+    showSidebar: false,
     showFeedback: false,
     showPrivacyStatement: false,
     vw: 0,
