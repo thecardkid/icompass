@@ -1,11 +1,9 @@
-'use strict';
-
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
 import Swipeable from 'react-swipeable';
-import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
 import Timer from '../components/Timer.jsx';
@@ -95,16 +93,18 @@ class Sidebar extends Component {
     });
   };
 
+  openNewCompass() {
+    window.open(HOST, '_blank').focus();
+  }
+
   renderShareList = () => {
     return (
       <div className="ic-sidebar-list" name="share">
         <h2>Share</h2>
-        <Link target="_blank" to={HOST}>
-          <button className="ic-action">
-            <i className="material-icons">add_circle</i>
-            <p>create new</p>
-          </button>
-        </Link>
+        <button className="ic-action" onClick={this.openNewCompass}>
+          <i className="material-icons">add_circle</i>
+          <p>create new</p>
+        </button>
         <button name="save" className="ic-action bookmark" onClick={this.save}>
           <i className="material-icons">star</i>
           <p>bookmark</p>

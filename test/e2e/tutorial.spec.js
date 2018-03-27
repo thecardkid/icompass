@@ -25,7 +25,7 @@ describe('tutorial', () => {
   });
 
   it('goes through tutorial', () => {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 21; i++) {
       browser.click('button[name="next-step"]');
     }
 
