@@ -76,9 +76,9 @@ class Timer extends Component {
 
   parse(seconds) {
     let min = (seconds / 60) | 0;
-    if (min < 10) min = '0' + min;
+    if (min < 10) min = `0${min}`;
     let sec = (seconds % 60) | 0;
-    if (sec < 10) sec = '0' + sec;
+    if (sec < 10) sec = `0${sec}`;
     return { min, sec };
   }
 

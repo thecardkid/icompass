@@ -40,7 +40,7 @@ class Sidebar extends Component {
   }
 
   renderUserColor(color, username) {
-    let label = username === this.props.you ? 'You [ ' + username + ' ]' : username;
+    let label = username === this.props.you ? `You [ ${username} ]` : username;
     return (
       <p key={username} className="ic-user" style={{ background: color }}>
         {label}
@@ -55,11 +55,11 @@ class Sidebar extends Component {
   };
 
   shareEditLink = () => {
-    this.modal.alert(MODALS.SHARE_LINK(HOST + 'compass/edit/' + this.props.compass.editCode));
+    this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/edit/${this.props.compass.editCode}`));
   };
 
   shareViewOnlyLink = () => {
-    this.modal.alert(MODALS.SHARE_LINK(HOST + 'compass/view/' + this.props.compass.viewCode));
+    this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/view/${this.props.compass.viewCode}`));
   };
 
   tweetThis = () => {
@@ -88,7 +88,7 @@ class Sidebar extends Component {
         return this.socket.emitSendMail(this.props.compass.editCode, this.props.you, email);
       }
 
-      this.emailReminder(`"${email}" does not look right - make sure you typed your email address correctly:`);
+      this.emailReminder(`"${email}" does not look right - make sure you type your email address correctly:`);
     });
   };
 

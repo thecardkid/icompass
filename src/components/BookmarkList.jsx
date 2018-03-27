@@ -70,7 +70,7 @@ export default class BookmarkList extends Component {
       <span id="arrow">&#9660;</span>;
 
     return (
-      <div className="ic-saved" key={'saved' + idx} onClick={() => this.expand(idx)}>
+      <div className="ic-saved" key={`saved${idx}`} onClick={() => this.expand(idx)}>
         <Link to={w.href}>{w.center}</Link>
         {arrow}
         {info}

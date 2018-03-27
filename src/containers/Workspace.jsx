@@ -102,7 +102,7 @@ class Workspace extends Component {
 
   setTranslation(target, x, y) {
     target.style.webkitTransform =
-      target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+      target.style.transform = `translate(${x}px, ${y}px)`;
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
   }

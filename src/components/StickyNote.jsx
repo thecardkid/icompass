@@ -163,7 +163,7 @@ class StickyNote extends Component {
             i = this.props.i,
             contents = this.getContents(),
             x = this.getX(),
-            noteId = 'note' + i,
+            noteId = `note${i}`,
             height = n.doodle ? '100px' : null,
             style = {
                 left: n.x * this.props.ui.vw,
@@ -175,7 +175,7 @@ class StickyNote extends Component {
         if (sel && sel[i]) {
             style.left -= 3;
             style.top -=3 ;
-            style['border'] = '3px solid ' + COLORS.BLUE;
+            style.border = `3px solid ${COLORS.BLUE}`;
         }
 
         return (
