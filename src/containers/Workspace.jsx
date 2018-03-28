@@ -265,7 +265,7 @@ class Workspace extends Component {
         <Compass destroy={this.socket.emitDeleteNote}
                  notes={this.notes}
                  submitDraft={this.submitDraft} />
-        <Sidebar connected={this.socket.socket.connected}
+        <Sidebar connected={this.socket.isConnected()}
                  destroy={this.socket.emitDeleteCompass}
                  stop={this.socket.emitCancelTimer}
                  exportCompass={this.exportCompass} />

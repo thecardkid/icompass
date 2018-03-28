@@ -1,54 +1,54 @@
 #compass {
-    div.ic-sticky-note {
-        list-style:none;
-        float:left;
-        cursor:pointer;
-        position:absolute;
-        z-index:0;
+  div.ic-sticky-note {
+    list-style: none;
+    float: left;
+    cursor: pointer;
+    position: absolute;
+    z-index: 0;
 
-        button.ic-close-window {
-            z-index:1;
-        }
-
-        a {
-            text-decoration:none;
-            color:black;
-            display:block;
-            background:#ffc;
-            max-width:160px;
-            .boxshadow(3px, 7px, rgba(33,33,33,0.7));
-            .wordwrap;
-
-            p {
-                padding:8px;
-                font-family:"Dosis", arial, sans-serif;
-                font-size:15px;
-            }
-        }
-
-        p.ic-tooltip {
-            position:absolute;
-            color:@dark;
-            background:@light;
-            top:-6px;
-            left:-5px;
-            font-size:10px;
-            padding:1px;
-        }
-
-        p.submit {
-            background:lightgreen;
-        }
-
-        button {
-            display:none;
-            font-size:15px;
-            letter-spacing:5px;
-            color:@red;
-        }
+    button.ic-close-window {
+      z-index: 1;
     }
 
-    div:hover button {
-        display:block;
+    a {
+      text-decoration: none;
+      color: black;
+      display: block;
+      background: #ffc;
+      max-width: 160px;
+      .boxshadow(3px, 7px, rgba(33, 33, 33, 0.7));
+      .wordwrap;
+
+      p {
+        padding: 8px;
+        font-family: "Dosis", arial, sans-serif;
+        font-size: 15px;
+      }
     }
+
+    p.ic-tooltip {
+      position: absolute;
+      color: @dark;
+      background: @light;
+      top: -6px;
+      left: -5px;
+      font-size: 10px;
+      padding: 1px;
+    }
+
+    p.submit {
+      background: lightgreen;
+    }
+
+    button {
+      display: none;
+      font-size: 15px;
+      letter-spacing: 5px;
+      color: @red;
+    }
+  }
+
+  div:hover button {
+    display: block;
+  }
 }

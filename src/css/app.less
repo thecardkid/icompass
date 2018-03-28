@@ -12,245 +12,250 @@
 @import "tutorial.less";
 @import "timer.less";
 
-@defaultFont:'Dosis', sans-serif;
-@stickySize:120px;
-@dark:#343434;
-@light:#EDEDED;
-@blue:#288AFF;
-@yellow:#EDFF4C;
-@twitterBlue:#55ACEE;
-@red:#C21A03;
+@defaultFont: 'Dosis', sans-serif;
+@stickySize: 120px;
+@dark: #343434;
+@light: #EDEDED;
+@blue: #288AFF;
+@yellow: #EDFF4C;
+@twitterBlue: #55ACEE;
+@red: #C21A03;
 
 .wordwrap {
-    white-space: pre-wrap;          // CSS3
-    white-space: -moz-pre-wrap;     // Firefox
-    white-space: -pre-wrap;         // Opera <7
-    white-space: -o-pre-wrap;       // Opera 7
-    word-wrap: break-word;          // IE
+  white-space: pre-wrap; // CSS3
+  white-space: -moz-pre-wrap; // Firefox
+  white-space: -o-pre-wrap; // Opera 7
+  word-wrap: break-word; // IE
 }
 
 .boxshadow (@offset, @spread, @rgba) {
-    -moz-box-shadow:@offset @offset @spread @rgba;
-    -webkit-box-shadow:@offset @offset @spread @rgba;
-    box-shadow:@offset @offset @spread @rgba;
+  -moz-box-shadow: @offset @offset @spread @rgba;
+  -webkit-box-shadow: @offset @offset @spread @rgba;
+  box-shadow: @offset @offset @spread @rgba;
 }
 
 .hasTransition (@s) {
-    -moz-transition:@s all ease-in-out;
-    -o-transition:@s all ease-in-out;
-    -webkit-transition:@s all ease-in-out;
-    transition:@s all ease-in-out;
+  -moz-transition: @s all ease-in-out;
+  -o-transition: @s all ease-in-out;
+  -webkit-transition: @s all ease-in-out;
+  transition: @s all ease-in-out;
 }
 
 .hidden {
-    display:none;
+  display: none;
 }
 
 body {
-    font-family:@defaultFont;
-    cursor:default;
+  font-family: @defaultFont;
+  cursor: default;
 }
 
 button {
-    background:#DDDDDD;
+  background: #DDDDDD;
 }
 
 button, input {
-    margin:0;
-    padding:0;
-    border:none;
-    cursor:pointer;
-    font-family:@defaultFont;
+  margin: 0;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  font-family: @defaultFont;
 }
 
 button:focus {
-    outline:none;
+  outline: none;
 }
 
 a {
-	text-decoration:none !important;
-    color:@blue;
+  text-decoration: none !important;
+  color: @blue;
 }
 
-.bold { font-weight:bold }
+.bold {
+  font-weight: bold
+}
 
-.italic { font-style:italic }
+.italic {
+  font-style: italic
+}
 
-.underline { text-decoration:underline }
+.underline {
+  text-decoration: underline
+}
 
 textarea:focus {
-    outline:none;
+  outline: none;
 }
 
 button.ic-button {
-    width:130px;
-    margin:10px 5px;
-    height:30px;
-    font-size:14px;
-    color:@light;
-    background:@dark;
-    .hasTransition(0.5s);
-    border:1px solid @dark;
+  width: 130px;
+  margin: 10px 5px;
+  height: 30px;
+  font-size: 14px;
+  color: @light;
+  background: @dark;
+  .hasTransition(0.5s);
+  border: 1px solid @dark;
 }
 
 button.ic-button:hover {
-    color:@dark;
-    background:@light;
+  color: @dark;
+  background: @light;
 }
 
 button.ic-close-window {
-    position:absolute;
-    background:transparent;
-    letter-spacing:15px;
-    top:-6px;
-    right:-5px;
-    font-size:25px;
-    cursor:pointer;
-    color:@light;
+  position: absolute;
+  background: transparent;
+  letter-spacing: 15px;
+  top: -6px;
+  right: -5px;
+  font-size: 25px;
+  cursor: pointer;
+  color: @light;
 }
 
 div.ic-modal {
-    position:absolute;
-    z-index:2;
-    background:@light;
-    text-align:center;
-    border-radius:4px;
+  position: absolute;
+  z-index: 2;
+  background: @light;
+  text-align: center;
+  border-radius: 4px;
 
-    div.ic-modal-contents {
-        margin:10px;
+  div.ic-modal-contents {
+    margin: 10px;
 
-        div.ic-modal-header {
-            height:30px;
+    div.ic-modal-header {
+      height: 30px;
 
-            h1.ic-modal-title {
-                width:50%;
-                height:30px;
-                line-height:30px;
-                text-align:left;
-                float:left;
-            }
-        }
+      h1.ic-modal-title {
+        width: 50%;
+        height: 30px;
+        line-height: 30px;
+        text-align: left;
+        float: left;
+      }
     }
+  }
 }
 
 div#ic-404 {
-    width:100vw;
-    margin-top:30vh;
-    text-align:center;
+  width: 100vw;
+  margin-top: 30vh;
+  text-align: center;
 
-    h1 {
-        font-size:30px;
-    }
+  h1 {
+    font-size: 30px;
+  }
 }
 
 div#container {
-    width:100vw;
-    height:100vh;
-    position:absolute;
-    overflow:hidden;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  overflow: hidden;
 }
 
 div#ic-toast {
-    position:absolute;
-    border-radius:4px;
-    height:17px;
-    width:100%;
-    text-align:center;
-    top:20px;
-    z-index:10;
+  position: absolute;
+  border-radius: 4px;
+  height: 17px;
+  width: 100%;
+  text-align: center;
+  top: 20px;
+  z-index: 10;
 
-    span {
-        border-radius:4px;
-        padding:3px 12px;
-        font-size:15px;
-        cursor:pointer;
-    }
+  span {
+    border-radius: 4px;
+    padding: 3px 12px;
+    font-size: 15px;
+    cursor: pointer;
+  }
 
-    @opacity: 0.8;
+  @opacity: 0.8;
 
-    span.success {
-        background:#DFF0D8;
-        color:#3C763D;
-    }
+  span.success {
+    background: #DFF0D8;
+    color: #3C763D;
+  }
 
-    span.info {
-        background:#D9EDF7;
-        color:#31708F;
-    }
+  span.info {
+    background: #D9EDF7;
+    color: #31708F;
+  }
 
-    span.warning {
-        background:#FCF8E3;
-        color:#8A6D3B;
-    }
+  span.warning {
+    background: #FCF8E3;
+    color: #8A6D3B;
+  }
 
-    span.error {
-        background:#F2DEDE;
-        color:#A94442;
-    }
+  span.error {
+    background: #F2DEDE;
+    color: #A94442;
+  }
 }
 
 div#ic-modal-container {
-    position:absolute;
-    top:0;
-    width:100%;
-    z-index:10;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
 
-    div#ic-backdrop {
-        z-index:-1;
+  div#ic-backdrop {
+    z-index: -1;
+  }
+
+  div#ic-modal {
+    width: 350px;
+    padding: 20px;
+    background: white;
+    margin: 0 auto;
+    margin-top: 15px;
+    border-radius: 2px;
+    .boxshadow(3px, 7px, rgba(33, 33, 33, 0.7));
+
+    div#ic-modal-body {
+      font-size: 18px;
+      text-align: left;
+      padding: 10px 0;
+      margin-top: 10px;
+
+      p {
+        margin-top: 10px;
+        font-size: 15px;
+      }
+
+      input {
+        border: 1px solid grey;
+        width: 93%;
+        font-size: 15px;
+        margin-top: 15px;
+        border-radius: 2px;
+        padding: 5px 10px;
+      }
     }
 
-    div#ic-modal {
-        width:350px;
-        padding:20px;
-        background:white;
-        margin:0 auto;
-        margin-top:15px;
-        border-radius:2px;
-        .boxshadow(3px, 7px, rgba(33,33,33,0.7));
+    div#ic-modal-footer {
+      height: 30px;
+      margin-top: 15px;
 
-        div#ic-modal-body {
-            font-size:18px;
-            text-align:left;
-            padding:10px 0;
-            margin-top:10px;
+      button {
+        float: right;
+        height: 28px;
+        font-size: 13px;
+        margin-left: 10px;
+        padding: 0 10px;
+        border-radius: 2px;
+        background: @dark;
+        color: @light;
+      }
 
-            p {
-                margin-top:10px;
-                font-size:15px;
-            }
+      button.danger {
+        background: @red;
+      }
 
-            input {
-                border:1px solid grey;
-                width:93%;
-                font-size:15px;
-                margin-top:15px;
-                border-radius:2px;
-                padding:5px 10px;
-            }
-        }
-
-        div#ic-modal-footer {
-            height:30px;
-            margin-top:15px;
-
-            button {
-                float:right;
-                height:28px;
-                font-size:13px;
-                margin-left:10px;
-                padding:0 10px;
-                border-radius:2px;
-                background:@dark;
-                color:@light;
-            }
-
-            button.danger {
-                background:@red;
-            }
-
-            button.confirm {
-                background:@blue;
-            }
-        }
+      button.confirm {
+        background: @blue;
+      }
     }
+  }
 }

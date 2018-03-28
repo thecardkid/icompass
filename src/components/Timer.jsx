@@ -1,9 +1,7 @@
-'use strict';
-
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
 import Toast from '../utils/Toast';
