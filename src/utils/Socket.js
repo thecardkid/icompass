@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { browserHistory } from 'react-router';
 import SocketIOClient from 'socket.io-client';
 

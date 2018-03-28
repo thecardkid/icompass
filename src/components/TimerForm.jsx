@@ -1,7 +1,6 @@
-'use strict';
-
-import React, { Component } from 'react';
+import $ from 'jquery';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import Toast from '../utils/Toast';
 

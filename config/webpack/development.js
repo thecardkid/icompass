@@ -1,53 +1,38 @@
-let path = require('path');
-let webpack = require('webpack');
-
-let HOME = path.resolve(__dirname, '../../');
-let PUBLIC = path.resolve(HOME, 'public/');
-let SRC = path.resolve(HOME, 'src/');
+const path = require('path');
 
 module.exports = {
-    plugins: [
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            'window.jQuery': 'jquery'
-        })
+  devtool: 'eval',
+  entry: path.join(__dirname, '../../src/containers/App.jsx'),
+  output: {
+    path: path.join(__dirname, '../../public'),
+    filename: 'bundle.js',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?/,
+        include: path.join(__dirname, '../../src'),
+        loader: 'babel-loader',
+        query: {
+          presets: [
+            'env',
+            'react',
+          ],
+          plugins: [
+            'transform-class-properties',
+            'transform-object-rest-spread',
+          ],
+        },
+      },
+      {
+        test: /\.less$/,
+        include: path.join(__dirname, '../../src/css'),
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          { loader: 'less-loader' },
+        ],
+      },
     ],
-    devtool: 'eval',
-    entry: SRC + '/containers/App.jsx',
-    output: {
-        path: PUBLIC,
-        filename: 'bundle.js'
-    },
-    resolve: {
-        alias: {
-            Components: path.resolve(SRC, 'components/'),
-            Containers: path.resolve(SRC, 'containers/'),
-            Utils: path.resolve(SRC, 'utils'),
-            Actions: path.resolve(SRC, 'actions'),
-            Lib: path.resolve(HOME, 'lib'),
-            Models: path.resolve(HOME, 'models')
-        }
-    },
-    module: {
-        rules: [
-            {
-                test: /\.jsx?/,
-                include: SRC,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015', 'react', 'stage-2']
-                }
-            },
-            {
-                test: /\.less$/,
-                use: [
-                    { loader: 'style-loader' },
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
-                    { loader: 'less-loader' }
-                ]
-            }
-        ]
-    },
+  },
 };
