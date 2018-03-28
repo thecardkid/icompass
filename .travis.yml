@@ -1,14 +1,15 @@
 cache:
   directories:
   - node_modules
-language: node_js
-  nodejs:
-  - '7'
-  env:
-  - NODE_ENV=test
+
 matrix:
   include:
-  - before_install:
+  - language: node_js
+    nodejs:
+    - '7'
+    env:
+    - NODE_ENV=test
+    before_install:
     - export CHROME_BIN=/usr/bin/google-chrome
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
@@ -19,12 +20,17 @@ matrix:
     - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
     install:
     - npm install --depth 0
-    - npm install
     - npm run build
     - MONGO_UNAME=icompass MONGO_PWD=compass78 node icompass &
     script:
     - npm run wdio
-  - install:
+
+  - language: node_js
+    nodejs:
+    - '7'
+    env:
+    - NODE_ENV=test
+    install:
     - npm install --depth 0
     script:
     - npm run lint
