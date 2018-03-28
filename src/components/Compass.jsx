@@ -27,7 +27,6 @@ class Compass extends Component {
 
     this.modal = new Modal();
     this.socket = new Socket(this);
-    this.centerStyle = null;
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
   }
 

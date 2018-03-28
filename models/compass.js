@@ -1,22 +1,21 @@
-'use strict';
+let mongoose = require('mongoose');
+let _ = require('underscore');
 
-var mongoose = require('mongoose');
-var logger = require('../lib/logger');
-var DefaultCompass = require('./defaultCompass');
-var _ = require('underscore');
+let logger = require('../lib/logger');
+let DefaultCompass = require('./defaultCompass');
 
 function generateUUID() {
-  var d = new Date().getTime();
-  var uuid = 'xxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = (d + Math.random() * 16) % 16 | 0;
+  let d = new Date().getTime();
+  let uuid = 'xxxxxxxx'.replace(/[xy]/g, function(c) {
+    let r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
-    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
   return uuid;
 }
 
 mongoose.Promise = global.Promise;
-var compassSchema = mongoose.Schema({
+let compassSchema = mongoose.Schema({
   editCode: String,
   viewCode: String,
   topic: String,
@@ -38,7 +37,7 @@ var compassSchema = mongoose.Schema({
 });
 
 compassSchema.statics.makeCompass = function(topic, cb) {
-  var newCompass = Object.assign({}, DefaultCompass, {
+  let newCompass = Object.assign({}, DefaultCompass, {
     editCode: generateUUID(),
     viewCode: generateUUID(),
     topic: topic,
@@ -78,8 +77,8 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
   this.findOne({ _id: id }, function(err, c) {
     if (err) logger.error('Could not find compass to update note', id, updatedNote, err);
 
-    var note;
-    for (var i = 0; i < c.notes.length; i++) {
+    let note;
+    for (let i = 0; i < c.notes.length; i++) {
       note = c.notes[i];
       if (note._id.toString() === updatedNote._id) {
         Object.assign(note, updatedNote);
@@ -96,7 +95,7 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
 compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb) {
   this.findOne({ _id: id }, function(err, c) {
     if (err) logger.error('Could not find compass to update note', id, noteIds, err);
-    var s = transformation.style;
+    let s = transformation.style;
 
     c.notes = _.map(c.notes, function(note) {
       if (_.contains(noteIds, note._id.toString())) {
@@ -129,14 +128,14 @@ compassSchema.statics.findByViewCode = function(code, cb) {
     if (err) logger.error('Could not find compass for viewing', code, err);
     if (c === null) return cb(null);
 
-    var copy = JSON.parse(JSON.stringify(c));
+    let copy = JSON.parse(JSON.stringify(c));
     delete copy.editCode;
     cb(copy);
   });
 };
 
 compassSchema.statics.findCode = function(code, cb) {
-  var schema = this;
+  let schema = this;
   schema.findByEditCode(code, function(compassEdit) {
     if (compassEdit === null) {
       schema.findByViewCode(code, function(compassView) {
@@ -159,7 +158,7 @@ compassSchema.statics.deleteNotes = function(compassId, noteIds, cb) {
   this.findOne({ _id: compassId }, function(err, c) {
     if (err) logger.error('Could not find compass to delete notes', compassId, noteIds, err);
 
-    var deletedIdx = [];
+    let deletedIdx = [];
     c.notes = _.filter(c.notes, function(e, idx) {
       if (_.contains(noteIds, e._id.toString())) {
         deletedIdx.push(idx);

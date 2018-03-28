@@ -102,7 +102,7 @@ class Workspace extends Component {
 
   setTranslation(target, x, y) {
     target.style.webkitTransform =
-      target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+      target.style.transform = `translate(${x}px, ${y}px)`;
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
   }
@@ -265,7 +265,7 @@ class Workspace extends Component {
         <Compass destroy={this.socket.emitDeleteNote}
                  notes={this.notes}
                  submitDraft={this.submitDraft} />
-        <Sidebar connected={this.socket.socket.connected}
+        <Sidebar connected={this.socket.isConnected()}
                  destroy={this.socket.emitDeleteCompass}
                  stop={this.socket.emitCancelTimer}
                  exportCompass={this.exportCompass} />

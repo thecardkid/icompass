@@ -1,9 +1,8 @@
-'use strict';
-
-import mongoose from 'mongoose';
 import { expect } from 'chai';
-import Compass from '../../models/compass';
+import mongoose from 'mongoose';
 import _ from 'underscore';
+
+import Compass from '../../models/compass';
 
 const TOPIC = 'test suite';
 const NOTE = {

@@ -21,7 +21,7 @@ matrix:
     install:
     - npm install -gq --depth 0
     - npm run build
-    - MONGO_UNAME=icompass MONGO_PWD=compass78 npm start &
+    - MONGO_UNAME=icompass MONGO_PWD=compass78 node icompass &
     script:
     - npm run wdio
 

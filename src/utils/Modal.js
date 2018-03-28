@@ -1,5 +1,3 @@
-'use strict';
-
 import $ from 'jquery';
 import { browserHistory } from 'react-router';
 
@@ -76,9 +74,9 @@ export default class Modal {
       '<button id="ic-modal-confirm">Submit</button><button id="ic-modal-cancel">Cancel</button></div>';
   }
 
-  prompt(text, cb) {
+  prompt(text, cb, value) {
     $('#ic-modal-container').empty().append(this.generatePrompt(text));
-    $('#ic-modal-input').focus();
+    $('#ic-modal-input').val(value || '').select();
     this.addBackdropIfNecessary();
     this.show = true;
 

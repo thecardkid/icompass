@@ -1,21 +1,19 @@
-'use strict';
-
 export const update = (data) => {
-    return {
-        type: 'setUsers',
-        manager: data.users
-    };
+  return {
+    type: 'setUsers',
+    manager: data.users,
+  };
 };
 
 export const me = (clientName) => {
-    return {
-        type: 'setClientName',
-        clientName
-    };
+  return {
+    type: 'setClientName',
+    clientName,
+  };
 };
 
 export const reset = () => {
-    return {
-        type: 'resetUsers'
-    };
+  return {
+    type: 'resetUsers',
+  };
 };

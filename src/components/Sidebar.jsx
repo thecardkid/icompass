@@ -18,7 +18,6 @@ import * as uiActions from '../actions/ui';
 import { VERSION, TWEET, HOST, PROMPTS, MODALS, PIXELS, COLORS, REGEX } from '../../lib/constants';
 
 class Sidebar extends Component {
-
   constructor(props, context) {
     super(props, context);
     this.toast = new Toast();
@@ -41,7 +40,7 @@ class Sidebar extends Component {
   }
 
   renderUserColor(color, username) {
-    let label = username === this.props.you ? 'You [ ' + username + ' ]' : username;
+    let label = username === this.props.you ? `You [ ${username} ]` : username;
     return (
       <p key={username} className="ic-user" style={{ background: color }}>
         {label}
@@ -56,11 +55,11 @@ class Sidebar extends Component {
   };
 
   shareEditLink = () => {
-    this.modal.alert(MODALS.SHARE_LINK(HOST + 'compass/edit/' + this.props.compass.editCode));
+    this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/edit/${this.props.compass.editCode}`));
   };
 
   shareViewOnlyLink = () => {
-    this.modal.alert(MODALS.SHARE_LINK(HOST + 'compass/view/' + this.props.compass.viewCode));
+    this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/view/${this.props.compass.viewCode}`));
   };
 
   tweetThis = () => {
@@ -89,7 +88,7 @@ class Sidebar extends Component {
         return this.socket.emitSendMail(this.props.compass.editCode, this.props.you, email);
       }
 
-      this.emailReminder(`"${email}" does not look right - make sure you typed your email address correctly:`);
+      this.emailReminder(`"${email}" does not look right - make sure you type your email address correctly:`);
     });
   };
 
@@ -188,13 +187,14 @@ class Sidebar extends Component {
   };
 
   save = () => {
+    const { topic, editCode } = this.props.compass;
     this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
       if (submit) {
         let username = this.props.you.replace(/\d+/g, '');
-        Storage.addBookmark(bookmarkName, this.props.compass.editCode, username);
+        Storage.addBookmark(bookmarkName, editCode, username);
         this.toast.success(PROMPTS.SAVE_SUCCESS);
       }
-    });
+    }, topic);
   };
 
   logout() {

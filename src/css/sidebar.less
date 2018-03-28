@@ -1,131 +1,136 @@
 #ic-sidebar {
-    position:absolute;
-    top:0;
-    width:200px;
-    background:@dark;
-    color:white;
-    height:100vh;
-    z-index:3;
-    cursor:default;
-    .hasTransition(0.5s);
+  position: absolute;
+  top: 0;
+  width: 200px;
+  background: @dark;
+  color: white;
+  height: 100vh;
+  z-index: 3;
+  cursor: default;
+  .hasTransition(0.5s);
 
-    div#ic-sidebar-scroll {
-        overflow:scroll;
-        position:absolute;
-        width:100%;
-        height:100%;
+  div#ic-sidebar-scroll {
+    overflow: scroll;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  div#ic-sidebar-contents {
+    margin: 20px;
+    margin-top: 30px;
+
+    h1 {
+      font-family: monospace;
+      font-size: 40px;
+      font-weight: 700;
     }
 
-    div#ic-sidebar-contents {
-        margin:20px;
-        margin-top:30px;
-
-        h1 {
-            font-family:monospace;
-            font-size:40px;
-            font-weight:700;
-        }
-
-        div[name=status] {
-            h2 p { display:inline }
-        }
-
-        div.ic-sidebar-list {
-            margin-top:25px;
-
-            h2 {
-                font-size:18px;
-                margin-bottom:5px;
-            }
-
-            p.ic-user {
-                width:120px;
-                height:25px;
-                line-height:25px;
-                padding-left:10px;
-                color:@dark;
-                text-align:left;
-                border-bottom:0.5px solid @dark;
-            }
-
-            button.ic-action {
-                font-size:15px;
-                display:block;
-                width:130px;
-                height:25px;
-                text-align:left;
-                border-bottom:0.5px solid @dark;
-
-                span.ic-ctrl-key {
-                    font-family:monospace;
-                    background:@dark;
-                    color:@light;
-                    border-radius:5px;
-                    padding:0 4px;
-                    font-size:15px;
-                    margin: 0 10px;
-                }
-
-                i {
-                    font-size:20px;
-                    color:black;
-                    float:left;
-                    margin:0 10px;
-                }
-
-                p { display:inline-block }
-
-                a { color: @dark }
-            }
-
-            .ic-time {
-                font-family:monospace;
-            }
-
-            .ic-timer-action {
-                float:right;
-                height:20px;
-                width:25px;
-                color:white;
-
-                p {
-                    font-size:12px;
-                    width:100%;
-                    text-align:center;
-                }
-            }
-
-
-            button.ic-action:hover {
-                background:#BABABA;
-            }
-
-            .dangerous {
-                background:@red;
-                color:@light;
-            }
-
-            .dangerous:hover {
-                background:#8C1302 !important;
-            }
-
-            .bookmark {
-                background:#EDFF4C;
-            }
-
-            .bookmark:hover {
-                background:@yellow !important;
-            }
-
-            .tweet {
-                background:@twitterBlue;
-                color:@light;
-            }
-
-            .tweet:hover {
-                background:#3A7EB1 !important;
-            }
-        }
+    div[name=status] {
+      h2 p {
+        display: inline
+      }
     }
+
+    div.ic-sidebar-list {
+      margin-top: 25px;
+
+      h2 {
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+
+      p.ic-user {
+        width: 120px;
+        height: 25px;
+        line-height: 25px;
+        padding-left: 10px;
+        color: @dark;
+        text-align: left;
+        border-bottom: 0.5px solid @dark;
+      }
+
+      button.ic-action {
+        font-size: 15px;
+        display: block;
+        width: 130px;
+        height: 25px;
+        text-align: left;
+        border-bottom: 0.5px solid @dark;
+
+        span.ic-ctrl-key {
+          font-family: monospace;
+          background: @dark;
+          color: @light;
+          border-radius: 5px;
+          padding: 0 4px;
+          font-size: 15px;
+          margin: 0 10px;
+        }
+
+        i {
+          font-size: 20px;
+          color: black;
+          float: left;
+          margin: 0 10px;
+        }
+
+        p {
+          display: inline-block
+        }
+
+        a {
+          color: @dark
+        }
+      }
+
+      .ic-time {
+        font-family: monospace;
+      }
+
+      .ic-timer-action {
+        float: right;
+        height: 20px;
+        width: 25px;
+        color: white;
+
+        p {
+          font-size: 12px;
+          width: 100%;
+          text-align: center;
+        }
+      }
+
+      button.ic-action:hover {
+        background: #BABABA;
+      }
+
+      .dangerous {
+        background: @red;
+        color: @light;
+      }
+
+      .dangerous:hover {
+        background: #8C1302 !important;
+      }
+
+      .bookmark {
+        background: #EDFF4C;
+      }
+
+      .bookmark:hover {
+        background: @yellow !important;
+      }
+
+      .tweet {
+        background: @twitterBlue;
+        color: @light;
+      }
+
+      .tweet:hover {
+        background: #3A7EB1 !important;
+      }
+    }
+  }
 }
 
