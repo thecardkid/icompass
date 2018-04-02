@@ -137,7 +137,7 @@ class LandingPage extends Component {
   };
 
   promptForEmail = (text) => {
-    this.modal.prompt(text || 'Your workspace is ready. If you would like to email you a link to the compass, enter your email below. I will not store your email address or send you spam. Leave blank if you do not want this reminder email', (status, email) => {
+    this.modal.prompt(text || 'If you would like me to email you a link to this workspace, enter your email below. I will not store your email address or send you spam. Without the code or link, you will not be able to retrieve your workspace! Leave blank if you do not want this reminder email', (status, email) => {
       if (!status) return;
 
       if (!email.length) {

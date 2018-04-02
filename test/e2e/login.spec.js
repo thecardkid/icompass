@@ -75,7 +75,7 @@ describe('login', () => {
         b.click('input[type=submit]');
         b.waitForVisible('#ic-modal');
 
-        expect('#ic-modal-body').to.have.text(/Your workspace is ready/);
+        expect('#ic-modal-body').to.have.text(/If you would like/);
         expect('#ic-modal-input').to.be.visible();
       });
 
