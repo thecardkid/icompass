@@ -8,7 +8,8 @@ import _ from 'underscore';
 import * as compassX from '../actions/compass';
 import * as uiX from '../actions/ui';
 
-import StickyNote from '../components/StickyNote.jsx';
+import NoteManager from '../components/NoteManager.jsx';
+import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
@@ -25,23 +26,13 @@ class Compass extends Component {
     super(props);
 
     this.modal = new Modal();
-    this.socket = new Socket(this);
+    this.socket = new Socket();
     this.socket.subscribe({
       'center set': this.setCompassCenter,
     });
 
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
   }
-
-  renderNote = (note, i) => {
-    return (
-      <StickyNote key={`note${i}`}
-                  note={note}
-                  i={i}
-                  submitDraft={this.props.submitDraft}
-                  destroy={this.socket.emitDeleteNote} />
-    );
-  };
 
   renderQuadrant = (q) => {
     const { showNewNote } = this.props.uiX;
@@ -182,11 +173,10 @@ class Compass extends Component {
       compass = this.renderCompassStructure();
     }
 
-
     return (
       <div id="compass">
         {compass}
-        {_.map(this.props.notes, this.renderNote)}
+        {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>
     );
   }
@@ -195,7 +185,6 @@ class Compass extends Component {
 const mapStateToProps = (state) => {
   return {
     compass: state.compass,
-    notes: state.notes,
     ui: state.ui,
   };
 };
