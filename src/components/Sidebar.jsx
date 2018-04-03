@@ -102,7 +102,7 @@ class Sidebar extends Component {
     this.modal.confirm(MODALS.DELETE_COMPASS, (deleteCompass) => {
       if (deleteCompass) {
         Storage.removeBookmarkByCenter(this.props.compass.center);
-        this.socket.emitDeleteCompass();
+        this.socket.emitDeleteCompass(this.props.compass._id);
       }
     });
   };
@@ -308,21 +308,21 @@ class Sidebar extends Component {
   }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     users: state.users.nameToColor,
     you: state.users.me,
     show: state.ui.showSidebar,
     compass: state.compass,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     uiX: bindActionCreators(uiX, dispatch),
     workspaceX: bindActionCreators(workspaceX, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
 

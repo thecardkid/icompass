@@ -100,9 +100,9 @@ export default class Socket {
     this.socket.emit('new note', doodle);
   };
 
-  emitDeleteCompass = () => {
+  emitDeleteCompass = (id) => {
     if (this.socket.disconnected) return this.alertInvalidAction();
-    this.socket.emit('delete compass', this.component.props.compass._id);
+    this.socket.emit('delete compass', id);
   };
 
   emitDeleteNote = (noteId) => {
