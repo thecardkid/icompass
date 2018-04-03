@@ -39,7 +39,7 @@ class Compass extends Component {
                   note={note}
                   i={i}
                   submitDraft={this.props.submitDraft}
-                  destroy={this.props.destroy} />
+                  destroy={this.socket.emitDeleteNote} />
     );
   };
 
@@ -195,6 +195,7 @@ class Compass extends Component {
 const mapStateToProps = (state) => {
   return {
     compass: state.compass,
+    notes: state.notes,
     ui: state.ui,
   };
 };
@@ -207,4 +208,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Compass);
-

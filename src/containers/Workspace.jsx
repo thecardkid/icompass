@@ -295,9 +295,7 @@ class Workspace extends Component {
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
         {this.renderCornerButtons()}
-        <Compass destroy={this.socket.emitDeleteNote}
-                 notes={this.notes}
-                 submitDraft={this.submitDraft} />
+        <Compass submitDraft={this.submitDraft} />
         <Sidebar />
         <ModesToolbar />
         <Chat />
