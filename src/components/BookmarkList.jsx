@@ -96,4 +96,3 @@ export default class BookmarkList extends Component {
     );
   }
 }
-

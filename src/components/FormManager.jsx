@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -7,18 +6,25 @@ import DoodleForm from '../components/DoodleForm.jsx';
 import NoteForm from '../components/NoteForm.jsx';
 import TimerForm from '../components/TimerForm.jsx';
 
-import * as workspaceActions from '../actions/workspace';
+import * as workspaceX from '../actions/workspace';
 
 import { EDITING_MODE } from '../../lib/constants';
+import Socket from '../utils/Socket';
 
-class FormChooser extends Component {
+class FormManager extends Component {
+  constructor(props) {
+    super(props);
+
+    this.socket = new Socket();
+  }
+
   renderNoteForm() {
     return (
       <NoteForm style={this.props.center(300, 230)}
                 mode={this.props.draftMode ? 'make draft' : 'make'}
                 note={{}}
                 position={this.props.ui.newNote}
-                ship={this.props.draftMode ? this.props.workspaceActions.createDraft : this.props.socket.emitNewNote}
+                ship={this.props.draftMode ? this.props.workspaceX.createDraft : this.socket.emitNewNote}
                 {...this.props.commonAttrs} />
     );
   }
@@ -29,7 +35,7 @@ class FormChooser extends Component {
                 mode={this.props.draftMode ? 'edit draft' : 'edit'}
                 idx={this.props.ui.editNote}
                 note={this.props.notes[this.props.ui.editNote]}
-                ship={this.props.draftMode ? this.props.workspaceActions.editDraft : this.props.socket.emitEditNote}
+                ship={this.props.draftMode ? this.props.workspaceX.editDraft : this.socket.emitEditNote}
                 {...this.props.commonAttrs} />
     );
   }
@@ -37,7 +43,8 @@ class FormChooser extends Component {
   renderDoodleForm() {
     return (
       <DoodleForm style={this.props.center(450, 345)}
-                  ship={this.props.draftMode ? this.props.workspaceActions.createDoodleDraft : this.props.socket.emitNewDoodle}
+                  ship={this.props.draftMode ? this.props.workspaceX.createDoodleDraft : this.socket.emitNewDoodle}
+                  color={this.props.color}
                   {...this.props.commonAttrs} />
     );
   }
@@ -45,7 +52,7 @@ class FormChooser extends Component {
   renderTimerForm() {
     return (
       <TimerForm style={this.props.center(300, 150)}
-                 ship={this.props.socket.emitCreateTimer}
+                 ship={this.socket.emitCreateTimer}
                  {...this.props.commonAttrs} />
     );
   }
@@ -66,31 +73,20 @@ class FormChooser extends Component {
   }
 }
 
-FormChooser.propTypes = {
-  socket: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
-  center: PropTypes.func.isRequired,
-  commonAttrs: PropTypes.shape({
-    bg: PropTypes.string,
-    user: PropTypes.string,
-    close: PropTypes.func,
-  }).isRequired,
-  notes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  draftMode: PropTypes.bool.isRequired,
-  workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
+    me: state.users.me,
+    color: state.users.nameToColor[state.users.me],
+    notes: state.notes,
     ui: state.ui,
     draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    workspaceActions: bindActionCreators(workspaceActions, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormChooser);
+export default connect(mapStateToProps, mapDispatchToProps)(FormManager);

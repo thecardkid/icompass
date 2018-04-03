@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
@@ -58,8 +57,3 @@ export default class About extends Component {
     );
   }
 }
-
-About.propTypes = {
-  close: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
-};

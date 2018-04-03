@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Tappable from 'react-tappable/lib/Tappable';
 import { connect } from 'react-redux';
@@ -27,6 +26,10 @@ class Compass extends Component {
 
     this.modal = new Modal();
     this.socket = new Socket(this);
+    this.socket.subscribe({
+      'center set': this.setCompassCenter,
+    });
+
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
   }
 
@@ -189,29 +192,19 @@ class Compass extends Component {
   }
 }
 
-Compass.propTypes = {
-  ui: PropTypes.object.isRequired,
-  compass: PropTypes.object.isRequired,
-  notes: PropTypes.array.isRequired,
-  uiX: PropTypes.objectOf(PropTypes.func).isRequired,
-  compassX: PropTypes.objectOf(PropTypes.func).isRequired,
-  destroy: PropTypes.func,
-  submitDraft: PropTypes.func,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     ui: state.ui,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     uiX: bindActionCreators(uiX, dispatch),
     compassX: bindActionCreators(compassX, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Compass);
 

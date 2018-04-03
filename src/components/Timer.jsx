@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -110,24 +109,17 @@ class Timer extends Component {
   }
 }
 
-Timer.propTypes = {
-  timer: PropTypes.objectOf(PropTypes.number).isRequired,
-  stop: PropTypes.func.isRequired,
-  workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     timer: state.workspace.timer || {},
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     workspaceActions: bindActionCreators(workspaceActions, dispatch),
     uiActions: bindActionCreators(uiActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timer);

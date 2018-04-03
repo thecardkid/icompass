@@ -1,7 +1,6 @@
 'use strict';
 
 import $ from 'jquery';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
@@ -24,9 +23,12 @@ class LandingPage extends Component {
     super(props);
     this.toast = new Toast();
     this.modal = new Modal();
+    this.state = { formType: FORM_TYPE.MAKE };
 
     this.socket = new Socket(this);
-    this.state = { formType: FORM_TYPE.MAKE };
+    this.socket.subscribe({
+      'compass ready': this.onCompassReady,
+    });
 
     this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
   }
@@ -38,6 +40,10 @@ class LandingPage extends Component {
   componentWillUnmount() {
     $(window).off('resize', this.props.uiX.resize);
   }
+
+  onCompassReady = (data) => {
+    this.setState({ data });
+  };
 
   setFormType = (type) => () => {
     $('#compass-center').val('');
@@ -210,21 +216,16 @@ class LandingPage extends Component {
   }
 }
 
-LandingPage.propTypes = {
-  ui: PropTypes.object.isRequired,
-  uiX: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     ui: state.ui,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     uiX: bindActionCreators(uiX, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);

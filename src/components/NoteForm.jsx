@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
@@ -89,7 +88,8 @@ export default class NoteForm extends Component {
 
       let style = Object.assign({}, this.state);
       delete style.charCount;
-      let edited = { text, isImage, style };
+      let edits = { text, isImage, style };
+      let edited = Object.assign({}, this.props.note, edits);
 
       this.props.ship(edited, this.props.idx);
       this.props.close();
@@ -169,18 +169,3 @@ export default class NoteForm extends Component {
     );
   }
 }
-
-NoteForm.propTypes = {
-  mode: PropTypes.string.isRequired,
-  style: PropTypes.object.isRequired,
-  note: PropTypes.object.isRequired,
-  ship: PropTypes.func.isRequired,
-  close: PropTypes.func.isRequired,
-  bg: PropTypes.string.isRequired,
-  position: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.objectOf(PropTypes.number),
-  ]),
-  user: PropTypes.string,
-  idx: PropTypes.number,
-};

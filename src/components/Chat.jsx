@@ -1,18 +1,39 @@
 import $ from 'jquery';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Swipeable from 'react-swipeable';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import * as uiActions from '../actions/ui';
+import * as chatX from '../actions/chat';
+import * as uiX from '../actions/ui';
 
 import Message from '../components/Message.jsx';
 
 import { KEYCODES, PIXELS } from '../../lib/constants';
+import Socket from '../utils/Socket';
 
 class Chat extends Component {
+  constructor(props) {
+    super(props);
+
+    this.socket = new Socket();
+    this.socket.subscribe({
+      'new message': this.onNewMessage,
+    });
+  }
+
+  onNewMessage = (message) => {
+    this.props.chatX.newMessage(message);
+
+    setTimeout(() => {
+      // scroll to bottom of messages div
+      $('#messages-container').scrollTop($('#messages').outerHeight());
+    }, 100);
+
+    if (!this.props.show) this.props.chatX.unread();
+  };
+
   componentDidMount() {
     this.$text = $('#message-text');
 
@@ -25,7 +46,7 @@ class Chat extends Component {
   }
 
   sendMessage = () => {
-    this.props.socket.emitMessage();
+    this.socket.emitMessage(this.props.me, this.$text.val());
     this.$text.val('').focus();
   };
 
@@ -46,7 +67,7 @@ class Chat extends Component {
   render() {
     const bottom = this.props.show ? PIXELS.SHOW : PIXELS.HIDE_CHAT;
     const messages = _.map(this.props.messages, this.renderMessage);
-    const { toggleChat } = this.props.uiActions;
+    const { toggleChat } = this.props.uiX;
 
     return (
       <div id="ic-chat" style={{ bottom: bottom }}>
@@ -66,29 +87,21 @@ class Chat extends Component {
   }
 }
 
-Chat.propTypes = {
-  socket: PropTypes.object.isRequired,
-  me: PropTypes.string.isRequired,
-  nameToColor: PropTypes.object.isRequired,
-  messages: PropTypes.array.isRequired,
-  show: PropTypes.bool.isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     nameToColor: state.users.nameToColor,
     me: state.users.me,
     messages: state.chat.messages,
     show: state.ui.showChat,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    uiActions: bindActionCreators(uiActions, dispatch),
+    chatX: bindActionCreators(chatX, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);
 

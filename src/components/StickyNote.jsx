@@ -1,5 +1,4 @@
 import deepEqual from 'deep-equal';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -182,31 +181,19 @@ class StickyNote extends Component {
   }
 }
 
-StickyNote.propTypes = {
-  note: PropTypes.object.isRequired,
-  i: PropTypes.number.isRequired,
-  destroy: PropTypes.func,
-  compass: PropTypes.object.isRequired,
-  submitDraft: PropTypes.func,
-  ui: PropTypes.object.isRequired,
-  workspace: PropTypes.object.isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     ui: state.ui,
     workspace: state.workspace,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     workspaceActions: bindActionCreators(workspaceActions, dispatch),
     uiActions: bindActionCreators(uiActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(StickyNote);
