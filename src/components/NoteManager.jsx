@@ -7,6 +7,7 @@ import _ from 'underscore';
 import StickyNote from './StickyNote.jsx';
 
 import * as noteX from '../actions/notes';
+import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
@@ -107,6 +108,7 @@ class NoteManager extends Component {
     this.props.workspaceX.undraft(idx);
     delete note.draft;
     note.color = this.props.color;
+    /* Can't submit draft in visual mode, no need to check */
     this.socket.emitNewNote(note);
   };
 
@@ -116,14 +118,17 @@ class NoteManager extends Component {
                   note={note}
                   i={i}
                   submitDraft={this.submitDraft}
+                  // Can't delete note in visual mode, no need to check
                   destroy={this.socket.emitDeleteNote} />
     );
   };
 
   render() {
     return (
-      <div id="note-manager">
-        {_.map(this.notes, this.renderNote)}
+      <div>
+        <div id="note-manager">
+          {_.map(this.notes, this.renderNote)}
+        </div>
       </div>
     );
   }
@@ -143,6 +148,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     noteX: bindActionCreators(noteX, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
     workspaceX: bindActionCreators(workspaceX, dispatch),
   };
 };

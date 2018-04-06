@@ -6,22 +6,23 @@ import DoodleForm from '../components/DoodleForm.jsx';
 import NoteForm from '../components/NoteForm.jsx';
 import TimerForm from '../components/TimerForm.jsx';
 
+import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { EDITING_MODE } from '../../lib/constants';
+import { EDITING_MODE, PROMPTS } from '../../lib/constants';
 import Socket from '../utils/Socket';
+import Toast from '../utils/Toast';
 
 class FormManager extends Component {
   constructor(props) {
     super(props);
-
+    this.toast = new Toast();
     this.socket = new Socket();
   }
 
   renderNoteForm() {
     return (
-      <NoteForm style={this.props.center(300, 230)}
-                mode={this.props.draftMode ? 'make draft' : 'make'}
+      <NoteForm mode={this.props.draftMode ? 'make draft' : 'make'}
                 note={{}}
                 position={this.props.ui.newNote}
                 ship={this.props.draftMode ? this.props.workspaceX.createDraft : this.socket.emitNewNote}
@@ -31,8 +32,7 @@ class FormManager extends Component {
 
   renderEditForm() {
     return (
-      <NoteForm style={this.props.center(300, 230)}
-                mode={this.props.draftMode ? 'edit draft' : 'edit'}
+      <NoteForm mode={this.props.draftMode ? 'edit draft' : 'edit'}
                 idx={this.props.ui.editNote}
                 note={this.props.notes[this.props.ui.editNote]}
                 ship={this.props.draftMode ? this.props.workspaceX.editDraft : this.socket.emitEditNote}
@@ -42,8 +42,7 @@ class FormManager extends Component {
 
   renderDoodleForm() {
     return (
-      <DoodleForm style={this.props.center(450, 345)}
-                  ship={this.props.draftMode ? this.props.workspaceX.createDoodleDraft : this.socket.emitNewDoodle}
+      <DoodleForm ship={this.props.draftMode ? this.props.workspaceX.createDoodleDraft : this.socket.emitNewNote}
                   color={this.props.color}
                   {...this.props.commonAttrs} />
     );
@@ -57,16 +56,39 @@ class FormManager extends Component {
     );
   }
 
+  getForm = () => {
+    const { ui, visualMode } = this.props;
+
+    if (ui.timerConfig) {
+      return this.renderTimerForm();
+    }
+
+    if (ui.newNote) {
+      if (visualMode) {
+        return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
+      }
+      return this.renderNoteForm();
+    }
+
+    if (typeof ui.editNote === 'number') {
+      if (visualMode) {
+        return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+      }
+      return this.renderEditForm();
+    }
+
+    if (ui.doodleNote) {
+      if (visualMode) {
+        return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
+      }
+      return this.renderDoodleForm();
+    }
+
+    return null;
+  };
+
   render() {
-    let form;
-    if (this.props.ui.newNote)
-      form = this.renderNoteForm();
-    else if (typeof this.props.ui.editNote === 'number')
-      form = this.renderEditForm();
-    else if (this.props.ui.doodleNote)
-      form = this.renderDoodleForm();
-    else if (this.props.ui.timerConfig)
-      form = this.renderTimerForm();
+    const form = this.getForm();
 
     if (form) return <div id="ic-backdrop">{form}</div>;
     return null;
@@ -80,12 +102,14 @@ const mapStateToProps = (state) => {
     notes: state.notes,
     ui: state.ui,
     draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
+    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     workspaceX: bindActionCreators(workspaceX, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
   };
 };
 

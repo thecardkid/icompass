@@ -32,16 +32,8 @@ export default class Socket {
     return this.socket.disconnect();
   };
 
-  alertInvalidAction() {
+  alertDisconnected() {
     this.toast.error(PROMPTS.NOT_CONNECTED);
-  }
-
-  alertVisualMode() {
-    this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
-  }
-
-  alertVisualModeNoCreate() {
-    this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
   }
 
   emitReconnected = ({ compass, users }) => {
@@ -54,83 +46,73 @@ export default class Socket {
   };
 
   emitCreateTimer = (min, sec) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('create timer', min, sec, Date.now());
   };
 
   emitCancelTimer = () => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('cancel timer');
   };
 
   emitNewNote = (note) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
-    // TODO if (this.component.props.visualMode) return this.alertVisualModeNoCreate();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('new note', note);
   };
 
   emitEditNote = (edited) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
-    // TODO if (this.component.props.visualMode) return this.alertVisualMode();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('update note', edited);
   };
 
   emitBulkEditNotes = (noteIds, transformation) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('bulk update notes', noteIds, transformation);
   };
 
   emitBulkDeleteNotes = (noteIds) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('bulk delete notes', noteIds);
   };
 
   emitDragNote = (note) => {
-    if (this.socket.disconnected) {
-      this.alertInvalidAction();
+    if (!this.isConnected()) {
+      this.alertDisconnected();
       return false;
     }
     this.socket.emit('update note', note);
     return true;
   };
 
-  emitNewDoodle = (doodle) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
-    // TODO if (this.component.props.visualMode) return this.alertVisualMode();
-    this.socket.emit('new note', doodle);
-  };
-
   emitDeleteCompass = (id) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('delete compass', id);
   };
 
   emitDeleteNote = (noteId) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
-    // TODO if (this.component.props.visualMode) return this.alertVisualMode();
-
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('delete note', noteId);
   };
 
   emitMessage = (username, text) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     if (!text) return;
 
     this.socket.emit('message', { username, text });
   };
 
   emitCreateCompass = (topic, username) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('create compass', { topic, username });
   };
 
   emitFindCompass = (code, username) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('find compass', { code, username });
   };
 
   emitSendMail = (code, username, receiverEmail) => {
-    if (this.socket.disconnected) return this.alertInvalidAction();
+    if (!this.isConnected()) return this.alertDisconnected();
     this.socket.emit('send mail', {
       editCode: code,
       username: username,

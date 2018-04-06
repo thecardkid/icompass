@@ -42,6 +42,7 @@ class Sidebar extends Component {
     this.toast.info(PROMPTS.TIMEBOX_CANCELED);
   };
 
+  // TODO connection status change not triggering update
   shouldComponentUpdate(nextProps) {
     if (this.props.users !== nextProps.users)
       return true;

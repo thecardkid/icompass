@@ -148,13 +148,6 @@ class Workspace extends Component {
     this.props.uiActions.toggleChat();
   };
 
-  center = (w, h) => {
-    return {
-      top: Math.max((this.props.ui.vh - h) / 2, 0),
-      left: Math.max((this.props.ui.vw - w) / 2, 0),
-    };
-  };
-
   renderCornerButtons = () => {
     let actions = this.props.uiActions;
     let showChatStyle = {
@@ -190,6 +183,7 @@ class Workspace extends Component {
     if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
 
     let { ui } = this.props;
+    // TODO clean this
     let formAttrs = {
       bg: this.props.draftMode ? 'grey' : this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
@@ -207,10 +201,8 @@ class Workspace extends Component {
         <ModesToolbar />
         <Chat />
         <Feedback show={ui.showFeedback}
-                  style={this.center(400, 250)}
                   close={this.props.uiActions.toggleFeedback} />
         <PrivacyStatement show={ui.showPrivacyStatement}
-                          style={this.center(400, 200)}
                           close={this.props.uiActions.togglePrivacyStatement} />
         <About show={ui.showAbout}
                close={this.props.uiActions.toggleAbout} />
@@ -224,7 +216,6 @@ class Workspace extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    notes: state.notes,
     compass: state.compass,
     users: state.users,
     chat: state.chat,
