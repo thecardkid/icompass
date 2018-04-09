@@ -17,7 +17,6 @@ class Timer extends Component {
 
     this.granularity = 1000;
     this.running = false;
-    this.interval = null;
     this.state = { left: null };
   }
 
@@ -41,7 +40,6 @@ class Timer extends Component {
 
   start(t) {
     if (this.running) return;
-    if (this.interval) this.removeInterval();
 
     this.duration = t.min * 60 + t.sec;
     this.startTime = t.startTime;
@@ -51,7 +49,6 @@ class Timer extends Component {
 
   handleClick = () => {
     if (this.running) return;
-    if (this.interval) return this.removeInterval();
     this.props.uiActions.showTimerConfig();
   };
 

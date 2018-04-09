@@ -9,27 +9,28 @@ import { PROMPTS } from '../../lib/constants';
 let socket;
 
 export default class Socket {
-  constructor(component) {
-    this.component = component;
+  constructor() {
     this.toast = new Toast();
     this.modal = new Modal();
 
-    if (!socket) socket = new SocketIOClient();
+    if (!socket || (this.socket && !this.isConnected())) {
+      socket = new SocketIOClient();
+      this.socket = socket;
+      this.subscribe({
+        'mail status': this.onMailStatus,
+      });
+    }
     this.socket = socket;
-
-    this.socket.on('mail status', this.onMailStatus);
   }
 
   subscribe = (eventListeners) => {
-    _.each(eventListeners, (listener, event) => this.socket.on(event, listener));
+    _.each(eventListeners, (listener, event) => {
+      this.socket._callbacks[`$${event}`] = [listener];
+    });
   };
 
   isConnected = () => {
     return this.socket.connected;
-  };
-
-  disconnect = () => {
-    return this.socket.disconnect();
   };
 
   alertDisconnected() {

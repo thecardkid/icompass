@@ -105,7 +105,6 @@ class Workspace extends Component {
   }
 
   componentWillUnmount() {
-    this.socket.disconnect();
     this.props.compassActions.reset();
     this.props.noteActions.reset();
     this.props.chatActions.reset();

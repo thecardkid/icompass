@@ -25,7 +25,7 @@ class LandingPage extends Component {
     this.modal = new Modal();
     this.state = { formType: FORM_TYPE.MAKE };
 
-    this.socket = new Socket(this);
+    this.socket = new Socket();
     this.socket.subscribe({
       'compass ready': this.onCompassReady,
     });

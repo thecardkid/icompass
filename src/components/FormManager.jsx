@@ -50,8 +50,7 @@ class FormManager extends Component {
 
   renderTimerForm() {
     return (
-      <TimerForm style={this.props.center(300, 150)}
-                 ship={this.socket.emitCreateTimer}
+      <TimerForm ship={this.socket.emitCreateTimer}
                  {...this.props.commonAttrs} />
     );
   }
@@ -65,6 +64,7 @@ class FormManager extends Component {
 
     if (ui.newNote) {
       if (visualMode) {
+        this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
       }
       return this.renderNoteForm();
@@ -72,6 +72,7 @@ class FormManager extends Component {
 
     if (typeof ui.editNote === 'number') {
       if (visualMode) {
+        this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
       }
       return this.renderEditForm();
@@ -79,6 +80,7 @@ class FormManager extends Component {
 
     if (ui.doodleNote) {
       if (visualMode) {
+        this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
       }
       return this.renderDoodleForm();
