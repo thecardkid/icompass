@@ -148,10 +148,6 @@ class StickyNote extends Component {
   render() {
     let n = this.props.note,
       i = this.props.i,
-      contents = this.getContents(),
-      x = this.getX(),
-      noteId = `note${i}`,
-      height = n.doodle ? '100px' : null,
       style = {
         left: n.x * this.props.ui.vw,
         top: n.y * this.props.ui.vh,
@@ -170,11 +166,11 @@ class StickyNote extends Component {
            style={style}
            onClick={this.handleClick}
            onDoubleClick={this.edit}
-           id={noteId}
-           height={height}>
-        {x}
+           id={`note${i}`}
+           height={n.doodle ? '100px' : null}>
+        {this.getX()}
         <Tappable onTap={this.handleClick} onPress={this.edit}>
-          {contents}
+          {this.getContents()}
         </Tappable>
       </div>
     );
