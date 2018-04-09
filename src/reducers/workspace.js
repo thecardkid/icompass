@@ -41,7 +41,6 @@ const dragDraft = (state, action) => {
   return { ...state, drafts };
 };
 
-// TODO
 const editDraft = (state, action) => {
   let { idx, updated } = action;
   let n = Object.assign({}, state.drafts[idx], updated);
