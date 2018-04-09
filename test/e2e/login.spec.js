@@ -1,123 +1,190 @@
-'use strict';
+const chai = require('chai');
+const chaiWebdriver = require('chai-webdriverio').default;
+chai.use(chaiWebdriver(browser));
 
-var ERROR_MSG = require('../../lib/constants.js').ERROR_MSG;
-var code;
+const expect = chai.expect;
+const b = browser;
 
-module.exports = {
-    'loads correctly': function(browser) {
-        browser
-        .url('http://localhost:8080')
-        .waitForElementVisible('body')
-        .assert.title('The Innovators\' Compass')
-        .assert.elementPresent('button[name=find]')
-        .assert.elementPresent('button[name=make]');
-    },
+describe('login', () => {
+  let code;
 
-    'make path': function(browser) {
-        browser
-        .click('button[name=make]')
-        .waitForElementVisible('input#compass-center')
-        .getAttribute('input#compass-center', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'Who/what is at the center of your compass?');
-        })
-        .getAttribute('input#username', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'Your name');
+  beforeAll(() => {
+    b.setViewportSize({ width: 2000, height: 2000 });
+    b.url('http://localhost:8080');
+    b.waitForVisible('body');
+    expect(b.getTitle()).to.equal('The Innovators\' Compass');
+    expect('div[name=find]').to.be.visible();
+    expect('div[name=make]').to.be.visible();
+  });
+
+  afterAll(() => {
+    b.click('button[name=to-workspace]');
+    b.waitForVisible('#ic-sidebar');
+    require('./utils').cleanup();
+  });
+
+  describe('make flow', () => {
+    it('make flow shows correct prompts', () => {
+      b.click('div[name=make]');
+      b.waitForVisible('input#compass-center');
+
+      const namePrompt = b.getAttribute('input#username', 'placeholder');
+      expect(namePrompt).to.equal('Your name (as you\'d like it to appear, no spaces)');
+
+      const topicPrompt = b.getAttribute('input#compass-center', 'placeholder');
+      expect(topicPrompt).to.equal('Topic: Who\'s involved?');
+    });
+
+    describe('invalid input', () => {
+      afterEach(() => {
+        b.clearElement('#compass-center');
+        b.clearElement('#username');
+      });
+
+      it('missing both', () => {
+        b.click('input[type=submit]').pause(200);
+        expect('#ic-modal').to.not.be.visible();
+        expect('#compass').to.not.be.visible();
+      });
+
+      it('missing username', () => {
+        b.setValue('#compass-center', 'acceptable');
+        b.click('input[type=submit]').pause(200);
+        expect('#ic-modal').to.not.be.visible();
+        expect('#compass').to.not.be.visible();
+      });
+
+      it('missing topic', () => {
+        b.setValue('#username', 'sandbox');
+        b.click('input[type=submit]').pause(200);
+        expect('#ic-modal').to.not.be.visible();
+        expect('#compass').to.not.be.visible();
+      });
+
+      it('topic too long', () => {
+        const text = 'This is a really long topic name that will hopefully exceed char limit';
+        b.setValue('#compass-center', text);
+        expect('#compass-center').to.have.value(text.substring(0, 30));
+      });
+    });
+
+    describe('valid input', () => {
+      beforeAll(() => {
+        b.setValue('#compass-center', 'topic');
+        b.setValue('#username', 'sandbox');
+        b.click('input[type=submit]');
+        b.waitForVisible('#ic-modal');
+
+        expect('#ic-modal-body').to.have.text(/If you would like/);
+        expect('#ic-modal-input').to.be.visible();
+      });
+
+      it('wrong email format reprompts for email', () => {
+        b.setValue('#ic-modal-input', 'fakeemail');
+        b.click('#ic-modal-confirm').pause(200);
+        expect('#ic-modal-body').to.have.text(/does not look right/);
+      });
+
+      it('empty email skips sending reminder', () => {
+        b.clearElement('#ic-modal-input');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#compass');
+        code = b.getUrl().split('/')[5];
+      });
+
+      it('valid email shows toast', () => {
+        b.back();
+        b.waitForVisible('#ic-landing');
+        b.click('div[name=make]');
+        b.setValue('#compass-center', 'topic');
+        b.setValue('#username', 'valid');
+        b.click('input[type=submit]');
+        b.waitForVisible('#ic-modal');
+        b.setValue('#ic-modal-input', 'fakeemail@test.com');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast span');
+        expect('#ic-toast span').to.have.text(/email/);
+      });
+    });
+
+  });
+
+  describe('find flow', () => {
+    it('find flow shows correct prompts', () => {
+      b.url('http://localhost:8080');
+      b.click('div[name=find]');
+      b.waitForVisible('input#compass-code');
+
+      const codePrompt = b.getAttribute('input#compass-code', 'placeholder');
+      expect(codePrompt).to.equal('The code of the compass you\'re looking for');
+
+      const namePrompt = b.getAttribute('input#username', 'placeholder');
+      expect(namePrompt).to.equal('Your name (as you\'d like it to appear, no spaces)');
+    });
+
+    describe('invalid input', () => {
+      afterEach(() => {
+        b.clearElement('#compass-code');
+        b.clearElement('#username');
+      });
+
+      it('missing both', () => {
+        b.click('input[type=submit]').pause(200);
+        expect('#ic-modal').to.not.be.visible();
+        expect('#compass').to.not.be.visible();
+      });
+
+      it('code too short', () => {
+        b.setValue('#username', 'valid');
+        b.setValue('#compass-code', '1234567');
+        b.click('input[type=submit]');
+        b.waitForVisible('#ic-modal');
+        expect('#ic-modal-body').to.have.text(/Your code is not valid/);
+        b.click('#ic-modal-confirm');
+      });
+
+      it('missing username', () => {
+        b.setValue('#compass-code', '12345678');
+        b.click('input[type=submit]').pause(200);
+        expect('#ic-modal').to.not.be.visible();
+        expect('#compass').to.not.be.visible();
+      });
+
+      describe('invalid username', () => {
+        beforeEach(() => {
+          b.setValue('#compass-code', '12345678');
         });
-    },
 
-    'make path errors': function(browser) {
-        browser
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('People group'))
-        .click('#ic-modal-confirm')
-        .setValue('#compass-center', 'This is a really long people group that will hopefully exceed char limit')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('People group', 30))
-        .click('#ic-modal-confirm')
-        .clearValue('#compass-center');
-    },
-
-    'make successful': function(browser) {
-        browser
-        .clearValue('#compass-center')
-        .setValue('#compass-center', 'nightwatchjs')
-        .click('button[name=next]')
-        .waitForElementVisible('.third')
-        .assert.containsText('.third h1', 'success')
-        .assert.elementPresent('#email')
-        .assert.elementPresent('button[name=to-workspace]')
-        .click('button[name=to-workspace]')
-        .url(function(result) {
-            var parts = result.value.split('/');
-            code = parts[5];
-        })
-        .url('http://localhost:8080');
-    },
-
-    'find path': function(browser) {
-        browser
-        .click('button[name=find]')
-        .waitForElementVisible('input#compass-code')
-        .getAttribute('input#compass-code', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'The code of your compass');
-        })
-        .getAttribute('input#username', 'placeholder', function(result) {
-            this.assert.equal(result.value, 'Your name');
+        it('contains number', () => {
+          b.setValue('#username', 'sandbox2');
+          b.click('input[type=submit]').pause(200);
+          b.waitForVisible('#ic-modal');
+          expect('#ic-modal-body').to.have.text(/Username can only contain letters/);
+          b.click('#ic-modal-confirm');
         });
-    },
 
-    'find path errors': function(browser) {
-        browser
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('A code'))
-        .click('#ic-modal-confirm')
-        .setValue('#compass-code', '1234567')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.INVALID('Your code'))
-        .click('#ic-modal-confirm')
-        .setValue('#compass-code', '8') //append to current
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.REQUIRED('Username'))
-        .click('#ic-modal-confirm')
-        .setValue('#username', 'sandbox5')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.UNAME_HAS_NON_CHAR)
-        .click('#ic-modal-confirm')
-        .clearValue('#username')
-        .setValue('#username', ',,,###')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.UNAME_HAS_NON_CHAR)
-        .click('#ic-modal-confirm')
-        .clearValue('#username')
-        .setValue('#username', 'sandboxsandboxsandboxsandboxsandboxsandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('#ic-modal')
-        .assert.containsText('#ic-modal-body', ERROR_MSG.TEXT_TOO_LONG('Username', 15))
-        .click('#ic-modal-confirm')
-        .clearValue('#username')
-        .clearValue('#compass-code');
-    },
+        it('contains symbols', () => {
+          b.setValue('#username', ',,,###');
+          b.click('input[type=submit]').pause(200);
+          b.waitForVisible('#ic-modal');
+          expect('#ic-modal-body').to.have.text(/Username can only contain letters/);
+          b.click('#ic-modal-confirm');
+        });
 
-    'find successful': function(browser) {
-        browser
-        .setValue('#compass-code', code)
-        .setValue('#username', 'sandbox')
-        .click('button[name=next]')
-        .waitForElementVisible('.third')
-        .assert.containsText('.third h1', 'Edit access')
-        .assert.containsText('.third h2', 'You will be logged in as sandbox')
-        .assert.elementPresent('button[name=to-workspace]')
-        .click('button[name=to-workspace]')
-        .waitForElementVisible('#ic-sidebar');
-    },
+        it('too long', () => {
+          const text = 'sandboxsandboxsandboxsandboxsandboxsandbox';
+          b.setValue('#username', text);
+          expect('#username').to.have.value(text.substring(0, 15));
+        });
+      });
+    });
 
-    'cleanup': require('./utils').cleanup
-};
+    it('find flow successful', () => {
+      b.setValue('#compass-code', code);
+      b.setValue('#username', 'sandbox');
+      b.click('input[type=submit]');
+      b.waitForVisible('#ic-modal');
+      expect('#ic-modal-body').to.have.text(/You will be logged in as "sandbox" with edit access/);
+    });
+  });
+});

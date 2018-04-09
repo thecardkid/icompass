@@ -1,138 +1,122 @@
-'use strict';
-
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import Toast from 'Utils/Toast.jsx';
-import { PROMPTS } from 'Lib/constants';
+import Toast from '../utils/Toast';
 
-import * as workspaceActions from 'Actions/workspace';
-import * as uiActions from 'Actions/ui';
+import { PROMPTS } from '../../lib/constants';
+
+import * as workspaceActions from '../actions/workspace';
+import * as uiActions from '../actions/ui';
 
 class Timer extends Component {
-    constructor(props) {
-        super(props);
-        this.toast = new Toast();
+  constructor(props) {
+    super(props);
+    this.toast = new Toast();
 
-        this.granularity = 1000;
-        this.running = false;
-        this.interval = null;
-        this.state = {left: null};
+    this.granularity = 1000;
+    this.running = false;
+    this.state = { left: null };
+  }
 
-        this.tick = this.tick.bind(this);
-        this.stop = this.stop.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.timer !== this.props.timer ||
+      nextState.left !== this.state.left;
+  }
+
+  componentDidUpdate() {
+    let empty = _.isEmpty(this.props.timer);
+    if (this.running && empty) {
+      this.running = false;
+      this.setState({ left: null });
+      return;
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.timer !== this.props.timer ||
-            nextState.left !== this.state.left;
+    if (!this.running && !empty) {
+      this.start(this.props.timer);
+    }
+  }
+
+  start(t) {
+    if (this.running) return;
+
+    this.duration = t.min * 60 + t.sec;
+    this.startTime = t.startTime;
+    this.running = true;
+    this.tick();
+  }
+
+  handleClick = () => {
+    if (this.running) return;
+    this.props.uiActions.showTimerConfig();
+  };
+
+  tick = () => {
+    let left = this.duration - (((Date.now() - this.startTime) / 1000) | 0);
+
+    if (left > 0) {
+      setTimeout(this.tick, this.granularity);
+    } else {
+      left = 0;
+      this.running = false;
+      this.props.workspaceActions.setTimer({});
+      this.props.uiActions.setSidebarVisible(true);
+      this.toast.info(PROMPTS.TIMEBOX_OVER);
     }
 
-    componentDidUpdate() {
-        let empty = _.isEmpty(this.props.timer);
-        if (this.running && empty) {
-            this.running = false;
-            this.setState({left: null});
-            return;
-        }
+    this.setState({ left });
+  };
 
-        if (!this.running && !empty) {
-            this.start(this.props.timer);
-        }
+  parse(seconds) {
+    let min = (seconds / 60) | 0;
+    if (min < 10) min = `0${min}`;
+    let sec = (seconds % 60) | 0;
+    if (sec < 10) sec = `0${sec}`;
+    return { min, sec };
+  }
+
+  stop = (e) => {
+    e.stopPropagation();
+    this.props.stop();
+  };
+
+  render() {
+    let contents;
+    if (this.running) {
+      let time = this.parse(this.state.left);
+      contents = (
+        <div>
+          <p className="ic-time">{time.min}:{time.sec}</p>
+          <div className="ic-timer-action dangerous" onClick={this.stop}>
+            <p>stop</p>
+          </div>
+        </div>
+      );
+    } else {
+      contents = <p>timebox</p>;
     }
 
-    start(t) {
-        if (this.running) return;
-        if (this.interval) this.removeInterval();
-
-        this.duration = t.min * 60 + t.sec;
-        this.startTime = t.startTime;
-        this.running = true;
-        this.tick();
-    }
-
-    handleClick() {
-        if (this.running) return;
-        if (this.interval) return this.removeInterval();
-        this.props.uiActions.showTimerConfig();
-    }
-
-    tick() {
-        let left = this.duration - (((Date.now() - this.startTime) / 1000) | 0);
-
-        if (left > 0) {
-            setTimeout(this.tick, this.granularity);
-        } else {
-            left = 0;
-            this.running = false;
-            this.props.workspaceActions.setTimer({});
-            this.props.uiActions.setSidebarVisible(true);
-            this.toast.info(PROMPTS.TIMEBOX_OVER);
-        }
-
-        this.setState({ left });
-    }
-
-    parse(seconds) {
-        let min = (seconds / 60) | 0;
-        if (min < 10) min = '0' + min;
-        let sec = (seconds % 60) | 0;
-        if (sec < 10) sec = '0' + sec;
-        return { min, sec };
-    }
-
-    stop(e) {
-        e.stopPropagation();
-        this.props.stop();
-    }
-
-    render() {
-        let contents;
-        if (this.running) {
-            let time = this.parse(this.state.left);
-            contents = (
-                <div>
-                    <p className="ic-time">{time.min}:{time.sec}</p>
-                    <div className="ic-timer-action dangerous" onClick={this.stop}>
-                        <p>stop</p>
-                    </div>
-                </div>
-            );
-        } else {
-            contents = <p>timebox</p>;
-        }
-
-        return (
-            <button name="timer" className="ic-action" onClick={this.handleClick}>
-                <i className="material-icons">timer</i>
-                {contents}
-            </button>
-        );
-    }
+    return (
+      <button name="timer" className="ic-action" onClick={this.handleClick}>
+        <i className="material-icons">timer</i>
+        {contents}
+      </button>
+    );
+  }
 }
 
-Timer.propTypes = {
-    timer: PropTypes.objectOf(PropTypes.number).isRequired,
-    stop: PropTypes.func.isRequired,
-    workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
-    uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
+const mapStateToProps = (state) => {
+  return {
+    timer: state.workspace.timer || {},
+  };
 };
 
-function mapStateToProps(state) {
-    return {
-        timer: state.workspace.timer || {}
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        workspaceActions: bindActionCreators(workspaceActions, dispatch),
-        uiActions: bindActionCreators(uiActions, dispatch)
-    };
-}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    workspaceActions: bindActionCreators(workspaceActions, dispatch),
+    uiActions: bindActionCreators(uiActions, dispatch),
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timer);

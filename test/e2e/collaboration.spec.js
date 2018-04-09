@@ -1,248 +1,283 @@
-'use strict';
+const chai = require('chai');
+const chaiWebdriver = require('chai-webdriverio').default;
+chai.use(chaiWebdriver(browser));
 
-var PROMPTS = require('../../lib/constants').PROMPTS;
-var users = {};
-var windows;
+const expect = chai.expect;
+const b = browser;
 
-module.exports = {
-    'creates successfully': require('./utils').setup,
+const PROMPTS = require('../../lib/constants').PROMPTS;
 
-    'second user login': function(browser) {
-        browser
-        .getCssProperty('.ic-user', 'background-color', function(result) {
-            this.assert.equal(result.value !== '', true, 'Background color is not null');
-            users['nightwatchjs'] = result.value;
-        })
-        .click('button[name=share-edit]')
-        .waitForElementVisible('#ic-modal', 100)
-        .getText('#ic-modal-body p', function(result) {
-            var editCode = result.value.substr(result.value.length - 8);
-            var editLink = 'http://localhost:8080/compass/edit/' + editCode + '/friendo';
-            browser
-            .click('button#ic-modal-confirm')
-            .execute(function() {
-                window.open('http://localhost:8080/tutorial', '_blank');
-            }, [])
-            .pause(2000)
-            .windowHandles(function (result) {
-                this.assert.equal(result.value.length, 2, 'There should be two windows open');
-                windows = result.value;
-                browser.windowSize(windows[1], 1300, 1200);
-                browser.switchWindow(windows[1], function() {
-                    browser
-                    .url(editLink)
-                    .waitForElementVisible('#compass')
-                    .elements('css selector', '.ic-user', function(result) {
-                        this.assert.equal(result.value.length, 2, 'There should be two users in the workspace');
-                    })
-                    .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
-                        this.assert.equal(result.value !== '', true, 'Second user tag should have background color');
-                        users['friendo'] = result.value;
-                    });
-                });
-            });
-        });
-    },
+describe('collaboration', () => {
+  const colors = {};
+  let tabs = {};
 
-    'continuous edit operations': function(browser) {
-        browser
-        .keys(['n'])
-        .waitForElementVisible('#ic-note-form')
-        .setValue('#ic-form-text', 'Friendo\'s note')
-        .click('button[name=ship]')
-        .waitForElementVisible('#note0')
-        .assert.cssProperty('#note0 span a', 'background-color', users['friendo'], 'Note should have friendo color')
-        .moveToElement('#note0', 10, 10, function() {
-            browser.doubleClick();
-        })
-        .waitForElementVisible('#ic-note-form')
+  beforeAll(() => {
+    require('./utils').setup();
+    colors.webdriverio = b.getCssProperty('.ic-user', 'background-color').value;
+    tabs.webdriverio = b.getCurrentTabId();
+    b.click('button[name=share-edit]');
+    b.waitForVisible('#ic-modal');
 
-        .switchWindow(windows[0])
-        .assert.elementPresent('#note0', 'Note 0 should be present')
-        .assert.containsText('#note0', 'Friendo\'s note', 'Note 0 should contain correct text')
-        .moveToElement('#note0', 10, 10, function() {
-            browser
-            .mouseButtonDown(0, function() {
-                browser.moveTo(null, 200, -200);
-            })
-            .mouseButtonUp(0)
-            .doubleClick();
-        })
-        .waitForElementVisible('#ic-note-form')
+    const text = b.getText('#ic-modal-body p');
+    const code = text.substring(text.length - 8);
+    const shareUrl = `http://localhost:8080/compass/edit/${code}/friendo`;
+    b.click('#ic-modal-confirm');
 
-        .switchWindow(windows[1])
-        .clearValue('#ic-form-text')
-        .setValue('#ic-form-text', 'first edit')
-        .click('button[name=ship]')
-        .pause(1000)
+    b.newWindow(shareUrl, 'friendo', 'width=2000,height=2000');
+    b.setViewportSize({ width: 2000, height: 2000 });
+    b.waitForVisible('#compass');
+    b.click('#ic-show-sidebar');
+    b.waitForVisible('#ic-sidebar');
+    tabs.friendo = b.getCurrentTabId();
+    colors.friendo = b.getCssProperty('.ic-user:nth-of-type(2)', 'background-color').value;
+    expect('.ic-user').to.have.count(2);
+  });
 
-        .switchWindow(windows[0])
-        .assert.containsText('#note0', 'first edit', 'Note 0 should contain edited text')
-        .clearValue('#ic-form-text')
-        .setValue('#ic-form-text', 'second edit')
-        .click('button[name=ship]')
-        .pause(1000)
-        .assert.containsText('#note0', 'second edit', 'Note 0 should contain edited text');
-    },
+  describe('continuous edit operations', () => {
+    it('friendo creates a note', () => {
+      b.switchTab(tabs.friendo);
+      b.keys(['n']);
+      b.waitForVisible('#ic-note-form');
+      b.setValue('#ic-form-text', 'Friendo\'s note');
+      b.click('button[name=ship]');
+      b.waitForVisible('#note0');
 
-    'logouts': function(browser) {
-        browser
-        .back()
-        .assert.urlEquals('http://localhost:8080/', 'URL should be home page')
+      expect(b.getCssProperty('#note0 span a', 'background-color').value).to.equal(colors.friendo);
+    });
 
-        .switchWindow(windows[1])
-        .elements('css selector', '.ic-user', function(result) {
-            this.assert.equal(result.value.length, 1, 'There should be only one user');
-        })
-        .assert.cssProperty('.ic-user', 'background-color', users['friendo'], 'User tag should have correct color')
+    it('webdriverio sees the note', () => {
+      b.switchTab(tabs.webdriverio);
+      expect('#note0').to.be.visible();
+      expect('#note0').to.have.text(/Friendo's note/);
+    });
 
-        .switchWindow(windows[0])
-        .forward()
-        .waitForElementVisible('#compass')
-        .elements('css selector', '.ic-user', function(result) {
-            this.assert.equal(result.value.length, 2, 'There should be two users');
-        })
-        .getCssProperty('.ic-user:nth-of-type(2)', 'background-color', function(result) {
-            users['nightwatchjs'] = result.value;
-        });
-    },
+    it('webdriverio drags the note and friendo sees the drag', () => {
+      b.switchTab(tabs.friendo);
+      const oldPos = b.getLocation('#note0');
 
-    'timeboxes': function(browser) {
-        browser
-        .click('button[name=timer]')
-        .waitForElementVisible('#ic-timer-config')
-        .click('button[name=ic-3m]')
-        .waitForElementVisible('#ic-toast')
+      b.switchTab(tabs.webdriverio);
+      b.moveToObject('#note0', 10, 10);
+      b.buttonDown(0).pause(100);
+      b.moveToObject('#note0', 210, 210);
+      b.buttonUp(0).pause(100);
 
-        .switchWindow(windows[1])
-        .assert.containsText('#ic-toast', 'A timebox for 3m0s has been created', 'There should be a toast notifying timebox creation')
-        .pause(1000)
-        .assert.containsText('button[name=timer] p.ic-time', '02:', 'Timer should be accurate')
-        .click('button[name=timer] div div p')
-        .waitForElementVisible('#ic-toast')
+      b.switchTab(tabs.friendo);
+      const newPos = b.getLocation('#note0');
 
-        .switchWindow(windows[0])
-        .assert.containsText('#ic-toast', 'Timebox has been canceled', 'There should be a toast notifiying that timebox was canceled')
-        .assert.elementNotPresent('button[name=timer] p.ic-time', 'Timer should not be present');
-    },
+      expect(newPos.x).to.not.equal(oldPos.x);
+      expect(newPos.y).to.not.equal(oldPos.y);
+    });
 
-    'chat': function(browser) {
-        browser
-        .assert.elementPresent('#ic-chat')
-        .click('#ic-chat button.ic-close-window')
-        .pause(1000)
-        .assert.cssProperty('#ic-chat', 'bottom', '-270px', 'Chat area should be hidden')
+    it('friendo makes an edit and webdriverio sees edit', () => {
+      b.switchTab(tabs.friendo);
 
-        .switchWindow(windows[1])
-        .setValue('#message-text', ['first message', browser.Keys.ENTER])
-        .waitForElementVisible('div.mine')
-        .assert.containsText('div.mine', 'first message', 'There should be a message')
-        .assert.cssProperty('div.mine', 'background-color', users['friendo'], 'Message should have correct background color')
+      b.doubleClick('#note0').pause(100);
+      b.waitForVisible('#ic-note-form');
+      b.setValue('#ic-form-text', 'edit');
+      b.click('button[name=ship]');
+      b.pause(500);
 
-        .switchWindow(windows[0])
-        .assert.cssProperty('button#ic-show-chat', 'background-color', 'rgba(194, 26, 3, 1)', 'Show chat button should notify there is an unread message')
-        .click('button#ic-show-chat')
-        .pause(1000)
-        .assert.cssProperty('#ic-chat', 'bottom', '0px', 'Chat area should be visible')
-        .assert.elementPresent('div.theirs', 'New message should be present')
-        .assert.containsText('div.theirs', 'first message', 'New message should contain correct text')
-        .assert.cssProperty('div.theirs', 'background-color', users['friendo'], 'New message should have correct background color')
-        .setValue('#message-text', ['second message', browser.Keys.ENTER])
-        .waitForElementVisible('div.mine')
-        .assert.containsText('div.mine', 'second message', 'New message should contain correct text')
-        .assert.cssProperty('div.mine', 'background-color', users['nightwatchjs'], 'New message should have correct background color')
+      b.switchTab(tabs.webdriverio);
+      expect('#note0').to.have.text(/edit/);
+    });
+  });
 
-        .switchWindow(windows[1])
-        .assert.elementPresent('div.theirs', 'New message should appear')
-        .assert.containsText('div.theirs', 'second message', 'New message should contain correct text')
-        .assert.cssProperty('div.theirs', 'background-color', users['nightwatchjs'], 'New message should have correct background color');
-    },
+  describe('logouts', () => {
+    it('webdriverio logs out and friendo sees only 1 user', () => {
+      b.switchTab(tabs.webdriverio);
+      b.url('http://localhost:8080/');
 
-    'select and draft mode simultaneously': function(browser) {
-        var draftText = 'friendo draft';
+      b.switchTab(tabs.friendo);
+      expect('.ic-user').to.have.count(1);
+      expect(b.getCssProperty('.ic-user', 'background-color').value).to.equal(colors.friendo);
+    });
 
-        browser
-        .click('#ic-mode-draft')
-        .moveToElement('body', 300, 200)
-        .doubleClick()
-        .waitForElementVisible('#ic-note-form')
-        .setValue('#ic-form-text', draftText)
-        .click('button[name=ship]')
-        .waitForElementVisible('#note1')
-        .assert.cssProperty('#note0 span a', 'background-color', 'rgba(128, 128, 128, 1)', 'Draft has grey background')
-        .assert.containsText('#note0', draftText, 'Draft contains correct text')
+    it('webdriverio logs in and both see 2 users', () => {
+      b.switchTab(tabs.webdriverio);
+      b.back();
+      b.waitForVisible('#compass');
+      b.click('#ic-show-sidebar');
+      b.waitForVisible('#ic-sidebar');
+      expect('.ic-user').to.have.count(2);
+      colors.webdriverio = b.getCssProperty('.ic-user:nth-of-type(2)', 'background-color').value;
 
-        .switchWindow(windows[0])
-        .elements('css selector', '.ic-sticky-note', function(result) {
-            this.assert.equal(1, result.value.length, 'Drafts by other users do not show up');
-        })
-        .moveToElement('body', 300, 600)
-        .doubleClick()
-        .waitForElementVisible('#ic-note-form')
-        .setValue('#ic-form-text', 'note while in draft')
-        .click('button[name=ship]')
-        .waitForElementVisible('#note1')
-        .click('#ic-mode-visual')
-        .waitForElementVisible('#ic-visual-toolbar')
+      b.switchTab(tabs.friendo);
+      expect('.ic-user').to.have.count(2);
+    });
+  });
 
-        .switchWindow(windows[1])
-        .elements('css selector', '.ic-sticky-note', function(result) {
-            this.assert.equal(3, result.value.length, 'New notes by other users still show up in draft mode');
-        })
-        .click('#note0 span a p.submit')
-        .pause(500)
-        .assert.containsText('#note2', draftText, 'A new note has been created from the draft')
+  describe('timeboxes', () => {
+    it('webdriverio creates timer and friendo sees it', () => {
+      b.switchTab(tabs.webdriverio);
+      b.click('button[name=timer]');
+      b.waitForVisible('#ic-timer-config');
+      b.click('button[name=ic-3m]');
+      b.waitForVisible('#ic-toast');
 
-        .switchWindow(windows[0])
-        .elements('css selector', '.ic-sticky-note', function(result) {
-            this.assert.equal(3, result.value.length, 'New notes by other users still show up in visual mode');
-        })
-        .click('button.bold')
-        .click('#note0')
-        .click('#note2')
-        .assert.cssClassPresent('#note0 span a p', 'bold', 'Note 0 should be bulk formatted')
-        .assert.cssClassPresent('#note2 span a p', 'bold', 'Note 2 should be bulk formatted')
+      b.switchTab(tabs.friendo);
+      expect('#ic-toast').to.have.text(/A timebox for 3m0s has been created/);
+      b.pause(1000);
+      expect('button[name=timer] p.ic-time').to.have.text(/02:/);
+    });
 
-        .switchWindow(windows[1])
-        .assert.cssClassNotPresent('#note0 span a p', 'bold', 'Visual edit should not affect other users')
-        .assert.cssClassNotPresent('#note2 span a p', 'bold', 'Visual edit should not affect other users')
-        .click('#ic-mode-visual')
-        .waitForElementVisible('#ic-visual-toolbar')
-        .click('#note2')
-        .click('#ic-bulk-delete')
-        .waitForElementVisible('#ic-modal')
-        .click('#ic-modal-confirm')
-        .pause(1000)
-        .elements('css selector', '.ic-sticky-note', function(result) {
-            this.assert.equal(2, result.value.length, 'One note should have been deleted');
-        })
+    it('can cancel timebox', () => {
+      b.switchTab(tabs.friendo);
+      b.click('button[name=timer] div div p');
+      b.waitForVisible('#ic-toast');
 
-        .switchWindow(windows[0])
-        .elements('css selector', '.ic-sticky-note', function(result) {
-            this.assert.equal(2, result.value.length, 'Notes can be deleted by other users in visual mode');
-        })
-        .assert.cssProperty('#note0', 'border-color', 'rgb(40, 138, 255)', 'Note 0 should still be selected')
-        .assert.cssProperty('#note1', 'border-color', 'rgb(0, 0, 0)', 'Note 1 should still be unselected');
-    },
+      b.switchTab(tabs.webdriverio);
+      expect('#ic-toast').to.have.text(/Timebox has been canceled/);
+      expect('button[name=timer] p.ic-time').to.not.be.there();
+    });
+  });
 
-    'redirected to home page on compass delete': function(browser) {
-        browser
-        .switchWindow(windows[0])
-        .click('#ic-sidebar button[name=destroyer]')
-        .waitForElementVisible('#ic-modal')
-        .click('#ic-modal-confirm')
-        .pause(100)
-        .waitForElementVisible('#ic-modal')
-        .click('#ic-modal-confirm')
-        .pause(500)
-        .assert.urlEquals('http://localhost:8080/')
+  describe('chat', () => {
+    it('red alert on chat box if message received while chat is hidden', () => {
+      b.switchTab(tabs.webdriverio);
+      expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
 
-        .switchWindow(windows[1])
-        .assert.elementPresent('#ic-modal')
-        .assert.containsText('#ic-modal', PROMPTS.COMPASS_DELETED)
-        .click('#ic-modal-confirm')
-        .pause(500)
-        .assert.urlEquals('http://localhost:8080/')
-        .end();
-    }
-};
+      b.switchTab(tabs.friendo);
+      b.click('#ic-show-chat').pause(500);
+      b.setValue('#message-text', ['first message', '\uE007']);
+      b.waitForVisible('div.mine');
+      expect('div.mine').to.have.text(/first message/);
+      expect(b.getCssProperty('div.mine', 'background-color').value).to.equal(colors.friendo);
+
+      b.switchTab(tabs.webdriverio);
+      expect(b.getCssProperty('button#ic-show-chat', 'background-color').value).to.equal('rgba(194,26,3,1)');
+    });
+
+    it('chat messages are rendered correctly', () => {
+      b.switchTab(tabs.webdriverio);
+      b.click('#ic-show-chat');
+      b.pause(500);
+
+      expect('div.theirs').to.be.visible();
+      expect('div.theirs').to.have.text(/first message/);
+      expect(b.getCssProperty('div.theirs', 'background-color').value).to.equal(colors.friendo);
+    });
+
+    it('renders both "mine" and "their" messages with correct colors', () => {
+      b.setValue('#message-text', ['second message', '\uE007']);
+      b.waitForVisible('div.mine');
+      expect('div.mine').to.have.text(/second message/);
+      expect(b.getCssProperty('div.mine', 'background-color').value).to.equal(colors.webdriverio);
+
+      b.switchTab(tabs.friendo);
+      expect('div.theirs').to.be.visible();
+      expect('div.theirs').to.have.text(/second message/);
+      expect(b.getCssProperty('div.theirs', 'background-color').value).to.equal(colors.webdriverio);
+    });
+  });
+
+  describe('draft mode', () => {
+    it('other users do not see drafts', () => {
+      b.switchTab(tabs.webdriverio);
+      b.click('#ic-mode-draft');
+      b.moveToObject('body', 300, 200);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      b.setValue('#ic-form-text', 'webdriverio draft');
+      b.click('button[name=ship]');
+      b.waitForVisible('#note1');
+      expect('.ic-sticky-note').to.have.count(2);
+
+      b.switchTab(tabs.friendo);
+      expect('.ic-sticky-note').to.have.count(1);
+    });
+
+    it('notes submitted by others still show up while in draft mode', () => {
+      // webdriverio in draft mode, friendo creates new note
+
+      b.switchTab(tabs.friendo);
+      b.moveToObject('body', 300, 600);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      b.setValue('#ic-form-text', 'note while in draft');
+      b.click('button[name=ship]');
+      b.waitForVisible('#note1');
+      expect('.ic-sticky-note').to.have.count(2);
+
+      b.switchTab(tabs.webdriverio);
+      expect('.ic-sticky-note').to.have.count(3);
+    });
+
+    it('submitting a draft makes it visible to others', () => {
+      b.switchTab(tabs.webdriverio);
+      b.click('#note0 span a p.submit');
+      b.pause(500);
+      expect('#note2').to.have.text(/webdriverio draft/);
+
+      b.switchTab(tabs.friendo);
+      expect('.ic-sticky-note').to.have.count(3);
+    });
+  });
+
+  describe('visual mode', () => {
+    it('edits while in visual mode don\'t show up', () => {
+      b.switchTab(tabs.webdriverio);
+      b.click('#ic-mode-visual');
+      b.waitForVisible('#ic-visual-toolbar');
+      b.click('button.bold');
+      b.click('#note0');
+      b.click('#note2');
+      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.contain('bold');
+      expect(b.getAttribute('#note2 span a p', 'class')[0]).to.contain('bold');
+
+      b.switchTab(tabs.friendo);
+      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.not.contain('bold');
+      expect(b.getAttribute('#note2 span a p', 'class')[0]).to.not.contain('bold');
+    });
+
+    it('deleting a note that is being edited by a user removes it from that user\'s screen', () => {
+      b.switchTab(tabs.friendo);
+      b.click('#ic-mode-visual');
+      b.waitForVisible('#ic-visual-toolbar');
+      b.click('#note2');
+      b.click('#ic-bulk-delete');
+      b.waitForVisible('#ic-modal');
+      b.click('#ic-modal-confirm');
+      b.pause(1000);
+      expect('.ic-sticky-note').to.have.count(2);
+
+      b.switchTab(tabs.webdriverio);
+      expect('.ic-sticky-note').to.have.count(2);
+      // #note0 is still selected
+      expect(b.getCssProperty('#note0', 'border-color').value).to.equal('rgb(40,138,255)');
+      // #note1 is still not selected
+      expect(b.getCssProperty('#note1', 'border-color').value).to.equal('rgb(0,0,0)');
+    });
+
+    it('submitting changes show up on other\'s screen', () => {
+      b.switchTab(tabs.webdriverio);
+      b.click('#ic-bulk-submit');
+      b.pause(500);
+
+      b.switchTab(tabs.friendo);
+      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.contain('bold');
+    });
+  });
+
+  describe('compass delete', () => {
+    it('user who performs delete action gets redirected to home page', () => {
+      b.switchTab(tabs.webdriverio);
+      b.click('#ic-sidebar button[name=destroyer]');
+      b.waitForVisible('#ic-modal');
+      b.click('#ic-modal-confirm');
+      b.pause(200);
+      b.waitForVisible('#ic-modal');
+      b.click('#ic-modal-confirm');
+      b.pause(500);
+      expect(b.getUrl()).to.equal('http://localhost:8080/');
+    });
+
+    it('any other user in that deleted workspace also gets redirected to home page', () => {
+      b.switchTab(tabs.friendo);
+      expect('#ic-modal').to.be.visible();
+      expect('#ic-modal').to.have.text(new RegExp(PROMPTS.COMPASS_DELETED, 'i'));
+      b.click('#ic-modal-confirm');
+      b.pause(500);
+      expect(b.getUrl()).to.equal('http://localhost:8080/');
+    });
+  });
+});

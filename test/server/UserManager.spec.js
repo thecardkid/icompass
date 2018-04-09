@@ -1,7 +1,6 @@
-'use strict';
+import { expect } from 'chai';
 
 import UserManager from '../../lib/userManager';
-import { expect } from 'chai';
 
 var code = '1a2b3c4d';
 var username = 'bruce willis';

@@ -1,66 +1,66 @@
 div#ic-bookmarks {
-    background:@dark;
-    height:100vh;
-    width:200px;
-    position:absolute;
-    color:white;
-    z-index:1;
+  background: @dark;
+  height: 100vh;
+  width: 200px;
+  position: absolute;
+  color: white;
+  z-index: 1;
 
-    div#contents {
-        margin:20px;
+  div#contents {
+    margin: 20px;
 
-        h1 {
-            font-size:30px;
-            margin-bottom:30px;
-            border-bottom:1px solid @yellow;
-            color: @yellow;
-        }
-
-        div.ic-saved {
-            margin:10px 0;
-            width:140px;
-            padding:10px;
-            background:#222;
-            cursor:pointer;
-            border-radius:5px;
-
-            a {
-                word-wrap:break-word;
-            }
-
-            span#arrow {
-                float:right;
-                font-size:10px;
-                margin-right:5px;
-                margin-top:3px;
-            }
-
-            div.ic-saved-info {
-                height:20px;
-                overflow:hidden;
-                .hasTransition(0.2s);
-
-                p {
-                    font-size:12px;
-                    display:inline-block;
-                }
-
-                button {
-                    float:right;
-                    font-weight:bold;
-                    padding:0 5px;
-                    height:100%;
-                    color:white;
-                }
-
-                button.remove {
-                    background:@red;
-                }
-
-                button.edit {
-                    color:black;
-                }
-            }
-        }
+    h1 {
+      font-size: 30px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid @yellow;
+      color: @yellow;
     }
+
+    div.ic-saved {
+      margin: 10px 0;
+      width: 140px;
+      padding: 10px;
+      background: #222;
+      cursor: pointer;
+      border-radius: 5px;
+
+      a {
+        word-wrap: break-word;
+      }
+
+      span#arrow {
+        float: right;
+        font-size: 10px;
+        margin-right: 5px;
+        margin-top: 3px;
+      }
+
+      div.ic-saved-info {
+        height: 20px;
+        overflow: hidden;
+        .hasTransition(0.2s);
+
+        p {
+          font-size: 12px;
+          display: inline-block;
+        }
+
+        button {
+          float: right;
+          font-weight: bold;
+          padding: 0 5px;
+          height: 100%;
+          color: white;
+        }
+
+        button.remove {
+          background: @red;
+        }
+
+        button.edit {
+          color: black;
+        }
+      }
+    }
+  }
 }

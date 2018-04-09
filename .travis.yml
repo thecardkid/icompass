@@ -7,40 +7,31 @@ matrix:
   - language: node_js
     nodejs:
     - '7'
-    services:
-    - docker
     env:
-    - TEST_ENV=mocha
     - NODE_ENV=test
+    before_install:
+    - export CHROME_BIN=/usr/bin/google-chrome
+    - export DISPLAY=:99.0
+    - sh -e /etc/init.d/xvfb start
+    - sudo apt-get update
+    - sudo apt-get install -y libappindicator1 fonts-liberation
+    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    - sudo dpkg -i google-chrome*.deb
+    - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+    install:
+    - npm install --depth 0
+    - npm run build
+    - MONGO_UNAME=icompass MONGO_PWD=compass78 node icompass &
+    script:
+    - npm run wdio
+
   - language: node_js
     nodejs:
     - '7'
-    services:
-    - docker
     env:
-    - TEST_ENV=e2e
     - NODE_ENV=test
-
-install:
-- if [ "$TEST_ENV" = "mocha" ]; then
-    docker pull jvdploeg/node-mocha;
-    npm install -gq --depth 0 mocha;
-  fi
-- if [ "$TEST_ENV" = "e2e" ]; then
-    docker pull thecardkid/e2e:latest;
-  fi
-- npm install --depth 0
-- npm run build
-
-script:
-- if [ "$TEST_ENV" = "mocha" ]; then
-    npm i -q --depth 0 eslint eslint-plugin-react@latest;
-    npm run lint;
-    npm run test:mocha;
-  fi
-- if [ "$TEST_ENV" = "e2e" ]; then
-    cd ..;
-    docker run -d --log-driver=none --name dc thecardkid/e2e & sleep 5;
-    docker cp icompass dc:.;
-    docker exec dc bash -c "export MONGO_UNAME=icompass; export MONGO_PWD=compass78; cd icompass; node test/e2e";
-  fi
+    install:
+    - npm install --depth 0
+    script:
+    - npm run lint
+    - npm run test:mocha

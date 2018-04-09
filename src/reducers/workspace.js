@@ -1,67 +1,66 @@
-'use strict';
-
 import _ from 'underscore';
 
 const defaultState = {
-    selected: [],
-    drafts: [],
-    color: null, bold: null, italic: null, underline: null,
-    timer: {}
+  selected: [],
+  drafts: [],
+  color: null, bold: null, italic: null, underline: null,
+  timer: {},
 };
 
 const colorAll = (state, action) => {
-    let color = (action.color === state.color ? null : action.color);
-    return {...state, color};
+  let color = (action.color === state.color ? null : action.color);
+  return { ...state, color };
 };
 
 const removeNotesIfSelected = (state, action) => {
-    let selected = _.filter(state.selected, (e, i) => {
-        return !_.contains(action.deletedIdx, i);
-    });
+  let selected = _.filter(state.selected, (e, i) => {
+    return !_.contains(action.deletedIdx, i);
+  });
 
-    return {...state, selected};
+  return { ...state, selected };
 };
 
 const createDraft = (state, action) => {
-    let note = Object.assign({}, action.note);
-    note.draft = true;
-    note.color = 'grey';
+  let note = Object.assign({}, action.note);
+  note.draft = true;
+  note.color = 'grey';
 
-    return {
-        ...state,
-        drafts: state.drafts.concat([ note ])
-    };
+  return {
+    ...state,
+    drafts: state.drafts.concat([note]),
+  };
 };
 
 const dragDraft = (state, action) => {
-    let { idx, x, y } = action;
-    let n = state.drafts[idx];
-    let dragged = Object.assign({}, n, { x, y });
-    let drafts = state.drafts.slice(0, idx)
-        .concat(dragged)
-        .concat(state.drafts.slice(idx + 1));
-    return {...state, drafts};
+  let { idx, x, y } = action;
+  let n = state.drafts[idx];
+  let dragged = Object.assign({}, n, { x, y });
+  let drafts = state.drafts.slice(0, idx)
+    .concat(dragged)
+    .concat(state.drafts.slice(idx + 1));
+  return { ...state, drafts };
 };
 
 const editDraft = (state, action) => {
-    let { idx, updated } = action;
-    let n = Object.assign({}, state.drafts[idx], updated);
-    let drafts = state.drafts.slice(0, idx)
-        .concat(n)
-        .concat(state.drafts.slice(idx + 1));
-    return {...state, drafts};
+  let { idx, updated } = action;
+  let n = Object.assign({}, state.drafts[idx], updated);
+  let drafts = state.drafts.slice(0, idx)
+    .concat(n)
+    .concat(state.drafts.slice(idx + 1));
+  return { ...state, drafts };
 };
 
 const createDoodleDraft = (state, action) => {
-    let doodle = {
-        text: null, color: 'grey', x: 0.5, y: 0.5,
-        user: action.user, draft: true,
-        doodle: document.getElementById('ic-doodle').toDataURL()
-    };
+  let note = {
+    ...action.note,
+    draft: true,
+    color: 'grey',
+  };
 
-    return {...state,
-        drafts: state.drafts.concat(doodle)
-    };
+  return {
+    ...state,
+    drafts: state.drafts.concat(note),
+  };
 };
 
 /*
@@ -71,79 +70,79 @@ const createDoodleDraft = (state, action) => {
                     from a separate socket emission
  */
 const updateSelected = (state, action) => {
-    if (action.len > state.selected.length) {
-        return {...state, selected: state.selected.concat([ false ])};
-    }
+  if (action.len > state.selected.length) {
+    return { ...state, selected: state.selected.concat([false]) };
+  }
 
-    return state;
+  return state;
 };
 
 const undraft = (state, action) => {
-    let drafts = _.filter(state.drafts, (e, i) => i !== action.idx);
-    return {...state, drafts};
+  let drafts = _.filter(state.drafts, (e, i) => i !== action.idx);
+  return { ...state, drafts };
 };
 
 export default (state = {}, action) => {
-    switch(action.type) {
-        case 'normalMode':
-        case 'compactMode':
-        case 'draftMode':
-            return {...defaultState, timer: state.timer};
+  switch (action.type) {
+    case 'normalMode':
+    case 'compactMode':
+    case 'draftMode':
+      return { ...defaultState, timer: state.timer };
 
-        case 'visualMode':
-            return {
-                ...defaultState,
-                selected: (new Array(action.len)).fill(false),
-                timer: state.timer
-            };
+    case 'visualMode':
+      return {
+        ...defaultState,
+        selected: (new Array(action.len)).fill(false),
+        timer: state.timer,
+      };
 
-        case 'selectNote':
-            return {
-                ...state,
-                selected: [
-                    ...state.selected.slice(0, action.idx),
-                    !state.selected[action.idx],
-                    ...state.selected.slice(action.idx + 1)
-                ]
-            };
+    case 'selectNote':
+      return {
+        ...state,
+        selected: [
+          ...state.selected.slice(0, action.idx),
+          !state.selected[action.idx],
+          ...state.selected.slice(action.idx + 1)
+        ],
+      };
 
-        case 'toggleBold':
-            return {...state, bold: !state.bold};
+    case 'toggleBold':
+      return { ...state, bold: !state.bold };
 
-        case 'toggleItalic':
-            return {...state, italic: !state.italic};
+    case 'toggleItalic':
+      return { ...state, italic: !state.italic };
 
-        case 'toggleUnderline':
-            return {...state, underline: !state.underline};
+    case 'toggleUnderline':
+      return { ...state, underline: !state.underline };
 
-        case 'colorAll':
-            return colorAll(state, action);
+    case 'colorAll':
+      return colorAll(state, action);
 
-        case 'removeNotesIfSelected':
-            return removeNotesIfSelected(state, action);
+    case 'removeNotesIfSelected':
+      return removeNotesIfSelected(state, action);
 
-        case 'createDraft':
-            return createDraft(state, action);
+    case 'createDraft':
+      return createDraft(state, action);
 
-        case 'dragDraft':
-            return dragDraft(state, action);
+    case 'dragDraft':
+      return dragDraft(state, action);
 
-        case 'editDraft':
-            return editDraft(state, action);
+    case 'editDraft':
+      return editDraft(state, action);
 
-        case 'createDoodleDraft':
-            return createDoodleDraft(state, action);
+    case 'createDoodleDraft':
+      return createDoodleDraft(state, action);
 
-        case 'updateSelected':
-            return updateSelected(state, action);
+    case 'updateSelected':
+      return updateSelected(state, action);
 
-        case 'undraft':
-            return undraft(state, action);
+    case 'undraft':
+      return undraft(state, action);
 
-        case 'setTimer':
-            return {...state, timer: action.timer};
+    case 'setTimer':
+      return { ...state, timer: action.timer };
 
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 };

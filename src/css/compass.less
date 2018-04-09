@@ -1,193 +1,207 @@
 #compass {
-    width:100vw;
-    height:100vh;
-    cursor:default;
+  width: 100vw;
+  height: 100vh;
+  cursor: default;
+
+  #note-manager {
+    width: 100vw;
+    height: 100vh;
+  }
 }
 
 .ic-quadrant {
-    color:#CACACA;
-    text-align:center;
-    position:absolute;
-    cursor:default;
-    width:50vw;
-    height:50vh;
-    z-index:0;
+  color: #CACACA;
+  text-align: center;
+  position: absolute;
+  cursor: default;
+  width: 50vw;
+  height: 50vh;
+  z-index: 0;
+  opacity: 0;
+  .hasTransition(0.3s);
 
-    div {
-        margin-top:23vh;
+  div {
+    margin-top: 23vh;
 
-        h1 {
-            letter-spacing:5px;
-        }
+    h1 {
+      letter-spacing: 5px;
     }
+  }
 }
 
 #observations {
-    bottom:0;
-    left:0;
+  bottom: 0;
+  left: 0;
 }
 
 #principles {
-    top:0;
-    left:0;
+  top: 0;
+  left: 0;
 }
 
 #ideas {
-    top:0;
-    right:0;
+  top: 0;
+  right: 0;
 }
 
 #experiments {
-    bottom:0;
-    right:0;
+  bottom: 0;
+  right: 0;
 }
 
 div.ic-compass-label {
-    position:absolute;
-    display:inline-block;
-    background:white;
-    color:@dark;
-    text-align:center;
-    padding:3px;
-    font-size:12px;
-    width:60px;
+  position: absolute;
+  display: inline-block;
+  background: white;
+  color: @dark;
+  text-align: center;
+  padding: 3px;
+  font-size: 12px;
+  width: 60px;
 }
 
 #center {
-    border-radius:100%;
-    width:100px;
-    height:100px;
-    position:absolute;
-    background:@dark;
-    color:@light;
-    text-align:center;
-    z-index:-1;
+  border-radius: 25%;
+  position: absolute;
+  background: @dark;
+  color: @light;
+  text-align: center;
+  z-index: -1;
 
-    p {
-        width:90%;
-        margin-left:5%;
-        font-family:monospace;
-    }
+  p#first-prompt {
+    margin-top: 42px;
+  }
+
+  p {
+    width: 90%;
+    margin: 0 auto;
+    font-family: monospace;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
 }
 
 button.ic-corner-btn {
-    position:absolute;
-    background:@light;
-    color:@dark;
-    z-index:2;
-    padding:1px 3px;
-    font-size:12px;
+  position: absolute;
+  background: @light;
+  color: @dark;
+  z-index: 2;
+  padding: 1px 3px;
+  font-size: 12px;
 }
 
 @corner-margin: 5px;
 
 button#ic-show-sidebar {
-    top:@corner-margin;
-    left:@corner-margin;
-    border:1px solid black;
+  top: @corner-margin;
+  left: @corner-margin;
+  border: 1px solid black;
 }
 
 button#ic-show-chat {
-    bottom:@corner-margin;
-    right:@corner-margin;
-    border:1px solid black;
+  bottom: @corner-margin;
+  right: @corner-margin;
+  border: 1px solid black;
 }
 
 button#ic-show-doodle {
-    left:@corner-margin;
-    bottom:@corner-margin;
-    border:1px solid black;
+  left: @corner-margin;
+  bottom: @corner-margin;
+  border: 1px solid black;
 }
 
 div#ic-modes {
-    position: absolute;
-    background:@dark;
-    z-index:2;
-    top:0px;
-    right:0px;
+  position: absolute;
+  background: @dark;
+  z-index: 2;
+  top: 0px;
+  right: 0px;
 
-    button {
-        float:right;
-        border-left:1px solid black;
-        border-bottom:1px solid black;
-        font-size:12px;
-        padding:1px 3px;
-    }
+  button {
+    float: right;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    font-size: 12px;
+    padding: 1px 3px;
+  }
 
-    button.selected {
-        background:@dark;
-        color:@light;
-    }
+  button.selected {
+    background: @dark;
+    color: @light;
+  }
 }
 
 div#ic-visual-toolbar {
-    width:105px;
-    text-align:center;
-    padding:5px;
-    position:absolute;
-    background:@dark;
-    color:@light;
-    z-index:3;
-    cursor:move;
-    top:50px;
-    right:50px;
+  width: 105px;
+  text-align: center;
+  padding: 5px;
+  position: absolute;
+  background: @dark;
+  color: @light;
+  z-index: 3;
+  cursor: move;
+  top: 50px;
+  right: 50px;
 
-    div#ic-visual-hint {
-        margin-top:5px;
-        font-size:12px;
-    }
+  div#ic-visual-hint {
+    margin-top: 5px;
+    font-size: 12px;
+  }
 
-    div.ic-visual-group {
-        margin:5px 0;
-    }
+  div.ic-visual-group {
+    margin: 5px 0;
+  }
 
-    button.ic-visual-color {
-        border-radius:100%;
-        border:2px solid @dark;
-    }
+  button.ic-visual-color {
+    border-radius: 100%;
+    border: 2px solid @dark;
+  }
 
+  button {
+    width: 30px;
+    height: 30px;
+    margin: 0 2.5px;
+    font-size: 13px;
+  }
+
+  div.ic-visual-actions {
     button {
-        width:30px;
-        height:30px;
-        margin:0 2.5px;
-        font-size:13px;
+      width: 90%;
+      height: 20px;
+      border: 2px solid @dark;
     }
 
-    div.ic-visual-actions {
-        button {
-            width:90%;
-            height:20px;
-            border:2px solid @dark;
-        }
-
-        button#ic-bulk-delete {
-            background:@red;
-            color:@light;
-        }
+    button#ic-bulk-delete {
+      background: @red;
+      color: @light;
     }
+  }
 }
 
 #hline {
-    width:100vw;
-    height:4px;
-    background:@dark;
-    position:absolute;
-    z-index:-2;
+  width: 100vw;
+  height: 4px;
+  background: @dark;
+  position: absolute;
+  z-index: -2;
 }
 
 #vline {
-    width:4px;
-    height:100vh;
-    z-index:-2;
-    background:@dark;
-    position:absolute;
+  width: 4px;
+  height: 100vh;
+  z-index: -2;
+  background: @dark;
+  position: absolute;
 }
 
 #ic-backdrop {
-    position:absolute;
-    top:0;
-    width:100vw;
-    height:100vh;
-    background:rgba(0,0,0,.7);
-    z-index:4;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, .7);
+  z-index: 4;
 }
