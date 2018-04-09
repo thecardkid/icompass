@@ -182,7 +182,6 @@ class Workspace extends Component {
     if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
 
     let { ui } = this.props;
-    // TODO clean this
     let formAttrs = {
       bg: this.props.draftMode ? 'grey' : this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
@@ -196,7 +195,7 @@ class Workspace extends Component {
         </Tappable>
         {this.renderCornerButtons()}
         <Compass />
-        <Sidebar />
+        <Sidebar connected={this.socket.isConnected()} />
         <ModesToolbar />
         <Chat />
         <Feedback show={ui.showFeedback}
