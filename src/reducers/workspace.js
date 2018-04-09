@@ -41,6 +41,7 @@ const dragDraft = (state, action) => {
   return { ...state, drafts };
 };
 
+// TODO
 const editDraft = (state, action) => {
   let { idx, updated } = action;
   let n = Object.assign({}, state.drafts[idx], updated);
@@ -51,15 +52,15 @@ const editDraft = (state, action) => {
 };
 
 const createDoodleDraft = (state, action) => {
-  let doodle = {
-    text: null, color: 'grey', x: 0.5, y: 0.5,
-    user: action.user, draft: true,
-    doodle: document.getElementById('ic-doodle').toDataURL(),
+  let note = {
+    ...action.note,
+    draft: true,
+    color: 'grey',
   };
 
   return {
     ...state,
-    drafts: state.drafts.concat(doodle),
+    drafts: state.drafts.concat(note),
   };
 };
 

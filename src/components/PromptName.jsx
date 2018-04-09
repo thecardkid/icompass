@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 
@@ -30,7 +29,3 @@ export default class PromptName extends Component {
     return <div/>;
   }
 }
-
-PromptName.propTypes = {
-  params: PropTypes.object.isRequired,
-};

@@ -1,12 +1,11 @@
 import $ from 'jquery';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import Toast from '../utils/Toast';
 
 import { PROMPTS } from '../../lib/constants';
 
-class TimerForm extends Component {
+export default class TimerForm extends Component {
   constructor(props) {
     super(props);
     this.toast = new Toast();
@@ -53,11 +52,3 @@ class TimerForm extends Component {
     );
   }
 }
-
-TimerForm.propTypes = {
-  close: PropTypes.func.isRequired,
-  ship: PropTypes.func.isRequired,
-  style: PropTypes.object.isRequired,
-};
-
-export default TimerForm;

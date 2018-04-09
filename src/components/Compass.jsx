@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Tappable from 'react-tappable/lib/Tappable';
 import { connect } from 'react-redux';
@@ -9,7 +8,8 @@ import _ from 'underscore';
 import * as compassX from '../actions/compass';
 import * as uiX from '../actions/ui';
 
-import StickyNote from '../components/StickyNote.jsx';
+import NoteManager from '../components/NoteManager.jsx';
+import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
@@ -26,19 +26,13 @@ class Compass extends Component {
     super(props);
 
     this.modal = new Modal();
-    this.socket = new Socket(this);
+    this.socket = new Socket();
+    this.socket.subscribe({
+      'center set': this.setCompassCenter,
+    });
+
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
   }
-
-  renderNote = (note, i) => {
-    return (
-      <StickyNote key={`note${i}`}
-                  note={note}
-                  i={i}
-                  submitDraft={this.props.submitDraft}
-                  destroy={this.props.destroy} />
-    );
-  };
 
   renderQuadrant = (q) => {
     const { showNewNote } = this.props.uiX;
@@ -179,39 +173,27 @@ class Compass extends Component {
       compass = this.renderCompassStructure();
     }
 
-
     return (
       <div id="compass">
         {compass}
-        {_.map(this.props.notes, this.renderNote)}
+        {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>
     );
   }
 }
 
-Compass.propTypes = {
-  ui: PropTypes.object.isRequired,
-  compass: PropTypes.object.isRequired,
-  notes: PropTypes.array.isRequired,
-  uiX: PropTypes.objectOf(PropTypes.func).isRequired,
-  compassX: PropTypes.objectOf(PropTypes.func).isRequired,
-  destroy: PropTypes.func,
-  submitDraft: PropTypes.func,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     ui: state.ui,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     uiX: bindActionCreators(uiX, dispatch),
     compassX: bindActionCreators(compassX, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Compass);
-

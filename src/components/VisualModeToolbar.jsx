@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
 import { connect } from 'react-redux';
@@ -11,6 +10,7 @@ import * as uiActions from '../actions/ui';
 import * as workspaceActions from '../actions/workspace';
 
 import { COLORS, STICKY_COLORS, MODALS } from '../../lib/constants';
+import Socket from '../utils/Socket';
 
 const SELECTED = {
   background: COLORS.DARK,
@@ -23,6 +23,7 @@ class VisualModeToolbar extends Component {
   constructor(props) {
     super(props);
     this.modal = new Modal();
+    this.socket = new Socket();
   }
 
   getSelectedNotes = () => {
@@ -34,7 +35,7 @@ class VisualModeToolbar extends Component {
   bulkDelete = () => {
     this.modal.confirm(MODALS.BULK_DELETE_NOTES, (deleteNotes) => {
       if (deleteNotes) {
-        this.props.socket.emitBulkDeleteNotes(this.getSelectedNotes());
+        this.socket.emitBulkDeleteNotes(this.getSelectedNotes());
         this.cancel();
       }
     });
@@ -47,7 +48,7 @@ class VisualModeToolbar extends Component {
   submit = () => {
     let { bold, italic, underline, color } = this.props.workspace;
     let transformation = { style: { bold, italic, underline }, color };
-    this.props.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
+    this.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
     this.cancel();
   };
 
@@ -118,29 +119,19 @@ class VisualModeToolbar extends Component {
   }
 }
 
-VisualModeToolbar.propTypes = {
-  socket: PropTypes.object.isRequired,
-  show: PropTypes.bool.isRequired,
-  notes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  ui: PropTypes.object.isRequired,
-  workspace: PropTypes.object.isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     notes: state.notes,
     ui: state.ui,
     workspace: state.workspace,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActions, dispatch),
     workspaceActions: bindActionCreators(workspaceActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(VisualModeToolbar);

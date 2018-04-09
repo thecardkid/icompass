@@ -1,23 +1,22 @@
-const dragNote = (state, action) => {
+const dragNote = (notes, action) => {
   let { idx, x, y } = action;
-  let n = state[idx];
-  let dragged = Object.assign({}, n, { x, y });
+  let dragged = Object.assign({}, notes[idx], { x, y });
   return [
-    ...state.slice(0, idx),
+    ...notes.slice(0, idx),
     dragged,
-    ...state.slice(idx + 1)
+    ...notes.slice(idx + 1)
   ];
 };
 
-export default (state = [], action) => {
+export default (notes = [], action) => {
   switch (action.type) {
     case 'updateNotes':
       return action.notes;
     case 'dragNote':
-      return dragNote(state, action);
+      return dragNote(notes, action);
     case 'resetNotes':
       return [];
     default:
-      return state;
+      return notes;
   }
 };

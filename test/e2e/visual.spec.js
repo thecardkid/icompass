@@ -45,12 +45,14 @@ describe('visual mode', () => {
   });
 
   describe('modifications are disabled', () => {
+    afterEach(() => {
+      b.click('#ic-toast span');
+      b.waitForVisible('#ic-toast span', 1000, true);
+    });
+
     it('no new note', () => {
       b.moveToObject('body', 200, 500);
       b.doDoubleClick();
-      b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', TEXT);
-      b.click('button[name=ship]');
       b.waitForVisible('#ic-toast span');
       expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
       expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.VISUAL_MODE_NO_CREATE, 'i'));

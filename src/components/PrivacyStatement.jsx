@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 export default class Feedback extends Component {
@@ -28,9 +27,3 @@ export default class Feedback extends Component {
     );
   }
 }
-
-Feedback.propTypes = {
-  close: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
-  style: PropTypes.object.isRequired,
-};

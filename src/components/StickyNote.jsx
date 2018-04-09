@@ -1,5 +1,4 @@
 import deepEqual from 'deep-equal';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -149,10 +148,6 @@ class StickyNote extends Component {
   render() {
     let n = this.props.note,
       i = this.props.i,
-      contents = this.getContents(),
-      x = this.getX(),
-      noteId = `note${i}`,
-      height = n.doodle ? '100px' : null,
       style = {
         left: n.x * this.props.ui.vw,
         top: n.y * this.props.ui.vh,
@@ -171,42 +166,30 @@ class StickyNote extends Component {
            style={style}
            onClick={this.handleClick}
            onDoubleClick={this.edit}
-           id={noteId}
-           height={height}>
-        {x}
+           id={`note${i}`}
+           height={n.doodle ? '100px' : null}>
+        {this.getX()}
         <Tappable onTap={this.handleClick} onPress={this.edit}>
-          {contents}
+          {this.getContents()}
         </Tappable>
       </div>
     );
   }
 }
 
-StickyNote.propTypes = {
-  note: PropTypes.object.isRequired,
-  i: PropTypes.number.isRequired,
-  destroy: PropTypes.func,
-  compass: PropTypes.object.isRequired,
-  submitDraft: PropTypes.func,
-  ui: PropTypes.object.isRequired,
-  workspace: PropTypes.object.isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     ui: state.ui,
     workspace: state.workspace,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     workspaceActions: bindActionCreators(workspaceActions, dispatch),
     uiActions: bindActionCreators(uiActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(StickyNote);

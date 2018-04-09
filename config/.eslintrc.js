@@ -26,6 +26,7 @@ module.exports = {
     'jasmine',
   ],
   'rules': {
+    'react/prop-types': 0,
     'indent': 0,
     'linebreak-style': [
       'error',

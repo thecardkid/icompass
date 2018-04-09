@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
@@ -13,7 +14,8 @@ import Socket from '../utils/Socket.js';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import * as uiActions from '../actions/ui';
+import * as uiX from '../actions/ui';
+import * as workspaceX from '../actions/workspace';
 
 import { VERSION, TWEET, HOST, PROMPTS, MODALS, PIXELS, COLORS, REGEX } from '../../lib/constants';
 
@@ -23,8 +25,24 @@ class Sidebar extends Component {
     this.toast = new Toast();
     this.modal = new Modal();
     this.socket = new Socket(this);
+
+    this.socket.subscribe({
+      'start timer': this.onStartTimer,
+      'all cancel timer': this.onCancelTimer,
+    });
   }
 
+  onStartTimer = (min, sec, startTime) => {
+    this.props.workspaceX.setTimer({ min, sec, startTime });
+    this.toast.info(PROMPTS.TIMEBOX(min, sec));
+  };
+
+  onCancelTimer = () => {
+    this.props.workspaceX.setTimer({});
+    this.toast.info(PROMPTS.TIMEBOX_CANCELED);
+  };
+
+  // TODO connection status change not triggering update
   shouldComponentUpdate(nextProps) {
     if (this.props.users !== nextProps.users)
       return true;
@@ -48,9 +66,23 @@ class Sidebar extends Component {
     );
   }
 
+  exportCompass = () => {
+    this.props.uiX.setSidebarVisible(false);
+    this.props.uiX.setChatVisible(false);
+
+    setTimeout(() => {
+      html2canvas(document.body).then((canvas) => {
+        let imgData = canvas.toDataURL('image/png');
+        let doc = new jsPDF('l', 'cm', 'a4');
+        doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
+        doc.save('compass.pdf');
+      });
+    }, 500);
+  };
+
   showSavePrompt = () => {
     this.modal.confirm(MODALS.EXPORT_PDF, (exportAsPDF) => {
-      if (exportAsPDF) this.props.exportCompass();
+      if (exportAsPDF) this.exportCompass();
     });
   };
 
@@ -71,7 +103,7 @@ class Sidebar extends Component {
     this.modal.confirm(MODALS.DELETE_COMPASS, (deleteCompass) => {
       if (deleteCompass) {
         Storage.removeBookmarkByCenter(this.props.compass.center);
-        this.props.destroy();
+        this.socket.emitDeleteCompass(this.props.compass._id);
       }
     });
   };
@@ -137,23 +169,23 @@ class Sidebar extends Component {
     return (
       <div className="ic-sidebar-list" name="controls">
         <h2>Controls</h2>
-        <button className="ic-action" onClick={() => this.props.uiActions.showNewNote()}>
+        <button className="ic-action" onClick={() => this.props.uiX.showNewNote()}>
           <span className='ic-ctrl-key'>n</span>
           <p>new note</p>
         </button>
-        <button className="ic-action" onClick={this.props.uiActions.showDoodle}>
+        <button className="ic-action" onClick={this.props.uiX.showDoodle}>
           <span className='ic-ctrl-key'>d</span>
           <p>new doodle</p>
         </button>
-        <button className="ic-action" onClick={this.props.uiActions.toggleSidebar}>
+        <button className="ic-action" onClick={this.props.uiX.toggleSidebar}>
           <span className='ic-ctrl-key'>s</span>
           <p>toggle sidebar</p>
         </button>
-        <button className="ic-action" onClick={this.props.uiActions.toggleChat}>
+        <button className="ic-action" onClick={this.props.uiX.toggleChat}>
           <span className='ic-ctrl-key'>c</span>
           <p>toggle chat</p>
         </button>
-        <button className="ic-action" onClick={this.props.uiActions.toggleAbout}>
+        <button className="ic-action" onClick={this.props.uiX.toggleAbout}>
           <span className='ic-ctrl-key'>p</span>
           <p>toggle prompt</p>
         </button>
@@ -172,7 +204,7 @@ class Sidebar extends Component {
   };
 
   renderConnectionStatus = () => {
-    let connectionStatus = this.props.connected ?
+    let connectionStatus = this.socket.isConnected() ?
       <p style={{ color: COLORS.GREEN }}>connected</p> :
       <p style={{ color: COLORS.RED }}>disconnected</p>;
     return (
@@ -205,7 +237,7 @@ class Sidebar extends Component {
     return (
       <div className="ic-sidebar-list" name="actions">
         <h2>Actions</h2>
-        <button name="privacy" className="ic-action" onClick={this.props.uiActions.togglePrivacyStatement}>
+        <button name="privacy" className="ic-action" onClick={this.props.uiX.togglePrivacyStatement}>
           <i className="material-icons">lock</i>
           <p>privacy</p>
         </button>
@@ -213,11 +245,11 @@ class Sidebar extends Component {
           <i className="material-icons">info</i>
           <p>tutorial</p>
         </Link></button>
-        <button name="sucks" className="ic-action" onClick={this.props.uiActions.toggleFeedback}>
+        <button name="sucks" className="ic-action" onClick={this.props.uiX.toggleFeedback}>
           <i className="material-icons">chat_bubble</i>
           <p>feedback</p>
         </button>
-        <Timer stop={this.props.stop}/>
+        <Timer stop={this.socket.emitCancelTimer}/>
         <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>
           <i className="material-icons" style={{ color: 'white' }}>delete</i>
           <p>delete</p>
@@ -257,10 +289,10 @@ class Sidebar extends Component {
 
     return (
       <div id="ic-sidebar" style={style}>
-        <Swipeable onSwipedLeft={this.props.uiActions.toggleSidebar}>
+        <Swipeable onSwipedLeft={this.props.uiX.toggleSidebar}>
           <div id="ic-sidebar-scroll">
             <div id="ic-sidebar-contents">
-              <button name="close-sidebar" className="ic-close-window" onClick={this.props.uiActions.toggleSidebar}>x
+              <button name="close-sidebar" className="ic-close-window" onClick={this.props.uiX.toggleSidebar}>x
               </button>
               {this.renderShareList()}
               {this.renderControlList()}
@@ -277,34 +309,21 @@ class Sidebar extends Component {
   }
 }
 
-Sidebar.propTypes = {
-  connected: PropTypes.bool.isRequired,
-  destroy: PropTypes.func.isRequired,
-  exportCompass: PropTypes.func.isRequired,
-  stop: PropTypes.func.isRequired,
-
-  compass: PropTypes.object.isRequired,
-  users: PropTypes.object.isRequired,
-  you: PropTypes.string.isRequired,
-  show: PropTypes.bool.isRequired,
-
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     users: state.users.nameToColor,
     you: state.users.me,
     show: state.ui.showSidebar,
     compass: state.compass,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    uiActions: bindActionCreators(uiActions, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
 

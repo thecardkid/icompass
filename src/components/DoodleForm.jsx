@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 let paint = false;
@@ -81,7 +80,14 @@ export default class DoodleForm extends Component {
 
   makeDoodle = () => {
     if (this.state.x.length === 0) return;
-    this.props.ship(this.props.user);
+    this.props.ship({
+      text: null,
+      doodle: document.getElementById('ic-doodle').toDataURL(),
+      color: this.props.color,
+      x: 0.5,
+      y: 0.5,
+      user: this.props.user,
+    });
     this.props.close();
   };
 
@@ -119,11 +125,3 @@ export default class DoodleForm extends Component {
     );
   }
 }
-
-DoodleForm.propTypes = {
-  ship: PropTypes.func.isRequired,
-  style: PropTypes.object.isRequired,
-  bg: PropTypes.string.isRequired,
-  close: PropTypes.func.isRequired,
-  user: PropTypes.string.isRequired,
-};

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 export default class Message extends Component {
@@ -16,9 +15,3 @@ export default class Message extends Component {
     );
   }
 }
-
-Message.propTypes = {
-  type: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-  m: PropTypes.object.isRequired,
-};

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -18,7 +17,6 @@ class Timer extends Component {
 
     this.granularity = 1000;
     this.running = false;
-    this.interval = null;
     this.state = { left: null };
   }
 
@@ -42,7 +40,6 @@ class Timer extends Component {
 
   start(t) {
     if (this.running) return;
-    if (this.interval) this.removeInterval();
 
     this.duration = t.min * 60 + t.sec;
     this.startTime = t.startTime;
@@ -52,7 +49,6 @@ class Timer extends Component {
 
   handleClick = () => {
     if (this.running) return;
-    if (this.interval) return this.removeInterval();
     this.props.uiActions.showTimerConfig();
   };
 
@@ -110,24 +106,17 @@ class Timer extends Component {
   }
 }
 
-Timer.propTypes = {
-  timer: PropTypes.objectOf(PropTypes.number).isRequired,
-  stop: PropTypes.func.isRequired,
-  workspaceActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     timer: state.workspace.timer || {},
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     workspaceActions: bindActionCreators(workspaceActions, dispatch),
     uiActions: bindActionCreators(uiActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timer);

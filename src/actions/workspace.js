@@ -51,10 +51,10 @@ export const editDraft = (updated, idx) => {
   };
 };
 
-export const createDoodleDraft = (user) => {
+export const createDoodleDraft = (note) => {
   return {
     type: 'createDoodleDraft',
-    user,
+    note,
   };
 };
 

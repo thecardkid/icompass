@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
 import { connect } from 'react-redux';
@@ -270,28 +269,20 @@ class Tutorial extends Component {
   }
 }
 
-Tutorial.propTypes = {
-  ui: PropTypes.object.isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  noteActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  compassActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  userActions: PropTypes.objectOf(PropTypes.func).isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     ui: state.ui,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     noteActions: bindActionCreators(noteActions, dispatch),
     compassActions: bindActionCreators(compassActions, dispatch),
     userActions: bindActionCreators(userActions, dispatch),
     uiActions: bindActionCreators(uiActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tutorial);
 

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
@@ -88,18 +87,7 @@ class ModesToolbar extends Component {
   }
 }
 
-ModesToolbar.propTypes = {
-  notes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  ui: PropTypes.object.isRequired,
-  drafts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  uiActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  normalMode: PropTypes.bool.isRequired,
-  compactMode: PropTypes.bool.isRequired,
-  visualMode: PropTypes.bool.isRequired,
-  draftMode: PropTypes.bool.isRequired,
-};
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     notes: state.notes,
     ui: state.ui,
@@ -109,13 +97,13 @@ function mapStateToProps(state) {
     draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
     drafts: state.workspace.drafts || [],
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     uiActions: bindActionCreators(uiActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModesToolbar);
 

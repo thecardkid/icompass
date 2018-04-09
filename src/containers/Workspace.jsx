@@ -1,7 +1,4 @@
-import html2canvas from 'html2canvas';
-import interact from 'interactjs';
 import $ from 'jquery';
-import jsPDF from 'jspdf';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -19,7 +16,7 @@ import About from '../components/About.jsx';
 import Chat from '../components/Chat.jsx';
 import Compass from '../components/Compass.jsx';
 import Feedback from '../components/Feedback.jsx';
-import FormChooser from '../components/FormChooser.jsx';
+import FormManager from '../components/FormManager.jsx';
 import ModesToolbar from '../components/ModesToolbar.jsx';
 import PrivacyStatement from '../components/PrivacyStatement.jsx';
 import Sidebar from '../components/Sidebar.jsx';
@@ -29,23 +26,31 @@ import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
 import Toast from '../utils/Toast';
 
-import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, DRAGGABLE_RESTRICTIONS, REGEX } from '../../lib/constants';
+import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, REGEX } from '../../lib/constants';
+import { browserHistory } from 'react-router';
 
-/* eslint react/prop-types: 0 */
 class Workspace extends Component {
   constructor(props) {
     super(props);
-    this.socket = new Socket(this);
     this.toast = new Toast();
     this.modal = new Modal();
 
+    this.socket = new Socket();
+    this.socket.subscribe({
+      'compass found': this.onCompassFound,
+      'compass deleted': this.onCompassDeleted,
+      'user joined': this.onUserJoined,
+      'user left': this.onUserLeft,
+      'disconnect': () => this.props.uiActions.setSidebarVisible(true),
+      'reconnect': () => this.socket.emitReconnected(this.props),
+    });
+
     if (this.props.route.viewOnly) {
-      this.socket.emitFindCompassView();
+      this.socket.emitFindCompassView(this.props.params);
     } else if (this.validateRouteParams(this.props.params)) {
-      this.socket.emitFindCompassEdit();
+      this.socket.emitFindCompassEdit(this.props.params);
     }
 
-    this.notes = null;
     this.keypressHandler = {
       78: this.props.uiActions.showNewNote,
       67: this.props.uiActions.toggleChat,
@@ -57,9 +62,30 @@ class Workspace extends Component {
     this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
   }
 
-  componentWillUpdate(nextProps) {
-    this.notes = this.chooseDisplayedNotes(nextProps.workspace, nextProps.notes);
-  }
+  onCompassFound = (data) => {
+    if (data.compass === null) {
+      return void this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
+    }
+
+    this.props.compassActions.set(data.compass, data.viewOnly);
+    this.props.noteActions.updateAll(data.compass.notes);
+
+    this.props.userActions.me(data.username);
+  };
+
+  onCompassDeleted = () => {
+    this.modal.alert(PROMPTS.COMPASS_DELETED, () => browserHistory.push('/'));
+  };
+
+  onUserJoined = (data) => {
+    this.props.chatActions.userJoined(data.joined);
+    this.props.userActions.update(data);
+  };
+
+  onUserLeft = (data) => {
+    this.props.chatActions.userLeft(data.left);
+    this.props.userActions.update(data);
+  };
 
   validateRouteParams({ code, username }) {
     let validCode = true,
@@ -76,19 +102,9 @@ class Workspace extends Component {
   componentDidMount() {
     $(window).on('resize', this.props.uiActions.resize);
     $(window).on('keydown', this.handleKeyDown);
-
-    if (!this.props.route.viewOnly) {
-      interact('.draggable').draggable({
-        restrict: DRAGGABLE_RESTRICTIONS,
-        autoScroll: true,
-        onmove: this.dragTarget.bind(this),
-        onend: this.dragEnd.bind(this),
-      });
-    }
   }
 
   componentWillUnmount() {
-    this.socket.disconnect();
     this.props.compassActions.reset();
     this.props.noteActions.reset();
     this.props.chatActions.reset();
@@ -98,38 +114,6 @@ class Workspace extends Component {
     $(window).off('keydown', this.handleKeyDown);
     this.modal.close();
     this.toast.clear();
-  }
-
-  setTranslation(target, x, y) {
-    target.style.webkitTransform =
-      target.style.transform = `translate(${x}px, ${y}px)`;
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
-  }
-
-  dragTarget(e) {
-    if (!this.props.visualMode) {
-      let x = (parseFloat(e.target.getAttribute('data-x')) || 0) + e.dx;
-      let y = (parseFloat(e.target.getAttribute('data-y')) || 0) + e.dy;
-      this.setTranslation(e.target, x, y);
-    }
-  }
-
-  dragEnd(e) {
-    if (this.props.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
-
-    this.setTranslation(e.target, 0, 0);
-
-    let i = Number(e.target.id.substring(4));
-    let x = this.notes[i].x + e.dx / this.props.ui.vw,
-      y = this.notes[i].y + e.dy / this.props.ui.vh;
-    let note = Object.assign({}, this.notes[i], { x, y });
-
-    if (this.props.draftMode && !note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
-    if (note.draft) this.props.workspaceActions.dragDraft(i, x, y);
-    else if (this.socket.emitDragNote(note)) {
-      this.props.noteActions.drag(i, x, y);
-    }
   }
 
   isControlKey(k) {
@@ -158,30 +142,9 @@ class Workspace extends Component {
     }
   };
 
-  exportCompass = () => {
-    this.props.uiActions.setSidebarVisible(false);
-    this.props.uiActions.setChatVisible(false);
-
-    setTimeout(() => {
-      html2canvas(document.body).then((canvas) => {
-        let imgData = canvas.toDataURL('image/png');
-        let doc = new jsPDF('l', 'cm', 'a4');
-        doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
-        doc.save('compass.pdf');
-      });
-    }, 500);
-  };
-
   showChat = () => {
     this.props.chatActions.read();
     this.props.uiActions.toggleChat();
-  };
-
-  center = (w, h) => {
-    return {
-      top: Math.max((this.props.ui.vh - h) / 2, 0),
-      left: Math.max((this.props.ui.vw - w) / 2, 0),
-    };
   };
 
   renderCornerButtons = () => {
@@ -213,43 +176,13 @@ class Workspace extends Component {
     );
   };
 
-  submitDraft = (note, idx) => {
-    this.props.workspaceActions.undraft(idx);
-
-    delete note.draft;
-    note.color = this.props.users.nameToColor[this.props.users.me];
-    this.socket.emitNewNote(note);
-  };
-
-  chooseDisplayedNotes(w, notes) {
-    if (this.props.visualMode) {
-      return _.map(notes, (note, i) => {
-        let copy = Object.assign({}, note);
-        copy.style = Object.assign({}, note.style);
-        if (w.selected[i]) {
-          if (!copy.doodle) {
-            if (w.bold !== null) copy.style.bold = w.bold;
-            if (w.italic !== null) copy.style.italic = w.italic;
-            if (w.underline !== null) copy.style.underline = w.underline;
-          }
-          if (w.color !== null) copy.color = w.color;
-        }
-
-        return copy;
-      });
-    } else if (this.props.draftMode) {
-      return w.drafts.concat(notes);
-    } else {
-      return notes;
-    }
-  }
-
   render() {
     if (_.isEmpty(this.props.compass)) return <div/>;
 
-    if (this.props.route.viewOnly) return <Compass notes={this.notes}/>;
+    if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
 
-    let ui = this.props.ui;
+    let { ui } = this.props;
+    // TODO clean this
     let formAttrs = {
       bg: this.props.draftMode ? 'grey' : this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
@@ -262,39 +195,26 @@ class Workspace extends Component {
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
         {this.renderCornerButtons()}
-        <Compass destroy={this.socket.emitDeleteNote}
-                 notes={this.notes}
-                 submitDraft={this.submitDraft} />
-        <Sidebar connected={this.socket.isConnected()}
-                 destroy={this.socket.emitDeleteCompass}
-                 stop={this.socket.emitCancelTimer}
-                 exportCompass={this.exportCompass} />
+        <Compass />
+        <Sidebar />
         <ModesToolbar />
-        <Chat socket={this.socket} />
+        <Chat />
         <Feedback show={ui.showFeedback}
-                  style={this.center(400, 250)}
                   close={this.props.uiActions.toggleFeedback} />
         <PrivacyStatement show={ui.showPrivacyStatement}
-                          style={this.center(400, 200)}
                           close={this.props.uiActions.togglePrivacyStatement} />
         <About show={ui.showAbout}
                close={this.props.uiActions.toggleAbout} />
-        <VisualModeToolbar show={this.props.visualMode}
-                           socket={this.socket} />
-        <FormChooser socket={this.socket}
-                     center={this.center}
-                     notes={this.notes}
+        <VisualModeToolbar show={this.props.visualMode} />
+        <FormManager center={this.center}
                      commonAttrs={formAttrs} />
       </div>
     );
   }
 }
 
-/* eslint react/prop-types: 0 */
-
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
-    notes: state.notes,
     compass: state.compass,
     users: state.users,
     chat: state.chat,
@@ -303,9 +223,9 @@ function mapStateToProps(state) {
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
     draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
     noteActions: bindActionCreators(noteActions, dispatch),
     compassActions: bindActionCreators(compassActions, dispatch),
@@ -314,7 +234,7 @@ function mapDispatchToProps(dispatch) {
     uiActions: bindActionCreators(uiActions, dispatch),
     workspaceActions: bindActionCreators(workspaceActions, dispatch),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Workspace);
 
