@@ -32,6 +32,10 @@ class Compass extends Component {
     });
 
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
+
+    if (this.props.compass.center.length === 0) {
+      this.setPeopleInvolved();
+    }
   }
 
   renderQuadrant = (q) => {

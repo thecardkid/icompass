@@ -8,7 +8,6 @@ const setup = () => {
   browser.waitForVisible('#ic-modal', 1000);
   browser.click('#ic-modal-confirm');
   browser.waitForVisible('#compass', 1000);
-  browser.click('#center');
   browser.waitForVisible('#ic-modal');
   browser.setValue('#ic-modal-input', 'topic');
   browser.click('#ic-modal-confirm');
