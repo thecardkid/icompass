@@ -5,6 +5,7 @@ import Timer from '../components/Timer.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
+import Storage from '../utils/Storage';
 
 import { MODALS } from '../../lib/constants';
 
