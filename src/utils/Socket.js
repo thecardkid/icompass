@@ -149,4 +149,8 @@ export default class Socket {
   emitMetricEditLinkAccess = (url) => {
     this.socket.emit('metric edit link access', url);
   };
+
+  emitMetric = (event) => {
+    this.socket.emit(`metric ${event}`);
+  };
 }

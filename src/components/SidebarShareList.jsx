@@ -31,26 +31,31 @@ export default class SidebarShareList extends Component {
     }, 500);
   };
 
-  showSavePrompt = () => {
+  showPdfPrompt = () => {
+    this.socket.emitMetric('sidebar pdf');
     this.modal.confirm(MODALS.EXPORT_PDF, (exportAsPDF) => {
       if (exportAsPDF) this.exportCompass();
     });
   };
 
   shareEditLink = () => {
+    this.socket.emitMetric('sidebar edit link');
     this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/edit/${this.props.compass.editCode}`));
   };
 
   shareViewOnlyLink = () => {
+    this.socket.emitMetric('sidebar view link');
     this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/view/${this.props.compass.viewCode}`));
   };
 
   tweetThis = () => {
-    let tweetURL = TWEET + this.props.compass.viewCode;
+    this.socket.emitMetric('sidebar tweet');
+    const tweetURL = TWEET + this.props.compass.viewCode;
     window.open(tweetURL, '_blank').focus();
   };
 
   triggerEmailModal = () => {
+    this.socket.emitMetric('sidebar email');
     this.emailReminder();
   };
 
@@ -66,12 +71,14 @@ export default class SidebarShareList extends Component {
     });
   };
 
-  openNewCompass() {
+  openNewCompass = () => {
+    this.socket.emitMetric('sidebar create new');
     window.open(HOST, '_blank').focus();
-  }
+  };
 
   save = () => {
     const { topic, editCode } = this.props.compass;
+    this.socket.emitMetric('sidebar bookmark');
     this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
       if (submit) {
         let username = this.props.me.replace(/\d+/g, '');
@@ -106,7 +113,7 @@ export default class SidebarShareList extends Component {
           <i className="material-icons">remove_red_eye</i>
           <p>view-only link</p>
         </button>
-        <button name="export" className="ic-action" onClick={this.showSavePrompt}>
+        <button name="export" className="ic-action" onClick={this.showPdfPrompt}>
           <i className="material-icons">picture_as_pdf</i>
           <p>export to pdf</p>
         </button>
