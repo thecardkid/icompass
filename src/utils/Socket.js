@@ -15,8 +15,10 @@ export default class Socket {
 
     if (!socket || (this.socket && !this.isConnected())) {
       socket = new SocketIOClient();
+      this.sessionId = null;
       this.socket = socket;
       this.subscribe({
+        'session id': this.onSessionId,
         'mail status': this.onMailStatus,
       });
     }
@@ -37,12 +39,22 @@ export default class Socket {
     this.toast.error(PROMPTS.NOT_CONNECTED);
   }
 
+  onSessionId = (sessionId) => {
+    this.sessionId = this.sessionId || sessionId;
+  };
+
+  onMailStatus = (status) => {
+    if (status) this.toast.success(PROMPTS.EMAIL_SENT);
+    else this.toast.error(PROMPTS.EMAIL_NOT_SENT);
+  };
+
   emitReconnected = ({ compass, users }) => {
     this.socket.emit('reconnected', {
       code: compass.editCode,
       compassId: compass._id,
       username: users.me,
       color: users.nameToColor[users.me],
+      sessionId: this.sessionId,
     });
   };
 
@@ -131,11 +143,6 @@ export default class Socket {
 
   emitSetCenter = (id, center) => {
     this.socket.emit('set center', { id, center });
-  };
-
-  onMailStatus = (status) => {
-    if (status) this.toast.success(PROMPTS.EMAIL_SENT);
-    else this.toast.error(PROMPTS.EMAIL_NOT_SENT);
   };
 
   emitMetricLandingPage = (start, end, action) => {
