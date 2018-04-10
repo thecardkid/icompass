@@ -137,4 +137,8 @@ export default class Socket {
     if (status) this.toast.success(PROMPTS.EMAIL_SENT);
     else this.toast.error(PROMPTS.EMAIL_NOT_SENT);
   };
+
+  emitMetricLandingPage = (start, end, action) => {
+    this.socket.emit('metric landing page time', start, end, action);
+  };
 }
