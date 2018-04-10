@@ -1,30 +1,28 @@
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
 import Swipeable from 'react-swipeable';
 import { bindActionCreators } from 'redux';
-import _ from 'underscore';
-
-import Timer from '../components/Timer.jsx';
 
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket.js';
-import Storage from '../utils/Storage';
+import SidebarActionsList from './SidebarActionsList.jsx';
+import SidebarControlsList from './SidebarControlsList.jsx';
+import SidebarShareList from './SidebarShareList.jsx';
+import SidebarUsersList from './SidebarUsersList.jsx';
+import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { VERSION, TWEET, HOST, PROMPTS, MODALS, PIXELS, COLORS, REGEX } from '../../lib/constants';
+import { VERSION, PROMPTS, PIXELS, COLORS } from '../../lib/constants';
 
 class Sidebar extends Component {
   constructor(props, context) {
     super(props, context);
     this.toast = new Toast();
     this.modal = new Modal();
-    this.socket = new Socket(this);
+    this.socket = new Socket();
 
     this.socket.subscribe({
       'start timer': this.onStartTimer,
@@ -52,155 +50,9 @@ class Sidebar extends Component {
     return (
       this.props.connected !== nextProps.connected ||
       this.props.show !== nextProps.show ||
-      this.props.you !== nextProps.you
+      this.props.me !== nextProps.me
     );
   }
-
-  renderUserColor(color, username) {
-    let label = username === this.props.you ? `You [ ${username} ]` : username;
-    return (
-      <p key={username} className="ic-user" style={{ background: color }}>
-        {label}
-      </p>
-    );
-  }
-
-  exportCompass = () => {
-    this.props.uiX.setSidebarVisible(false);
-    this.props.uiX.setChatVisible(false);
-
-    setTimeout(() => {
-      html2canvas(document.body).then((canvas) => {
-        let imgData = canvas.toDataURL('image/png');
-        let doc = new jsPDF('l', 'cm', 'a4');
-        doc.addImage(imgData, 'PNG', 0, 0, 30, 18);
-        doc.save('compass.pdf');
-      });
-    }, 500);
-  };
-
-  showSavePrompt = () => {
-    this.modal.confirm(MODALS.EXPORT_PDF, (exportAsPDF) => {
-      if (exportAsPDF) this.exportCompass();
-    });
-  };
-
-  shareEditLink = () => {
-    this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/edit/${this.props.compass.editCode}`));
-  };
-
-  shareViewOnlyLink = () => {
-    this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/view/${this.props.compass.viewCode}`));
-  };
-
-  tweetThis = () => {
-    let tweetURL = TWEET + this.props.compass.viewCode;
-    window.open(tweetURL, '_blank').focus();
-  };
-
-  confirmDelete = () => {
-    this.modal.confirm(MODALS.DELETE_COMPASS, (deleteCompass) => {
-      if (deleteCompass) {
-        Storage.removeBookmarkByCenter(this.props.compass.center);
-        this.socket.emitDeleteCompass(this.props.compass._id);
-      }
-    });
-  };
-
-  triggerEmailModal = () => {
-    this.emailReminder();
-  };
-
-  emailReminder = (text) => {
-    this.modal.prompt(text || 'Enter your email below to receive a reminder link to this workspace:', (status, email) => {
-      if (!status) return;
-
-      if (REGEX.EMAIL.test(email)) {
-        return this.socket.emitSendMail(this.props.compass.editCode, this.props.you, email);
-      }
-
-      this.emailReminder(`"${email}" does not look right - make sure you type your email address correctly:`);
-    });
-  };
-
-  openNewCompass() {
-    window.open(HOST, '_blank').focus();
-  }
-
-  renderShareList = () => {
-    return (
-      <div className="ic-sidebar-list" name="share">
-        <h2>Share</h2>
-        <button className="ic-action" onClick={this.openNewCompass}>
-          <i className="material-icons">add_circle</i>
-          <p>create new</p>
-        </button>
-        <button name="save" className="ic-action bookmark" onClick={this.save}>
-          <i className="material-icons">star</i>
-          <p>bookmark</p>
-        </button>
-        <button name="email" className="ic-action" onClick={this.triggerEmailModal}>
-          <i className="fa fa-envelope" />
-          <p>email</p>
-        </button>
-        <button name="share-edit" id={this.props.compass.editCode} className="ic-action" onClick={this.shareEditLink}>
-          <i className="material-icons">edit</i>
-          <p>editing link</p>
-        </button>
-        <button name="share-view" id={this.props.compass.viewCode} className="ic-action"
-                onClick={this.shareViewOnlyLink}>
-          <i className="material-icons">remove_red_eye</i>
-          <p>view-only link</p>
-        </button>
-        <button name="export" className="ic-action" onClick={this.showSavePrompt}>
-          <i className="material-icons">picture_as_pdf</i>
-          <p>export to pdf</p>
-        </button>
-        <button name="tweet" className="ic-action tweet" onClick={this.tweetThis}>
-          <i className="fa fa-twitter" style={{ color: 'white' }} />
-          <p>tweet this</p>
-        </button>
-      </div>
-    );
-  };
-
-  renderControlList = () => {
-    return (
-      <div className="ic-sidebar-list" name="controls">
-        <h2>Controls</h2>
-        <button className="ic-action" onClick={() => this.props.uiX.showNewNote()}>
-          <span className='ic-ctrl-key'>n</span>
-          <p>new note</p>
-        </button>
-        <button className="ic-action" onClick={this.props.uiX.showDoodle}>
-          <span className='ic-ctrl-key'>d</span>
-          <p>new doodle</p>
-        </button>
-        <button className="ic-action" onClick={this.props.uiX.toggleSidebar}>
-          <span className='ic-ctrl-key'>s</span>
-          <p>toggle sidebar</p>
-        </button>
-        <button className="ic-action" onClick={this.props.uiX.toggleChat}>
-          <span className='ic-ctrl-key'>c</span>
-          <p>toggle chat</p>
-        </button>
-        <button className="ic-action" onClick={this.props.uiX.toggleAbout}>
-          <span className='ic-ctrl-key'>p</span>
-          <p>toggle prompt</p>
-        </button>
-      </div>
-    );
-  };
-
-  renderUserList = () => {
-    let userList = _.map(this.props.users, this.renderUserColor.bind(this));
-    return (
-      <div className="ic-sidebar-list" name="users">
-        <h2>Collaborators</h2>
-        {userList}
-      </div>
-    );
-  };
 
   renderConnectionStatus = () => {
     let connectionStatus = this.socket.isConnected() ?
@@ -217,44 +69,8 @@ class Sidebar extends Component {
     );
   };
 
-  save = () => {
-    const { topic, editCode } = this.props.compass;
-    this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
-      if (submit) {
-        let username = this.props.you.replace(/\d+/g, '');
-        Storage.addBookmark(bookmarkName, editCode, username);
-        this.toast.success(PROMPTS.SAVE_SUCCESS);
-      }
-    }, topic);
-  };
-
   logout() {
     browserHistory.push('/');
-  }
-
-  renderActionList() {
-    return (
-      <div className="ic-sidebar-list" name="actions">
-        <h2>Actions</h2>
-        <button name="privacy" className="ic-action" onClick={this.modal.alertPrivacyStatement}>
-          <i className="material-icons">lock</i>
-          <p>privacy</p>
-        </button>
-        <button name="tutorial" className="ic-action"><Link to="/tutorial" target="_blank" rel="noopener noreferrer">
-          <i className="material-icons">info</i>
-          <p>tutorial</p>
-        </Link></button>
-        <button name="sucks" className="ic-action" onClick={this.modal.alertFeedback}>
-          <i className="material-icons">chat_bubble</i>
-          <p>feedback</p>
-        </button>
-        <Timer stop={this.socket.emitCancelTimer}/>
-        <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>
-          <i className="material-icons" style={{ color: 'white' }}>delete</i>
-          <p>delete</p>
-        </button>
-      </div>
-    );
   }
 
   renderCreditsList() {
@@ -285,19 +101,24 @@ class Sidebar extends Component {
 
   render() {
     let style = { left: this.props.show ? PIXELS.SHOW : PIXELS.HIDE_SIDEBAR };
+    const { toggleSidebar } = this.props.uiX;
 
     return (
       <div id="ic-sidebar" style={style}>
-        <Swipeable onSwipedLeft={this.props.uiX.toggleSidebar}>
+        <Swipeable onSwipedLeft={toggleSidebar}>
           <div id="ic-sidebar-scroll">
             <div id="ic-sidebar-contents">
-              <button name="close-sidebar" className="ic-close-window" onClick={this.props.uiX.toggleSidebar}>x
+              <button name="close-sidebar" className="ic-close-window" onClick={toggleSidebar}>x
               </button>
-              {this.renderShareList()}
-              {this.renderControlList()}
-              {this.renderUserList()}
+              <SidebarShareList compass={this.props.compass}
+                                uiX={this.props.uiX}
+                                me={this.props.me} />
+              <SidebarControlsList uiX={this.props.uiX} />
+              <SidebarUsersList users={this.props.users}
+                                me={this.props.me} />
               {this.renderConnectionStatus()}
-              {this.renderActionList()}
+              <SidebarActionsList uiX={this.props.uiX}
+                                  compass={this.props.compass}/>
               {this.renderCreditsList()}
               {this.renderVersionList()}
             </div>
@@ -311,7 +132,7 @@ class Sidebar extends Component {
 const mapStateToProps = (state) => {
   return {
     users: state.users.nameToColor,
-    you: state.users.me,
+    me: state.users.me,
     show: state.ui.showSidebar,
     compass: state.compass,
   };
