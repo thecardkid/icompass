@@ -4,6 +4,7 @@ import Tappable from 'react-tappable/lib/Tappable';
 
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
+import Socket from '../utils/Socket';
 import { REGEX } from '../../lib/constants';
 
 export default class PromptName extends Component {
@@ -11,6 +12,7 @@ export default class PromptName extends Component {
     super();
     this.modal = new Modal();
     this.toast = new Toast();
+    this.socket = new Socket();
   }
 
   componentDidMount() {
@@ -25,7 +27,9 @@ export default class PromptName extends Component {
         return this.promptForName();
       }
 
-      browserHistory.push(`/compass/edit/${code}/${name}`);
+      const url = `/compass/edit/${code}/${name}`;
+      this.socket.emitMetricEditLinkAccess(url);
+      browserHistory.push(url);
     });
   };
 

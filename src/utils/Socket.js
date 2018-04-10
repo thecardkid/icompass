@@ -144,5 +144,9 @@ export default class Socket {
 
   emitMetricDirectUrlAccess = (url) => {
     this.socket.emit('metric direct url access', url);
-  }
+  };
+
+  emitMetricEditLinkAccess = (url) => {
+    this.socket.emit('metric edit link access', url);
+  };
 }
