@@ -27,9 +27,11 @@ class VisualModeToolbar extends Component {
   }
 
   getSelectedNotes = () => {
-    return _.map(this.props.notes, (n, i) => {
-      if (this.props.workspace.selected[i]) return n._id;
+    const selected = [];
+    _.each(this.props.notes, (n, i) => {
+      if (this.props.workspace.selected[i]) selected.push(n._id);
     });
+    return selected;
   };
 
   bulkDelete = () => {
