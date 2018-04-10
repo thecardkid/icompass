@@ -92,7 +92,10 @@ class Workspace extends Component {
     if (code.length !== 8) validCode = false;
     if (!REGEX.CHAR_ONLY.test(username) || username.length > 15) validUsername = false;
 
-    if (validCode && validUsername) return true;
+    if (validCode && validUsername) {
+      this.socket.emitMetricDirectUrlAccess(this.props.router.getCurrentLocation().pathname);
+      return true;
+    }
 
     this.modal.alertRouteErrors(validCode, validUsername);
   }

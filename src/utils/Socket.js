@@ -141,4 +141,8 @@ export default class Socket {
   emitMetricLandingPage = (start, end, action) => {
     this.socket.emit('metric landing page time', start, end, action);
   };
+
+  emitMetricDirectUrlAccess = (url) => {
+    this.socket.emit('metric direct url access', url);
+  }
 }
