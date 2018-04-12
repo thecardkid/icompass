@@ -116,16 +116,14 @@ describe('view modes', () => {
 
         b.setValue('#ic-modal-input', 'sandbox2');
         b.click('#ic-modal-confirm');
-        b.pause(200);
-
-        expect('#ic-modal-body').to.have.text(/not valid/);
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/Username must be fewer/);
       });
 
       it('missing username', () => {
         b.click('#ic-modal-confirm');
-        b.pause(200);
-
-        expect('#ic-modal-body').to.have.text(/not valid/);
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/You can't leave this empty/);
       });
 
       it('valid username', () => {

@@ -232,7 +232,7 @@ describe('sidebar', () => {
       it('toast displays success status', () => {
         b.click('button[name=save]');
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.SAVE_BOOKMARK, 'i'));
+        expect('#ic-modal-body').to.have.text(/Bookmarks give you quick access/);
         b.setValue('#ic-modal-input', 'My bookmark');
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast span');
