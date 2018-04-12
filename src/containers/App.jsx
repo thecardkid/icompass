@@ -14,8 +14,14 @@ import Workspace from '../containers/Workspace.jsx';
 import PromptName from '../components/PromptName.jsx';
 
 import Store from '../store';
+import Toast from '../utils/Toast';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.toast = new Toast();
+  }
+
   render() {
     return (
       <Provider store={Store()}>

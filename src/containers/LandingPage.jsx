@@ -4,6 +4,7 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
+import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 
 import * as uiX from '../actions/ui';
@@ -112,7 +113,7 @@ class LandingPage extends Component {
                ref="topic"
                required
                maxLength={30}
-               placeholder="Topic: Who's involved?" />
+               placeholder="Topic" />
         <input id="username"
                ref="username"
                maxLength={15}
@@ -142,9 +143,12 @@ class LandingPage extends Component {
     }
   };
 
-  promptForEmail = (text) => {
-    this.modal.prompt(text || 'If you would like me to email you a link to this workspace, enter your email below. I will not store your email address or send you spam. Without the code or link, you will not be able to retrieve your workspace! Leave blank if you do not want this reminder email', (status, email) => {
-      if (!status) return;
+  promptForEmail = () => {
+    this.modal.promptForEmail((status, email) => {
+      if (!status) {
+        this.toast.warn('You need to complete this action');
+        return this.promptForEmail();
+      }
 
       if (!email.length) {
         const { code } = this.state.data;
@@ -157,7 +161,8 @@ class LandingPage extends Component {
         return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
       }
 
-      this.promptForEmail(`"${email}" does not look right - make sure you have typed it correctly. Leave blank if you do not want this reminder email`);
+      this.toast.error(`"${email}" is not a valid email address`);
+      this.promptForEmail();
     });
   };
 
@@ -186,6 +191,9 @@ class LandingPage extends Component {
 
     return (
       <div>
+        <Tappable onTap={this.toast.clear}>
+          <div id="ic-toast" onClick={this.toast.clear} />
+        </Tappable>
         <BookmarkList/>
         <div id="ic-landing-container" style={{ width: this.props.ui.vw - 200 }}>
           <div id="ic-landing">

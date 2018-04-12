@@ -32,7 +32,7 @@ describe('login', () => {
       expect(namePrompt).to.equal('Your name (as you\'d like it to appear, no spaces)');
 
       const topicPrompt = b.getAttribute('input#compass-center', 'placeholder');
-      expect(topicPrompt).to.equal('Topic: Who\'s involved?');
+      expect(topicPrompt).to.equal('Topic');
     });
 
     describe('invalid input', () => {
@@ -75,14 +75,15 @@ describe('login', () => {
         b.click('input[type=submit]');
         b.waitForVisible('#ic-modal');
 
-        expect('#ic-modal-body').to.have.text(/If you would like/);
+        expect('#ic-modal-body').to.have.text(/Email reminder/);
         expect('#ic-modal-input').to.be.visible();
       });
 
       it('wrong email format reprompts for email', () => {
         b.setValue('#ic-modal-input', 'fakeemail');
-        b.click('#ic-modal-confirm').pause(200);
-        expect('#ic-modal-body').to.have.text(/does not look right/);
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/not a valid email address/);
       });
 
       it('empty email skips sending reminder', () => {
