@@ -113,7 +113,7 @@ class LandingPage extends Component {
                ref="topic"
                required
                maxLength={30}
-               placeholder="Topic: Who's involved?" />
+               placeholder="Topic" />
         <input id="username"
                ref="username"
                maxLength={15}
