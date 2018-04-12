@@ -139,6 +139,7 @@ class Workspace extends Component {
 
     if (this.isControlKey(e.which) && !this.isModifierKey(e)) {
       e.preventDefault();
+      this.socket.emitMetric('shortcut key', e.which);
       this.keypressHandler[e.which]();
     }
   };
