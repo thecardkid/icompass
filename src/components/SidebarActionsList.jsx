@@ -28,12 +28,12 @@ export default class SidebarActionsList extends Component {
 
   togglePrivacyStatement = () => {
     this.socket.emitMetric('sidebar toggle privacy');
-    this.props.uiX.togglePrivacyStatement();
+    this.modal.alertPrivacyStatement();
   };
 
   toggleFeedback = () => {
     this.socket.emitMetric('sidebar toggle feedback');
-    this.props.uiX.toggleFeedback();
+    this.modal.alertFeedback();
   };
 
   toTutorial = () => {

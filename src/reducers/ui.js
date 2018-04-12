@@ -8,8 +8,6 @@ const defaultState = {
   showAbout: false,
   showChat: false,
   showSidebar: false,
-  showFeedback: false,
-  showPrivacyStatement: false,
   vw: 0,
   vh: 0,
   editingMode: EDITING_MODE.NORMAL,
@@ -54,10 +52,6 @@ export default (state = defaultState, action) => {
       return { ...state, showSidebar: !state.showSidebar };
     case 'setSidebar':
       return { ...state, showSidebar: action.value };
-    case 'toggleFeedback':
-      return { ...state, showFeedback: !state.showFeedback };
-    case 'togglePrivacyStatement':
-      return { ...state, showPrivacyStatement: !state.showPrivacyStatement };
     case 'resize':
       return { ...state, vw: action.screenWidth, vh: action.screenHeight };
     case 'normalMode':

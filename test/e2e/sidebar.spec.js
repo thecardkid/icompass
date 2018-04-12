@@ -224,8 +224,7 @@ describe('sidebar', () => {
     });
 
     it('tutorial button has link', () => {
-      expect(b.getAttribute('button[name=tutorial] a', 'href')).to.equal('http://localhost:8080/tutorial');
-      b.click('#ic-toast span');
+      expect('button[name=tutorial] a').to.be.there();
     });
 
     describe('bookmarking', () => {
