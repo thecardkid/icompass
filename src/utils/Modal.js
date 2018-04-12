@@ -100,11 +100,25 @@ export default class Modal {
     this.alert(text, () => {});
   };
 
-  generatePrompt(text) {
+  generatePrompt(html) {
     return '<div id="ic-modal">' +
-      '<div id="ic-modal-body"><h3>' + text + '</h3><input id="ic-modal-input" autofocus="true" /></div>' +
+      '<div id="ic-modal-body">' + html + '<input id="ic-modal-input" autofocus="true" /></div>' +
       '<div id="ic-modal-footer">' +
       '<button id="ic-modal-confirm">Submit</button><button id="ic-modal-cancel">Cancel</button></div>';
+  }
+
+  promptForEmail(cb) {
+    const html = `
+      <h3>Email reminder</h3>
+      <p>
+        You'll need the link to the compass to access it again. To email yourself the link now,
+        enter your email address below.
+        <br/><br/>
+        I will not store your email address or send you spam. Otherwise leave this blank and
+        be sure to email or copy your link from the side panel in your workspace.
+      </p>
+    `;
+    this.prompt(html, cb);
   }
 
   prompt(text, cb, value) {
@@ -126,7 +140,7 @@ export default class Modal {
     $('#ic-backdrop').on('click', () => {
       response = $('#ic-modal-input').val();
       this.close();
-      cb(response);
+      cb(false, response);
     });
   }
 
