@@ -3,12 +3,7 @@ import $ from 'jquery';
 const ToastSingleton = (() => {
   class Toast {
     constructor() {
-      if (!instance) {
-        this.timeout = 0;
-        instance = this;
-      }
-
-      return instance;
+      this.timeout = 0;
     }
 
     getSpan(clazz, msg) {

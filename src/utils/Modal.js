@@ -4,12 +4,7 @@ import { browserHistory } from 'react-router';
 const ModalSingleton = (() => {
   class Modal {
     constructor() {
-      if (!instance) {
-        this.show = false;
-        instance = this;
-      }
-
-      return instance;
+      this.show = false;
     }
 
     addBackdropIfNecessary() {
