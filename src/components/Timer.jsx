@@ -9,11 +9,13 @@ import { PROMPTS } from '../../lib/constants';
 
 import * as workspaceActions from '../actions/workspace';
 import * as uiActions from '../actions/ui';
+import Socket from '../utils/Socket';
 
 class Timer extends Component {
   constructor(props) {
     super(props);
     this.toast = new Toast();
+    this.socket = new Socket();
 
     this.granularity = 1000;
     this.running = false;
@@ -49,6 +51,7 @@ class Timer extends Component {
 
   handleClick = () => {
     if (this.running) return;
+    this.socket.emitMetric('sidebar timer form');
     this.props.uiActions.showTimerConfig();
   };
 
