@@ -139,10 +139,13 @@ class StickyNote extends Component {
     if (now - this.lastClick < 40) return;
 
     this.lastClick = now;
-    if (this.visualMode)
+    if (this.visualMode) {
+      this.props.socket.emitMetric('visual mode select');
       this.props.workspaceActions.selectNote(this.props.i);
-    else
+    } else {
+      this.props.socket.emitMetric('note focus');
       this.props.uiActions.focusOnNote(this.props.i);
+    }
   };
 
   render() {

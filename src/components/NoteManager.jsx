@@ -119,6 +119,7 @@ class NoteManager extends Component {
                   note={note}
                   i={i}
                   submitDraft={this.submitDraft}
+                  socket={this.socket}
                   // Can't delete note in visual mode, no need to check
                   destroy={this.socket.emitDeleteNote} />
     );
