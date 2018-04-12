@@ -9,7 +9,6 @@ import { PROMPTS } from '../../lib/constants';
 const SocketSingleton = (() => {
   class Socket {
     constructor() {
-      this.toast = Toast.getInstance();
       this.modal = Modal.getInstance();
 
       this.socket = new SocketIOClient();
@@ -30,17 +29,18 @@ const SocketSingleton = (() => {
       return this.socket.connected;
     };
 
-    alertDisconnected() {
-      this.toast.error(PROMPTS.NOT_CONNECTED);
-    }
+    checkConnected = () => {
+      if (this.isConnected()) return true;
+      Toast.getInstance().error('You are not connected to the server');
+    };
 
     onSessionId = (sessionId) => {
       this.sessionId = this.sessionId || sessionId;
     };
 
     onMailStatus = (status) => {
-      if (status) this.toast.success(PROMPTS.EMAIL_SENT);
-      else this.toast.error(PROMPTS.EMAIL_NOT_SENT);
+      if (status) Toast.getInstance().success(PROMPTS.EMAIL_SENT);
+      else Toast.getInstance().error(PROMPTS.EMAIL_NOT_SENT);
     };
 
     emitReconnected = ({ compass, users }) => {
@@ -54,78 +54,88 @@ const SocketSingleton = (() => {
     };
 
     emitCreateTimer = (min, sec) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('create timer', min, sec, Date.now());
+      if (this.checkConnected()) {
+        this.socket.emit('create timer', min, sec, Date.now());
+      }
     };
 
     emitCancelTimer = () => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('cancel timer');
+      if (this.checkConnected()) {
+        this.socket.emit('cancel timer');
+      }
     };
 
     emitNewNote = (note) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('new note', note);
+      if (this.checkConnected()) {
+        this.socket.emit('new note', note);
+      }
     };
 
     emitEditNote = (edited) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('update note', edited);
+      if (this.checkConnected()) {
+        this.socket.emit('update note', edited);
+      }
     };
 
     emitBulkEditNotes = (noteIds, transformation) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('bulk update notes', noteIds, transformation);
+      if (this.checkConnected()) {
+        this.socket.emit('bulk update notes', noteIds, transformation);
+      }
     };
 
     emitBulkDeleteNotes = (noteIds) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('bulk delete notes', noteIds);
+      if (this.checkConnected()) {
+        this.socket.emit('bulk delete notes', noteIds);
+      }
     };
 
     emitDragNote = (note) => {
-      if (!this.isConnected()) {
-        this.alertDisconnected();
-        return false;
+      if (this.checkConnected()) {
+        this.socket.emit('update note', note);
+        return true;
       }
-      this.socket.emit('update note', note);
-      return true;
+      return false;
     };
 
     emitDeleteCompass = (id) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('delete compass', id);
+      if (this.checkConnected()) {
+        this.socket.emit('delete compass', id);
+      }
     };
 
     emitDeleteNote = (noteId) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('delete note', noteId);
+      if (this.checkConnected()) {
+        this.socket.emit('delete note', noteId);
+      }
     };
 
     emitMessage = (username, text) => {
-      if (!this.isConnected()) return this.alertDisconnected();
       if (!text) return;
-
-      this.socket.emit('message', { username, text });
+      if (this.checkConnected()) {
+        this.socket.emit('message', { username, text });
+      }
     };
 
     emitCreateCompass = (topic, username) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('create compass', { topic, username });
+      if (this.checkConnected()) {
+        this.socket.emit('create compass', { topic, username });
+      }
     };
 
     emitFindCompass = (code, username) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('find compass', { code, username });
+      if (this.checkConnected()) {
+        this.socket.emit('find compass', { code, username });
+      }
     };
 
     emitSendMail = (code, username, receiverEmail) => {
-      if (!this.isConnected()) return this.alertDisconnected();
-      this.socket.emit('send mail', {
-        editCode: code,
-        username: username,
-        email: receiverEmail,
-      });
+      if (this.checkConnected()) {
+        this.socket.emit('send mail', {
+          editCode: code,
+          username: username,
+          email: receiverEmail,
+        });
+      }
     };
 
     emitFindCompassEdit = ({ code, username }) => {

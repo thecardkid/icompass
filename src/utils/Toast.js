@@ -1,9 +1,11 @@
 import $ from 'jquery';
+import Socket from './Socket';
 
 const ToastSingleton = (() => {
   class Toast {
     constructor() {
       this.timeout = 0;
+      this.socket = Socket.getInstance();
     }
 
     getSpan(clazz, msg) {
@@ -24,12 +26,14 @@ const ToastSingleton = (() => {
     };
 
     warn = (msg) => {
+      this.socket.emitMetric('toast warn', msg);
       clearTimeout(this.timeout);
       $('#ic-toast').empty().append(this.getSpan('warning', msg));
       this.timeout = setTimeout(this.clear, 5000);
     };
 
     error = (msg) => {
+      this.socket.emitMetric('toast error', msg);
       clearTimeout(this.timeout);
       $('#ic-toast').empty().append(this.getSpan('error', msg));
     };
