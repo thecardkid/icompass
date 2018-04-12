@@ -118,12 +118,7 @@ class Compass extends Component {
   };
 
   setPeopleInvolved = () => {
-    this.modal.prompt('1. Who could be involved, including you? For and with everyone involved, explore!', (res, people) => {
-      if (!res || !people) {
-        this.toast.warn('You need to complete this action!');
-        return this.setPeopleInvolved();
-      }
-
+    this.modal.promptForCenter(this.toast.warn, (people) => {
       this.socket.emitSetCenter(this.props.compass._id, people);
     });
   };

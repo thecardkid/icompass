@@ -100,9 +100,9 @@ export default class Modal {
     this.alert(text, () => {});
   };
 
-  generatePrompt(html) {
+  generatePrompt(html, afterInput = '') {
     return '<div id="ic-modal">' +
-      '<div id="ic-modal-body">' + html + '<input id="ic-modal-input" autofocus="true" /></div>' +
+      '<div id="ic-modal-body">' + html + '<input id="ic-modal-input" autofocus="true" />' + afterInput + '</div>' +
       '<div id="ic-modal-footer">' +
       '<button id="ic-modal-confirm">Submit</button><button id="ic-modal-cancel">Cancel</button></div>';
   }
@@ -119,6 +119,24 @@ export default class Modal {
       </p>
     `;
     this.prompt(html, cb);
+  }
+
+  promptForCenter(warn, cb) {
+    const before = '<h3>1. Who could be involved, including you?</h3>';
+    const after = '<p>For and with everyone involved, explore...</p>';
+    $('#ic-modal-container').empty().append(this.generatePrompt(before, after));
+    $('#ic-modal-input').focus();
+    this.addBackdropIfNecessary();
+    this.show = true;
+
+    let response;
+    $('#ic-modal-confirm').on('click', () => {
+      response = $('#ic-modal-input').val();
+      this.close();
+      cb(response);
+    });
+    $('#ic-modal-cancel').on('click', () => warn('You need to complete this action'));
+    $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
   }
 
   prompt(text, cb, value) {
