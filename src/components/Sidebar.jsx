@@ -69,9 +69,10 @@ class Sidebar extends Component {
     );
   };
 
-  logout() {
+  logout = () => {
+    this.socket.emitMetric('sidebar log out');
     browserHistory.push('/');
-  }
+  };
 
   renderCreditsList() {
     return (
