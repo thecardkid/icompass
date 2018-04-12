@@ -35,6 +35,7 @@ class VisualModeToolbar extends Component {
   };
 
   bulkDelete = () => {
+    this.socket.emitMetric('visual mode bulk delete');
     this.modal.confirm(MODALS.BULK_DELETE_NOTES, (deleteNotes) => {
       if (deleteNotes) {
         this.socket.emitBulkDeleteNotes(this.getSelectedNotes());
@@ -44,12 +45,14 @@ class VisualModeToolbar extends Component {
   };
 
   cancel = () => {
+    this.socket.emitMetric('enter normal mode');
     this.props.uiActions.normalMode();
   };
 
   submit = () => {
     let { bold, italic, underline, color } = this.props.workspace;
     let transformation = { style: { bold, italic, underline }, color };
+    this.socket.emitMetric('visual mode submit');
     this.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
     this.cancel();
   };
