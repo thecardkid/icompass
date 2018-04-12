@@ -6,7 +6,7 @@ import Socket from '../utils/Socket.js';
 export default class SidebarUsersList extends Component {
   constructor(props, context) {
     super(props, context);
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
   }
 
   renderUserTab = (color, username) => {

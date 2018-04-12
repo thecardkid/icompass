@@ -8,7 +8,7 @@ let paint = false;
 export default class DoodleForm extends Component {
   constructor() {
     super();
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
   }
 
   componentDidMount() {

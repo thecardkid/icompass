@@ -10,9 +10,9 @@ import { PROMPTS, COLORS, MODALS, REGEX } from '../../lib/constants';
 export default class NoteForm extends Component {
   constructor(props) {
     super(props);
-    this.toast = new Toast();
-    this.modal = new Modal();
-    this.socket = new Socket();
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
 
     this.state = {
       bold: false,

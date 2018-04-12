@@ -17,7 +17,7 @@ class Chat extends Component {
   constructor(props) {
     super(props);
 
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
     this.socket.subscribe({
       'new message': this.onNewMessage,
     });

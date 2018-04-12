@@ -12,9 +12,9 @@ import { TWEET, HOST, PROMPTS, MODALS, REGEX } from '../../lib/constants';
 export default class SidebarShareList extends Component {
   constructor(props, context) {
     super(props, context);
-    this.toast = new Toast();
-    this.modal = new Modal();
-    this.socket = new Socket();
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
   }
 
   exportCompass = () => {

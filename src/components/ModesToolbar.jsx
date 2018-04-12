@@ -14,8 +14,8 @@ import Socket from '../utils/Socket';
 class ModesToolbar extends Component {
   constructor() {
     super();
-    this.modal = new Modal();
-    this.socket = new Socket();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
   }
 
   changeMode = (mode) => {

@@ -8,7 +8,7 @@ import { PROMPTS } from '../../lib/constants';
 export default class TimerForm extends Component {
   constructor(props) {
     super(props);
-    this.toast = new Toast();
+    this.toast = Toast.getInstance();
   }
 
   submit = (m, s) => {

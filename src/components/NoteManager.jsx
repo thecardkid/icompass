@@ -17,9 +17,9 @@ class NoteManager extends Component {
   constructor(props) {
     super(props);
     this.notes = [];
-    this.toast = new Toast();
+    this.toast = Toast.getInstance();
 
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
     this.socket.subscribe({
       'update notes': this.onUpdateNotes,
       'deleted notes': this.onDeleteNotes,

@@ -11,8 +11,8 @@ import Socket from '../utils/Socket';
 export default class BookmarkList extends Component {
   constructor(props) {
     super(props);
-    this.modal = new Modal();
-    this.socket = new Socket();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
 
     let b = Storage.getBookmarks();
     this.state = {

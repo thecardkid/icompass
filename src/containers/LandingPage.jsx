@@ -20,11 +20,11 @@ const FORM_TYPE = { MAKE: 0, FIND: 1 };
 class LandingPage extends Component {
   constructor(props) {
     super(props);
-    this.toast = new Toast();
-    this.modal = new Modal();
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
     this.state = { formType: FORM_TYPE.MAKE };
 
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
     this.socket.subscribe({
       'compass ready': this.onCompassReady,
     });

@@ -5,7 +5,7 @@ import Socket from '../utils/Socket.js';
 export default class SidebarControlsList extends Component {
   constructor(props, context) {
     super(props, context);
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
   }
 
   showNewNote = () => {

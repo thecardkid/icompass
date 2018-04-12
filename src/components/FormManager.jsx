@@ -16,8 +16,8 @@ import Toast from '../utils/Toast';
 class FormManager extends Component {
   constructor(props) {
     super(props);
-    this.toast = new Toast();
-    this.socket = new Socket();
+    this.toast = Toast.getInstance();
+    this.socket = Socket.getInstance();
   }
 
   renderNoteForm() {

@@ -10,9 +10,9 @@ import { REGEX } from '../../lib/constants';
 export default class PromptName extends Component {
   constructor() {
     super();
-    this.modal = new Modal();
-    this.toast = new Toast();
-    this.socket = new Socket();
+    this.modal = Modal.getInstance();
+    this.toast = Toast.getInstance();
+    this.socket = Socket.getInstance();
   }
 
   componentDidMount() {

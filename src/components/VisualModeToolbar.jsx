@@ -22,8 +22,8 @@ const SELECTED_COLOR_BORDER = '2px solid orangered';
 class VisualModeToolbar extends Component {
   constructor(props) {
     super(props);
-    this.modal = new Modal();
-    this.socket = new Socket();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
   }
 
   getSelectedNotes = () => {

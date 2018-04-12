@@ -12,8 +12,8 @@ import { MODALS, HOST } from '../../lib/constants';
 export default class SidebarActionsList extends Component {
   constructor(props, context) {
     super(props, context);
-    this.modal = new Modal();
-    this.socket = new Socket();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
   }
 
   confirmDelete = () => {
