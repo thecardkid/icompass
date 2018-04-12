@@ -110,6 +110,7 @@ class NoteManager extends Component {
     note.color = this.props.color;
     /* Can't submit draft in visual mode, no need to check */
     this.socket.emitNewNote(note);
+    this.socket.emitMetric('draft submit');
   };
 
   renderNote = (note, i) => {

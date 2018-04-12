@@ -1,9 +1,16 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
 
+import Socket from '../utils/Socket';
+
 let paint = false;
 
 export default class DoodleForm extends Component {
+  constructor() {
+    super();
+    this.socket = new Socket();
+  }
+
   componentDidMount() {
     this.canvas = $('#ic-doodle');
     $(document).on('touchstart', this.preventDefaultIfCanvas);
@@ -80,6 +87,7 @@ export default class DoodleForm extends Component {
 
   makeDoodle = () => {
     if (this.state.x.length === 0) return;
+    this.socket.emitMetric('note doodle');
     this.props.ship({
       text: null,
       doodle: document.getElementById('ic-doodle').toDataURL(),

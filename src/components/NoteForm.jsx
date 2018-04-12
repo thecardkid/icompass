@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
+import Socket from '../utils/Socket';
 
 import { PROMPTS, COLORS, MODALS, REGEX } from '../../lib/constants';
 
@@ -11,6 +12,7 @@ export default class NoteForm extends Component {
     super(props);
     this.toast = new Toast();
     this.modal = new Modal();
+    this.socket = new Socket();
 
     this.state = {
       bold: false,
@@ -77,6 +79,7 @@ export default class NoteForm extends Component {
         user: this.props.user,
       };
 
+      this.socket.emitMetric(`note ${isImage ? 'image' : 'create'}`);
       this.props.ship(note);
       this.props.close();
     });
@@ -91,6 +94,7 @@ export default class NoteForm extends Component {
       let edits = { text, isImage, style };
       let edited = Object.assign({}, this.props.note, edits);
 
+      this.socket.emitMetric('note edit');
       this.props.ship(edited, this.props.idx);
       this.props.close();
     });
