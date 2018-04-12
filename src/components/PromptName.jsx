@@ -1,24 +1,28 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
+import Tappable from 'react-tappable/lib/Tappable';
 
 import Modal from '../utils/Modal';
-import { PROMPTS, REGEX } from '../../lib/constants';
+import Toast from '../utils/Toast';
+import { REGEX } from '../../lib/constants';
 
 export default class PromptName extends Component {
-  componentDidMount() {
+  constructor() {
+    super();
     this.modal = new Modal();
-    this.promptForName('Welcome to Innovators\' Compass. Please enter your name as it would appear to others in this workspace.');
+    this.toast = new Toast();
   }
 
-  promptForName = (prefix) => {
+  componentDidMount() {
+    this.promptForName();
+  }
+
+  promptForName = () => {
     const { code } = this.props.params;
-    const text = `${prefix} ${PROMPTS.PROMPT_NAME}`;
-
-    this.modal.prompt(text, (submit, name) => {
-      if (!submit) return browserHistory.push('/');
-
+    this.modal.promptForUsername(this.toast.warn, (name) => {
       if (name.length > 15 || !REGEX.CHAR_ONLY.test(name)) {
-        return this.promptForName(`"${name}" is not valid.`);
+        this.toast.error('Username must be fewer than 15 characters and letters-only');
+        return this.promptForName();
       }
 
       browserHistory.push(`/compass/edit/${code}/${name}`);
@@ -26,6 +30,10 @@ export default class PromptName extends Component {
   };
 
   render() {
-    return <div/>;
+    return (
+      <Tappable onTap={this.toast.clear}>
+        <div id="ic-toast" onClick={this.toast.clear} />
+      </Tappable>
+    );
   }
 }
