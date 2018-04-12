@@ -19,7 +19,7 @@ import Toast from '../utils/Toast';
 class App extends Component {
   constructor() {
     super();
-    this.toast = new Toast();
+    this.toast = Toast.getInstance();
   }
 
   render() {

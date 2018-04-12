@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import Modal from '../utils/Modal';
 import Storage from '../utils/Storage';
 
 import { MODALS } from '../../lib/constants';
+import Socket from '../utils/Socket';
 
 export default class BookmarkList extends Component {
   constructor(props) {
     super(props);
-    this.modal = new Modal();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
 
     let b = Storage.getBookmarks();
     this.state = {
@@ -52,6 +54,11 @@ export default class BookmarkList extends Component {
     this.setState({ show });
   }
 
+  navigateTo = (href) => () => {
+    this.socket.emitMetricLandingPage(this.props.start, Date.now(), 'navigate with bookmark');
+    browserHistory.push(href);
+  };
+
   renderBookmark(w, idx) {
     let style = {
       height: this.state.show[idx] ? '20px' : '0px',
@@ -71,7 +78,7 @@ export default class BookmarkList extends Component {
 
     return (
       <div className="ic-saved" key={`saved${idx}`} onClick={() => this.expand(idx)}>
-        <Link to={w.href}>{w.center}</Link>
+        <a onClick={this.navigateTo(w.href)}>{w.center}</a>
         {arrow}
         {info}
       </div>

@@ -1,5 +1,3 @@
-'use strict';
-
 import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -22,11 +20,11 @@ const FORM_TYPE = { MAKE: 0, FIND: 1 };
 class LandingPage extends Component {
   constructor(props) {
     super(props);
-    this.toast = new Toast();
-    this.modal = new Modal();
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
     this.state = { formType: FORM_TYPE.MAKE };
 
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
     this.socket.subscribe({
       'compass ready': this.onCompassReady,
     });
@@ -35,6 +33,7 @@ class LandingPage extends Component {
   }
 
   componentDidMount() {
+    this.start = Date.now();
     $(window).on('resize', this.props.uiX.resize);
   }
 
@@ -69,6 +68,7 @@ class LandingPage extends Component {
 
     this.setState({ username });
     this.socket.emitFindCompass(code, username);
+    this.socket.emitMetricLandingPage(this.start, Date.now(), 'find');
   };
 
   validateMakeInput = (e) => {
@@ -82,7 +82,8 @@ class LandingPage extends Component {
     }
 
     this.setState({ username });
-    return this.socket.emitCreateCompass(topic, username);
+    this.socket.emitCreateCompass(topic, username);
+    this.socket.emitMetricLandingPage(this.start, Date.now(), 'create');
   };
 
   renderFindForm = () => {
@@ -194,7 +195,7 @@ class LandingPage extends Component {
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
-        <BookmarkList/>
+        <BookmarkList start={this.start}/>
         <div id="ic-landing-container" style={{ width: this.props.ui.vw - 200 }}>
           <div id="ic-landing">
             <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to

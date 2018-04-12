@@ -15,8 +15,8 @@ import { PROMPTS, COLORS, EDITING_MODE, MODALS } from '../../lib/constants';
 class StickyNote extends Component {
   constructor(props) {
     super(props);
-    this.toast = new Toast();
-    this.modal = new Modal();
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
     this.hasEditingRights = !this.props.compass.viewOnly;
     this.setModes(this.props);
     this.lastClick = 0;
@@ -139,10 +139,12 @@ class StickyNote extends Component {
     if (now - this.lastClick < 40) return;
 
     this.lastClick = now;
-    if (this.visualMode)
+    if (this.visualMode) {
+      this.props.socket.emitMetric('visual mode select');
       this.props.workspaceActions.selectNote(this.props.i);
-    else
+    } else {
       this.props.uiActions.focusOnNote(this.props.i);
+    }
   };
 
   render() {

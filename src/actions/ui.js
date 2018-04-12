@@ -94,18 +94,6 @@ export const setSidebarVisible = (value) => {
   };
 };
 
-export const toggleFeedback = () => {
-  return {
-    type: 'toggleFeedback',
-  };
-};
-
-export const togglePrivacyStatement = () => {
-  return {
-    type: 'togglePrivacyStatement',
-  };
-};
-
 export const resize = (e) => {
   return {
     type: 'resize',

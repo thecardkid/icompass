@@ -224,8 +224,7 @@ describe('sidebar', () => {
     });
 
     it('tutorial button has link', () => {
-      expect(b.getAttribute('button[name=tutorial] a', 'href')).to.equal('http://localhost:8080/tutorial');
-      b.click('#ic-toast span');
+      expect('button[name=tutorial] a').to.be.there();
     });
 
     describe('bookmarking', () => {
@@ -245,7 +244,11 @@ describe('sidebar', () => {
         b.click('button[name=logout]');
         b.waitForVisible('div.ic-saved');
         expect(b.getUrl()).to.equal('http://localhost:8080/');
-        expect(b.getAttribute('div.ic-saved a', 'href')).to.contain('http://localhost:8080/compass/edit');
+        b.click('div.ic-saved a');
+        b.waitForVisible('#compass');
+        expect(b.getUrl()).to.contain('http://localhost:8080/compass/edit');
+        b.back();
+        b.waitForVisible('#ic-landing');
         b.click('div.ic-saved #arrow');
         b.pause(100);
         expect('div.ic-saved a').to.have.text('My bookmark');
