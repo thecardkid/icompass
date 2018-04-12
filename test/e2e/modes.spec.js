@@ -112,7 +112,7 @@ describe('view modes', () => {
       });
 
       it('bad username', () => {
-        expect('#ic-modal-body h3').to.have.text(/Welcome/);
+        expect('#ic-modal-body').to.have.text(/Welcome/);
 
         b.setValue('#ic-modal-input', 'sandbox2');
         b.click('#ic-modal-confirm');

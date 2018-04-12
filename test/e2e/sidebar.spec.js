@@ -24,7 +24,7 @@ describe('sidebar', () => {
       expect('div.ic-sidebar-list[name="share"]').to.be.visible();
       b.click('button[name="share-edit"]');
       b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body h3').to.have.text(/Share this link below/);
+      expect('#ic-modal-body').to.have.text(/Share this link below/);
       expect('#ic-modal-body p').to.have.text(/\/compass\/edit/);
       b.click('#ic-modal-confirm');
     });
@@ -32,7 +32,7 @@ describe('sidebar', () => {
     it('share view mode', () => {
       b.click('button[name="share-view"]');
       b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body h3').to.have.text(/Share this link below/);
+      expect('#ic-modal-body').to.have.text(/Share this link below/);
       expect('#ic-modal-body p').to.have.text(/\/compass\/view/);
       b.click('#ic-modal-confirm');
     });
@@ -41,11 +41,11 @@ describe('sidebar', () => {
       it('wrong email format displays error message', () => {
         b.click('button[name=email]');
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body h3').to.have.text(/Enter your email/);
+        expect('#ic-modal-body').to.have.text(/Enter your email/);
         b.setValue('#ic-modal-input', 'fakeemail');
         b.click('#ic-modal-confirm');
         b.pause(200);
-        expect('#ic-modal-body h3').to.have.text(/does not look right/);
+        expect('#ic-modal-body').to.have.text(/does not look right/);
       });
 
       it('valid email shows toast', () => {
@@ -59,7 +59,7 @@ describe('sidebar', () => {
     it('export button', () => {
       b.click('button[name="export"]');
       b.waitForVisible('#ic-modal');
-      expect(b.getText('#ic-modal-body h3')).to.contain('I see you want to save this compass as a PDF');
+      expect(b.getText('#ic-modal-body')).to.contain('I see you want to save this compass as a PDF');
       b.click('#ic-modal-cancel');
     });
 
@@ -210,15 +210,17 @@ describe('sidebar', () => {
     it('privacy statement', () => {
       expect('button[name=privacy]').to.be.visible();
       b.click('button[name=privacy]');
-      b.waitForVisible('#ic-privacy-statement');
-      b.click('#ic-privacy-statement button.ic-close-window');
+      b.waitForVisible('#ic-modal');
+      expect('#ic-modal-body').to.have.text(/Privacy Statement/);
+      b.click('#ic-modal-confirm');
     });
 
     it('feedback form', () => {
       expect('button[name=sucks]').to.be.visible();
       b.click('button[name=sucks]');
-      b.waitForVisible('#ic-feedback');
-      b.click('#ic-feedback button.ic-close-window');
+      b.waitForVisible('#ic-modal');
+      expect('#ic-modal-body').to.have.text(/We'd love to hear from you/);
+      b.click('#ic-modal-confirm');
     });
 
     it('tutorial button has link', () => {
