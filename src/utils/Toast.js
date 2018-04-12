@@ -1,51 +1,60 @@
 import $ from 'jquery';
+import Socket from './Socket';
 
-let instance;
-
-export default class Toaster {
-  constructor() {
-    if (!instance) {
+const ToastSingleton = (() => {
+  class Toast {
+    constructor() {
       this.timeout = 0;
-      this.success = this.success.bind(this);
-      this.info = this.info.bind(this);
-      this.warn = this.warn.bind(this);
-      this.error = this.error.bind(this);
-
-      instance = this;
+      this.socket = Socket.getInstance();
     }
 
-    return instance;
+    getSpan(clazz, msg) {
+      if (clazz === 'error') msg += ' [ Click to dismiss ]';
+      return `<span class="${clazz}">${msg}</span>`;
+    }
+
+    success = (msg) => {
+      clearTimeout(this.timeout);
+      $('#ic-toast').empty().append(this.getSpan('success', msg));
+      this.timeout = setTimeout(this.clear, 5000);
+    };
+
+    info = (msg) => {
+      window.clearTimeout(this.timeout);
+      $('#ic-toast').empty().append(this.getSpan('info', msg));
+      this.timeout = window.setTimeout(this.clear, 5000);
+    };
+
+    warn = (msg) => {
+      this.socket.emitMetric('toast warn', msg);
+      clearTimeout(this.timeout);
+      $('#ic-toast').empty().append(this.getSpan('warning', msg));
+      this.timeout = setTimeout(this.clear, 5000);
+    };
+
+    error = (msg) => {
+      this.socket.emitMetric('toast error', msg);
+      clearTimeout(this.timeout);
+      $('#ic-toast').empty().append(this.getSpan('error', msg));
+    };
+
+    clear() {
+      $('#ic-toast').empty();
+    }
   }
 
-  getSpan(clazz, msg) {
-    if (clazz === 'error') msg += ' [ Click to dismiss ]';
-    return '<span class="' + clazz + '">' + msg + '</span>';
-  }
+  let instance = null;
 
-  success(msg) {
-    clearTimeout(this.timeout);
-    $('#ic-toast').empty().append(this.getSpan('success', msg));
-    this.timeout = setTimeout(this.clear, 5000);
-  }
+  return {
+    getInstance: () => {
+      if (!instance) {
+        instance = new Toast();
+        instance.constructor = null;
+      }
 
-  info(msg) {
-    window.clearTimeout(this.timeout);
-    $('#ic-toast').empty().append(this.getSpan('info', msg));
-    this.timeout = window.setTimeout(this.clear, 5000);
-  }
+      return instance;
+    }
+  };
+})();
 
-  warn(msg) {
-    clearTimeout(this.timeout);
-    $('#ic-toast').empty().append(this.getSpan('warning', msg));
-    this.timeout = setTimeout(this.clear, 5000);
-  }
-
-  error(msg) {
-    clearTimeout(this.timeout);
-    $('#ic-toast').empty().append(this.getSpan('error', msg));
-  }
-
-  clear() {
-    $('#ic-toast').empty();
-  }
-}
+export default ToastSingleton;

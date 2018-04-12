@@ -30,10 +30,10 @@ import { browserHistory } from 'react-router';
 class Workspace extends Component {
   constructor(props) {
     super(props);
-    this.toast = new Toast();
-    this.modal = new Modal();
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
 
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
     this.socket.subscribe({
       'compass found': this.onCompassFound,
       'compass deleted': this.onCompassDeleted,
@@ -92,7 +92,10 @@ class Workspace extends Component {
     if (code.length !== 8) validCode = false;
     if (!REGEX.CHAR_ONLY.test(username) || username.length > 15) validUsername = false;
 
-    if (validCode && validUsername) return true;
+    if (validCode && validUsername) {
+      this.socket.emitMetricDirectUrlAccess(this.props.router.getCurrentLocation().pathname);
+      return true;
+    }
 
     this.modal.alertRouteErrors(validCode, validUsername);
   }
@@ -136,6 +139,7 @@ class Workspace extends Component {
 
     if (this.isControlKey(e.which) && !this.isModifierKey(e)) {
       e.preventDefault();
+      this.socket.emitMetric('shortcut key', e.which);
       this.keypressHandler[e.which]();
     }
   };

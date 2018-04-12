@@ -17,9 +17,9 @@ class NoteManager extends Component {
   constructor(props) {
     super(props);
     this.notes = [];
-    this.toast = new Toast();
+    this.toast = Toast.getInstance();
 
-    this.socket = new Socket();
+    this.socket = Socket.getInstance();
     this.socket.subscribe({
       'update notes': this.onUpdateNotes,
       'deleted notes': this.onDeleteNotes,
@@ -110,6 +110,7 @@ class NoteManager extends Component {
     note.color = this.props.color;
     /* Can't submit draft in visual mode, no need to check */
     this.socket.emitNewNote(note);
+    this.socket.emitMetric('draft submit');
   };
 
   renderNote = (note, i) => {
@@ -118,6 +119,7 @@ class NoteManager extends Component {
                   note={note}
                   i={i}
                   submitDraft={this.submitDraft}
+                  socket={this.socket}
                   // Can't delete note in visual mode, no need to check
                   destroy={this.socket.emitDeleteNote} />
     );

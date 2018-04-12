@@ -34,4 +34,4 @@ matrix:
     - npm install --depth 0
     script:
     - npm run lint
-    - npm run test:mocha
+    - npm run mocha

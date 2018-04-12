@@ -26,9 +26,9 @@ class Compass extends Component {
   constructor(props) {
     super(props);
 
-    this.toast = new Toast();
-    this.modal = new Modal();
-    this.socket = new Socket();
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
+    this.socket = Socket.getInstance();
     this.socket.subscribe({
       'center set': this.setCompassCenter,
     });
@@ -40,12 +40,15 @@ class Compass extends Component {
     }
   }
 
-  renderQuadrant = (q) => {
-    const { showNewNote } = this.props.uiX;
+  doubleClickCreate = (ev) => {
+    this.socket.emitMetric('double click create');
+    this.props.uiX.showNewNote(ev);
+  };
 
+  renderQuadrant = (q) => {
     return (
-      <Tappable onPress={showNewNote} key={q.id}>
-        <div onDoubleClick={showNewNote} className="ic-quadrant" id={q.id}>
+      <Tappable onPress={this.doubleClickCreate} key={q.id}>
+        <div onDoubleClick={this.doubleClickCreate} className="ic-quadrant" id={q.id}>
           <div>
             <h1>{q.id.toUpperCase()}</h1>
             <h2>{q.prompt}</h2>
