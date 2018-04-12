@@ -9,22 +9,28 @@ import Modal from '../utils/Modal';
 import * as uiActions from '../actions/ui';
 
 import { MODALS, EDITING_MODE } from '../../lib/constants';
+import Socket from '../utils/Socket';
 
 class ModesToolbar extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.modal = new Modal();
+    this.socket = new Socket();
   }
 
   changeMode = (mode) => {
     switch (mode) {
       case 'ic-mode-normal':
+        this.socket.emitMetric('enter normal mode');
         return this.props.uiActions.normalMode();
       case 'ic-mode-compact':
+        this.socket.emitMetric('enter compact mode');
         return this.props.uiActions.compactMode();
       case 'ic-mode-visual':
+        this.socket.emitMetric('enter visual mode');
         return this.props.uiActions.visualMode(this.props.notes.length);
       case 'ic-mode-draft':
+        this.socket.emitMetric('enter draft mode');
         return this.props.uiActions.draftMode();
       default:
         return;
