@@ -13,6 +13,7 @@ import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
+import Toast from '../utils/Toast';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -25,6 +26,7 @@ class Compass extends Component {
   constructor(props) {
     super(props);
 
+    this.toast = new Toast();
     this.modal = new Modal();
     this.socket = new Socket();
     this.socket.subscribe({
@@ -116,9 +118,7 @@ class Compass extends Component {
   };
 
   setPeopleInvolved = () => {
-    this.modal.prompt('1. Who could be involved, including you? For and with everyone involved, explore!', (res, people) => {
-      if (!res) return this.setPeopleInvolved();
-
+    this.modal.promptForCenter(this.toast.warn, (people) => {
       this.socket.emitSetCenter(this.props.compass._id, people);
     });
   };

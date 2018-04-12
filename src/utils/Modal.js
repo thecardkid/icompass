@@ -23,7 +23,7 @@ export default class Modal {
     let clazz = modal.danger ? 'danger' : 'confirm';
     return '<div id="ic-modal">' +
       '<div id="ic-modal-body">' + modal.text + '</div>' +
-      '<div id="ic-modal-footer"><hr /><button id="ic-modal-confirm" class="' + clazz + '">' + modal.confirm + '</button>' +
+      '<div id="ic-modal-footer"><button id="ic-modal-confirm" class="' + clazz + '">' + modal.confirm + '</button>' +
       '<button id="ic-modal-cancel">' + modal.cancel + '</button></div></div>';
   }
 
@@ -49,7 +49,7 @@ export default class Modal {
   generateAlert(text) {
     return '<div id="ic-modal">' +
       '<div id="ic-modal-body">' + text + '</div>' +
-      '<div id="ic-modal-footer"><hr /><button id="ic-modal-confirm">OK</button>';
+      '<div id="ic-modal-footer"><button id="ic-modal-confirm">OK</button>';
   }
 
   alert(text, cb) {
@@ -67,11 +67,100 @@ export default class Modal {
     });
   }
 
-  generatePrompt(text) {
+  alertPrivacyStatement = () => {
+    const text = `
+      <h3>Privacy Statement</h3>
+      <p>
+        iCompass will not share your Compass, code, data, or any personal
+        information included in your compass with any third party.
+        <br/><br/>
+        Anyone who has your Compass' edit code with will be able to modify,
+        add, or delete any and all data in your Compass. Save and share your
+        Compass link with care, and ask any collaborator to do the same.
+       </p>
+    `;
+    this.alert(text, () => {});
+  };
+
+  alertFeedback = () => {
+    const text = `
+      <h3>We'd love to hear from you!</h3>
+      <p>
+        Please feel free reach out to Ela or me (under credits) with your experiences
+        and questions about using the Innovators' Compass - they are a huge help!
+        <br/><br/>
+        If you would like to report a bug or request a feature, go
+        <a href="https://github.com/thecardkid/innovators-compass/issues" target="_blank"
+        rel="noopener noreferrer">here</a> and click New issue.
+        <br/><br/>
+        If you are reporting a bug, please list the steps to reproduce or include screenshots.
+        If requesting a new feature, please be specific!
+      </p>
+    `;
+    this.alert(text, () => {});
+  };
+
+  generatePrompt(html) {
     return '<div id="ic-modal">' +
-      '<div id="ic-modal-body"><h3>' + text + '</h3><input id="ic-modal-input" autofocus="true" /></div>' +
-      '<div id="ic-modal-footer"><hr />' +
+      '<div id="ic-modal-body">' + html + '<input id="ic-modal-input" autofocus="true" /></div>' +
+      '<div id="ic-modal-footer">' +
       '<button id="ic-modal-confirm">Submit</button><button id="ic-modal-cancel">Cancel</button></div>';
+  }
+
+  promptForEmail(cb) {
+    const html = `
+      <h3>Email reminder</h3>
+      <p>
+        You'll need the link to the compass to access it again. To email yourself the link now,
+        enter your email address below.
+        <br/><br/>
+        I will not store your email address or send you spam. Otherwise leave this blank and
+        be sure to email or copy your link from the side panel in your workspace.
+      </p>
+    `;
+    this.prompt(html, cb);
+  }
+
+  promptForCenter(warn, cb) {
+    const html = '<h3>1. Who could be involved, including you?</h3><p>For and with everyone involved, explore...</p>';
+    $('#ic-modal-container').empty().append(this.generatePrompt(html));
+    $('#ic-modal-input').focus();
+    this.addBackdropIfNecessary();
+    this.show = true;
+
+    let response;
+    $('#ic-modal-confirm').on('click', () => {
+      response = $('#ic-modal-input').val();
+      if (!response) {
+        warn('You can\'t leave this empty');
+      } else {
+        this.close();
+        cb(response);
+      }
+    });
+    $('#ic-modal-cancel').on('click', () => warn('You need to complete this action'));
+    $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
+  }
+
+  promptForUsername(warn, cb) {
+    const html = '<h3>Welcome to this workspace!</h3><p>Please enter your name as it would appear to others:</p>';
+    $('#ic-modal-container').empty().append(this.generatePrompt(html));
+    $('#ic-modal-input').focus();
+    this.addBackdropIfNecessary();
+    this.show = true;
+
+    let response;
+    $('#ic-modal-confirm').on('click', () => {
+      response = $('#ic-modal-input').val();
+      if (!response) {
+        warn('You can\'t leave this empty');
+      } else {
+        this.close();
+        cb(response);
+      }
+    });
+    $('#ic-modal-cancel').on('click', () => warn('You need to complete this action'));
+    $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
   }
 
   prompt(text, cb, value) {
@@ -93,7 +182,7 @@ export default class Modal {
     $('#ic-backdrop').on('click', () => {
       response = $('#ic-modal-input').val();
       this.close();
-      cb(response);
+      cb(false, response);
     });
   }
 

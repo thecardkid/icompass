@@ -236,7 +236,7 @@ class Sidebar extends Component {
     return (
       <div className="ic-sidebar-list" name="actions">
         <h2>Actions</h2>
-        <button name="privacy" className="ic-action" onClick={this.props.uiX.togglePrivacyStatement}>
+        <button name="privacy" className="ic-action" onClick={this.modal.alertPrivacyStatement}>
           <i className="material-icons">lock</i>
           <p>privacy</p>
         </button>
@@ -244,7 +244,7 @@ class Sidebar extends Component {
           <i className="material-icons">info</i>
           <p>tutorial</p>
         </Link></button>
-        <button name="sucks" className="ic-action" onClick={this.props.uiX.toggleFeedback}>
+        <button name="sucks" className="ic-action" onClick={this.modal.alertFeedback}>
           <i className="material-icons">chat_bubble</i>
           <p>feedback</p>
         </button>

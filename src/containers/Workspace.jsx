@@ -15,10 +15,8 @@ import * as workspaceActions from '../actions/workspace';
 import About from '../components/About.jsx';
 import Chat from '../components/Chat.jsx';
 import Compass from '../components/Compass.jsx';
-import Feedback from '../components/Feedback.jsx';
 import FormManager from '../components/FormManager.jsx';
 import ModesToolbar from '../components/ModesToolbar.jsx';
-import PrivacyStatement from '../components/PrivacyStatement.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
@@ -198,10 +196,6 @@ class Workspace extends Component {
         <Sidebar connected={this.socket.isConnected()} />
         <ModesToolbar />
         <Chat />
-        <Feedback show={ui.showFeedback}
-                  close={this.props.uiActions.toggleFeedback} />
-        <PrivacyStatement show={ui.showPrivacyStatement}
-                          close={this.props.uiActions.togglePrivacyStatement} />
         <About show={ui.showAbout}
                close={this.props.uiActions.toggleAbout} />
         <VisualModeToolbar show={this.props.visualMode} />
