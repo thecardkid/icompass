@@ -20,9 +20,6 @@ cache:
   - node_modules
 jobs:
   include:
-  - stage: build-docker-image
-    script:
-    - docker build -t $DOCKER_TAG .
   - stage: test
     before_install:
     - sudo rm /usr/local/bin/docker-compose
@@ -38,7 +35,7 @@ jobs:
     - sudo dpkg -i google-chrome*.deb
     - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
     install:
-    - docker-compose -f docker/compose.yml up
+    - docker-compose -f docker/compose.yml up --detach
     script:
     - npm run lint
     - npm run mocha
@@ -47,6 +44,7 @@ jobs:
     if: branch = master
     script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -t $DOCKER_TAG .
     - export REPO=$DOCKER_USER/icompass
     - docker images
     - docker tag $DOCKER_TAG $REPO:latest
