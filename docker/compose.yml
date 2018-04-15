@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  mongo:
+    image: 'mongo:3.4.1'
+    ports:
+    - '27017:27017'
+    volumes:
+    - 'mongo:/data/db'
+  icompass:
+    tty: true
+    stdin_open: true
+    depends_on:
+    - 'mongo'
+    build:
+      context: ../
+    command: node icompass.js
+    ports:
+    - '8080:8080'
+    environment:
+    - MONGODB_URI=mongodb://mongo:27017
+volumes:
+  mongo:
