@@ -59,15 +59,16 @@ export default class SidebarShareList extends Component {
     this.emailReminder();
   };
 
-  emailReminder = (text) => {
-    this.modal.prompt(text || 'Enter your email below to receive a reminder link to this workspace:', (status, email) => {
+  emailReminder = () => {
+    this.modal.promptForEmail((status, email) => {
       if (!status) return;
 
       if (REGEX.EMAIL.test(email)) {
         return this.socket.emitSendMail(this.props.compass.editCode, this.props.me, email);
+      } else {
+        this.toast.error(`"${email}" does not look like a valid email`);
+        this.emailReminder();
       }
-
-      this.emailReminder(`"${email}" does not look right - make sure you type your email address correctly:`);
     });
   };
 
