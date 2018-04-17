@@ -57,18 +57,6 @@ const SocketSingleton = (() => {
       this.socket.emit('logout');
     };
 
-    emitCreateTimer = (min, sec) => {
-      if (this.checkConnected()) {
-        this.socket.emit('create timer', min, sec, Date.now());
-      }
-    };
-
-    emitCancelTimer = () => {
-      if (this.checkConnected()) {
-        this.socket.emit('cancel timer');
-      }
-    };
-
     emitNewNote = (note) => {
       if (this.checkConnected()) {
         this.socket.emit('new note', note);

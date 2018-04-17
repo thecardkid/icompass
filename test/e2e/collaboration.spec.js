@@ -106,31 +106,6 @@ describe('collaboration', () => {
     });
   });
 
-  describe('timeboxes', () => {
-    it('webdriverio creates timer and friendo sees it', () => {
-      b.switchTab(tabs.webdriverio);
-      b.click('button[name=timer]');
-      b.waitForVisible('#ic-timer-config');
-      b.click('button[name=ic-3m]');
-      b.waitForVisible('#ic-toast');
-
-      b.switchTab(tabs.friendo);
-      expect('#ic-toast').to.have.text(/A timebox for 3m0s has been created/);
-      b.pause(1000);
-      expect('button[name=timer] p.ic-time').to.have.text(/02:/);
-    });
-
-    it('can cancel timebox', () => {
-      b.switchTab(tabs.friendo);
-      b.click('button[name=timer] div div p');
-      b.waitForVisible('#ic-toast');
-
-      b.switchTab(tabs.webdriverio);
-      expect('#ic-toast').to.have.text(/Timebox has been canceled/);
-      expect('button[name=timer] p.ic-time').to.not.be.there();
-    });
-  });
-
   describe('chat', () => {
     it('red alert on chat box if message received while chat is hidden', () => {
       b.switchTab(tabs.webdriverio);
