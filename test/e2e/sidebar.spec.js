@@ -41,11 +41,11 @@ describe('sidebar', () => {
       it('wrong email format displays error message', () => {
         b.click('button[name=email]');
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(/Enter your email/);
+        expect('#ic-modal-body').to.have.text(/Email reminder/);
         b.setValue('#ic-modal-input', 'fakeemail');
         b.click('#ic-modal-confirm');
-        b.pause(200);
-        expect('#ic-modal-body').to.have.text(/does not look right/);
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/not a valid email/);
       });
 
       it('valid email shows toast', () => {

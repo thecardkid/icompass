@@ -66,7 +66,7 @@ export default class SidebarShareList extends Component {
       if (REGEX.EMAIL.test(email)) {
         return this.socket.emitSendMail(this.props.compass.editCode, this.props.me, email);
       } else {
-        this.toast.error(`"${email}" does not look like a valid email`);
+        this.toast.error(`"${email}" is not a valid email address`);
         this.emailReminder();
       }
     });
