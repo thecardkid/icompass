@@ -103,6 +103,7 @@ class Workspace extends Component {
   componentDidMount() {
     $(window).on('resize', this.props.uiActions.resize);
     $(window).on('keydown', this.handleKeyDown);
+    setTimeout(() => this.props.uiActions.setSidebarVisible(true), 800);
   }
 
   componentWillUnmount() {
