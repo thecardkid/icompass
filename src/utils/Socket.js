@@ -53,6 +53,10 @@ const SocketSingleton = (() => {
       });
     };
 
+    logout = () => {
+      this.socket.emit('logout');
+    };
+
     emitCreateTimer = (min, sec) => {
       if (this.checkConnected()) {
         this.socket.emit('create timer', min, sec, Date.now());
