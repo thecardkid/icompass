@@ -121,9 +121,11 @@ class StickyNote extends Component {
 
   getX = () => {
     if (this.hasEditingRights) {
-      return <button className="ic-close-window" onClick={this.confirmDelete}>
-        <Tappable onTap={this.confirmDelete}>x</Tappable>
-      </button>;
+      return (
+        <button className="ic-close-window" onClick={this.confirmDelete}>
+          <Tappable onTap={this.confirmDelete}>x</Tappable>
+        </button>
+      );
     }
   };
 
