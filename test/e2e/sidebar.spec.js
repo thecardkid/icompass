@@ -5,18 +5,17 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
+const { setup, cleanup } = require('./utils');
 const PROMPTS = require('../../lib/constants').PROMPTS;
 const MODALS = require('../../lib/constants').MODALS;
 
 describe('sidebar', () => {
-  beforeAll(() => {
-    require('./utils').setup();
-  });
+  beforeAll(setup);
 
   afterAll(() => {
     b.back();
     b.waitForVisible('#ic-sidebar');
-    require('./utils').cleanup();
+    cleanup();
   });
 
   describe('share section', () => {
@@ -92,11 +91,8 @@ describe('sidebar', () => {
     });
 
     it('toggle sidebar button', () => {
-      buttons[2].click();
-      b.pause(500);
-      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('-240px');
-      b.click('#ic-show-sidebar');
-      b.pause(500);
+      buttons[2].click().pause(2000);
+      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('0px');
     });
 
     it('toggle chat button', () => {
