@@ -85,7 +85,7 @@ class StickyNote extends Component {
     };
 
     return (
-      <div className="contents" style={s}>
+      <div className="ic-img contents" style={s}>
         <img src={n.doodle || n.text}
              width={this.compactMode ? '100px' : '160px'}/>
         {this.getTooltip(n)}

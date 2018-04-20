@@ -102,7 +102,7 @@ describe('basic functionality', () => {
 
     describe('images', () => {
       it('accepting image prompt should render image', () => {
-        expect('a.ic-img').to.not.be.there();
+        expect('div.ic-img').to.not.be.there();
 
         b.keys(['n']);
         b.setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg');
@@ -112,18 +112,18 @@ describe('basic functionality', () => {
 
         b.click('#ic-modal-confirm');
         b.pause(1000);
-        expect('a.ic-img').to.be.visible();
+        expect('div.ic-img').to.be.visible();
       });
 
       it('rejecting the prompt should render text', () => {
-        b.moveToObject('a.ic-img', 50, 50);
+        b.moveToObject('div.ic-img', 50, 50);
         b.doDoubleClick();
         b.waitForVisible('#ic-form-text');
         b.click('button[name=ship]');
         b.waitForVisible('#ic-modal');
         b.click('#ic-modal-cancel');
         b.pause(1000);
-        expect('a.ic-img').to.not.be.there();
+        expect('div.ic-img').to.not.be.there();
       });
     });
 
@@ -197,9 +197,9 @@ describe('basic functionality', () => {
         b.pause(500);
 
         expect('#note2').to.be.visible();
-        expect(b.getAttribute('#note2 a p', 'class')[0]).to.not.contain('bold');
-        expect(b.getAttribute('#note2 a p', 'class')[0]).to.contain('italic');
-        expect(b.getAttribute('#note2 a p', 'class')[0]).to.contain('underline');
+        expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.not.contain('bold');
+        expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.contain('italic');
+        expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.contain('underline');
       });
 
       it('double click for new note', () => {
@@ -217,31 +217,10 @@ describe('basic functionality', () => {
   });
 
   it('compact mode', () => {
-    const compactCss = {
-      letterSpacing: '-1px',
-      overflow: 'auto',
-      maxHeight: '70px',
-    };
-
-    let letterSpacing = b.getCssProperty('#note0 a', 'letter-spacing').value;
-    let overflow = b.getCssProperty('#note0 a', 'overflow').value;
-    let height = b.getCssProperty('#note0 a', 'max-height').value;
-
-    expect(letterSpacing).to.not.equal(compactCss.letterSpacing);
-    expect(overflow).to.not.equal(compactCss.overflow);
-    expect(height).to.not.equal(compactCss.maxHeight);
-
+    expect('div.compact').to.have.count(0);
     b.click('#ic-mode-compact');
     b.pause(300);
-
-    letterSpacing = b.getCssProperty('#note0 a', 'letter-spacing').value;
-    overflow = b.getCssProperty('#note0 a', 'overflow').value;
-    height = b.getCssProperty('#note0 a', 'max-height').value;
-
-    expect(letterSpacing).to.equal(compactCss.letterSpacing);
-    expect(overflow).to.equal(compactCss.overflow);
-    expect(height).to.equal(compactCss.maxHeight);
-
+    expect('div.compact').to.have.count(3);
     b.click('#ic-mode-normal');
   });
 
