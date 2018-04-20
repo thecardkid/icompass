@@ -169,8 +169,10 @@ export default class NoteForm extends Component {
                     onChange={this.handleChange}
                     style={{ background: color }}>
                     </textarea>
-          <button name="nvm" className="ic-button" onClick={this.props.close}>never mind</button>
-          <button name="ship" className="ic-button" onClick={click}>ship it</button>
+          <div className="note-form-footer">
+            <button name="ship" onClick={click}>ship it</button>
+            <button name="nvm" onClick={this.props.close}>never mind</button>
+          </div>
         </div>
       </div>
     );

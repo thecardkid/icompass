@@ -17,6 +17,7 @@
       width: 30px;
       margin: 0 2px;
       float: right;
+      border-radius: 3px;
     }
   }
 
@@ -29,6 +30,32 @@
     border: none;
     font-family: @defaultFont;
     resize: none;
+  }
+
+  div.note-form-footer {
+    margin-top: 10px;
+
+    button {
+      float: right;
+      font-size: 14px;
+      padding: 5px;
+      min-width: 60px;
+    }
+
+    button[name=nvm] {
+      background: none;
+      color: gray;
+    }
+
+    button[name=ship] {
+      background: @dark;
+      color: @light;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      .hasTransition(0.5);
+      margin-left: 5px;
+    }
   }
 }
 
