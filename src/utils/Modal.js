@@ -13,51 +13,78 @@ const ModalSingleton = (() => {
       }
     }
 
+    getModalHtml(body, confirm, cancel = '') {
+      return (`
+        <div id="ic-modal">
+          <div id="ic-modal-body">${body}</div>
+          <div id="ic-modal-footer">
+            ${confirm}
+            ${cancel}
+          </div>
+        </div>
+      `);
+    }
+
+    renderModal(html) {
+      const $container = $('#ic-modal-container');
+      $container.empty().append(html);
+      let $backdrop = $('#ic-backdrop');
+      if ($backdrop.length === 0) {
+        $container.append('<div id="ic-backdrop"></div>');
+      }
+    }
+
+    onEvent({ onConfirm, onCancel, onBackdrop }) {
+      const $confirm = $('#ic-modal-confirm');
+      const $cancel = $('#ic-modal-cancel');
+      const $backdrop = $('#ic-backdrop');
+      this.show = true;
+
+      $confirm.on('click', () => {
+        this.close();
+        onConfirm();
+      });
+      $cancel.on('click', () => {
+        this.close();
+        onCancel();
+      });
+      $backdrop.on('click', () => {
+        this.close();
+        onBackdrop();
+      });
+    }
+
     generateConfirm(modal) {
-      let clazz = modal.danger ? 'danger' : 'confirm';
-      return '<div id="ic-modal">' +
-        '<div id="ic-modal-body">' + modal.text + '</div>' +
-        '<div id="ic-modal-footer"><button id="ic-modal-confirm" class="' + clazz + '">' + modal.confirm + '</button>' +
-        '<button id="ic-modal-cancel">' + modal.cancel + '</button></div></div>';
+      const clazz = modal.danger ? 'danger' : 'confirm';
+      return this.getModalHtml(
+        modal.text,
+        `<button id="ic-modal-confirm" class="${clazz}">${modal.confirm}</button>`,
+        `<button id="ic-modal-cancel">${modal.cancel}</button>`,
+      );
     }
 
     confirm(modal, cb) {
-      $('#ic-modal-container').empty().append(this.generateConfirm(modal));
-      this.addBackdropIfNecessary();
-      this.show = true;
-
-      $('#ic-modal-confirm').on('click', () => {
-        this.close();
-        cb(true);
-      });
-      $('#ic-modal-cancel').on('click', () => {
-        this.close();
-        cb(false);
-      });
-      $('#ic-backdrop').on('click', () => {
-        this.close();
-        cb(false);
+      this.renderModal(this.generateConfirm(modal));
+      this.onEvent({
+        onConfirm: () => cb(true),
+        onCancel: () => cb(false),
+        onBackdrop: () => cb(false),
       });
     }
 
     generateAlert(text) {
-      return '<div id="ic-modal">' +
-        '<div id="ic-modal-body">' + text + '</div>' +
-        '<div id="ic-modal-footer"><button id="ic-modal-confirm">OK</button>';
+      return this.getModalHtml(
+        text,
+        '<button id="ic-modal-confirm">OK</button>',
+      );
     }
 
-    alert(text, cb) {
-      $('#ic-modal-container').empty().append(this.generateAlert(text));
-      this.addBackdropIfNecessary();
-      this.show = true;
-
-      $('#ic-modal-confirm').on('click', () => {
-        this.close();
-        if (cb) cb();
-      });
-      $('#ic-backdrop').on('click', () => {
-        this.close();
-        if (cb) cb();
+    alert(text, cb = () => {}) {
+      this.renderModal(this.generateAlert(text));
+      this.onEvent({
+        onConfirm: cb,
+        onCancel: () => {},
+        onBackdrop: cb,
       });
     }
 
@@ -95,10 +122,11 @@ const ModalSingleton = (() => {
     };
 
     generatePrompt(html) {
-      return '<div id="ic-modal">' +
-        '<div id="ic-modal-body">' + html + '<input id="ic-modal-input" autofocus="true" /></div>' +
-        '<div id="ic-modal-footer">' +
-        '<button id="ic-modal-confirm">Submit</button><button id="ic-modal-cancel">Cancel</button></div>';
+      return this.getModalHtml(
+        `${html}<input id="ic-modal-input" />`,
+        '<button id="ic-modal-confirm">Submit</button>',
+        '<button id="ic-modal-cancel">Cancel</button>',
+      );
     }
 
     promptForEmail(cb) {
@@ -106,7 +134,7 @@ const ModalSingleton = (() => {
         <h3>Email reminder</h3>
         <p>
           You'll need the link to the compass to access it again. To email yourself the link now,
-          enter your email address below.
+          enter your email address below. Leave blank if you do not want this email.
           <br/><br/>
           I will not store your email address or send you spam. Otherwise leave this blank and
           be sure to email or copy your link from the side panel in your workspace.

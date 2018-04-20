@@ -143,7 +143,7 @@ export default class NoteForm extends Component {
   }
 
   render() {
-    const header = `${this.getHeader(this.props.mode)} ${this.state.charCount}/300`;
+    const spanStyle = { color: this.state.charCount > 300 ? 'red' : 'black' };
     const click = this.props.mode.includes('make') ? this.make : this.edit;
     const color = this.props.note.color || this.props.bg;
 
@@ -156,7 +156,10 @@ export default class NoteForm extends Component {
       <div className="ic-modal" id="ic-note-form" style={this.props.style}>
         <div className="ic-modal-contents">
           <div className="ic-modal-header">
-            <h1 className="ic-modal-title">{header}</h1>
+            <h1 className="ic-modal-title">
+              {this.getHeader(this.props.mode)}
+              <span style={spanStyle}> {this.state.charCount}/300</span>
+            </h1>
             {this.renderToolbar()}
           </div>
           <textarea id="ic-form-text"

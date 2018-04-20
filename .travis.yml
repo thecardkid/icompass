@@ -1,15 +1,38 @@
+sudo: required
+services:
+- docker
+language: node_js
+node_js:
+- '8'
+env:
+  global:
+  - NODE_ENV=test
+  - DOCKER_TAG=${TRAVIS_COMMIT::8}
+  - DOCKER_COMPOSE_VERSION=1.20.1
+  # DOCKER_USER
+  - secure: m4jgTUSPYMrOQZYo5TqSmn5j9qFdEdekzRGoK+k4H+rFynEa6vwm2fz6nf0dIAaMjLwV+R+yBO6ezN4dPyLzfZRxlZ2mo16emKvaiTDxx+p3WhA0f8QldmzhwNdsMVTMJCr9v8xLguQaF8+OX8XViibwpTirDSqykxNkbxlkjWa3UG9U6zh8jmiTg2AXiivZelzM+nRngUfGDXy3+MowP3BMsbfVnonsmtkoFcRixj+urPZ2Y/ebCdnsng7kKz29726dL4v4UFSLLK95kgvdGbH4vVfB+Y9uJeJGsnjW2sr12GRiPI5lsUOWt3xbr8v9PKB+9881U2BmA9SjJnf1tvceJiawfbg66k1IYVQ287rtrgtdjTdKVIkfkgP2M9BVgHPuRilb7KAuMFDhBKAZZLTPnGHsWyKeqjzgNcIx3blcTCW+qqgJvlYlzWi4xRXutCdrxqz0q6Ii3SUym2dmcLDmqN7dxl92Rd/EhPXfvrftRtfwpdBx5VWPZoCnFdM3Ko/H0ZVRqZRUdmIhgYCS0obM8Yp6MKjER2izyJcNEdcZ/DxnLoML2tpSft3wjukbZUDAGwkqwva0hdsM2BOakxCtI5sGatU3w7AosTPXSKrU0M1t3a79nlij8xbAb2V7LN2IwRVN8pRXNGjTe6jTg5i17X3aCT4rYwwUQi0t23U=
+  # DOCKER_PASS
+  - secure: GILY37ioGMnTbMXy4Awy3mCROsmKf9j3/7tfC/fuVs+BFjD1wBtMUk7G8d9Br+bp/6uOgud2ZWSJZU2SpFlxyC2XlRjUlOPCGkYtMtfDHkxvA3rHviJORBquqpdEmlQWlFvubeE6r9EemaVtvWLhLV1mInW5wO5b8LvrzDqmgkqpaNgmftVw+7kbZl4H2P8sPRAZt37SK8ptLLq90x45DkGiEO2WNAnLi0TplwtweULAtVKi8KUeYStHqO6luUmS0TNYQjviNQlSlcwCClYKwZ/ls/YWUoRGaZ7DB1+Nv1xSfqlUjW7UOlTePw6zfWODvNCa1ZOtUoRHUDKKVFGnCaQFFgByyQk6ITdafnyJlp3tUZNt3YuRlx/j0Toh4NsDvOTTZCTVsUe+vhASAqON7mFed9TNc+QQ0Y64uZOp5G3s+P7iilLBTMp0oN3zQQeKgpTsTmTCv4HUVQUDvPZMvdiT/4ji6LRQStIBRlTFJDLD0NXR6huS3eOHuJkL+chHjC3k0oL4jdo90kBCTydyS4hILgci2mcSeL7ZyFqzEv0VIlPrb7yTp4w8IrLna3JBCKteWkM7gyyxF6xCxxiFdl2K2pIq9aQ7Vco3JDYpmn4iafn8d/2c73oKwphqkhHhhuhq0ko42W2tzKjBA3s+yCBk3O/9P7dVhJEbAHfeMfI=
+  # MONGO_URI
+  - secure: eSGoalK246XOptQkNNG70lkViwZ2nn5+fcBloxGugG+LLPQK8CieKy98iHAcL0jzBP8ahhojsxy1P6Kit+b11legKkKHrcLQhL1UdugG8SY588V+62FWh6JgGRrfiisXr5g9GTNB7upvgZ+p+m62Pbc49/ufHHobfSzwIXBJ/5iD97Rm/UQ/yGU+FvZpO54V5p3Aii0SPH0TC/I1zGHf1zUqH2Jb8jpUIf68ARzwxUv2LNqtcqnYvjcIe6jN4t08csoK4ulkCe+idl5aCSdyGLyjha94Cj3LifC6Wp+d0KprXyZgoP7/EDPX6PWj74I9DHQZmRa0+YyD7mK68AxrCz77aWsR4nW7Flmx+QOJ59DNNPmsvGNe4dVqvMsoqJW9DvbwJ9jRswiEXJhWPtdVNhbnJIh3FXrmYffrQXrXZzdoMUudhIvdxHhl5XAz32jvwxDtQ7GtYFRDU5PRveBKIkVBcYvBoPl6vRYk8qe3q1tqdxqXMCJCjzbzZPcb51wbzzWSN1KiszB1Iadv4MblgyNN6KQzwchfZs6MPTdpY9dFoj6N+jpba5Ast3z4hJRMz4eqxnStYbYjS/sQ0WpJJIx9g+z+Xt87WzMDuwO1+Uo/aDMObvaT1zu7jXoqw/b1b+zuZMhitRi429muXOrNcsBasQkir1pshlwRRkgoamk=
 cache:
   directories:
   - node_modules
-
-matrix:
+jobs:
   include:
-  - language: node_js
-    nodejs:
-    - '7'
-    env:
-    - NODE_ENV=test
+  - stage: unit tests
+    install:
+    - npm install --depth 0
+    script:
+    - npm run lint
+    - npm run mocha
+  - stage: end to end tests
     before_install:
+    - docker-compose --version
+    - sudo rm /usr/local/bin/docker-compose
+    - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+    - chmod +x docker-compose
+    - sudo mv docker-compose /usr/local/bin
     - export CHROME_BIN=/usr/bin/google-chrome
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
@@ -19,19 +42,16 @@ matrix:
     - sudo dpkg -i google-chrome*.deb
     - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
     install:
+    - docker-compose -f docker/compose.yml up --detach
     - npm install --depth 0
-    - npm run build
-    - MONGO_UNAME=icompass MONGO_PWD=compass78 node icompass &
     script:
     - npm run wdio
-
-  - language: node_js
-    nodejs:
-    - '7'
-    env:
-    - NODE_ENV=test
-    install:
-    - npm install --depth 0
+  - stage: deploy
+    if: branch = master
     script:
-    - npm run lint
-    - npm run mocha
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -t $DOCKER_TAG .
+    - export REPO=$DOCKER_USER/icompass
+    - docker images
+    - docker tag $DOCKER_TAG $REPO:latest
+    - docker push $REPO

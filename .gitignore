@@ -2,6 +2,7 @@ errorShots/
 .DS_Store
 .idea/
 node_modules/
+docker/prod.yml
 
 bundle.js
 bundle.js.map

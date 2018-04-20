@@ -78,10 +78,3 @@ export const removeNotesIfSelected = (deletedIdx) => {
     deletedIdx,
   };
 };
-
-export const setTimer = (timer) => {
-  return {
-    type: 'setTimer',
-    timer,
-  };
-};

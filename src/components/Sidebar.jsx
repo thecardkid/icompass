@@ -15,7 +15,7 @@ import Toast from '../utils/Toast';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { VERSION, PROMPTS, PIXELS, COLORS } from '../../lib/constants';
+import { VERSION, PIXELS, COLORS } from '../../lib/constants';
 
 class Sidebar extends Component {
   constructor(props, context) {
@@ -23,22 +23,7 @@ class Sidebar extends Component {
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
     this.socket = Socket.getInstance();
-
-    this.socket.subscribe({
-      'start timer': this.onStartTimer,
-      'all cancel timer': this.onCancelTimer,
-    });
   }
-
-  onStartTimer = (min, sec, startTime) => {
-    this.props.workspaceX.setTimer({ min, sec, startTime });
-    this.toast.info(PROMPTS.TIMEBOX(min, sec));
-  };
-
-  onCancelTimer = () => {
-    this.props.workspaceX.setTimer({});
-    this.toast.info(PROMPTS.TIMEBOX_CANCELED);
-  };
 
   shouldComponentUpdate(nextProps) {
     if (this.props.users !== nextProps.users)
