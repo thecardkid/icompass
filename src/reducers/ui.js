@@ -25,7 +25,7 @@ const showNewNote = (state, action) => {
       y: touchY / state.vh,
     };
   }
-  return { ...state, editNote: false, doodleNote: false, newNote, timerConfig: false };
+  return { ...state, editNote: false, doodleNote: false, newNote };
 };
 
 export default (state = defaultState, action) => {
@@ -33,13 +33,13 @@ export default (state = defaultState, action) => {
     case 'showNewNote':
       return showNewNote(state, action);
     case 'showEdit':
-      return { ...state, newNote: false, doodleNote: false, editNote: action.noteIdx, timerConfig: false };
+      return { ...state, newNote: false, doodleNote: false, editNote: action.noteIdx };
     case 'showDoodle':
-      return { ...state, newNote: false, editNote: false, doodleNote: true, timerConfig: false };
+      return { ...state, newNote: false, editNote: false, doodleNote: true };
     case 'showTimerConfig':
-      return { ...state, newNote: false, editNote: false, doodleNote: false, timerConfig: true };
+      return { ...state, newNote: false, editNote: false, doodleNote: false};
     case 'closeForm':
-      return { ...state, newNote: false, editNote: false, doodleNote: false, timerConfig: false };
+      return { ...state, newNote: false, editNote: false, doodleNote: false };
     case 'focusOnNote':
       return { ...state, focusedNote: action.idx };
     case 'toggleAbout':

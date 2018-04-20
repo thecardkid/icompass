@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-import Timer from '../components/Timer.jsx';
-
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
 import Storage from '../utils/Storage';
@@ -59,7 +57,6 @@ export default class SidebarActionsList extends Component {
           <i className="material-icons">chat_bubble</i>
           <p>feedback</p>
         </button>
-        <Timer stop={this.socket.emitCancelTimer}/>
         <button name="destroyer" className="ic-action dangerous" onClick={this.confirmDelete}>
           <i className="material-icons" style={{ color: 'white' }}>delete</i>
           <p>delete</p>

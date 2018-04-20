@@ -18,12 +18,6 @@ export const showDoodle = () => {
   };
 };
 
-export const showTimerConfig = () => {
-  return {
-    type: 'showTimerConfig',
-  };
-};
-
 export const closeForm = () => {
   return {
     type: 'closeForm',

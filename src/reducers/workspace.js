@@ -4,7 +4,6 @@ const defaultState = {
   selected: [],
   drafts: [],
   color: null, bold: null, italic: null, underline: null,
-  timer: {},
 };
 
 const colorAll = (state, action) => {
@@ -87,13 +86,12 @@ export default (state = {}, action) => {
     case 'normalMode':
     case 'compactMode':
     case 'draftMode':
-      return { ...defaultState, timer: state.timer };
+      return defaultState;
 
     case 'visualMode':
       return {
         ...defaultState,
         selected: (new Array(action.len)).fill(false),
-        timer: state.timer,
       };
 
     case 'selectNote':
@@ -138,9 +136,6 @@ export default (state = {}, action) => {
 
     case 'undraft':
       return undraft(state, action);
-
-    case 'setTimer':
-      return { ...state, timer: action.timer };
 
     default:
       return state;

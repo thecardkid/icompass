@@ -139,9 +139,9 @@ describe('login', () => {
         b.setValue('#username', 'valid');
         b.setValue('#compass-code', '1234567');
         b.click('input[type=submit]');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(/Your code is not valid/);
-        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/Your code is not valid/);
+        b.click('#ic-toast');
       });
 
       it('missing username', () => {
@@ -159,17 +159,17 @@ describe('login', () => {
         it('contains number', () => {
           b.setValue('#username', 'sandbox2');
           b.click('input[type=submit]').pause(200);
-          b.waitForVisible('#ic-modal');
-          expect('#ic-modal-body').to.have.text(/Username can only contain letters/);
-          b.click('#ic-modal-confirm');
+          b.waitForVisible('#ic-toast');
+          expect('#ic-toast').to.have.text(/Username can only contain letters/);
+          b.click('#ic-toast');
         });
 
         it('contains symbols', () => {
           b.setValue('#username', ',,,###');
           b.click('input[type=submit]').pause(200);
-          b.waitForVisible('#ic-modal');
-          expect('#ic-modal-body').to.have.text(/Username can only contain letters/);
-          b.click('#ic-modal-confirm');
+          b.waitForVisible('#ic-toast');
+          expect('#ic-toast').to.have.text(/Username can only contain letters/);
+          b.click('#ic-toast');
         });
 
         it('too long', () => {

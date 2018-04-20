@@ -59,11 +59,11 @@ class LandingPage extends Component {
     const username = this.refs.username.value;
 
     if (code.length !== 8) {
-      return this.modal.alert(ERROR_MSG.INVALID('Your code'));
+      return this.toast.error(ERROR_MSG.INVALID('Your code'));
     }
 
     if (!REGEX.CHAR_ONLY.test(username)) {
-      return this.modal.alert(ERROR_MSG.UNAME_HAS_NON_CHAR);
+      return this.toast.error(ERROR_MSG.UNAME_HAS_NON_CHAR);
     }
 
     this.setState({ username });
@@ -78,7 +78,7 @@ class LandingPage extends Component {
     const username = this.refs.username.value;
 
     if (!REGEX.CHAR_ONLY.test(username)) {
-      return this.modal.alert(ERROR_MSG.UNAME_HAS_NON_CHAR);
+      return this.toast.error(ERROR_MSG.UNAME_HAS_NON_CHAR);
     }
 
     this.setState({ username });
@@ -192,11 +192,11 @@ class LandingPage extends Component {
 
     return (
       <div>
-        <Tappable onTap={this.toast.clear}>
-          <div id="ic-toast" onClick={this.toast.clear} />
-        </Tappable>
         <BookmarkList start={this.start}/>
         <div id="ic-landing-container" style={{ width: this.props.ui.vw - 200 }}>
+          <Tappable onTap={this.toast.clear}>
+            <div id="ic-toast" onClick={this.toast.clear} />
+          </Tappable>
           <div id="ic-landing">
             <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to
               make anything better</h1>

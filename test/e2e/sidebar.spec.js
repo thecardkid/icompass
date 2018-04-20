@@ -5,18 +5,17 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
+const { setup, cleanup } = require('./utils');
 const PROMPTS = require('../../lib/constants').PROMPTS;
 const MODALS = require('../../lib/constants').MODALS;
 
 describe('sidebar', () => {
-  beforeAll(() => {
-    require('./utils').setup();
-  });
+  beforeAll(setup);
 
   afterAll(() => {
     b.back();
     b.waitForVisible('#ic-sidebar');
-    require('./utils').cleanup();
+    cleanup();
   });
 
   describe('share section', () => {
@@ -41,11 +40,11 @@ describe('sidebar', () => {
       it('wrong email format displays error message', () => {
         b.click('button[name=email]');
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(/Enter your email/);
+        expect('#ic-modal-body').to.have.text(/Email reminder/);
         b.setValue('#ic-modal-input', 'fakeemail');
         b.click('#ic-modal-confirm');
-        b.pause(200);
-        expect('#ic-modal-body').to.have.text(/does not look right/);
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/not a valid email/);
       });
 
       it('valid email shows toast', () => {
@@ -92,11 +91,8 @@ describe('sidebar', () => {
     });
 
     it('toggle sidebar button', () => {
-      buttons[2].click();
-      b.pause(500);
-      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('-240px');
-      b.click('#ic-show-sidebar');
-      b.pause(500);
+      buttons[2].click().pause(2000);
+      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('0px');
     });
 
     it('toggle chat button', () => {
@@ -134,76 +130,6 @@ describe('sidebar', () => {
   it('version section', () => {
     expect('div.ic-sidebar-list[name=version]').to.be.visible();
     expect(b.getAttribute('div.ic-sidebar-list[name=version] p a', 'href')).to.equal('https://github.com/thecardkid/innovators-compass/releases');
-  });
-
-  describe('timer section', () => {
-    it('timer form has all components', () => {
-      expect('button[name=timer]').to.be.visible();
-      b.click('button[name=timer]');
-      b.waitForVisible('#ic-timer-form');
-
-      expect('button[name=ic-30s]').to.be.visible();
-      expect('button[name=ic-1m]').to.be.visible();
-      expect('button[name=ic-3m]').to.be.visible();
-    });
-
-    it('display toast and start countdown with correct time when 3m timer is created', () => {
-      b.click('button[name=ic-3m]');
-      b.waitForVisible('#ic-toast span');
-      expect(b.getAttribute('#ic-toast span', 'class')).to.equal('info');
-      expect('#ic-toast span').to.have.text(PROMPTS.TIMEBOX(3, 0));
-      expect('button[name=timer] div p').to.have.text('03:00');
-      expect('div.ic-timer-action p').to.have.text('stop');
-    });
-
-    it('clicking "stop" stops timer', () => {
-      b.click('div.ic-timer-action.dangerous');
-      expect('button[name=timer]').to.have.text(/timebox/);
-      b.click('button[name=timer]');
-      b.waitForVisible('#ic-timer-form');
-    });
-
-    describe('invalid input', () => {
-      it('negative time not allowed', () => {
-        b.clearElement('input#ic-timer-min');
-        b.setValue('input#ic-timer-min', -2);
-        b.click('button[name=ship]');
-        b.waitForVisible('#ic-toast span');
-        expect(b.getAttribute('#ic-toast span', 'class')).to.equal('error');
-        expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_NEGATIVE_VALUES, 'i'));
-      });
-
-      it('limited to 30 minutes', () => {
-        b.clearElement('input#ic-timer-min');
-        b.setValue('input#ic-timer-min', 31);
-        b.click('button[name=ship]');
-        b.waitForVisible('#ic-toast span');
-        expect(b.getAttribute('#ic-toast span', 'class')).to.equal('error');
-        expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_TOO_LONG, 'i'));
-      });
-
-      it('limited to 60 seconds', () => {
-        b.clearElement('input#ic-timer-min');
-        b.setValue('input#ic-timer-min', 0);
-        b.clearElement('input#ic-timer-sec');
-        b.setValue('input#ic-timer-sec', 61);
-        b.click('button[name=ship]');
-        b.waitForVisible('#ic-toast span');
-        expect(b.getAttribute('#ic-toast span', 'class')).to.equal('error');
-        expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_TOO_MANY_SECONDS, 'i'));
-      });
-    });
-
-    it('display toast when timebox is over', () => {
-      b.clearElement('input#ic-timer-sec');
-      b.setValue('input#ic-timer-sec', 2);
-      b.click('button[name=ship]');
-      b.waitForVisible('#ic-toast span');
-      expect(b.getAttribute('#ic-toast span', 'class')).to.equal('info');
-      expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX(0, 2), 'i'));
-      b.pause(3000);
-      expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.TIMEBOX_OVER, 'i'));
-    });
   });
 
   describe('other actions section', () => {

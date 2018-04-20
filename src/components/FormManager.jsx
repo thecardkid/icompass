@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 
 import DoodleForm from '../components/DoodleForm.jsx';
 import NoteForm from '../components/NoteForm.jsx';
-import TimerForm from '../components/TimerForm.jsx';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
@@ -48,19 +47,8 @@ class FormManager extends Component {
     );
   }
 
-  renderTimerForm() {
-    return (
-      <TimerForm ship={this.socket.emitCreateTimer}
-                 {...this.props.commonAttrs} />
-    );
-  }
-
   getForm = () => {
     const { ui, visualMode } = this.props;
-
-    if (ui.timerConfig) {
-      return this.renderTimerForm();
-    }
 
     if (ui.newNote) {
       if (visualMode) {
