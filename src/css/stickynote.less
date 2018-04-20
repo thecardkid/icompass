@@ -10,19 +10,25 @@
       z-index: 1;
     }
 
-    a {
+    div.contents {
       text-decoration: none;
       color: black;
       display: block;
-      background: #ffc;
       max-width: 160px;
+      letter-spacing: 0;
       .boxshadow(3px, 7px, rgba(33, 33, 33, 0.7));
       .wordwrap;
 
-      p {
+      p.text {
         padding: 8px;
         font-family: "Dosis", arial, sans-serif;
         font-size: 15px;
+      }
+
+      &.compact {
+        letter-spacing: -1px;
+        max-height: 70px;
+        overflow: auto;
       }
     }
 

@@ -1,4 +1,5 @@
 import deepEqual from 'deep-equal';
+import linkifyHtml from 'linkifyjs/html';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -84,32 +85,26 @@ class StickyNote extends Component {
     };
 
     return (
-      <a className="ic-img" style={s}>
+      <div className="contents" style={s}>
         <img src={n.doodle || n.text}
              width={this.compactMode ? '100px' : '160px'}/>
         {this.getTooltip(n)}
-      </a>
+      </div>
     );
   };
 
   renderText = (n) => {
-    let style = { background: n.color, letterSpacing: '0px' };
-    let textStyle = '';
-    if (n.style.bold) textStyle += 'bold ';
-    if (n.style.italic) textStyle += 'italic ';
-    if (n.style.underline) textStyle += 'underline';
-
-    if (this.compactMode) {
-      style.letterSpacing = '-1px';
-      style.maxHeight = '70px';
-      style.overflow = 'auto';
-    }
+    let style = { background: n.color };
+    let clazz = 'text';
+    if (n.style.bold) clazz += 'bold ';
+    if (n.style.italic) clazz += 'italic ';
+    if (n.style.underline) clazz += 'underline';
 
     return (
-      <a style={style}>
-        <p className={textStyle}>{n.text}</p>
+      <div style={style} className={this.compactMode ? 'contents compact' : 'contents'}>
+        <p className={clazz} dangerouslySetInnerHTML={{ __html: linkifyHtml(n.text) }} />
         {this.getTooltip(n)}
-      </a>
+      </div>
     );
   };
 
