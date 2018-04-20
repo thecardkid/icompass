@@ -73,7 +73,7 @@ describe('draft mode', () => {
       b.click('button[name=ship]');
       b.waitForVisible('#note2');
       expect('#note0').to.have.text(/A draft text note/);
-      expect('#note0 span a p.submit').to.be.visible();
+      expect('#note0 span div.contents p.submit').to.be.visible();
     });
   });
 
@@ -91,8 +91,8 @@ describe('draft mode', () => {
 
     it('renders draft with image', () => {
       b.pause(1000);
-      expect('#note1 span a img').to.be.there();
-      expect('#note1 span a p.submit').to.be.there();
+      expect('#note1 span div.contents img').to.be.there();
+      expect('#note1 span div.contents p.submit').to.be.there();
     });
   });
 
@@ -108,7 +108,7 @@ describe('draft mode', () => {
       b.click('button[name=ship]');
       b.waitForVisible('#note2');
       b.pause(1000);
-      expect(b.getAttribute('#note2 span a img', 'src')).to.contain('data:image/png;base64');
+      expect(b.getAttribute('#note2 span div.contents img', 'src')).to.contain('data:image/png;base64');
     });
   });
 
@@ -126,8 +126,8 @@ describe('draft mode', () => {
       b.click('button[name=ship]');
       b.pause(200);
       expect('#note0').to.have.text(/Edited text/);
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.contain('bold');
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.contain('underline');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('bold');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('underline');
     });
 
     it('cannot edit doodle', () => {
@@ -154,15 +154,15 @@ describe('draft mode', () => {
 
   describe('submit drafts', () => {
     it('submit #note2', () => {
-      b.click('#note2 span a p.submit');
+      b.click('#note2 span div.contents p.submit');
       b.pause(100);
-      expect(b.getCssProperty('#note2 span a', 'background').value).to.not.contain('rgb(128,128,128)');
+      expect(b.getCssProperty('#note2 span div.contents', 'background').value).to.not.contain('rgb(128,128,128)');
     });
 
     it('submit #note1', () => {
-      b.click('#note1 span a p.submit');
+      b.click('#note1 span div.contents p.submit');
       b.pause(100);
-      expect(b.getCssProperty('#note1 span a', 'background').value).to.not.contain('rgb(128,128,128)');
+      expect(b.getCssProperty('#note1 span div.contents', 'background').value).to.not.contain('rgb(128,128,128)');
     });
 
     describe('changing mode', () => {
@@ -174,7 +174,7 @@ describe('draft mode', () => {
 
       it('discard draft if accept alert', () => {
         b.click('#ic-modal-confirm');
-        expect(b.getCssProperty('#note0 span a', 'background').value).to.not.contain('rgb(128,128,128)');
+        expect(b.getCssProperty('#note0 span div.contents', 'background').value).to.not.contain('rgb(128,128,128)');
       });
     });
   });

@@ -42,7 +42,7 @@ describe('collaboration', () => {
       b.click('button[name=ship]');
       b.waitForVisible('#note0');
 
-      expect(b.getCssProperty('#note0 span a', 'background-color').value).to.equal(colors.friendo);
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal(colors.friendo);
     });
 
     it('webdriverio sees the note', () => {
@@ -179,7 +179,7 @@ describe('collaboration', () => {
 
     it('submitting a draft makes it visible to others', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('#note0 span a p.submit');
+      b.click('#note0 span div.contents p.submit');
       b.pause(500);
       expect('#note2').to.have.text(/webdriverio draft/);
 
@@ -196,12 +196,12 @@ describe('collaboration', () => {
       b.click('button.bold');
       b.click('#note0');
       b.click('#note2');
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.contain('bold');
-      expect(b.getAttribute('#note2 span a p', 'class')[0]).to.contain('bold');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('bold');
+      expect(b.getAttribute('#note2 span div.contents p', 'class')[0]).to.contain('bold');
 
       b.switchTab(tabs.friendo);
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.not.contain('bold');
-      expect(b.getAttribute('#note2 span a p', 'class')[0]).to.not.contain('bold');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.not.contain('bold');
+      expect(b.getAttribute('#note2 span div.contents p', 'class')[0]).to.not.contain('bold');
     });
 
     it('deleting a note that is being edited by a user removes it from that user\'s screen', () => {
@@ -229,7 +229,7 @@ describe('collaboration', () => {
       b.pause(500);
 
       b.switchTab(tabs.friendo);
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.contain('bold');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('bold');
     });
   });
 

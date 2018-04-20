@@ -5,4 +5,36 @@ div#ic-doodle-form {
   h1 {
     margin: 10px 0;
   }
+
+  div.doodle-form-footer {
+    margin-top: 10px;
+    height: 25px;
+    padding: 0 20px;
+
+    button {
+      float: right;
+      font-size: 14px;
+      padding: 5px;
+      min-width: 60px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
+
+    button[name=clear] {
+      float: left;
+    }
+
+    button[name=nvm] {
+      background: none;
+      color: gray;
+    }
+
+    button[name=ship] {
+      background: @dark;
+      color: @light;
+      .hasTransition(0.5);
+      margin-left: 5px;
+    }
+  }
 }
