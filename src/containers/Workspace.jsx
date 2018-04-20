@@ -67,7 +67,6 @@ class Workspace extends Component {
 
     this.props.compassActions.set(data.compass, data.viewOnly);
     this.props.noteActions.updateAll(data.compass.notes);
-
     this.props.userActions.me(data.username);
   };
 
@@ -103,7 +102,6 @@ class Workspace extends Component {
   componentDidMount() {
     $(window).on('resize', this.props.uiActions.resize);
     $(window).on('keydown', this.handleKeyDown);
-    setTimeout(() => this.props.uiActions.setSidebarVisible(true), 800);
   }
 
   componentWillUnmount() {

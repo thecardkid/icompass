@@ -91,7 +91,10 @@ describe('sidebar', () => {
     });
 
     it('toggle sidebar button', () => {
-      buttons[2].click().pause(2000);
+      buttons[2].click();
+      b.pause(500);
+      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('-240px');
+      b.keys('s').pause(500);
       expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('0px');
     });
 

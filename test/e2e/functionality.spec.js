@@ -55,8 +55,9 @@ describe('basic functionality', () => {
     });
 
     it('sidebar', () => {
-      b.keys(['s']).pause(2000);
-      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('0px');
+      b.keys(['s']);
+      b.pause(500);
+      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('-240px');
       b.keys(['s']);
     });
 
