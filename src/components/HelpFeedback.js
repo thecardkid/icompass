@@ -44,6 +44,12 @@ export default class HelpFeedback extends Component {
     this.hideMenu();
   };
 
+  contactUs = () => {
+    this.socket.emitMetric('help contact us');
+    window.location.href = 'mailto:hieumaster95@gmail.com';
+    this.hideMenu();
+  };
+
   renderHelpMenu() {
     return (
       <div className={'ic-menu ic-help-menu'}>
@@ -53,17 +59,17 @@ export default class HelpFeedback extends Component {
           </div>
         </section>
         <section>
-          <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
-            Privacy Statement
-          </div>
           <div className={'ic-menu-item'} onClick={this.openReleaseNotes}>
             Release Notes
+          </div>
+          <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
+            Privacy Statement
           </div>
           <div className={'ic-menu-item'} onClick={this.showFeedback}>
             Provide Feedback
           </div>
-          <div className={'ic-menu-item'}>
-            <a href={'mailto:hieumaster95@gmail.com'}>Contact Us</a>
+          <div className={'ic-menu-item'} onClick={this.contactUs}>
+            Contact Us
           </div>
         </section>
       </div>
@@ -73,9 +79,12 @@ export default class HelpFeedback extends Component {
   render() {
     return (
       <div id={'ic-help'}>
-        {this.state.active && this.renderHelpMenu()}
         <button className={'ic-help-button floating-button'}
-             onClick={this.toggleMenu}>?</button>
+             onClick={this.toggleMenu}
+             onBlur={this.hideMenu}>
+          ?
+          {this.state.active && this.renderHelpMenu()}
+        </button>
       </div>
     );
   }
