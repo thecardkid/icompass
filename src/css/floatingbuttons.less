@@ -84,6 +84,7 @@ div.ic-notes-submenu {
 div.ic-modes-submenu {
   top: 186px;
   left: 158px;
+  width: 180px;
 }
 
 div.ic-menu-item {
@@ -112,6 +113,25 @@ div.ic-menu-item {
 
   span.ic-shortcut {
     float: right;
+  }
+
+  span.active {
+    float: left;
+    width: 20px;
+  }
+
+  span.active::before {
+    content: '●';
+  }
+
+  span.inactive {
+    float: left;
+    width: 20px;
+  }
+
+  span.inactive::before {
+    content: '.';
+    color: transparent;
   }
 }
 

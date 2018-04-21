@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import ModesSubmenu from './ModesSubmenu';
 import NotesSubmenu from './NotesSubmenu';
 import ShareSubmenu from './ShareSubmenu';
 
@@ -43,27 +44,6 @@ class WorkspaceMenu extends Component {
     }});
   };
 
-  renderModesSubmenu = () => {
-    return (
-      <div className={'ic-menu ic-modes-submenu'}>
-        <section>
-          <div className={'ic-menu-item'}>
-            Standard
-          </div>
-          <div className={'ic-menu-item'}>
-            Compact
-          </div>
-          <div className={'ic-menu-item'}>
-            Draft
-          </div>
-          <div className={'ic-menu-item'}>
-            Bulk Edit
-          </div>
-        </section>
-      </div>
-    );
-  };
-
   renderMenu = () => {
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -98,7 +78,10 @@ class WorkspaceMenu extends Component {
           <div className={'ic-menu-item has-more'}
                onMouseOver={this.showSubmenu('modes')}>
             Editing Modes
-            {this.state.submenus.modes && this.renderModesSubmenu()}
+            {
+              this.state.submenus.modes &&
+              <ModesSubmenu/>
+            }
           </div>
         </section>
         <section onMouseEnter={this.hideSubmenus}>
