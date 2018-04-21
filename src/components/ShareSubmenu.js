@@ -25,24 +25,24 @@ export default class ShareSubmenu extends Component {
   };
 
   shareEditLink = () => {
-    this.socket.emitMetric('sidebar edit link');
+    this.socket.emitMetric('menu edit link');
     this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/edit/${this.props.compass.editCode}`));
   };
 
   shareViewOnlyLink = () => {
-    this.socket.emitMetric('sidebar view link');
+    this.socket.emitMetric('menu view link');
     this.modal.alert(MODALS.SHARE_LINK(`${HOST}compass/view/${this.props.compass.viewCode}`));
   };
 
   showPdfPrompt = () => {
-    this.socket.emitMetric('sidebar pdf');
+    this.socket.emitMetric('menu pdf');
     this.modal.confirm(MODALS.EXPORT_PDF, (exportAsPDF) => {
       if (exportAsPDF) this.exportCompass();
     });
   };
 
   tweetThis = () => {
-    this.socket.emitMetric('sidebar tweet');
+    this.socket.emitMetric('menu tweet');
     const tweetURL = TWEET + this.props.compass.viewCode;
     window.open(tweetURL, '_blank').focus();
   };

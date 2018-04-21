@@ -8,15 +8,6 @@ export default class SidebarControlsList extends Component {
     this.socket = Socket.getInstance();
   }
 
-  showNewNote = () => {
-    this.socket.emitMetric('sidebar new note');
-    this.props.uiX.showNewNote();
-  };
-
-  showDoodle = () => {
-    this.socket.emitMetric('sidebar new doodle');
-    this.props.uiX.showDoodle();
-  };
 
   toggleSidebar = () => {
     this.socket.emitMetric('sidebar toggle sidebar');

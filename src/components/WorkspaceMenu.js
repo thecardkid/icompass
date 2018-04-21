@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import NotesSubmenu from './NotesSubmenu';
 import ShareSubmenu from './ShareSubmenu';
 
+import ModalSingleton from '../utils/Modal';
 import SocketSingleton from '../utils/Socket';
 import ToastSingleton from '../utils/Toast';
-import ModalSingleton from '../utils/Modal';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
@@ -40,21 +41,6 @@ class WorkspaceMenu extends Component {
       notes: false,
       modes: false,
     }});
-  };
-
-  renderNotesSubmenu = () => {
-    return (
-      <div className={'ic-menu ic-notes-submenu'}>
-        <section>
-          <div className={'ic-menu-item'}>
-            Text Note
-          </div>
-          <div className={'ic-menu-item'}>
-            Doodle Note
-          </div>
-        </section>
-      </div>
-    );
   };
 
   renderModesSubmenu = () => {
@@ -95,13 +81,19 @@ class WorkspaceMenu extends Component {
         <section className={'border-bottom'}>
           <div className={'ic-menu-item has-more'}
                onMouseOver={this.showSubmenu('share')}>
-            {this.state.submenus.share && <ShareSubmenu compass={this.props.compass}/>}
+            {
+              this.state.submenus.share &&
+              <ShareSubmenu compass={this.props.compass}/>
+            }
             Share
           </div>
           <div className={'ic-menu-item has-more'}
                onMouseOver={this.showSubmenu('notes')}>
             Notes
-            {this.state.submenus.notes && this.renderNotesSubmenu()}
+            {
+              this.state.submenus.notes &&
+              <NotesSubmenu uiX={this.props.uiX}/>
+            }
           </div>
           <div className={'ic-menu-item has-more'}
                onMouseOver={this.showSubmenu('modes')}>
