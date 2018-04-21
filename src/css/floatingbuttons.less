@@ -54,9 +54,9 @@ div.ic-menu {
   position: fixed;
   width: 150px;
   background: @dark;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -70,12 +70,27 @@ div.ic-menu {
   }
 }
 
+div.ic-share-submenu {
+  top: 136px;
+  left: 158px;
+}
+
+div.ic-notes-submenu {
+  top: 161px;
+  left: 158px;
+}
+
+div.ic-modes-submenu {
+  top: 186px;
+  left: 158px;
+}
+
 div.ic-menu-item {
   width: 100%;
   height: 25px;
   line-height: 25px;
   font-size: 12px;
-  padding: 0 15px;
+  padding: 0 10px;
   color: @light;
   background: none;
   font-family: @notosans;
@@ -85,6 +100,13 @@ div.ic-menu-item {
 
   a {
     color: inherit;
+  }
+
+  &.has-more::after {
+    content: '>';
+    float: right;
+    font-size: 16px;
+    font-family: @dosis;
   }
 }
 
