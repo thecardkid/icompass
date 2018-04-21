@@ -20,18 +20,23 @@ export default class WorkspaceMenu extends Component {
 
   showSubmenu = (submenu) => () => {
     this.setState({ submenus: {
+      [submenu]: true,
+    }});
+  };
+
+  hideSubmenus = () => {
+    this.setState({ submenus: {
       share: false,
       notes: false,
       modes: false,
-      [submenu]: true,
     }});
   };
 
   renderShareSubmenu = () => {
     return (
-      <div className={'ic-menu ic-share-submenu'}>
+      <div className={'ic-menu ic-submenu ic-share-submenu'}>
         <section>
-          <div className={'ic-menu-item'}>
+          <div className={'ic-menu-item default'}>
             Edit Link
           </div>
           <div className={'ic-menu-item'}>
@@ -87,7 +92,7 @@ export default class WorkspaceMenu extends Component {
   renderMenu = () => {
     return (
       <div className={'ic-menu ic-workspace-menu'}>
-        <section className={'border-bottom'}>
+        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'}>
             New Workspace
           </div>
@@ -99,20 +104,23 @@ export default class WorkspaceMenu extends Component {
           </div>
         </section>
         <section className={'border-bottom'}>
-          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('share')}>
+          <div className={'ic-menu-item has-more'}
+               onMouseOver={this.showSubmenu('share')}>
             {this.state.submenus.share && this.renderShareSubmenu()}
             Share
           </div>
-          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
+          <div className={'ic-menu-item has-more'}
+               onMouseOver={this.showSubmenu('notes')}>
             Notes
             {this.state.submenus.notes && this.renderNotesSubmenu()}
           </div>
-          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
+          <div className={'ic-menu-item has-more'}
+               onMouseOver={this.showSubmenu('modes')}>
             Editing Modes
             {this.state.submenus.modes && this.renderModesSubmenu()}
           </div>
         </section>
-        <section>
+        <section onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'}>
             Log Out
           </div>
