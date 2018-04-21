@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import ShareSubmenu from './ShareSubmenu';
+
 import SocketSingleton from '../utils/Socket';
 import ToastSingleton from '../utils/Toast';
+import ModalSingleton from '../utils/Modal';
 
-export default class WorkspaceMenu extends Component {
+import * as uiX from '../actions/ui';
+import * as workspaceX from '../actions/workspace';
+
+class WorkspaceMenu extends Component {
   constructor() {
     super();
 
@@ -14,6 +23,7 @@ export default class WorkspaceMenu extends Component {
         modes: false,
       },
     };
+    this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
     this.toast = ToastSingleton.getInstance();
   }
@@ -30,27 +40,6 @@ export default class WorkspaceMenu extends Component {
       notes: false,
       modes: false,
     }});
-  };
-
-  renderShareSubmenu = () => {
-    return (
-      <div className={'ic-menu ic-submenu ic-share-submenu'}>
-        <section>
-          <div className={'ic-menu-item default'}>
-            Edit Link
-          </div>
-          <div className={'ic-menu-item'}>
-            View-Only Link
-          </div>
-          <div className={'ic-menu-item'}>
-            Export to PDF
-          </div>
-          <div className={'ic-menu-item'}>
-            Twitter
-          </div>
-        </section>
-      </div>
-    );
   };
 
   renderNotesSubmenu = () => {
@@ -106,7 +95,7 @@ export default class WorkspaceMenu extends Component {
         <section className={'border-bottom'}>
           <div className={'ic-menu-item has-more'}
                onMouseOver={this.showSubmenu('share')}>
-            {this.state.submenus.share && this.renderShareSubmenu()}
+            {this.state.submenus.share && <ShareSubmenu compass={this.props.compass}/>}
             Share
           </div>
           <div className={'ic-menu-item has-more'}
@@ -137,7 +126,14 @@ export default class WorkspaceMenu extends Component {
   };
 
   hideMenu = () => {
-    this.setState({ active: false });
+    this.setState({
+      active: false,
+      submenus: {
+        share: false,
+        notes: false,
+        modes: false,
+      },
+    });
   };
 
   render() {
@@ -153,3 +149,17 @@ export default class WorkspaceMenu extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    compass: state.compass,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceMenu);
