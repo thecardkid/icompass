@@ -39,8 +39,8 @@ class Workspace extends Component {
       'compass deleted': this.onCompassDeleted,
       'user joined': this.onUserJoined,
       'user left': this.onUserLeft,
-      'disconnect': () => this.props.uiActions.setSidebarVisible(true),
-      'reconnect': () => this.socket.emitReconnected(this.props),
+      'disconnect': () => this.toast.error('Lost connection to server'),
+      'reconnect': () => this.toast.success('Established connection to server'),
     });
 
     if (this.props.route.viewOnly) {
@@ -203,8 +203,7 @@ class Workspace extends Component {
         <About show={ui.showAbout}
                close={this.props.uiActions.toggleAbout} />
         <VisualModeToolbar show={this.props.visualMode} />
-        <FormManager center={this.center}
-                     commonAttrs={formAttrs} />
+        <FormManager commonAttrs={formAttrs} />
       </div>
     );
   }
