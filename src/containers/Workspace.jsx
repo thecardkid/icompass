@@ -27,6 +27,7 @@ import Toast from '../utils/Toast';
 
 import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, REGEX } from '../../lib/constants';
 import { browserHistory } from 'react-router';
+import WorkspaceMenu from '../components/WorkspaceMenu';
 
 class Workspace extends Component {
   constructor(props) {
@@ -206,6 +207,7 @@ class Workspace extends Component {
         <VisualModeToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
         <HelpFeedback />
+        <WorkspaceMenu />
       </div>
     );
   }

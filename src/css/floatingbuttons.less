@@ -1,25 +1,40 @@
 div#ic-help {
-  button#ic-help-button {
-    @r: 35px;
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    background: @dark;
-    color: white;
-    width: @r;
-    height: @r;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    border-radius: 100%;
-    text-align: center;
-    line-height: @r;
-    cursor: pointer;
+  button.ic-help-button {
     font-size: 20px;
     font-weight: 300;
+    bottom: 10px;
+    right: 10px;
   }
 
   div.__react_component_tooltip {
     font-family: @notosans;
+  }
+}
+
+button.floating-button {
+  @r: 35px;
+  position: fixed;
+  background: @dark;
+  color: white;
+  width: @r;
+  height: @r;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+  text-align: center;
+  line-height: @r;
+  cursor: pointer;
+}
+
+button.ic-workspace-button {
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  font-weight: 300;
+
+  i {
+    margin-top: 6px;
+    color: #DDD;
   }
 }
 
