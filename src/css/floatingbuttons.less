@@ -31,6 +31,7 @@ button.ic-workspace-button {
   left: 10px;
   font-size: 20px;
   font-weight: 300;
+  z-index: 100; // has to be higher than #ic-toast
 
   i {
     margin-top: 6px;
@@ -39,9 +40,18 @@ button.ic-workspace-button {
 }
 
 div.ic-help-menu {
-  position: fixed;
   bottom: 50px;
   right: 10px;
+}
+
+div.ic-workspace-menu {
+  top: 50px;
+  left: 10px;
+}
+
+div.ic-menu {
+  text-align: left;
+  position: fixed;
   width: 150px;
   background: @dark;
   -webkit-border-radius: 5px;
@@ -50,9 +60,7 @@ div.ic-help-menu {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-}
 
-div.ic-menu {
   section {
     padding: 5px 0;
 
