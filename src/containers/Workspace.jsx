@@ -16,7 +16,8 @@ import About from '../components/About.jsx';
 import Chat from '../components/Chat.jsx';
 import Compass from '../components/Compass.jsx';
 import FormManager from '../components/FormManager.jsx';
-import ModesToolbar from '../components/ModesToolbar.jsx';
+import HelpFeedback from '../components/HelpFeedback';
+// import ModesToolbar from '../components/ModesToolbar.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
@@ -195,15 +196,16 @@ class Workspace extends Component {
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
-        {this.renderCornerButtons()}
+        {/*{this.renderCornerButtons()}*/}
         <Compass />
         <Sidebar connected={this.socket.isConnected()} />
-        <ModesToolbar />
+        {/*<ModesToolbar />*/}
         <Chat />
         <About show={ui.showAbout}
                close={this.props.uiActions.toggleAbout} />
         <VisualModeToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
+        <HelpFeedback />
       </div>
     );
   }
