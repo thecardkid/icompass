@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
 
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
@@ -167,9 +168,16 @@ export default class NoteForm extends Component {
                     autoFocus
                     defaultValue={this.props.note.text}
                     onChange={this.handleChange}
-                    style={{ background: color }}>
-                    </textarea>
+                    style={{ background: color }} />
           <div className="note-form-footer">
+            <button className={'switch-form'} data-tip="Insert an image" data-for="image-tooltip">
+              <i className={'material-icons'}>photo</i>
+            </button>
+            <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
+            <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip">
+              <i className={'material-icons'}>brush</i>
+            </button>
+            <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
             <button name="ship" onClick={click}>ship it</button>
             <button name="nvm" onClick={this.props.close}>never mind</button>
           </div>
