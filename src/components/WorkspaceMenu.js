@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
@@ -14,7 +15,8 @@ import ToastSingleton from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-import { EDITING_MODE, MODALS } from '../../lib/constants';
+import { EDITING_MODE, MODALS, PROMPTS, REGEX } from '../../lib/constants';
+import Storage from '../utils/Storage';
 
 class WorkspaceMenu extends Component {
   constructor(props) {
@@ -95,6 +97,51 @@ class WorkspaceMenu extends Component {
     window.open('/', '_blank').focus();
   };
 
+  triggerEmailModal = () => {
+    this.socket.emitMetric('sidebar email');
+    this.emailReminder();
+  };
+
+  emailReminder = () => {
+    this.modal.promptForEmail((status, email) => {
+      if (!status) return;
+
+      if (REGEX.EMAIL.test(email)) {
+        return this.socket.emitSendMail(this.props.compass.editCode, this.props.me, email);
+      } else {
+        this.toast.error(`"${email}" is not a valid email address`);
+        this.emailReminder();
+      }
+    });
+  };
+
+  bookmark = () => {
+    const { topic, editCode } = this.props.compass;
+    this.socket.emitMetric('sidebar bookmark');
+    this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
+      if (submit) {
+        let username = this.props.me.replace(/\d+/g, '');
+        Storage.addBookmark(bookmarkName, editCode, username);
+        this.toast.success(PROMPTS.SAVE_SUCCESS);
+      }
+    }, topic);
+  };
+
+  logout = () => {
+    this.socket.emitMetric('menu log out');
+    browserHistory.push('/');
+  };
+
+  confirmDelete = () => {
+    this.socket.emitMetric('menu delete workspace');
+    this.modal.confirm(MODALS.DELETE_COMPASS, (deleteCompass) => {
+      if (deleteCompass) {
+        Storage.removeBookmarkByCenter(this.props.compass.center);
+        this.socket.emitDeleteCompass(this.props.compass._id);
+      }
+    });
+  };
+
   showSubmenu = (submenu) => () => {
     this.setState({ submenus: {
       [submenu]: true,
@@ -118,10 +165,10 @@ class WorkspaceMenu extends Component {
           <div className={'ic-menu-item'} onClick={this.openNewWorkspace}>
             New Workspace
           </div>
-          <div className={'ic-menu-item'}>
+          <div className={'ic-menu-item'} onClick={this.triggerEmailModal}>
             Email Reminder
           </div>
-          <div className={'ic-menu-item'}>
+          <div className={'ic-menu-item'} onClick={this.bookmark}>
             Bookmark
           </div>
         </section>
@@ -143,10 +190,10 @@ class WorkspaceMenu extends Component {
           </div>
         </section>
         <section onMouseEnter={this.hideSubmenus}>
-          <div className={'ic-menu-item'}>
+          <div className={'ic-menu-item'} onClick={this.logout}>
             Log Out
           </div>
-          <div className={'ic-menu-item'}>
+          <div className={'ic-menu-item'} onClick={this.confirmDelete}>
             Delete Workspace
           </div>
         </section>

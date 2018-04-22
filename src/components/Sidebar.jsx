@@ -6,8 +6,6 @@ import { bindActionCreators } from 'redux';
 
 import Modal from '../utils/Modal';
 import SidebarActionsList from './SidebarActionsList.jsx';
-import SidebarControlsList from './SidebarControlsList.jsx';
-import SidebarShareList from './SidebarShareList.jsx';
 import SidebarUsersList from './SidebarUsersList.jsx';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
@@ -96,10 +94,6 @@ class Sidebar extends Component {
             <div id="ic-sidebar-contents">
               <button name="close-sidebar" className="ic-close-window" onClick={toggleSidebar}>x
               </button>
-              <SidebarShareList compass={this.props.compass}
-                                uiX={this.props.uiX}
-                                me={this.props.me} />
-              <SidebarControlsList uiX={this.props.uiX} />
               <SidebarUsersList users={this.props.users}
                                 me={this.props.me} />
               {this.renderConnectionStatus()}
