@@ -45,7 +45,7 @@ const selectSubmenuOption = ({ submenu, submenuPosition, position }) => {
   b.elements(`${submenu} div.ic-menu-item`).value[position].click();
 };
 
-describe('sidebar', () => {
+describe('workspace menu', () => {
   beforeAll(setup);
 
   afterAll(() => {
@@ -185,35 +185,4 @@ describe('sidebar', () => {
       });
     });
   });
-
-  /*
-  it('user section', () => {
-    expect('div.ic-sidebar-list[name=users]').to.be.visible();
-    expect('div.ic-sidebar-list[name=users] p').to.have.text(/You/);
-  });
-
-  describe('other actions section', () => {
-    it('privacy statement', () => {
-      expect('button[name=privacy]').to.be.visible();
-      b.click('button[name=privacy]');
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/Privacy Statement/);
-      b.click('#ic-modal-confirm');
-    });
-
-    it('feedback form', () => {
-      expect('button[name=sucks]').to.be.visible();
-      b.click('button[name=sucks]');
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/We'd love to hear from you/);
-      b.click('#ic-modal-confirm');
-    });
-
-    it('tutorial button has link', () => {
-      expect('button[name=tutorial] a').to.be.there();
-    });
-
-
-  });
-  */
 });
