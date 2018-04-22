@@ -4,8 +4,8 @@ import ModalSingleton from '../utils/Modal';
 import SocketSingleton from '../utils/Socket';
 
 export default class NotesSubmenu extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }

@@ -7,7 +7,7 @@ import SocketSingleton from '../utils/Socket';
 
 import * as uiX from '../actions/ui';
 
-import { MODALS, EDITING_MODE } from '../../lib/constants';
+import { EDITING_MODE } from '../../lib/constants';
 
 class ModesSubmenu extends Component {
   constructor() {
@@ -16,62 +16,28 @@ class ModesSubmenu extends Component {
     this.socket = SocketSingleton.getInstance();
   }
 
-  changeMode = (mode) => {
-    switch (mode) {
-      case 'ic-standard':
-        this.socket.emitMetric('menu normal mode');
-        return this.props.uiX.normalMode();
-
-      case 'ic-compact':
-        this.socket.emitMetric('menu compact mode');
-        return this.props.uiX.compactMode();
-
-      case 'ic-bulk':
-        this.socket.emitMetric('menu visual mode');
-        return this.props.uiX.visualMode(this.props.notes.length);
-
-      case 'ic-draft':
-        this.socket.emitMetric('menu draft mode');
-        return this.props.uiX.draftMode();
-
-      default:
-        return;
-    }
-  };
-
-  handleChangeMode = (e) => {
-    const { id } = e.target;
-    if (this.props.modes.draft && id !== 'ic-draft' && this.props.hasDrafts) {
-      this.modal.confirm(MODALS.EXIT_DRAFT_MODE, (confirmed) => {
-        if (confirmed) this.changeMode(id);
-      });
-    } else {
-      this.changeMode(id);
-    }
-  };
-
   render() {
     const { normal, compact, bulk, draft } = this.props.modes;
 
     return (
       <div className={'ic-menu ic-modes-submenu'}>
         <section className={'border-bottom'}>
-          <div id={'ic-standard'} className={'ic-menu-item'} onClick={this.handleChangeMode}>
+          <div id={'ic-standard'} className={'ic-menu-item'} onClick={this.props.changeMode('standard')}>
             <span className={normal ? 'active' : 'inactive'} />
             Standard
             <span className={'ic-shortcut'}>⇧1</span>
           </div>
-          <div id={'ic-compact'} className={'ic-menu-item'} onClick={this.handleChangeMode}>
+          <div id={'ic-compact'} className={'ic-menu-item'} onClick={this.props.changeMode('compact')}>
             <span className={compact ? 'active' : 'inactive'} />
             Compact
             <span className={'ic-shortcut'}>⇧2</span>
           </div>
-          <div id={'ic-draft'} className={'ic-menu-item'} onClick={this.handleChangeMode}>
+          <div id={'ic-draft'} className={'ic-menu-item'} onClick={this.props.changeMode('draft')}>
             <span className={draft ? 'active' : 'inactive'} />
             Draft
             <span className={'ic-shortcut'}>⇧3</span>
           </div>
-          <div id={'ic-bulk'} className={'ic-menu-item'} onClick={this.handleChangeMode}>
+          <div id={'ic-bulk'} className={'ic-menu-item'} onClick={this.props.changeMode('bulk')}>
             <span className={bulk ? 'active' : 'inactive'} />
             Bulk Edit
             <span className={'ic-shortcut'}>⇧4</span>
@@ -79,6 +45,7 @@ class ModesSubmenu extends Component {
         </section>
         <section>
           <div className={'ic-menu-item'}>
+            <span className={'inactive'} />
             What are these?
           </div>
         </section>

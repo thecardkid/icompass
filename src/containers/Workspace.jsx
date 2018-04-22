@@ -17,7 +17,6 @@ import Chat from '../components/Chat.jsx';
 import Compass from '../components/Compass.jsx';
 import FormManager from '../components/FormManager.jsx';
 import HelpFeedback from '../components/HelpFeedback';
-// import ModesToolbar from '../components/ModesToolbar.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
@@ -25,7 +24,7 @@ import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
 import Toast from '../utils/Toast';
 
-import { KEYCODES, PROMPTS, EDITING_MODE, COLORS, REGEX } from '../../lib/constants';
+import { PROMPTS, EDITING_MODE, REGEX } from '../../lib/constants';
 import { browserHistory } from 'react-router';
 import WorkspaceMenu from '../components/WorkspaceMenu';
 
@@ -50,14 +49,6 @@ class Workspace extends Component {
     } else if (this.validateRouteParams(this.props.params)) {
       this.socket.emitFindCompassEdit(this.props.params);
     }
-
-    this.keypressHandler = {
-      78: this.props.uiActions.showNewNote,
-      67: this.props.uiActions.toggleChat,
-      68: this.props.uiActions.showDoodle,
-      83: this.props.uiActions.toggleSidebar,
-      80: this.props.uiActions.toggleAbout,
-    };
 
     this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
   }
@@ -103,7 +94,6 @@ class Workspace extends Component {
 
   componentDidMount() {
     $(window).on('resize', this.props.uiActions.resize);
-    $(window).on('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
@@ -113,71 +103,14 @@ class Workspace extends Component {
     this.props.uiActions.reset();
     this.props.userActions.reset();
     $(window).off('resize', this.props.uiActions.resize);
-    $(window).off('keydown', this.handleKeyDown);
     this.socket.logout();
     this.modal.close();
     this.toast.clear();
   }
 
-  isControlKey(k) {
-    return k in this.keypressHandler;
-  }
-
-  isModifierKey(e) {
-    return e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
-  }
-
-  handleKeyDown = (e) => {
-    if (this.modal.show && e.which === KEYCODES.ESC) return this.modal.close();
-
-    if (this.props.ui.newNote || this.props.ui.doodleNote ||
-      typeof this.props.ui.editNote === 'number') {
-      if (e.which === KEYCODES.ESC) this.props.uiActions.closeForm();
-      return;
-    }
-
-    if (document.activeElement.id === 'message-text') return;
-    if (document.activeElement.id === 'ic-modal-input') return;
-
-    if (this.isControlKey(e.which) && !this.isModifierKey(e)) {
-      e.preventDefault();
-      this.socket.emitMetric('shortcut key', e.which);
-      this.keypressHandler[e.which]();
-    }
-  };
-
   showChat = () => {
     this.props.chatActions.read();
     this.props.uiActions.toggleChat();
-  };
-
-  renderCornerButtons = () => {
-    let actions = this.props.uiActions;
-    let showChatStyle = {
-      background: this.props.chat.unread ? COLORS.RED : COLORS.LIGHT,
-      color: this.props.chat.unread ? COLORS.LIGHT : COLORS.DARK,
-    };
-
-    return (
-      <div>
-        <button className="ic-corner-btn"
-                id="ic-show-sidebar"
-                onClick={actions.toggleSidebar}>
-          Show Sidebar
-        </button>
-        <button className="ic-corner-btn"
-                id="ic-show-chat"
-                onClick={this.showChat}
-                style={showChatStyle}>
-          Show Chat
-        </button>
-        <button className="ic-corner-btn"
-                id="ic-show-doodle"
-                onClick={actions.showDoodle}>
-          Doodle
-        </button>
-      </div>
-    );
   };
 
   render() {
@@ -197,10 +130,8 @@ class Workspace extends Component {
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
-        {/*{this.renderCornerButtons()}*/}
         <Compass />
         <Sidebar connected={this.socket.isConnected()} />
-        {/*<ModesToolbar />*/}
         <Chat />
         <About show={ui.showAbout}
                close={this.props.uiActions.toggleAbout} />
