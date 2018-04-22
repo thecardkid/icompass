@@ -60,16 +60,20 @@ class WorkspaceMenu extends Component {
   changeMode = (mode) => {
     switch (mode) {
       case 'standard':
+        this.toast.info('Switched to standard mode');
         return this.props.uiX.normalMode();
 
       case 'compact':
+        this.toast.info('Switched to compact mode');
         return this.props.uiX.compactMode();
 
-      case 'bulk':
-        return this.props.uiX.visualMode(this.props.notes.length);
-
       case 'draft':
+        this.toast.info('Switched to draft mode');
         return this.props.uiX.draftMode();
+
+      case 'bulk':
+        this.toast.info('Switched to bulk edit mode');
+        return this.props.uiX.visualMode(this.props.notes.length);
 
       default:
         return;
@@ -121,7 +125,7 @@ class WorkspaceMenu extends Component {
     this.socket.emitMetric('sidebar bookmark');
     this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
       if (submit) {
-        let username = this.props.me.replace(/\d+/g, '');
+        let username = this.props.users.me.replace(/\d+/g, '');
         Storage.addBookmark(bookmarkName, editCode, username);
         this.toast.success(PROMPTS.SAVE_SUCCESS);
       }
