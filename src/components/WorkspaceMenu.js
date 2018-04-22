@@ -27,6 +27,7 @@ class WorkspaceMenu extends Component {
         share: false,
         notes: false,
         modes: false,
+        users: false,
       },
     };
     this.shortcuts = {
