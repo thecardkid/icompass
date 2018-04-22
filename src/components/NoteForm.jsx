@@ -68,7 +68,7 @@ export default class NoteForm extends Component {
         y = this.props.position.y;
       }
 
-      let style = Object.assign({}, this.state);
+      let style = { ...this.state };
       delete style.charCount;
 
       let note = {

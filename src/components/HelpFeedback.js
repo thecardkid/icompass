@@ -26,12 +26,6 @@ export default class HelpFeedback extends Component {
     this.hideMenu();
   };
 
-  openTutorial = () => {
-    this.socket.emitMetric('help tutorial');
-    window.open('/tutorial', '_blank').focus();
-    this.hideMenu();
-  };
-
   openPrompt = () => {
     this.socket.emitMetric('help prompt');
     this.modal.alertCompassPrompt();
@@ -60,9 +54,6 @@ export default class HelpFeedback extends Component {
     return (
       <div className={'ic-menu ic-help-menu'}>
         <section className={'border-bottom'}>
-          <div className={'ic-menu-item'} onClick={this.openTutorial}>
-            App Walkthrough
-          </div>
           <div className={'ic-menu-item'} onClick={this.openPrompt}>
             Prompt
           </div>

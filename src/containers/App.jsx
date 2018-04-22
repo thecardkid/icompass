@@ -8,7 +8,6 @@ import { Router, Route, browserHistory } from 'react-router';
 
 import LandingPage from '../containers/LandingPage.jsx';
 import NotFound from '../containers/NotFound.jsx';
-import Tutorial from '../containers/Tutorial.jsx';
 import Workspace from '../containers/Workspace.jsx';
 
 import PromptName from '../components/PromptName.jsx';
@@ -30,7 +29,6 @@ class App extends Component {
           <Route path='/compass/edit/:code/:username' viewOnly={false} component={Workspace}/>
           <Route path='/compass/edit/:code' viewOnly={false} component={PromptName}/>
           <Route path='/compass/view/:code(/:username)' viewOnly={true} component={Workspace}/>
-          <Route path='/tutorial' component={Tutorial}/>
           <Route path='*' component={NotFound}/>
         </Router>
       </Provider>

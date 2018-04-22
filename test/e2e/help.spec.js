@@ -8,11 +8,10 @@ const b = browser;
 const { setup, cleanup } = require('./utils');
 
 const actions = {
-  tutorial: 0,
-  prompt: 1,
-  release: 2,
-  privacy: 3,
-  feedback: 4,
+  prompt: 0,
+  release: 1,
+  privacy: 2,
+  feedback: 3,
 };
 
 const selectHelpOption = (count) => {
@@ -28,13 +27,6 @@ describe('help menu', () => {
   });
 
   afterAll(cleanup);
-
-  it('tutorial', () => {
-    selectHelpOption(actions.tutorial);
-    b.pause(200);
-    expect(b.getTabIds()).to.have.length(2);
-    b.switchTab(this.tabId);
-  });
 
   it('prompt', () => {
     selectHelpOption(actions.prompt);
