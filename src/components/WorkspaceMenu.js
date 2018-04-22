@@ -77,14 +77,22 @@ class WorkspaceMenu extends Component {
     if (this.props.modes.draft && switchTo !== 'draft' && this.props.hasDrafts) {
       this.modal.confirm(MODALS.EXIT_DRAFT_MODE, (confirmed) => {
         if (confirmed) {
-          this.socket.emitMetric(`menu ${switchTo}`);
           this.changeMode(switchTo);
         }
       });
     } else {
-      this.socket.emitMetric(`menu ${switchTo}`);
       this.changeMode(switchTo);
     }
+  };
+
+  buttonChangeMode = (switchTo) => () => {
+    this.socket.emitMetric(`menu ${switchTo}`);
+    this.handleChangeMode(switchTo)();
+  };
+
+  openNewWorkspace = () => {
+    this.socket.emitMetric('menu new workspace');
+    window.open('/', '_blank').focus();
   };
 
   showSubmenu = (submenu) => () => {
@@ -107,7 +115,7 @@ class WorkspaceMenu extends Component {
     return (
       <div className={'ic-menu ic-workspace-menu'}>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
-          <div className={'ic-menu-item'}>
+          <div className={'ic-menu-item'} onClick={this.openNewWorkspace}>
             New Workspace
           </div>
           <div className={'ic-menu-item'}>
@@ -131,7 +139,7 @@ class WorkspaceMenu extends Component {
           <div className={'ic-menu-item has-more'}
                onMouseOver={this.showSubmenu('modes')}>
             Editing Modes
-            {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.handleChangeMode}/>}
+            {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode}/>}
           </div>
         </section>
         <section onMouseEnter={this.hideSubmenus}>
