@@ -14,6 +14,7 @@ const expectNumUsers = (expected) => {
   b.moveTo(b.elements('div.has-more').value[3].ELEMENT, 10, 10);
   b.waitForVisible('div.ic-users-submenu');
   expect('div.ic-user').to.have.count(expected);
+  b.click('button.ic-workspace-button');
 };
 
 describe('collaboration', () => {
@@ -22,7 +23,6 @@ describe('collaboration', () => {
   beforeAll(() => {
     setup();
     tabs.webdriverio = b.getCurrentTabId();
-
     const url = b.getUrl().substring(0, 43);
 
     b.newWindow(`${url}/friendo`, 'friendo', 'width=2000,height=2000');
@@ -88,7 +88,7 @@ describe('collaboration', () => {
     it('webdriverio logs in and both see 2 users', () => {
       b.switchTab(tabs.webdriverio);
       b.back();
-      b.waitForVisible('#compass');
+      b.waitForVisible('button.ic-workspace-button');
       expectNumUsers(2);
 
       b.switchTab(tabs.friendo);
