@@ -38,7 +38,7 @@ describe('help menu', () => {
   it('release notes', () => {
     selectHelpOption(actions.release);
     b.pause(200);
-    expect(b.getTabIds()).to.have.length(3);
+    expect(b.getTabIds()).to.have.length(2);
     b.switchTab(this.tabId);
   });
 
