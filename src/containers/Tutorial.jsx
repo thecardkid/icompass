@@ -12,11 +12,8 @@ import * as userActions from '../actions/users';
 import * as uiActions from '../actions/ui';
 
 import Compass from '../components/Compass.jsx';
-import Sidebar from '../components/Sidebar.jsx';
-import Chat from '../components/Chat.jsx';
 import NoteForm from '../components/NoteForm.jsx';
 import DoodleForm from '../components/DoodleForm.jsx';
-import ModesToolbar from '../components/ModesToolbar.jsx';
 
 import DefaultCompass from '../../models/defaultCompass';
 
@@ -252,17 +249,8 @@ class Tutorial extends Component {
             </button>
           </div>
         </Draggable>
-        <button className="ic-corner-btn" id="ic-show-sidebar">Show Sidebar</button>
-        <button className="ic-corner-btn" id="ic-show-doodle">Doodle</button>
-        <button className="ic-corner-btn" id="ic-show-chat">Show Chat</button>
         <div id="circle"/>
         <Compass notes={[]}/>
-        <ModesToolbar/>
-        <Sidebar connected={true}
-                 destroy={noOp}
-                 exportCompass={noOp}
-                 stop={noOp} />
-        <Chat socket={{}} />
         {this.getForm()}
       </div>
     );

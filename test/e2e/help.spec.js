@@ -9,9 +9,10 @@ const { setup, cleanup } = require('./utils');
 
 const actions = {
   tutorial: 0,
-  release: 1,
-  privacy: 2,
-  feedback: 3,
+  prompt: 1,
+  release: 2,
+  privacy: 3,
+  feedback: 4,
 };
 
 const selectHelpOption = (count) => {
@@ -33,6 +34,13 @@ describe('help menu', () => {
     b.pause(200);
     expect(b.getTabIds()).to.have.length(2);
     b.switchTab(this.tabId);
+  });
+
+  it('prompt', () => {
+    selectHelpOption(actions.prompt);
+    b.waitForVisible('#ic-modal');
+    expect('#ic-modal-body').to.have.text(/Innovator's Compass/);
+    b.click('#ic-modal-confirm');
   });
 
   it('release notes', () => {

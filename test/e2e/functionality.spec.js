@@ -39,13 +39,6 @@ describe('basic functionality', () => {
   });
 
   describe('key bindings', () => {
-    // it('prompt', () => {
-    //   b.keys(['p']);
-    //   expect('#ic-about').to.be.visible();
-    //   b.keys(['p']);
-    //   expect('#ic-about').to.not.be.visible();
-    // });
-
     it('new note', () => {
       b.keys('n');
       expect('#ic-note-form').to.be.visible();

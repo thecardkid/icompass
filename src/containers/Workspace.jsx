@@ -5,19 +5,15 @@ import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import * as chatActions from '../actions/chat';
 import * as compassActions from '../actions/compass';
 import * as noteActions from '../actions/notes';
 import * as uiActions from '../actions/ui';
 import * as userActions from '../actions/users';
 import * as workspaceActions from '../actions/workspace';
 
-import About from '../components/About.jsx';
-import Chat from '../components/Chat.jsx';
 import Compass from '../components/Compass.jsx';
 import FormManager from '../components/FormManager.jsx';
 import HelpFeedback from '../components/HelpFeedback';
-import Sidebar from '../components/Sidebar.jsx';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
 import Modal from '../utils/Modal';
@@ -71,12 +67,10 @@ class Workspace extends Component {
   };
 
   onUserJoined = (data) => {
-    this.props.chatActions.userJoined(data.joined);
     this.props.userActions.update(data);
   };
 
   onUserLeft = (data) => {
-    this.props.chatActions.userLeft(data.left);
     this.props.userActions.update(data);
   };
 
@@ -111,17 +105,11 @@ class Workspace extends Component {
     this.toast.clear();
   }
 
-  showChat = () => {
-    this.props.chatActions.read();
-    this.props.uiActions.toggleChat();
-  };
-
   render() {
     if (_.isEmpty(this.props.compass)) return <div/>;
 
     if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
 
-    let { ui } = this.props;
     let formAttrs = {
       bg: this.props.draftMode ? 'grey' : this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
@@ -134,10 +122,6 @@ class Workspace extends Component {
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
         <Compass />
-        <Sidebar connected={this.socket.isConnected()} />
-        <Chat />
-        <About show={ui.showAbout}
-               close={this.props.uiActions.toggleAbout} />
         <VisualModeToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
         <HelpFeedback />
@@ -151,7 +135,6 @@ const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     users: state.users,
-    chat: state.chat,
     ui: state.ui,
     workspace: state.workspace,
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
@@ -164,7 +147,6 @@ const mapDispatchToProps = (dispatch) => {
     noteActions: bindActionCreators(noteActions, dispatch),
     compassActions: bindActionCreators(compassActions, dispatch),
     userActions: bindActionCreators(userActions, dispatch),
-    chatActions: bindActionCreators(chatActions, dispatch),
     uiActions: bindActionCreators(uiActions, dispatch),
     workspaceActions: bindActionCreators(workspaceActions, dispatch),
   };

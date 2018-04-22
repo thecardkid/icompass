@@ -32,6 +32,12 @@ export default class HelpFeedback extends Component {
     this.hideMenu();
   };
 
+  openPrompt = () => {
+    this.socket.emitMetric('help prompt');
+    this.modal.alertCompassPrompt();
+    this.hideMenu();
+  };
+
   openReleaseNotes = () => {
     this.socket.emitMetric('help release notes');
     window.open('https://github.com/thecardkid/icompass/releases', '_blank').focus();
@@ -56,6 +62,9 @@ export default class HelpFeedback extends Component {
         <section className={'border-bottom'}>
           <div className={'ic-menu-item'} onClick={this.openTutorial}>
             App Walkthrough
+          </div>
+          <div className={'ic-menu-item'} onClick={this.openPrompt}>
+            Prompt
           </div>
         </section>
         <section>
