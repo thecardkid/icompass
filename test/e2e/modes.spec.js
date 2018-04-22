@@ -2,6 +2,8 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
+const { setup, cleanup } = require('./utils');
+
 const expect = chai.expect;
 const b = browser;
 
@@ -12,31 +14,32 @@ describe('view modes', () => {
     viewCode;
 
   beforeAll(() => {
-    require('./utils').setup();
-    editCode = b.getAttribute('button[name=share-edit]', 'id');
+    setup();
+    editCode = b.getUrl().substring(35, 43);
     editURL = `http://localhost:8080/compass/edit/${editCode}`;
-    expect(b.getUrl()).to.equal(editURL + '/sandbox');
+    expect(b.getUrl()).to.equal(`${editURL}/sandbox`);
 
-    viewCode = b.getAttribute('button[name=share-view]', 'id');
+    b.click('button.ic-workspace-button');
+    b.waitForVisible('div.ic-workspace-menu');
+    b.moveTo(browser.elements('div.has-more').value[0].ELEMENT, 10, 10);
+    b.waitForVisible('div.ic-share-submenu');
+    b.elements('div.ic-share-submenu div.ic-menu-item').value[1].click();
+    b.waitForVisible('#ic-modal');
+    viewCode = b.getText('#ic-modal-body p').substring(35, 43);
     viewURL = `http://localhost:8080/compass/view/${viewCode}`;
   });
 
-  afterAll(() => require('./utils').cleanup);
+  afterAll(cleanup);
 
   describe('view-only mode', () => {
     it('from url', () => {
       b.url(viewURL);
       b.waitForVisible('#compass');
-
       expect('#center').to.be.visible();
       expect('#vline').to.be.visible();
       expect('#hline').to.be.visible();
-
-      expect('#ic-modes').to.not.be.there();
-      expect('#ic-sidebar').to.not.be.there();
-      expect('#ic-chat').to.not.be.there();
-      expect('#ic-show-chat').to.not.be.there();
-      expect('#ic-show-sidebar').to.not.be.there();
+      expect('.ic-workspace-button').to.not.be.there();
+      expect('.ic-help-button').to.not.be.there();
     });
 
     it('from login page', () => {
@@ -57,12 +60,8 @@ describe('view modes', () => {
       expect('#center').to.be.visible();
       expect('#vline').to.be.visible();
       expect('#hline').to.be.visible();
-
-      expect('#ic-modes').to.not.be.there();
-      expect('#ic-sidebar').to.not.be.there();
-      expect('#ic-chat').to.not.be.there();
-      expect('#ic-show-chat').to.not.be.there();
-      expect('#ic-show-sidebar').to.not.be.there();
+      expect('.ic-workspace-button').to.not.be.there();
+      expect('.ic-help-button').to.not.be.there();
     });
   });
 
@@ -74,9 +73,8 @@ describe('view modes', () => {
       expect('#center').to.be.visible();
       expect('#vline').to.be.visible();
       expect('#hline').to.be.visible();
-      expect('#ic-show-chat').to.be.visible();
-      expect('#ic-show-sidebar').to.be.visible();
-      expect('#ic-modes').to.be.visible();
+      expect('.ic-workspace-button').to.be.visible;
+      expect('.ic-help-button').to.be.visible;
     });
 
     it('invalid code and invalid username', () => {
@@ -89,7 +87,6 @@ describe('view modes', () => {
 
       b.click('#ic-modal-confirm');
       b.waitForVisible('#ic-landing');
-
       expect(b.getUrl()).to.equal('http://localhost:8080/');
     });
 
@@ -130,11 +127,11 @@ describe('view modes', () => {
         b.setValue('#ic-modal-input', 'sandbox');
         b.click('#ic-modal-confirm');
         b.waitForVisible('#compass');
+        expect('#center').to.be.visible();
         expect('#vline').to.be.visible();
         expect('#hline').to.be.visible();
-        expect('#ic-show-chat').to.be.visible();
-        expect('#ic-show-sidebar').to.be.visible();
-        expect('#ic-modes').to.be.visible();
+        expect('.ic-workspace-button').to.be.visible;
+        expect('.ic-help-button').to.be.visible;
       });
     });
   });
