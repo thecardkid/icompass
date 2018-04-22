@@ -131,7 +131,7 @@ class WorkspaceMenu extends Component {
           <div className={'ic-menu-item has-more'}
                onMouseOver={this.showSubmenu('modes')}>
             Editing Modes
-            {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.props.handleChangeMode}/>}
+            {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.handleChangeMode}/>}
           </div>
         </section>
         <section onMouseEnter={this.hideSubmenus}>
