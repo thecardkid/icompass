@@ -17,6 +17,7 @@ describe('login', () => {
     expect('div[name=make]').to.be.visible();
   });
 
+  // TODO
   afterAll(() => {
     b.click('button[name=to-workspace]');
     b.waitForVisible('#ic-sidebar');

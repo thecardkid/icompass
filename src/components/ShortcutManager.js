@@ -51,8 +51,8 @@ class ShortcutManager extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    noteFormVisible: state.ui.newNote || (typeof state.ui.editNote === 'number'),
-    doodleFormVisible: state.ui.doodleNote,
+    noteFormVisible: state.ui.forms.newText || (typeof state.ui.forms.editText === 'number'),
+    doodleFormVisible: state.ui.forms.newDoodle,
   };
 };
 

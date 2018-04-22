@@ -23,7 +23,7 @@ class FormManager extends Component {
     return (
       <NoteForm mode={this.props.draftMode ? 'make draft' : 'make'}
                 note={{}}
-                position={this.props.ui.newNote}
+                position={this.props.forms.newText}
                 ship={this.props.draftMode ? this.props.workspaceX.createDraft : this.socket.emitNewNote}
                 {...this.props.commonAttrs} />
     );
@@ -32,8 +32,8 @@ class FormManager extends Component {
   renderEditForm() {
     return (
       <NoteForm mode={this.props.draftMode ? 'edit draft' : 'edit'}
-                idx={this.props.ui.editNote}
-                note={this.props.notes[this.props.ui.editNote]}
+                idx={this.props.forms.editText}
+                note={this.props.notes[this.props.forms.editText]}
                 ship={this.props.draftMode ? this.props.workspaceX.editDraft : this.socket.emitEditNote}
                 {...this.props.commonAttrs} />
     );
@@ -48,9 +48,9 @@ class FormManager extends Component {
   }
 
   getForm = () => {
-    const { ui, visualMode } = this.props;
+    const { forms, visualMode } = this.props;
 
-    if (ui.newNote) {
+    if (forms.newText) {
       if (visualMode) {
         this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
@@ -58,7 +58,7 @@ class FormManager extends Component {
       return this.renderNoteForm();
     }
 
-    if (typeof ui.editNote === 'number') {
+    if (typeof forms.editText === 'number') {
       if (visualMode) {
         this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
@@ -66,7 +66,7 @@ class FormManager extends Component {
       return this.renderEditForm();
     }
 
-    if (ui.doodleNote) {
+    if (forms.newDoodle) {
       if (visualMode) {
         this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
@@ -90,7 +90,7 @@ const mapStateToProps = (state) => {
     me: state.users.me,
     color: state.users.nameToColor[state.users.me],
     notes: state.notes,
-    ui: state.ui,
+    forms: state.ui.forms,
     draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
   };

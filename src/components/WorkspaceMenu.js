@@ -103,7 +103,7 @@ class WorkspaceMenu extends Component {
   };
 
   triggerEmailModal = () => {
-    this.socket.emitMetric('sidebar email');
+    this.socket.emitMetric('menu email');
     this.emailReminder();
   };
 
@@ -122,7 +122,7 @@ class WorkspaceMenu extends Component {
 
   bookmark = () => {
     const { topic, editCode } = this.props.compass;
-    this.socket.emitMetric('sidebar bookmark');
+    this.socket.emitMetric('menu bookmark');
     this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
       if (submit) {
         let username = this.props.users.me.replace(/\d+/g, '');
