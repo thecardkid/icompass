@@ -5,16 +5,14 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const PROMPTS = require('../../lib/constants').PROMPTS;
-const MODALS = require('../../lib/constants').MODALS;
+const { setup, cleanup, switchMode } = require('./utils');
+const { PROMPTS, MODALS } = require('../../lib/constants');
 const DOG_PHOTO_LINK = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
 const POSITIONS = [{ x: 400, y: 200 }, { x: 500, y: 200 }];
 
 describe('draft mode', () => {
   beforeAll(() => {
-    require('./utils').setup();
-
-    expect('body').to.be.there();
+    setup();
     for (let i = 0; i < POSITIONS.length; i++) {
       let p = POSITIONS[i];
       b.pause(100);
@@ -27,15 +25,11 @@ describe('draft mode', () => {
     }
   });
 
-  afterAll(() => {
-    b.keys(['s']);
-    b.waitForVisible('#ic-sidebar button[name=destroyer]');
-    require('./utils').cleanup();
-  });
+  afterAll(cleanup);
 
   describe('edit to normal notes are disabled', () => {
     it('disables dragging', () => {
-      b.click('#ic-mode-draft');
+      switchMode('#ic-draft');
       b.moveToObject('#note0', 10, 10);
       b.buttonDown(0);
       b.pause(100);
@@ -59,8 +53,7 @@ describe('draft mode', () => {
 
   describe('text draft', () => {
     it('note form should have correct properties', () => {
-      b.keys(['s', 'c']);
-      b.click('#ic-mode-draft');
+      switchMode('#ic-draft');
       b.moveToObject('body', 200, 500);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
@@ -167,7 +160,7 @@ describe('draft mode', () => {
 
     describe('changing mode', () => {
       it('trigger warning', () => {
-        b.click('#ic-mode-normal');
+        switchMode('#ic-standard');
         b.waitForVisible('#ic-modal');
         expect('#ic-modal-body').to.have.text(new RegExp(MODALS.EXIT_DRAFT_MODE.text, 'i'));
       });
