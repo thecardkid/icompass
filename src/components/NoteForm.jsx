@@ -145,7 +145,7 @@ export default class NoteForm extends Component {
 
   render() {
     const spanStyle = { color: this.state.charCount > 300 ? 'red' : 'black' };
-    const click = this.props.mode.includes('make') ? this.make : this.edit;
+    const isCreating = this.props.mode.includes('make');
     const color = this.props.note.color || this.props.bg;
 
     let textStyle = '';
@@ -170,15 +170,22 @@ export default class NoteForm extends Component {
                     onChange={this.handleChange}
                     style={{ background: color }} />
           <div className="note-form-footer">
-            <button className={'switch-form'} data-tip="Insert an image" data-for="image-tooltip">
-              <i className={'material-icons'}>photo</i>
-            </button>
-            <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
-            <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip">
-              <i className={'material-icons'}>brush</i>
-            </button>
-            <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
-            <button name="ship" onClick={click}>ship it</button>
+            {
+              isCreating &&
+              (
+                <div>
+                  <button className={'switch-form'} data-tip="Insert an image" data-for="image-tooltip">
+                    <i className={'material-icons'}>photo</i>
+                  </button>
+                  <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
+                  <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip">
+                    <i className={'material-icons'}>brush</i>
+                  </button>
+                  <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+                </div>
+              )
+            }
+            <button name="ship" onClick={isCreating ? this.make : this.edit}>ship it</button>
             <button name="nvm" onClick={this.props.close}>never mind</button>
           </div>
         </div>
