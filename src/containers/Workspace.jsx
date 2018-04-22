@@ -96,7 +96,6 @@ class Workspace extends Component {
   componentWillUnmount() {
     this.props.compassActions.reset();
     this.props.noteActions.reset();
-    this.props.chatActions.reset();
     this.props.uiActions.reset();
     this.props.userActions.reset();
     $(window).off('resize', this.props.uiActions.resize);
