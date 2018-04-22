@@ -5,6 +5,7 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
+const { setup, cleanup, switchMode } = require('./utils');
 const PROMPTS = require('../../lib/constants').PROMPTS;
 
 const expectNumUsers = (expected) => {
@@ -15,19 +16,11 @@ const expectNumUsers = (expected) => {
   expect('div.ic-user').to.have.count(expected);
 };
 
-const switchMode = (modeId) => {
-  b.click('button.ic-workspace-button');
-  b.waitForVisible('div.ic-workspace-menu');
-  b.moveTo(b.elements('div.has-more').value[2].ELEMENT, 10, 10);
-  b.waitForVisible('div.ic-modes-submenu');
-  b.click(modeId);
-};
-
 describe('collaboration', () => {
   let tabs = {};
 
   beforeAll(() => {
-    require('./utils').setup();
+    setup();
     tabs.webdriverio = b.getCurrentTabId();
 
     const url = b.getUrl().substring(0, 43);
@@ -191,14 +184,7 @@ describe('collaboration', () => {
   describe('compass delete', () => {
     it('user who performs delete action gets redirected to home page', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('button.ic-workspace-button');
-      b.waitForVisible('div.ic-workspace-menu');
-      b.elements('div.ic-menu-item').value[8].click();
-      b.waitForVisible('#ic-modal');
-      b.click('#ic-modal-confirm');
-      b.pause(200);
-      b.waitForVisible('#ic-modal');
-      b.click('#ic-modal-confirm');
+      cleanup();
       b.pause(500);
       expect(b.getUrl()).to.equal('http://localhost:8080/');
     });

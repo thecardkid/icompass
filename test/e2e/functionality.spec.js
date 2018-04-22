@@ -1,3 +1,5 @@
+const { setup, cleanup, switchMode } = require('./utils');
+
 const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
@@ -8,18 +10,15 @@ const b = browser;
 const MODALS = require('../../lib/constants.js').MODALS;
 
 describe('basic functionality', () => {
-  beforeAll(require('./utils').setup);
+  beforeAll(setup);
 
-  afterAll(require('./utils').cleanup);
+  afterAll(cleanup);
 
   it('elements are there', () => {
     expect('#vline').to.be.visible();
     expect('#hline').to.be.visible();
-    expect('#ic-sidebar').to.be.visible();
-    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
-    expect('#ic-show-chat').to.be.visible();
-    expect('#ic-show-sidebar').to.be.visible();
-    expect('#ic-modes').to.be.visible();
+    expect('.ic-workspace-button').to.be.visible();
+    expect('.ic-help-button').to.be.visible();
     expect('#center').to.have.text('topic');
 
     expect('#observations').to.be.visible();
@@ -40,40 +39,26 @@ describe('basic functionality', () => {
   });
 
   describe('key bindings', () => {
-    it('prompt', () => {
-      b.keys(['p']);
-      expect('#ic-about').to.be.visible();
-      b.keys(['p']);
-      expect('#ic-about').to.not.be.visible();
-    });
-
-    it('chat', () => {
-      b.keys(['c']);
-      b.pause(500);
-      expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('0px');
-      b.keys(['c']);
-    });
-
-    it('sidebar', () => {
-      b.keys(['s']);
-      b.pause(500);
-      expect(b.getCssProperty('#ic-sidebar', 'left').value).to.equal('-240px');
-      b.keys(['s']);
-    });
+    // it('prompt', () => {
+    //   b.keys(['p']);
+    //   expect('#ic-about').to.be.visible();
+    //   b.keys(['p']);
+    //   expect('#ic-about').to.not.be.visible();
+    // });
 
     it('new note', () => {
-      b.keys(['n']);
+      b.keys('n');
       expect('#ic-note-form').to.be.visible();
       b.click('button[name=ship]');
       expect('#ic-note-form').to.be.visible();
-      b.click('button[name=nvm]');
+      b.keys('\uE00C'); // ESCAPE
       expect('#ic-note-form').to.not.be.visible();
     });
 
     it('new doodle', () => {
-      b.keys(['d']);
+      b.keys('d');
       expect('#ic-doodle-form').to.be.visible();
-      b.click('button[name=nvm]');
+      b.keys('\uE00C'); // ESCAPE
       expect('#ic-doodle-form').to.not.be.visible();
     });
   });
@@ -81,11 +66,11 @@ describe('basic functionality', () => {
   describe('sticky workflow', () => {
     describe('text', () => {
       it('create', () => {
-        b.keys(['n']);
-        expect('.ic-sticky-note').to.not.be.there();
+        expect('.ic-sticky-note').to.have.count(0);
+        b.keys('n');
         b.setValue('#ic-form-text', 'An observation');
-        b.click('button[name=ship]');
-        b.waitForVisible('.ic-sticky-note');
+        b.click('button[name=ship]').pause(200);
+        expect('.ic-sticky-note').to.have.count(1);
         expect('.ic-sticky-note').to.have.text(/An observation/);
       });
 
@@ -95,16 +80,28 @@ describe('basic functionality', () => {
         b.waitForVisible('#ic-note-form');
         b.setValue('#ic-form-text', 'A principle');
         b.click('button[name=ship]');
-        b.pause(500);
+        b.pause(200);
         expect('.ic-sticky-note').to.have.text(/A principle/);
+      });
+
+      it('dragging', () => {
+        const oldPos = b.getLocation('#note0');
+        b.moveToObject('#note0', 10, 10);
+        b.buttonDown(0);
+        b.moveToObject('#note0', -290, -290);
+        b.buttonUp(0);
+        const newPosition = b.getLocation('#note0');
+
+        expect(oldPos.x - newPosition.x).to.equal(300);
+        expect(oldPos.y - newPosition.y).to.equal(300);
       });
     });
 
     describe('images', () => {
       it('accepting image prompt should render image', () => {
-        expect('div.ic-img').to.not.be.there();
+        expect('div.ic-img').to.have.count(0);
 
-        b.keys(['n']);
+        b.keys('n');
         b.setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg');
         b.click('button[name=ship]');
         b.waitForVisible('#ic-modal');
@@ -112,10 +109,10 @@ describe('basic functionality', () => {
 
         b.click('#ic-modal-confirm');
         b.pause(1000);
-        expect('div.ic-img').to.be.visible();
+        expect('div.ic-img').to.have.count(1);
       });
 
-      it('rejecting the prompt should render text', () => {
+      it('rejecting the prompt should render embedded link', () => {
         b.moveToObject('div.ic-img', 50, 50);
         b.doDoubleClick();
         b.waitForVisible('#ic-form-text');
@@ -123,20 +120,9 @@ describe('basic functionality', () => {
         b.waitForVisible('#ic-modal');
         b.click('#ic-modal-cancel');
         b.pause(1000);
-        expect('div.ic-img').to.not.be.there();
+        expect('div.ic-img').to.have.count(0);
+        expect('#note1 span div.contents p a').to.be.there(); // expect embedded link
       });
-    });
-
-    it('dragging', () => {
-      const oldPos = b.getLocation('#note1');
-      b.moveToObject('#note1', 10, 10);
-      b.buttonDown(0);
-      b.moveToObject('#note1', -290, -290);
-      b.buttonUp(0);
-      const newPosition = b.getLocation('#note1');
-
-      expect(oldPos.x - newPosition.x).to.equal(300);
-      expect(oldPos.y - newPosition.y).to.equal(300);
     });
 
     describe('delete', () => {
@@ -146,7 +132,7 @@ describe('basic functionality', () => {
         b.waitForVisible('#ic-modal');
         expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_NOTE.text, 'i'));
         b.click('#ic-modal-cancel');
-        expect('#note1').to.be.visible();
+        expect('div.ic-sticky-note').to.have.count(2);
       });
 
       it('accepting alert deletes note', () => {
@@ -155,13 +141,13 @@ describe('basic functionality', () => {
         b.waitForVisible('#ic-modal');
         b.click('#ic-modal-confirm');
         b.pause(500);
-        expect('#note1').to.not.be.there();
+        expect('div.ic-sticky-note').to.have.count(1);
       });
     });
 
     describe('other actions', () => {
       it('doodle', () => {
-        b.keys(['d']);
+        b.keys('d');
         b.waitForVisible('#ic-doodle-form');
         b.click('button[name=ship]');
         expect('#ic-doodle-form').to.be.visible();
@@ -171,14 +157,14 @@ describe('basic functionality', () => {
         b.moveToObject('#ic-doodle', 255, 175);
         b.buttonUp(0);
         b.pause(500);
-        b.click('button[name=ship]');
-        b.waitForVisible('#note1');
+        b.click('button[name=ship]').pause(200);
+        expect('div.ic-sticky-note').to.have.count(2);
 
-        expect(b.getAttribute('#note1 .ic-img img', 'src')).to.contain('data:image/png;base64');
+        expect(b.getAttribute('div.ic-img img', 'src')).to.contain('data:image/png;base64');
       });
 
       it('styling', () => {
-        b.keys(['n']);
+        b.keys('n');
         b.waitForVisible('#ic-note-form');
         b.setValue('#ic-form-text', 'Text styling example');
 
@@ -194,9 +180,9 @@ describe('basic functionality', () => {
         b.click('button[name=underline]');
         b.pause(100);
         b.click('button[name=ship]');
-        b.pause(500);
+        b.pause(200);
 
-        expect('#note2').to.be.visible();
+        expect('div.ic-sticky-note').to.have.count(3);
         expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.not.contain('bold');
         expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.contain('italic');
         expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.contain('underline');
@@ -207,8 +193,8 @@ describe('basic functionality', () => {
         b.doDoubleClick();
         b.waitForVisible('#ic-note-form');
         b.setValue('#ic-form-text', 'Double click to create');
-        b.click('button[name=ship]');
-        b.waitForVisible('#note3');
+        b.click('button[name=ship]').pause(200);
+        expect('div.ic-sticky-note').to.have.count(4);
         const pos = b.getLocation('#note3');
         expect(pos.x).to.equal(300);
         expect(pos.y).to.equal(200);
@@ -218,22 +204,9 @@ describe('basic functionality', () => {
 
   it('compact mode', () => {
     expect('div.compact').to.have.count(0);
-    b.click('#ic-mode-compact');
+    switchMode('#ic-compact');
     b.pause(300);
     expect('div.compact').to.have.count(3);
-    b.click('#ic-mode-normal');
-  });
-
-  it('chat events', () => {
-    b.keys(['c']);
-    b.pause(500);
-    expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('0px');
-
-    b.setValue('#message-text', 'Hello world!');
-    b.keys('\uE007'); // ENTER key
-    b.waitForVisible('.bubble');
-
-    expect('.bubble').to.have.text(/Hello world!/);
-    expect(b.getAttribute('.bubble', 'class')).to.contain('mine');
+    switchMode('#ic-standard');
   });
 });
