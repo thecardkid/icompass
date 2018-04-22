@@ -96,9 +96,9 @@ class StickyNote extends Component {
   renderText = (n) => {
     let style = { background: n.color };
     let clazz = 'text';
-    if (n.style.bold) clazz += 'bold ';
-    if (n.style.italic) clazz += 'italic ';
-    if (n.style.underline) clazz += 'underline';
+    if (n.style.bold) clazz += ' bold';
+    if (n.style.italic) clazz += ' italic';
+    if (n.style.underline) clazz += ' underline';
 
     return (
       <div style={style} className={this.compactMode ? 'contents compact' : 'contents'}>

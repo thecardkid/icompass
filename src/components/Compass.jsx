@@ -75,7 +75,6 @@ class Compass extends Component {
   setCompassCenter = (center) => {
     this.animateQuadrants = true;
     this.props.compassX.setCenter(center);
-    setTimeout(() => this.props.uiX.setSidebarVisible(true), 3000);
   };
 
   fadeInQuadrants = (deltaTimeMs) => {

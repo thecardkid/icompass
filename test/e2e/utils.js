@@ -11,7 +11,7 @@ const setup = () => {
   browser.waitForVisible('#ic-modal');
   browser.setValue('#ic-modal-input', 'topic');
   browser.click('#ic-modal-confirm');
-  browser.waitForVisible('#ic-sidebar', 4000);
+  browser.pause(1000);
 };
 
 const cleanup = () => {

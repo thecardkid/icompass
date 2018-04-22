@@ -162,7 +162,7 @@ class WorkspaceMenu extends Component {
     const { me } = this.props.users;
     const users = _.map(this.props.users.nameToColor, (color, name) => {
       return (
-        <div className={'ic-menu-item'} key={`user-${name}`}>
+        <div className={'ic-menu-item ic-user'} key={`user-${name}`}>
           <span className={'user-color'} style={{background: color}} />
           {name === me ? `${name} (You)` : name}
         </div>
@@ -235,6 +235,7 @@ class WorkspaceMenu extends Component {
         share: false,
         notes: false,
         modes: false,
+        users: false,
       },
     });
   };
