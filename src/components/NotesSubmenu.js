@@ -25,11 +25,11 @@ export default class NotesSubmenu extends Component {
       <div className={'ic-menu ic-notes-submenu'}>
         <section>
           <div className={'ic-menu-item'} onClick={this.showNewNote}>
-            Text Note
+            Text
             <span className={'ic-shortcut'}>N</span>
           </div>
           <div className={'ic-menu-item'} onClick={this.showDoodle}>
-            Doodle Note
+            Doodle
             <span className={'ic-shortcut'}>D</span>
           </div>
         </section>

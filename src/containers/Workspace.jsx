@@ -41,7 +41,10 @@ class Workspace extends Component {
       'user joined': this.onUserJoined,
       'user left': this.onUserLeft,
       'disconnect': () => this.toast.error('Lost connection to server'),
-      'reconnect': () => this.toast.success('Established connection to server'),
+      'reconnect': () => {
+        this.toast.success('Established connection to server');
+        this.socket.onReconnect(this.props);
+      }
     });
 
     if (this.props.route.viewOnly) {

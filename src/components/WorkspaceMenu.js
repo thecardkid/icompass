@@ -153,11 +153,29 @@ class WorkspaceMenu extends Component {
       share: false,
       notes: false,
       modes: false,
+      users: false,
     }});
   };
 
+  renderUsersSubmenu = () => {
+    const { me } = this.props.users;
+    const users = _.map(this.props.users.nameToColor, (color, name) => {
+      return (
+        <div className={'ic-menu-item'} key={`user-${name}`}>
+          <span className={'user-color'} style={{background: color}} />
+          {name === me ? `${name} (You)` : name}
+        </div>
+      );
+    });
+    return (
+      <div className={'ic-menu ic-users-submenu'}>
+        <section>{users}</section>
+      </div>
+    );
+  };
+
   renderMenu = () => {
-    const { share, notes, modes } = this.state.submenus;
+    const { share, notes, modes, users } = this.state.submenus;
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -173,20 +191,21 @@ class WorkspaceMenu extends Component {
           </div>
         </section>
         <section className={'border-bottom'}>
-          <div className={'ic-menu-item has-more'}
-               onMouseOver={this.showSubmenu('share')}>
+          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('share')}>
             {share && <ShareSubmenu compass={this.props.compass}/>}
             Share
           </div>
-          <div className={'ic-menu-item has-more'}
-               onMouseOver={this.showSubmenu('notes')}>
+          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
             Notes
             {notes && <NotesSubmenu uiX={this.props.uiX}/>}
           </div>
-          <div className={'ic-menu-item has-more'}
-               onMouseOver={this.showSubmenu('modes')}>
+          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
             Editing Modes
             {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode}/>}
+          </div>
+          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('users')}>
+            Collaborators
+            {users && this.renderUsersSubmenu()}
           </div>
         </section>
         <section onMouseEnter={this.hideSubmenus}>
@@ -202,7 +221,10 @@ class WorkspaceMenu extends Component {
   };
 
   toggleMenu = () => {
-    this.setState({ active: !this.state.active });
+    if (this.state.active) {
+      return this.hideMenu();
+    }
+    this.setState({ active: true });
   };
 
   hideMenu = () => {
@@ -234,6 +256,7 @@ const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     notes: state.notes,
+    users: state.users,
     modes: {
       normal: state.ui.editingMode === EDITING_MODE.NORMAL || false,
       compact: state.ui.editingMode === EDITING_MODE.COMPACT || false,

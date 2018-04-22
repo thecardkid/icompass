@@ -43,7 +43,7 @@ const SocketSingleton = (() => {
       else Toast.getInstance().error(PROMPTS.EMAIL_NOT_SENT);
     };
 
-    emitReconnected = ({ compass, users }) => {
+    onReconnect = ({ compass, users }) => {
       this.socket.emit('reconnected', {
         code: compass.editCode,
         compassId: compass._id,
