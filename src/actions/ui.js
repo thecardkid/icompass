@@ -5,10 +5,11 @@ export const showNewNote = (event) => {
   };
 };
 
-export const showEdit = (noteIdx) => {
+export const showEdit = (idx, note) => {
   return {
     type: 'showEdit',
-    noteIdx,
+    idx,
+    note,
   };
 };
 
@@ -18,10 +19,11 @@ export const showImage = () => {
   };
 };
 
-export const editImage = (noteIdx) => {
+export const editImage = (idx, note) => {
   return {
     type: 'editImage',
-    noteIdx,
+    idx,
+    note,
   };
 };
 

@@ -2,6 +2,7 @@ import { EDITING_MODE } from '../../lib/constants.js';
 
 const defaultState = {
   forms: {
+    formInfo: {},
     newText: false,
     newImage: false,
     newDoodle: false,
@@ -15,13 +16,13 @@ const defaultState = {
 };
 
 const showNewNote = (state, action) => {
-  let newText = { x: 0.5, y: 0.5 };
-  let e = action.event;
-  if (e) {
+  let formInfo = { x: 0.5, y: 0.5 };
+  const { event } = action;
+  if (event) {
     // mobile touch events come with touches[] array
-    let touchX = e.clientX || e.touches[0].clientX,
-      touchY = e.clientY || e.touches[0].clientY;
-    newText = {
+    const touchX = event.clientX || event.touches[0].clientX;
+    const touchY = event.clientY || event.touches[0].clientY;
+    formInfo = {
       x: touchX / state.vw,
       y: touchY / state.vh,
     };
@@ -30,7 +31,8 @@ const showNewNote = (state, action) => {
     ...state,
     forms: {
       ...defaultState.forms,
-      newText,
+      newText: true,
+      formInfo,
     }
   };
 };
@@ -45,7 +47,11 @@ export default (state = defaultState, action) => {
         ...state,
         forms: {
           ...defaultState.forms,
-          editText: action.noteIdx,
+          editText: true,
+          formInfo: {
+            ...action.note,
+            idx: action.idx,
+          }
         },
       };
 
@@ -63,7 +69,11 @@ export default (state = defaultState, action) => {
         ...state,
         forms: {
           ...defaultState.forms,
-          editImage: action.noteIdx,
+          editImage: true,
+          formInfo: {
+            ...action.note,
+            idx: action.idx,
+          }
         },
       };
 

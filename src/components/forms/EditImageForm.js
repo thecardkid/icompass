@@ -16,17 +16,21 @@ export default class EditImageForm extends Component {
       ...this.props.note,
       text: url,
     };
+    const { idx } = edited;
+    delete edited.idx;
 
     this.socket.emitMetric('note image edit');
-    this.props.ship(edited, this.props.idx);
+    this.props.ship(edited, idx);
     this.props.close();
   };
 
   render() {
     return (
-      <ImageForm title={this.props.title} defaultUrl={this.props.note.text}
-                submit={this.edit} close={this.props.close}
-                bg={this.props.note.color}
+      <ImageForm title={this.props.title}
+                 defaultUrl={this.props.info.text}
+                 submit={this.edit}
+                 close={this.props.close}
+                 bg={this.props.info.color}
       />
     );
   }

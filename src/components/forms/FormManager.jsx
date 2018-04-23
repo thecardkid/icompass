@@ -27,7 +27,7 @@ class FormManager extends Component {
     if (this.props.draftMode) {
       return (
         <CreateTextForm title={'Create a draft'}
-                        position={this.props.forms.newText}
+                        position={this.props.forms.formInfo}
                         ship={this.props.workspaceX.createDraft}
                         {...this.props.commonAttrs} />
       );
@@ -35,7 +35,7 @@ class FormManager extends Component {
 
     return (
       <CreateTextForm title={'Create a note'}
-                      position={this.props.forms.newText}
+                      position={this.props.forms.formInfo}
                       ship={this.socket.emitNewNote}
                       {...this.props.commonAttrs} />
     );
@@ -45,8 +45,7 @@ class FormManager extends Component {
     if (this.props.draftMode) {
       return (
         <EditTextForm title={'Edit this draft'}
-                      idx={this.props.forms.editText}
-                      note={this.props.drafts[this.props.forms.editText]}
+                      info={this.props.forms.formInfo}
                       ship={this.props.workspaceX.editDraft}
                       {...this.props.commonAttrs} />
       );
@@ -54,8 +53,7 @@ class FormManager extends Component {
 
     return (
       <EditTextForm title={'Edit this draft'}
-                      idx={this.props.forms.editText}
-                      note={this.props.notes[this.props.forms.editText]}
+                      info={this.props.forms.formInfo}
                       ship={this.socket.emitEditNote}
                       {...this.props.commonAttrs} />
     );
@@ -81,8 +79,7 @@ class FormManager extends Component {
     if (this.props.draftMode) {
      return (
         <EditImageForm title={'Edit image draft'}
-                       idx={this.props.forms.editImage}
-                       note={this.props.drafts[this.props.forms.editImage]}
+                       info={this.props.forms.formInfo}
                        ship={this.props.workspaceX.editDraft}
                        {...this.props.commonAttrs}
         />
@@ -91,8 +88,7 @@ class FormManager extends Component {
 
     return (
       <EditImageForm title={'Edit image link'}
-                     idx={this.props.forms.editImage}
-                     note={this.props.notes[this.props.forms.editImage]}
+                     info={this.props.forms.formInfo}
                      ship={this.socket.emitEditNote}
                      {...this.props.commonAttrs}
       />
@@ -118,7 +114,7 @@ class FormManager extends Component {
       return this.createTextForm();
     }
 
-    if (typeof forms.editText === 'number') {
+    if (forms.editText) {
       if (visualMode) {
         this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
@@ -130,7 +126,7 @@ class FormManager extends Component {
       return this.createImageForm();
     }
 
-    if (typeof forms.editImage === 'number') {
+    if (forms.editImage) {
       return this.editImageForm();
     }
 

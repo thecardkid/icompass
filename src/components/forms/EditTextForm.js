@@ -14,25 +14,27 @@ export default class EditTextForm extends Component {
     if (!text) return;
 
     const edited = {
-      ...this.props.note,
+      ...this.props.info,
       text,
       isImage,
       style,
     };
+    const { idx } = edited;
+    delete edited.idx;
 
     this.socket.emitMetric('note edit');
-    this.props.ship(edited, this.props.idx);
+    this.props.ship(edited, idx);
     this.props.close();
   };
 
   render() {
     return (
       <TextForm title={this.props.title}
-                defaultStyle={this.props.note.style}
-                defaultText={this.props.note.text}
+                defaultStyle={this.props.info.style}
+                defaultText={this.props.info.text}
                 submit={this.edit}
                 close={this.props.close}
-                bg={this.props.note.color}
+                bg={this.props.info.color}
       />
     );
   }

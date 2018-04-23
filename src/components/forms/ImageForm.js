@@ -25,8 +25,8 @@ export default class ImageForm extends Component {
       <div className="preview">
         <p>
           Preview <span><i className={'material-icons'}>help</i></span>
-          {img}
         </p>
+        {img}
       </div>
     );
   };

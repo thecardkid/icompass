@@ -139,9 +139,9 @@ class StickyNote extends Component {
 
     if (this.hasEditingRights) {
       if (this.props.note.isImage) {
-        this.props.uiActions.editImage(this.props.i);
+        this.props.uiActions.editImage(this.props.i, this.props.note);
       } else {
-        this.props.uiActions.showEdit(this.props.i);
+        this.props.uiActions.showEdit(this.props.i, this.props.note);
       }
     }
   };
