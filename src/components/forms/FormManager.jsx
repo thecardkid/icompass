@@ -23,7 +23,7 @@ class FormManager extends Component {
     this.socket = Socket.getInstance();
   }
 
-  createTextForm() {
+  createTextForm = () => {
     if (this.props.draftMode) {
       return (
         <CreateTextForm title={'Create a draft'}
@@ -39,9 +39,9 @@ class FormManager extends Component {
                       ship={this.socket.emitNewNote}
                       {...this.props.commonAttrs} />
     );
-  }
+  };
 
-  editTextForm() {
+  editTextForm = () => {
     if (this.props.draftMode) {
       return (
         <EditTextForm title={'Edit this draft'}
@@ -57,9 +57,9 @@ class FormManager extends Component {
                       ship={this.socket.emitEditNote}
                       {...this.props.commonAttrs} />
     );
-  }
+  };
 
-  createImageForm() {
+  createImageForm = () => {
     if (this.props.draftMode) {
       return (
         <CreateImageForm title={'Draft an image'}
@@ -75,9 +75,9 @@ class FormManager extends Component {
                        ship={this.socket.emitNewNote}
                        {...this.props.commonAttrs}/>
     );
-  }
+  };
 
-  editImageForm() {
+  editImageForm = () => {
     if (this.props.draftMode) {
      return (
         <EditImageForm title={'Edit image draft'}
@@ -95,50 +95,47 @@ class FormManager extends Component {
                      {...this.props.commonAttrs}
       />
     );
-  }
+  };
 
-  renderDoodleForm() {
+  renderDoodleForm = () => {
     return (
       <DoodleForm ship={this.props.draftMode ? this.props.workspaceX.createDoodleDraft : this.socket.emitNewNote}
                   info={this.props.forms.formInfo}
                   color={this.props.color}
                   {...this.props.commonAttrs} />
     );
-  }
+  };
+
+  renderFormIfNotVisual = (formRenderer) => {
+    if (this.props.visualMode) {
+      this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
+      return null;
+    }
+
+    return formRenderer();
+  };
 
   getForm = () => {
-    const { forms, visualMode } = this.props;
+    const { forms } = this.props;
 
     if (forms.newText) {
-      if (visualMode) {
-        this.props.uiX.closeForm();
-        return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
-      }
-      return this.createTextForm();
+      return this.renderFormIfNotVisual(this.createTextForm);
     }
 
     if (forms.editText) {
-      if (visualMode) {
-        this.props.uiX.closeForm();
-        return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
-      }
-      return this.editTextForm();
+      return this.renderFormIfNotVisual(this.editTextForm);
     }
 
     if (forms.newImage) {
-      return this.createImageForm();
+      return this.renderFormIfNotVisual(this.createImageForm);
     }
 
     if (forms.editImage) {
-      return this.editImageForm();
+      return this.renderFormIfNotVisual(this.editImageForm);
     }
 
     if (forms.newDoodle) {
-      if (visualMode) {
-        this.props.uiX.closeForm();
-        return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
-      }
-      return this.renderDoodleForm();
+      return this.renderFormIfNotVisual(this.renderDoodleForm);
     }
 
     return null;

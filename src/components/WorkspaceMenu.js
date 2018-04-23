@@ -190,10 +190,10 @@ class WorkspaceMenu extends Component {
             New Workspace
           </div>
           <div className={'ic-menu-item'} onClick={this.triggerEmailModal}>
-            Email Reminder
+            Save via Email
           </div>
           <div className={'ic-menu-item'} onClick={this.bookmark}>
-            Bookmark
+            Save as Bookmark
           </div>
         </section>
         <section className={'border-bottom'}>
