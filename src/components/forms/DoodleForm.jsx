@@ -88,13 +88,13 @@ export default class DoodleForm extends Component {
   makeDoodle = () => {
     if (this.state.x.length === 0) return;
     this.socket.emitMetric('note doodle');
+    const { x, y } = this.props.info;
     this.props.ship({
       text: null,
       doodle: document.getElementById('ic-doodle').toDataURL(),
       color: this.props.color,
-      x: 0.5,
-      y: 0.5,
       user: this.props.user,
+      x, y,
     });
     this.props.close();
   };

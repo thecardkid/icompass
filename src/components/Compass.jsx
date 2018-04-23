@@ -47,7 +47,13 @@ class Compass extends Component {
       return;
     }
 
-    this.socket.emitMetric('double click create');
+    if (ev.altKey) {
+      this.socket.emitMetric('double click doodle');
+      this.props.uiX.showDoodle(ev);
+      return;
+    }
+
+    this.socket.emitMetric('double click text');
     this.props.uiX.showNewNote(ev);
   };
 

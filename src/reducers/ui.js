@@ -72,13 +72,7 @@ export default (state = defaultState, action) => {
       };
 
     case 'showDoodle':
-      return {
-        ...state,
-        forms: {
-          ...defaultState.forms,
-          newDoodle: true,
-        },
-      };
+      return showNewNote(state, action, 'newDoodle');
 
     case 'closeForm':
       return {

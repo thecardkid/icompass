@@ -28,9 +28,10 @@ export const editImage = (idx, note) => {
   };
 };
 
-export const showDoodle = () => {
+export const showDoodle = (event) => {
   return {
     type: 'showDoodle',
+    event,
   };
 };
 

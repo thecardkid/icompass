@@ -25,22 +25,22 @@ class ModesSubmenu extends Component {
           <div id={'ic-standard'} className={'ic-menu-item'} onClick={this.props.changeMode('standard')}>
             <span className={normal ? 'active' : 'inactive'} />
             Standard
-            <span className={'ic-shortcut'}>⇧1</span>
+            <span className={'ic-shortcut'}>shift+1</span>
           </div>
           <div id={'ic-compact'} className={'ic-menu-item'} onClick={this.props.changeMode('compact')}>
             <span className={compact ? 'active' : 'inactive'} />
             Compact
-            <span className={'ic-shortcut'}>⇧2</span>
+            <span className={'ic-shortcut'}>shift+2</span>
           </div>
           <div id={'ic-draft'} className={'ic-menu-item'} onClick={this.props.changeMode('draft')}>
             <span className={draft ? 'active' : 'inactive'} />
             Draft
-            <span className={'ic-shortcut'}>⇧3</span>
+            <span className={'ic-shortcut'}>shift+3</span>
           </div>
           <div id={'ic-bulk'} className={'ic-menu-item'} onClick={this.props.changeMode('bulk')}>
             <span className={bulk ? 'active' : 'inactive'} />
             Bulk Edit
-            <span className={'ic-shortcut'}>⇧4</span>
+            <span className={'ic-shortcut'}>shift+4</span>
           </div>
         </section>
         <section>

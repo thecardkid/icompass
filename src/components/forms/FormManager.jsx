@@ -100,6 +100,7 @@ class FormManager extends Component {
   renderDoodleForm() {
     return (
       <DoodleForm ship={this.props.draftMode ? this.props.workspaceX.createDoodleDraft : this.socket.emitNewNote}
+                  info={this.props.forms.formInfo}
                   color={this.props.color}
                   {...this.props.commonAttrs} />
     );
