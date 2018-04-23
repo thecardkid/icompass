@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import DoodleForm from '../components/DoodleForm.jsx';
-import NoteForm from '../components/NoteForm.jsx';
+import DoodleForm from './DoodleForm.jsx';
+import CreateTextForm from './CreateTextForm';
+import EditTextForm from './EditTextForm';
 
-import * as uiX from '../actions/ui';
-import * as workspaceX from '../actions/workspace';
+import * as uiX from '../../actions/ui';
+import * as workspaceX from '../../actions/workspace';
 
-import { EDITING_MODE, PROMPTS } from '../../lib/constants';
-import Socket from '../utils/Socket';
-import Toast from '../utils/Toast';
+import { EDITING_MODE, PROMPTS } from '../../../lib/constants';
+import Socket from '../../utils/Socket';
+import Toast from '../../utils/Toast';
 
 class FormManager extends Component {
   constructor(props) {
@@ -20,22 +21,40 @@ class FormManager extends Component {
   }
 
   renderNoteForm() {
+    if (this.props.draftMode) {
+      return (
+        <CreateTextForm mode={'make draft'}
+                        position={this.props.forms.newText}
+                        ship={this.props.workspaceX.createDraft}
+                        {...this.props.commonAttrs} />
+      );
+    }
+
     return (
-      <NoteForm mode={this.props.draftMode ? 'make draft' : 'make'}
-                note={{}}
-                position={this.props.forms.newText}
-                ship={this.props.draftMode ? this.props.workspaceX.createDraft : this.socket.emitNewNote}
-                {...this.props.commonAttrs} />
+      <CreateTextForm mode={'make'}
+                      position={this.props.forms.newText}
+                      ship={this.socket.emitNewNote}
+                      {...this.props.commonAttrs} />
     );
   }
 
   renderEditForm() {
+    if (this.props.draftMode) {
+      return (
+        <EditTextForm mode={'edit draft'}
+                      idx={this.props.forms.editText}
+                      note={this.props.drafts[this.props.forms.editText]}
+                      ship={this.props.workspaceX.editDraft}
+                      {...this.props.commonAttrs} />
+      );
+    }
+
     return (
-      <NoteForm mode={this.props.draftMode ? 'edit draft' : 'edit'}
-                idx={this.props.forms.editText}
-                note={this.props.notes[this.props.forms.editText]}
-                ship={this.props.draftMode ? this.props.workspaceX.editDraft : this.socket.emitEditNote}
-                {...this.props.commonAttrs} />
+      <EditTextForm mode={'edit'}
+                      idx={this.props.forms.editText}
+                      note={this.props.notes[this.props.forms.editText]}
+                      ship={this.socket.emitEditNote}
+                      {...this.props.commonAttrs} />
     );
   }
 
@@ -90,6 +109,7 @@ const mapStateToProps = (state) => {
     me: state.users.me,
     color: state.users.nameToColor[state.users.me],
     notes: state.notes,
+    drafts: state.workspace.drafts,
     forms: state.ui.forms,
     draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,

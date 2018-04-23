@@ -12,7 +12,7 @@ import * as userActions from '../actions/users';
 import * as workspaceActions from '../actions/workspace';
 
 import Compass from '../components/Compass.jsx';
-import FormManager from '../components/FormManager.jsx';
+import FormManager from '../components/forms/FormManager.jsx';
 import HelpFeedback from '../components/HelpFeedback';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 

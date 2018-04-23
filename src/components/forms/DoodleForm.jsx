@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
 
-import Socket from '../utils/Socket';
+import Socket from '../../utils/Socket';
 
 let paint = false;
 
