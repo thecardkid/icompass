@@ -15,7 +15,7 @@ const defaultState = {
 };
 
 const showNewNote = (state, action) => {
-  let newText = true;
+  let newText = { x: 0.5, y: 0.5 };
   let e = action.event;
   if (e) {
     // mobile touch events come with touches[] array

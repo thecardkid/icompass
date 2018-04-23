@@ -5,8 +5,8 @@ import Socket from '../../utils/Socket';
 import TextForm from './TextForm';
 
 export default class EditTextForm extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.socket = Socket.getInstance();
   }
 
@@ -25,20 +25,9 @@ export default class EditTextForm extends Component {
     this.props.close();
   };
 
-  getHeader(mode) {
-    switch (mode) {
-      case 'edit':
-        return 'Edit this note';
-      case 'edit draft':
-        return 'Edit this draft';
-      default:
-        return '';
-    }
-  }
-
   render() {
     return (
-      <TextForm title={this.getHeader(this.props.mode)}
+      <TextForm title={this.props.title}
                 defaultStyle={this.props.note.style}
                 defaultText={this.props.note.text}
                 submit={this.edit}

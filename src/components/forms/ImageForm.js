@@ -16,16 +16,17 @@ export default class ImageForm extends Component {
   };
 
   renderPreview = () => {
-    if (!REGEX.URL.test(this.state.imgSource)) {
-      return;
+    let img;
+    if (REGEX.URL.test(this.state.imgSource)) {
+      img = <img src={this.state.imgSource} />;
     }
 
     return (
       <div className="preview">
         <p>
           Preview <span><i className={'material-icons'}>help</i></span>
+          {img}
         </p>
-        <img src={this.state.imgSource} />
       </div>
     );
   };
@@ -35,8 +36,6 @@ export default class ImageForm extends Component {
   };
 
   render() {
-    const color = this.props.bg;
-
     return (
       <div className="ic-modal ic-form" id="ic-image-form">
         <div className="ic-modal-contents">
@@ -47,7 +46,7 @@ export default class ImageForm extends Component {
                     autoFocus
                     value={this.state.imgSource}
                     onChange={this.handleChange}
-                    style={{ background: color }} />
+                    style={{ background: this.props.bg }} />
           {this.renderPreview()}
           <div className="note-form-footer">
             <div>

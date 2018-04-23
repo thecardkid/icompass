@@ -5,20 +5,15 @@ import TextForm from './TextForm';
 import Socket from '../../utils/Socket';
 
 export default class CreateTextForm extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.socket = Socket.getInstance();
   }
 
   make = (text, isImage, style) => {
     if (!text) return;
 
-    let x = 0.5, y = 0.5;
-    if (typeof this.props.position === 'object') {
-      x = this.props.position.x;
-      y = this.props.position.y;
-    }
-
+    const { x, y } = this.props.position;
     let note = {
       text, isImage, x, y, style,
       doodle: null,
@@ -31,21 +26,12 @@ export default class CreateTextForm extends Component {
     this.props.close();
   };
 
-  getHeader(mode) {
-    switch (mode) {
-      case 'make':
-        return 'Create a note';
-      case 'make draft':
-        return 'Create a draft';
-      default:
-        return '';
-    }
-  }
-
   render() {
     return (
-      <TextForm title={this.getHeader(this.props.mode)} defaultText={''}
-                submit={this.make} close={this.props.close}
+      <TextForm title={this.props.title}
+                defaultText={''}
+                submit={this.make}
+                close={this.props.close}
                 bg={this.props.bg}
       />
     );
