@@ -95,6 +95,9 @@ class Compass extends Component {
     setTimeout(() => $('#principles').css({opacity: 1}), start + deltaTimeMs);
     setTimeout(() => $('#ideas').css({opacity: 1}), start + (2 * deltaTimeMs));
     setTimeout(() => $('#experiments').css({opacity: 1}), start + (3 * deltaTimeMs));
+    setTimeout(() => {
+      this.toast.info('You\'re all set up! Double click anywhere to get started.');
+    }, start + (4 * deltaTimeMs));
   };
 
   getCenterCss(r) {
@@ -184,8 +187,6 @@ class Compass extends Component {
       if (this.animateQuadrants) {
         this.animateQuadrants = false;
         this.fadeInQuadrants(800);
-      } else {
-        this.fadeInQuadrants(0);
       }
 
       compass = this.renderCompassStructure();
