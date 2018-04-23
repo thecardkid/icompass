@@ -1,21 +1,14 @@
 div#ic-doodle-form {
   width: 450px;
-  height: 345px;
 
-  h1 {
-    margin: 10px 0;
-  }
+  div.ic-modal-header {
+    margin-bottom: 5px;
 
-  canvas {
-    width: 94%;
-  }
+    h1 {
+      text-align: left;
+    }
 
-  div.doodle-form-footer {
-    margin-top: 10px;
-    height: 25px;
-    padding: 0 20px;
-
-    button {
+    button[name=clear] {
       float: right;
       font-size: 14px;
       padding: 5px;
@@ -24,21 +17,14 @@ div#ic-doodle-form {
       -moz-border-radius: 3px;
       border-radius: 3px;
     }
+  }
 
-    button[name=clear] {
-      float: left;
-    }
+  canvas {
+    width: 100%;
+  }
 
-    button[name=nvm] {
-      background: none;
-      color: gray;
-    }
-
-    button[name=ship] {
-      background: @dark;
-      color: @light;
-      .hasTransition(0.5);
-      margin-left: 5px;
-    }
+  div.note-form-footer {
+    margin-top: 5px;
+    height: 25px;
   }
 }

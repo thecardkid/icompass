@@ -31,6 +31,7 @@ export default class EditImageForm extends Component {
                  submit={this.edit}
                  close={this.props.close}
                  bg={this.props.info.color}
+                 switch={false}
       />
     );
   }

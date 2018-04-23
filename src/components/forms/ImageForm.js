@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
+import { bindActionCreators } from 'redux';
 
 import * as uiX from '../../actions/ui';
 
@@ -51,12 +51,33 @@ class ImageForm extends Component {
     this.props.uiX.switchToDoodle();
   };
 
+  renderSwitches = () => {
+    return (
+      <div>
+        <button className={'switch-form'}
+                data-tip="Create a text note"
+                data-for="text-tooltip"
+                onClick={this.switchText}>
+          <i className={'material-icons'}>text_format</i>
+        </button>
+        <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
+        <button className={'switch-form'}
+                data-tip="Create a sketch"
+                data-for="doodle-tooltip"
+                onClick={this.switchDoodle}>
+          <i className={'material-icons'}>brush</i>
+        </button>
+        <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+      </div>
+    );
+  };
+
   render() {
     return (
       <div className="ic-modal ic-form" id="ic-image-form">
         <div className="ic-modal-contents">
           <div className="ic-modal-header">
-            <h1 className="ic-modal-title">Insert an image</h1>
+            <h1 className="ic-modal-title">{this.props.title}</h1>
           </div>
           <textarea id="ic-form-text"
                     autoFocus
@@ -65,16 +86,7 @@ class ImageForm extends Component {
                     style={{ background: this.props.bg }} />
           {this.renderPreview()}
           <div className="note-form-footer">
-            <div>
-              <button className={'switch-form'} data-tip="Create a text note" data-for="image-tooltip" onClick={this.switchText}>
-                <i className={'material-icons'}>text_format</i>
-              </button>
-              <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
-              <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip" onClick={this.switchDoodle}>
-                <i className={'material-icons'}>brush</i>
-              </button>
-              <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
-            </div>
+            {this.props.switch && this.renderSwitches()}
             <button name="ship" onClick={this.submit}>ship it</button>
             <button name="nvm" onClick={this.props.close}>never mind</button>
           </div>

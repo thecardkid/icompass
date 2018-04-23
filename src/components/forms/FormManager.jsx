@@ -62,7 +62,7 @@ class FormManager extends Component {
   createImageForm = () => {
     if (this.props.draftMode) {
       return (
-        <CreateImageForm title={'Draft an image'}
+        <CreateImageForm title={'Insert a photo draft'}
                          info={this.props.forms.formInfo}
                          ship={this.props.workspaceX.createDraft}
                          {...this.props.commonAttrs}/>
@@ -70,7 +70,7 @@ class FormManager extends Component {
     }
 
     return (
-      <CreateImageForm title={'Insert an image'}
+      <CreateImageForm title={'Insert a photo'}
                        info={this.props.forms.formInfo}
                        ship={this.socket.emitNewNote}
                        {...this.props.commonAttrs}/>
@@ -80,7 +80,7 @@ class FormManager extends Component {
   editImageForm = () => {
     if (this.props.draftMode) {
      return (
-        <EditImageForm title={'Edit image draft'}
+        <EditImageForm title={'Edit photo draft'}
                        info={this.props.forms.formInfo}
                        ship={this.props.workspaceX.editDraft}
                        {...this.props.commonAttrs}

@@ -1,11 +1,16 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
+import { bindActionCreators } from 'redux';
+
+import * as uiX from '../../actions/ui';
 
 import Socket from '../../utils/Socket';
 
 let paint = false;
 
-export default class DoodleForm extends Component {
+class DoodleForm extends Component {
   constructor() {
     super();
     this.socket = Socket.getInstance();
@@ -103,13 +108,26 @@ export default class DoodleForm extends Component {
     this.setState({ x: [], y: [], drag: [] });
   };
 
+  switchText = () => {
+    this.socket.emitMetric('switch doodle to text');
+    this.props.uiX.switchToText();
+  };
+
+  switchImage = () => {
+    this.socket.emitMetric('switch doodle to image');
+    this.props.uiX.switchToImage();
+  };
+
   render() {
     this.drawCanvas();
 
     return (
-      <div className="ic-modal" id="ic-doodle-form" style={this.props.style}>
-        <div>
-          <h1>Doodle on a note</h1>
+      <div className="ic-modal ic-form" id="ic-doodle-form" style={this.props.style}>
+        <div className={'ic-modal-contents'}>
+          <div className={'ic-modal-header'}>
+            <h1 className={'ic-modal-title'}>Create a sketch</h1>
+            <button name="clear" onClick={this.clearCanvas}>clear</button>
+          </div>
           <canvas id="ic-doodle"
                   ref="canvas"
                   width="410"
@@ -123,13 +141,36 @@ export default class DoodleForm extends Component {
                   onTouchEnd={this.stopDraw}
                   style={{ background: this.props.bg }}>
           </canvas>
-        </div>
-        <div className="doodle-form-footer">
-          <button name="clear" onClick={this.clearCanvas}>clear</button>
-          <button name="ship" onClick={this.makeDoodle}>ship it</button>
-          <button name="nvm" onClick={this.props.close}>never mind</button>
+          <div className="note-form-footer">
+            <div>
+              <button className={'switch-form'}
+                      data-tip="Create a text note"
+                      data-for="text-tooltip"
+                      onClick={this.switchText}>
+                <i className={'material-icons'}>text_format</i>
+              </button>
+              <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
+              <button className={'switch-form'}
+                      data-tip="Insert a photo"
+                      data-for="doodle-tooltip"
+                      onClick={this.switchImage}>
+                <i className={'material-icons'}>photo</i>
+              </button>
+              <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+            </div>
+            <button name="ship" onClick={this.makeDoodle}>ship it</button>
+            <button name="nvm" onClick={this.props.close}>never mind</button>
+          </div>
         </div>
       </div>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(() => ({}), mapDispatchToProps)(DoodleForm);

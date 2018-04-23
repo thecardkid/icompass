@@ -33,6 +33,7 @@ export default class CreateTextForm extends Component {
                 submit={this.make}
                 close={this.props.close}
                 bg={this.props.bg}
+                switch={true}
       />
     );
   }

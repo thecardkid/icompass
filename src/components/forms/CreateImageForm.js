@@ -34,9 +34,12 @@ export default class CreateImageForm extends Component {
 
   render() {
     return (
-      <ImageForm title={this.props.title} defaultText={''}
-                submit={this.make} close={this.props.close}
-                bg={this.props.bg}
+      <ImageForm title={this.props.title}
+                 defaultText={''}
+                 submit={this.make}
+                 close={this.props.close}
+                 bg={this.props.bg}
+                 switch={true}
       />
     );
   }

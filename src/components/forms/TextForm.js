@@ -95,6 +95,27 @@ class TextForm extends Component {
     this.props.uiX.switchToDoodle();
   };
 
+  renderSwitches = () => {
+    return (
+      <div>
+        <button className={'switch-form'}
+                data-tip="Insert a photo"
+                data-for="image-tooltip"
+                onClick={this.switchImage}>
+          <i className={'material-icons'}>photo</i>
+        </button>
+        <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
+        <button className={'switch-form'}
+                data-tip="Create a sketch"
+                data-for="doodle-tooltip"
+                onClick={this.switchDoodle}>
+          <i className={'material-icons'}>brush</i>
+        </button>
+        <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+      </div>
+    );
+  };
+
   render() {
     const spanStyle = { color: this.state.charCount > 300 ? 'red' : 'black' };
 
@@ -121,16 +142,7 @@ class TextForm extends Component {
                     onChange={this.handleChange}
                     style={{ background: this.props.bg }}/>
           <div className="note-form-footer">
-            <div>
-              <button className={'switch-form'} data-tip="Insert an image" data-for="image-tooltip" onClick={this.switchImage}>
-                <i className={'material-icons'}>photo</i>
-              </button>
-              <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
-              <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip" onClick={this.switchDoodle}>
-                <i className={'material-icons'}>brush</i>
-              </button>
-              <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
-            </div>
+            {this.props.switch && this.renderSwitches()}
             <button name="ship" onClick={this.submit}>ship it</button>
             <button name="nvm" onClick={this.props.close}>never mind</button>
           </div>
