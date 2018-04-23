@@ -202,7 +202,7 @@ class WorkspaceMenu extends Component {
             Share
           </div>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
-            Notes
+            Insert Note
             {notes && <NotesSubmenu uiX={this.props.uiX}/>}
           </div>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
