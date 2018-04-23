@@ -58,6 +58,15 @@ export default (state = defaultState, action) => {
         },
       };
 
+    case 'editImage':
+      return {
+        ...state,
+        forms: {
+          ...defaultState.forms,
+          editImage: action.noteIdx,
+        },
+      };
+
     case 'showDoodle':
       return {
         ...state,

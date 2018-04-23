@@ -18,6 +18,13 @@ export const showImage = () => {
   };
 };
 
+export const editImage = (noteIdx) => {
+  return {
+    type: 'editImage',
+    noteIdx,
+  };
+};
+
 export const showDoodle = () => {
   return {
     type: 'showDoodle',

@@ -43,7 +43,7 @@ export default class EditTextForm extends Component {
                 defaultText={this.props.note.text}
                 submit={this.edit}
                 close={this.props.close}
-                bg={this.props.note.color || this.props.bg}
+                bg={this.props.note.color}
       />
     );
   }

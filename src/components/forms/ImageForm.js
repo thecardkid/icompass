@@ -4,9 +4,12 @@ import ReactTooltip from 'react-tooltip';
 import { REGEX } from '../../../lib/constants';
 
 export default class ImageForm extends Component {
-  state = {
-    imgSource: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      imgSource: props.defaultUrl || '',
+    };
+  }
 
   handleChange = (e) => {
     this.setState({ imgSource: e.target.value });
@@ -19,7 +22,9 @@ export default class ImageForm extends Component {
 
     return (
       <div className="preview">
-        <p>Preview</p>
+        <p>
+          Preview <span><i className={'material-icons'}>help</i></span>
+        </p>
         <img src={this.state.imgSource} />
       </div>
     );
@@ -40,7 +45,7 @@ export default class ImageForm extends Component {
           </div>
           <textarea id="ic-form-text"
                     autoFocus
-                    defaultValue={this.props.value || ''}
+                    value={this.state.imgSource}
                     onChange={this.handleChange}
                     style={{ background: color }} />
           {this.renderPreview()}

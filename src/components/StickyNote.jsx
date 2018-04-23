@@ -125,10 +125,25 @@ class StickyNote extends Component {
   };
 
   edit = () => {
-    if (this.props.note.doodle) return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
-    if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
-    if (this.draftMode && !this.props.note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
-    if (this.hasEditingRights) this.props.uiActions.showEdit(this.props.i);
+    if (this.props.note.doodle) {
+      return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
+    }
+
+    if (this.visualMode) {
+      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+    }
+
+    if (this.draftMode && !this.props.note.draft) {
+      return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
+    }
+
+    if (this.hasEditingRights) {
+      if (this.props.note.isImage) {
+        this.props.uiActions.editImage(this.props.i);
+      } else {
+        this.props.uiActions.showEdit(this.props.i);
+      }
+    }
   };
 
   handleClick = () => {

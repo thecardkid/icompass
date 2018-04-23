@@ -14,6 +14,7 @@ import Socket from '../../utils/Socket';
 import Toast from '../../utils/Toast';
 import ImageForm from './ImageForm';
 import CreateImageForm from './CreateImageForm';
+import EditImageForm from './EditImageForm';
 
 class FormManager extends Component {
   constructor(props) {
@@ -61,10 +62,40 @@ class FormManager extends Component {
   }
 
   createImageForm() {
+    if (this.props.draftMode) {
+      return (
+        <CreateImageForm title={'Draft an image'}
+                         ship={this.props.workspaceX.createDraft}
+                         {...this.props.commonAttrs}/>
+      );
+    }
+
     return (
-      <CreateImageForm title={'Insert in image'}
+      <CreateImageForm title={'Insert an image'}
                        ship={this.socket.emitNewNote}
                        {...this.props.commonAttrs}/>
+    );
+  }
+
+  editImageForm() {
+    if (this.props.draftMode) {
+     return (
+        <EditImageForm title={'Edit image draft'}
+                       idx={this.props.forms.editImage}
+                       note={this.props.drafts[this.props.forms.editImage]}
+                       ship={this.props.workspaceX.editDraft}
+                       {...this.props.commonAttrs}
+        />
+      );
+    }
+
+    return (
+      <EditImageForm title={'Edit image link'}
+                     idx={this.props.forms.editImage}
+                     note={this.props.drafts[this.props.forms.editImage]}
+                     ship={this.socket.emitEditNote}
+                     {...this.props.commonAttrs}
+      />
     );
   }
 
@@ -97,6 +128,10 @@ class FormManager extends Component {
 
     if (forms.newImage) {
       return this.createImageForm();
+    }
+
+    if (typeof forms.editImage === 'number') {
+      return this.editImageForm();
     }
 
     if (forms.newDoodle) {
