@@ -13,9 +13,10 @@ export const showEdit = (idx, note) => {
   };
 };
 
-export const showImage = () => {
+export const showImage = (event) => {
   return {
-    type: 'showImage'
+    type: 'showImage',
+    event,
   };
 };
 

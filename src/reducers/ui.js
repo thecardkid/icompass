@@ -15,7 +15,7 @@ const defaultState = {
   editingMode: EDITING_MODE.NORMAL,
 };
 
-const showNewNote = (state, action) => {
+const showNewNote = (state, action, formType) => {
   let formInfo = { x: 0.5, y: 0.5 };
   const { event } = action;
   if (event) {
@@ -31,7 +31,7 @@ const showNewNote = (state, action) => {
     ...state,
     forms: {
       ...defaultState.forms,
-      newText: true,
+      [formType]: true,
       formInfo,
     }
   };
@@ -40,7 +40,7 @@ const showNewNote = (state, action) => {
 export default (state = defaultState, action) => {
   switch (action.type) {
     case 'showNewNote':
-      return showNewNote(state, action);
+      return showNewNote(state, action, 'newText');
 
     case 'showEdit':
       return {
@@ -56,13 +56,7 @@ export default (state = defaultState, action) => {
       };
 
     case 'showImage':
-      return {
-        ...state,
-        forms: {
-          ...defaultState.forms,
-          newImage: true,
-        },
-      };
+      return showNewNote(state, action, 'newImage');
 
     case 'editImage':
       return {

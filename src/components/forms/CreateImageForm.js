@@ -12,12 +12,7 @@ export default class CreateImageForm extends Component {
   make = (url) => {
     if (!url) return;
 
-    let x = 0.5, y = 0.5;
-    if (typeof this.props.position === 'object') {
-      x = this.props.position.x;
-      y = this.props.position.y;
-    }
-
+    const { x, y } = this.props.info;
     let note = {
       x, y,
       text: url,

@@ -13,7 +13,7 @@ export default class CreateTextForm extends Component {
   make = (text, isImage, style) => {
     if (!text) return;
 
-    const { x, y } = this.props.position;
+    const { x, y } = this.props.info;
     let note = {
       text, isImage, x, y, style,
       doodle: null,

@@ -41,6 +41,12 @@ class Compass extends Component {
   }
 
   doubleClickCreate = (ev) => {
+    if (ev.shiftKey) {
+      this.socket.emitMetric('double click image');
+      this.props.uiX.showImage(ev);
+      return;
+    }
+
     this.socket.emitMetric('double click create');
     this.props.uiX.showNewNote(ev);
   };

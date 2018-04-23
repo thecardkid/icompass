@@ -27,7 +27,7 @@ class FormManager extends Component {
     if (this.props.draftMode) {
       return (
         <CreateTextForm title={'Create a draft'}
-                        position={this.props.forms.formInfo}
+                        info={this.props.forms.formInfo}
                         ship={this.props.workspaceX.createDraft}
                         {...this.props.commonAttrs} />
       );
@@ -35,7 +35,7 @@ class FormManager extends Component {
 
     return (
       <CreateTextForm title={'Create a note'}
-                      position={this.props.forms.formInfo}
+                      info={this.props.forms.formInfo}
                       ship={this.socket.emitNewNote}
                       {...this.props.commonAttrs} />
     );
@@ -63,6 +63,7 @@ class FormManager extends Component {
     if (this.props.draftMode) {
       return (
         <CreateImageForm title={'Draft an image'}
+                         info={this.props.forms.formInfo}
                          ship={this.props.workspaceX.createDraft}
                          {...this.props.commonAttrs}/>
       );
@@ -70,6 +71,7 @@ class FormManager extends Component {
 
     return (
       <CreateImageForm title={'Insert an image'}
+                       info={this.props.forms.formInfo}
                        ship={this.socket.emitNewNote}
                        {...this.props.commonAttrs}/>
     );
