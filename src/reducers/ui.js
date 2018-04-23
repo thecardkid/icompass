@@ -49,6 +49,15 @@ export default (state = defaultState, action) => {
         },
       };
 
+    case 'showImage':
+      return {
+        ...state,
+        forms: {
+          ...defaultState.forms,
+          newImage: true,
+        },
+      };
+
     case 'showDoodle':
       return {
         ...state,

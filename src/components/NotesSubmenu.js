@@ -28,6 +28,10 @@ export default class NotesSubmenu extends Component {
             Text
             <span className={'ic-shortcut'}>N</span>
           </div>
+          <div className={'ic-menu-item'} onClick={this.props.uiX.showImage}>
+            Image
+            <span className={'ic-shortcut'}>I</span>
+          </div>
           <div className={'ic-menu-item'} onClick={this.showDoodle}>
             Doodle
             <span className={'ic-shortcut'}>D</span>

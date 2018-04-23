@@ -12,6 +12,8 @@ import * as workspaceX from '../../actions/workspace';
 import { EDITING_MODE, PROMPTS } from '../../../lib/constants';
 import Socket from '../../utils/Socket';
 import Toast from '../../utils/Toast';
+import ImageForm from './ImageForm';
+import CreateImageForm from './CreateImageForm';
 
 class FormManager extends Component {
   constructor(props) {
@@ -20,7 +22,7 @@ class FormManager extends Component {
     this.socket = Socket.getInstance();
   }
 
-  renderNoteForm() {
+  createTextForm() {
     if (this.props.draftMode) {
       return (
         <CreateTextForm mode={'make draft'}
@@ -38,7 +40,7 @@ class FormManager extends Component {
     );
   }
 
-  renderEditForm() {
+  editTextForm() {
     if (this.props.draftMode) {
       return (
         <EditTextForm mode={'edit draft'}
@@ -58,6 +60,14 @@ class FormManager extends Component {
     );
   }
 
+  createImageForm() {
+    return (
+      <CreateImageForm title={'Insert in image'}
+                       ship={this.socket.emitNewNote}
+                       {...this.props.commonAttrs}/>
+    );
+  }
+
   renderDoodleForm() {
     return (
       <DoodleForm ship={this.props.draftMode ? this.props.workspaceX.createDoodleDraft : this.socket.emitNewNote}
@@ -74,7 +84,7 @@ class FormManager extends Component {
         this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
       }
-      return this.renderNoteForm();
+      return this.createTextForm();
     }
 
     if (typeof forms.editText === 'number') {
@@ -82,7 +92,11 @@ class FormManager extends Component {
         this.props.uiX.closeForm();
         return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
       }
-      return this.renderEditForm();
+      return this.editTextForm();
+    }
+
+    if (forms.newImage) {
+      return this.createImageForm();
     }
 
     if (forms.newDoodle) {

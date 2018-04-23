@@ -12,6 +12,12 @@ export const showEdit = (noteIdx) => {
   };
 };
 
+export const showImage = () => {
+  return {
+    type: 'showImage'
+  };
+};
+
 export const showDoodle = () => {
   return {
     type: 'showDoodle',

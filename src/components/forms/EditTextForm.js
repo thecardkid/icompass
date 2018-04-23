@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import Modal from '../../utils/Modal';
-import Toast from '../../utils/Toast';
 import Socket from '../../utils/Socket';
 
 import TextForm from './TextForm';
@@ -9,8 +7,6 @@ import TextForm from './TextForm';
 export default class EditTextForm extends Component {
   constructor(props) {
     super(props);
-    this.toast = Toast.getInstance();
-    this.modal = Modal.getInstance();
     this.socket = Socket.getInstance();
   }
 

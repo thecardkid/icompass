@@ -88,7 +88,7 @@ export default class TextForm extends Component {
     if (this.state.style.underline) textStyle += 'underline';
 
     return (
-      <div className="ic-modal" id="ic-note-form">
+      <div className="ic-modal ic-form" id="ic-note-form">
         <div className="ic-modal-contents">
           <div className="ic-modal-header">
             <h1 className={'ic-modal-title'}>

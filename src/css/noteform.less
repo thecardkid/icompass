@@ -1,4 +1,4 @@
-#ic-note-form {
+.ic-form {
   width: 300px;
   z-index: 3;
 
@@ -6,23 +6,8 @@
     width: 60%;
   }
 
-  div.ic-text-ibu {
-    float: right;
-    width: 40%;
-    height: 30px;
-
-    button {
-      height: 30px;
-      width: 30px;
-      margin: 0 2px;
-      float: right;
-      border-radius: 3px;
-    }
-  }
-
-  textarea#ic-form-text {
+  textarea {
     font-size: 18px;
-    height: 200px;
     margin-top: 10px;
     width: 260px;
     padding: 10px;
@@ -70,3 +55,41 @@
   }
 }
 
+#ic-note-form {
+  div.ic-text-ibu {
+    float: right;
+    width: 40%;
+    height: 30px;
+
+    button {
+      height: 30px;
+      width: 30px;
+      margin: 0 2px;
+      float: right;
+      border-radius: 3px;
+    }
+  }
+
+  textarea#ic-form-text {
+    height: 200px;
+  }
+}
+
+#ic-image-form {
+  textarea#ic-form-text {
+    height: 100px;
+  }
+
+  div.preview {
+    border-top: 1px solid #BBB;
+    text-align: left;
+    margin: 10px 0 20px;
+    padding-top: 5px;
+
+    img {
+      max-width: 100%;
+      max-height: 200px;
+      margin-top: 10px;
+    }
+  }
+}
