@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import React, { Component } from 'react';
 import ReactTooltip from 'react-tooltip';
 
@@ -31,11 +30,11 @@ export default class TextForm extends Component {
   };
 
   handleChange = () => {
-    this.setState({ charCount: $('#ic-form-text').val().length });
+    this.setState({ charCount: this.refs.text.value.length });
   };
 
   getText(cb) {
-    let text = $('#ic-form-text').val();
+    let text = this.refs.text.value;
     if (!text) cb({});
 
     if (REGEX.URL.test(text)) {
@@ -100,6 +99,7 @@ export default class TextForm extends Component {
           </div>
           <textarea id="ic-form-text"
                     className={textStyle}
+                    ref={'text'}
                     autoFocus
                     defaultValue={this.props.defaultText || ''}
                     onChange={this.handleChange}
