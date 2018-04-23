@@ -35,6 +35,24 @@ export const showDoodle = (event) => {
   };
 };
 
+export const switchToImage = () => {
+  return {
+    type: 'switchToImage',
+  };
+};
+
+export const switchToDoodle = () => {
+  return {
+    type: 'switchToDoodle',
+  };
+};
+
+export const switchToText = () => {
+  return {
+    type: 'switchToText',
+  };
+};
+
 export const closeForm = () => {
   return {
     type: 'closeForm',

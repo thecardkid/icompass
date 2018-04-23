@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
 
-import { REGEX } from '../../../lib/constants';
+import * as uiX from '../../actions/ui';
 
-export default class ImageForm extends Component {
+import { REGEX } from '../../../lib/constants';
+import SocketSingleton from '../../utils/Socket';
+
+class ImageForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       imgSource: props.defaultUrl || '',
     };
+    this.socket = SocketSingleton.getInstance();
   }
 
   handleChange = (e) => {
@@ -35,6 +41,16 @@ export default class ImageForm extends Component {
     this.props.submit(this.state.imgSource);
   };
 
+  switchText = () => {
+    this.socket.emitMetric('switch image to text');
+    this.props.uiX.switchToText();
+  };
+
+  switchDoodle = () => {
+    this.socket.emitMetric('switch image to doodle');
+    this.props.uiX.switchToDoodle();
+  };
+
   render() {
     return (
       <div className="ic-modal ic-form" id="ic-image-form">
@@ -50,11 +66,11 @@ export default class ImageForm extends Component {
           {this.renderPreview()}
           <div className="note-form-footer">
             <div>
-              <button className={'switch-form'} data-tip="Create a text note" data-for="image-tooltip">
+              <button className={'switch-form'} data-tip="Create a text note" data-for="image-tooltip" onClick={this.switchText}>
                 <i className={'material-icons'}>text_format</i>
               </button>
               <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
-              <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip">
+              <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip" onClick={this.switchDoodle}>
                 <i className={'material-icons'}>brush</i>
               </button>
               <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
@@ -67,3 +83,11 @@ export default class ImageForm extends Component {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(() => ({}), mapDispatchToProps)(ImageForm);

@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
+
+import * as uiX from '../../actions/ui';
 
 import { COLORS, MODALS, PROMPTS, REGEX } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
+import SocketSingleton from '../../utils/Socket';
 
-export default class TextForm extends Component {
+class TextForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,6 +23,7 @@ export default class TextForm extends Component {
     };
 
     this.modal = ModalSingleton.getInstance();
+    this.socket = SocketSingleton.getInstance();
   }
 
   toggleStyle = (style) => () => {
@@ -79,6 +85,16 @@ export default class TextForm extends Component {
     );
   }
 
+  switchImage = () => {
+    this.socket.emitMetric('switch text to image');
+    this.props.uiX.switchToImage();
+  };
+
+  switchDoodle = () => {
+    this.socket.emitMetric('switch text to doodle');
+    this.props.uiX.switchToDoodle();
+  };
+
   render() {
     const spanStyle = { color: this.state.charCount > 300 ? 'red' : 'black' };
 
@@ -106,11 +122,11 @@ export default class TextForm extends Component {
                     style={{ background: this.props.bg }}/>
           <div className="note-form-footer">
             <div>
-              <button className={'switch-form'} data-tip="Insert an image" data-for="image-tooltip">
+              <button className={'switch-form'} data-tip="Insert an image" data-for="image-tooltip" onClick={this.switchImage}>
                 <i className={'material-icons'}>photo</i>
               </button>
               <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
-              <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip">
+              <button className={'switch-form'} data-tip="Insert a doodle" data-for="doodle-tooltip" onClick={this.switchDoodle}>
                 <i className={'material-icons'}>brush</i>
               </button>
               <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
@@ -123,3 +139,11 @@ export default class TextForm extends Component {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(() => ({}), mapDispatchToProps)(TextForm);

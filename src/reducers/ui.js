@@ -74,6 +74,36 @@ export default (state = defaultState, action) => {
     case 'showDoodle':
       return showNewNote(state, action, 'newDoodle');
 
+    case 'switchToImage':
+      return {
+        ...state,
+        forms: {
+          ...defaultState.forms,
+          formInfo: {...state.forms.formInfo},
+          newImage: true,
+        },
+      };
+
+    case 'switchToDoodle':
+      return {
+        ...state,
+        forms: {
+          ...defaultState.forms,
+          formInfo: {...state.forms.formInfo},
+          newDoodle: true,
+        },
+      };
+
+    case 'switchToText':
+      return {
+        ...state,
+        forms: {
+          ...defaultState.forms,
+          formInfo: { ...state.forms.formInfo },
+          newText: true,
+        },
+      };
+
     case 'closeForm':
       return {
         ...state,
