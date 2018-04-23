@@ -18,7 +18,16 @@ class ImageForm extends Component {
   }
 
   handleChange = (e) => {
-    this.setState({ imgSource: e.target.value });
+    const { value } = e.target;
+
+    if (value.includes('drive.google.com')) {
+      const fileId = value.split('/')[5];
+      const imgSource = `https://drive.google.com/thumbnail?id=${fileId}`;
+      this.setState({ imgSource });
+      return;
+    }
+
+    this.setState({ imgSource: value });
   };
 
   renderPreview = () => {
@@ -30,7 +39,23 @@ class ImageForm extends Component {
     return (
       <div className="preview">
         <p>
-          Preview <span><i className={'material-icons'}>help</i></span>
+          Preview
+          <span data-tip
+                data-for="help-tooltip"
+          ><i className={'material-icons'}>help</i></span>
+          <ReactTooltip id={'help-tooltip'} place={'top'} effect={'solid'} data-multiline={true}>
+            <div className={'ic-image-help'}>
+              <h1>Troubleshooting</h1>
+              <br/>
+              <p>
+                To insert an image from Google Images, click once to expand the image, then <u>Right Click > Copy Image Address</u> and paste in the link.
+              </p>
+              <br/>
+              <p>
+                To insert an image from Google Drive, go that image and click on <u>Share > Get Shareable Link</u>, and use the link given (the link should end with "usp=sharing").
+              </p>
+            </div>
+          </ReactTooltip>
         </p>
         {img}
       </div>

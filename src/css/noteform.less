@@ -73,6 +73,14 @@
   textarea#ic-form-text {
     height: 200px;
   }
+
+  i {
+    color: @dark;
+  }
+
+  .__react_component_tooltip {
+    opacity: 1;
+  }
 }
 
 #ic-image-form {
@@ -93,9 +101,21 @@
         float: right;
 
         i {
-          font-size: 17px;
+          font-size: 19px;
         }
       }
+    }
+
+    div.__react_component_tooltip {
+      opacity: 1;
+    }
+
+    div.ic-image-help {
+      width: 230px;
+      margin: 5px 0;
+      font-family: @notosans;
+      font-size: 12px;
+      line-height: 15px;
     }
 
     img {
