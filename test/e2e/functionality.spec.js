@@ -8,6 +8,7 @@ const expect = chai.expect;
 const b = browser;
 
 const MODALS = require('../../lib/constants.js').MODALS;
+const imageUrl = 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg';
 
 describe('basic functionality', () => {
   beforeAll(setup);
@@ -91,50 +92,82 @@ describe('basic functionality', () => {
     });
 
     describe('images', () => {
-      it('accepting image prompt should render image', () => {
-        expect('div.ic-img').to.have.count(0);
-
+      it('entering link in note form should ask if the link is an image', () => {
         b.keys('n');
-        b.setValue('#ic-form-text', 'https://s-media-cache-ak0.pinimg.com/736x/47/b9/7e/47b97e62ef6f28ea4ae2861e01def86c.jpg');
+        b.setValue('#ic-form-text', imageUrl);
         b.click('button[name=ship]');
         b.waitForVisible('#ic-modal');
         expect('#ic-modal-body').to.have.text(new RegExp(MODALS.IMPORT_IMAGE.text, 'i'));
+      });
+
+      it('rejecting the prompt should embed the link', () => {
+        b.click('#ic-modal-cancel');
+        b.pause(1000);
+        expect('div.ic-img').to.have.count(0);
+        expect('#note1 span div.contents p a').to.be.there(); // expect embedded link
+      });
+
+     it('accepting image prompt should render image', () => {
+        b.moveToObject('#note1', 10, 1);
+        b.doDoubleClick();
+        b.waitForVisible('#ic-note-form');
+        b.click('button[name=ship]');
+        b.waitForVisible('#ic-modal');
 
         b.click('#ic-modal-confirm');
         b.pause(1000);
         expect('div.ic-img').to.have.count(1);
       });
 
-      it('rejecting the prompt should render embedded link', () => {
+      it('editing an image made from the note-form will show an image-form', () => {
         b.moveToObject('div.ic-img', 50, 50);
         b.doDoubleClick();
-        b.waitForVisible('#ic-form-text');
-        b.click('button[name=ship]');
-        b.waitForVisible('#ic-modal');
-        b.click('#ic-modal-cancel');
-        b.pause(1000);
-        expect('div.ic-img').to.have.count(0);
-        expect('#note1 span div.contents p a').to.be.there(); // expect embedded link
+        b.pause(100);
+        expect('#ic-image-form').to.be.visible();
+        b.click('button[name=nvm]');
+      });
+
+      describe('image form', () => {
+        it('create image', () => {
+          b.keys('i');
+          b.waitForVisible('#ic-image-form');
+
+          b.setValue('#ic-form-text', imageUrl);
+          b.pause(200);
+          expect('div.preview').to.be.visible();
+          expect('div.preview img').to.be.visible();
+          b.click('button[name=ship]');
+
+          expect('div.ic-img').to.have.count(2);
+        });
+
+        it('edit image', () => {
+          b.moveToObject('div.ic-img', 20, 20);
+          b.doDoubleClick();
+          b.waitForVisible('#ic-image-form');
+          expect('#ic-form-text').to.have.text(imageUrl);
+          b.click('button[name=nvm]');
+        });
       });
     });
 
     describe('delete', () => {
       it('rejecting alert preserves note', () => {
-        b.moveToObject('#note1', 158, 3);
+        b.moveToObject('#note2', 164, 2);
         b.leftClick();
         b.waitForVisible('#ic-modal');
         expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_NOTE.text, 'i'));
         b.click('#ic-modal-cancel');
-        expect('div.ic-sticky-note').to.have.count(2);
+        expect('div.ic-sticky-note').to.have.count(3);
       });
 
       it('accepting alert deletes note', () => {
-        b.moveToObject('#note1', 158, 3);
+        b.moveToObject('#note1', 164, 2);
         b.leftClick();
         b.waitForVisible('#ic-modal');
         b.click('#ic-modal-confirm');
         b.pause(500);
-        expect('div.ic-sticky-note').to.have.count(1);
+        expect('div.ic-sticky-note').to.have.count(2);
       });
     });
 
@@ -151,9 +184,9 @@ describe('basic functionality', () => {
         b.buttonUp(0);
         b.pause(500);
         b.click('button[name=ship]').pause(200);
-        expect('div.ic-sticky-note').to.have.count(2);
+        expect('div.ic-sticky-note').to.have.count(3);
 
-        expect(b.getAttribute('div.ic-img img', 'src')).to.contain('data:image/png;base64');
+        expect(b.getAttribute('#note2 div.ic-img img', 'src')).to.contain('data:image/png;base64');
       });
 
       it('styling', () => {
@@ -175,10 +208,10 @@ describe('basic functionality', () => {
         b.click('button[name=ship]');
         b.pause(200);
 
-        expect('div.ic-sticky-note').to.have.count(3);
-        expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.not.contain('bold');
-        expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.contain('italic');
-        expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.contain('underline');
+        expect('div.ic-sticky-note').to.have.count(4);
+        expect(b.getAttribute('#note3 div.contents p', 'class')[0]).to.not.contain('bold');
+        expect(b.getAttribute('#note3 div.contents p', 'class')[0]).to.contain('italic');
+        expect(b.getAttribute('#note3 div.contents p', 'class')[0]).to.contain('underline');
       });
 
       it('double click for new note', () => {
@@ -187,8 +220,8 @@ describe('basic functionality', () => {
         b.waitForVisible('#ic-note-form');
         b.setValue('#ic-form-text', 'Double click to create');
         b.click('button[name=ship]').pause(200);
-        expect('div.ic-sticky-note').to.have.count(4);
-        const pos = b.getLocation('#note3');
+        expect('div.ic-sticky-note').to.have.count(5);
+        const pos = b.getLocation('#note4');
         expect(pos.x).to.equal(300);
         expect(pos.y).to.equal(200);
       });

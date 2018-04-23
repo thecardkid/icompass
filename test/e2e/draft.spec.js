@@ -68,44 +68,7 @@ describe('draft mode', () => {
       expect('#note0').to.have.text(/A draft text note/);
       expect('#note0 span div.contents p.submit').to.be.visible();
     });
-  });
 
-  describe('image draft', () => {
-    it('image form should render correctly', () => {
-      b.moveToObject('body', 400, 500);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', DOG_PHOTO_LINK);
-      b.click('button[name=ship]');
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(new RegExp(MODALS.IMPORT_IMAGE.text, 'i'));
-      b.click('#ic-modal-confirm');
-    });
-
-    it('renders draft with image', () => {
-      b.pause(1000);
-      expect('#note1 span div.contents img').to.be.there();
-      expect('#note1 span div.contents p.submit').to.be.there();
-    });
-  });
-
-  describe('doodle draft', () => {
-    it('create doodle draft', () => {
-      b.keys(['d']);
-      b.waitForVisible('#ic-doodle-form');
-      b.moveToObject('#ic-doodle', 155, 75);
-      b.buttonDown(0);
-      b.moveToObject('#ic-doodle', 255, 175);
-      b.buttonUp(0);
-      b.pause(1000);
-      b.click('button[name=ship]');
-      b.waitForVisible('#note2');
-      b.pause(1000);
-      expect(b.getAttribute('#note2 span div.contents img', 'src')).to.contain('data:image/png;base64');
-    });
-  });
-
-  describe('edit draft', () => {
     it('form has correct heading', () => {
       b.moveToObject('#note0', 10, 10);
       b.doDoubleClick();
@@ -122,9 +85,70 @@ describe('draft mode', () => {
       expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('bold');
       expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('underline');
     });
+  });
+
+  describe('image draft', () => {
+    describe('import image from text note', () => {
+      it('image form should render correctly', () => {
+        b.moveToObject('body', 400, 500);
+        b.doDoubleClick();
+        b.waitForVisible('#ic-note-form');
+        b.setValue('#ic-form-text', DOG_PHOTO_LINK);
+        b.click('button[name=ship]');
+        b.waitForVisible('#ic-modal');
+        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.IMPORT_IMAGE.text, 'i'));
+        b.click('#ic-modal-confirm');
+      });
+
+      it('renders draft with image', () => {
+        b.pause(1000);
+        expect('#note1 span div.contents img').to.be.there();
+        expect('#note1 span div.contents p.submit').to.be.there();
+      });
+    });
+
+    describe('image form', () => {
+      it('create image', () => {
+        expect('div.ic-img').to.have.count(1);
+        b.keys('i');
+        b.waitForVisible('#ic-image-form');
+
+        b.setValue('#ic-form-text', DOG_PHOTO_LINK);
+        b.pause(3000);
+        expect('div.preview').to.be.visible();
+        expect('div.preview img').to.be.visible();
+        b.click('button[name=ship]');
+
+        expect('div.ic-img').to.have.count(2);
+      });
+
+      it('edit image', () => {
+        b.moveToObject('div.ic-img', 20, 20);
+        b.doDoubleClick();
+        b.waitForVisible('#ic-image-form');
+        expect('#ic-form-text').to.have.text(DOG_PHOTO_LINK);
+        b.click('button[name=nvm]');
+      });
+    });
+  });
+
+  describe('doodle draft', () => {
+    it('create doodle draft', () => {
+      b.keys('d');
+      b.waitForVisible('#ic-doodle-form');
+      b.moveToObject('#ic-doodle', 155, 75);
+      b.buttonDown(0);
+      b.moveToObject('#ic-doodle', 255, 175);
+      b.buttonUp(0);
+      b.pause(1000);
+      b.click('button[name=ship]');
+      b.waitForVisible('#note3');
+      b.pause(1000);
+      expect(b.getAttribute('#note3 span div.contents img', 'src')).to.contain('data:image/png;base64');
+    });
 
     it('cannot edit doodle', () => {
-      b.moveToObject('#note2', 10, 10);
+      b.moveToObject('#note3', 10, 10);
       b.doDoubleClick();
       b.waitForVisible('#ic-toast span');
       expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');

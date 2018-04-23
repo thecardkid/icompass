@@ -92,7 +92,7 @@ class FormManager extends Component {
     return (
       <EditImageForm title={'Edit image link'}
                      idx={this.props.forms.editImage}
-                     note={this.props.drafts[this.props.forms.editImage]}
+                     note={this.props.notes[this.props.forms.editImage]}
                      ship={this.socket.emitEditNote}
                      {...this.props.commonAttrs}
       />

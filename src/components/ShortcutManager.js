@@ -30,7 +30,7 @@ class ShortcutManager extends Component {
       return this.modal.close();
     }
 
-    if (this.props.noteFormVisible || this.props.doodleFormVisible) {
+    if (this.props.imageFormVisible || this.props.noteFormVisible || this.props.doodleFormVisible) {
       if (e.which === KEYCODES.ESC) {
         this.props.uiX.closeForm();
       }
@@ -51,6 +51,7 @@ class ShortcutManager extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    imageFormVisible: state.ui.forms.newImage || (typeof state.ui.forms.editImage === 'number'),
     noteFormVisible: state.ui.forms.newText || (typeof state.ui.forms.editText === 'number'),
     doodleFormVisible: state.ui.forms.newDoodle,
   };

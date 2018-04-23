@@ -32,6 +32,7 @@ class WorkspaceMenu extends Component {
     };
     this.shortcuts = {
       68: props.uiX.showDoodle,
+      73: props.uiX.showImage,
       78: props.uiX.showNewNote,
       shift: {
         49: this.handleChangeMode('standard'),

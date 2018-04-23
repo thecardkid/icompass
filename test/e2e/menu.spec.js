@@ -24,7 +24,8 @@ const actions = {
   pdf: Object.assign({}, shareSubmenu, { position: 2 }),
   twitter: Object.assign({},  shareSubmenu,{  position: 3 }),
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
-  doodleNote: Object.assign({}, notesSubmenu, { position: 1 }),
+  imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
+  doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
   standardMode: Object.assign({}, modesSubmenu, { position: 0 }),
   compactMode: Object.assign({}, modesSubmenu, { position: 1 }),
   draftMode: Object.assign({}, modesSubmenu, { position: 2 }),
@@ -56,7 +57,6 @@ describe('workspace menu', () => {
   describe('share submenu', () => {
     it('share edit link', () => {
       selectSubmenuOption(actions.editLink);
-      b.saveScreenshot('sel.png');
       b.waitForVisible('#ic-modal');
       expect('#ic-modal-body').to.have.text(/Share this link below/);
       expect('#ic-modal-body p').to.have.text(/\/compass\/edit/);
@@ -84,9 +84,15 @@ describe('workspace menu', () => {
   });
 
   describe('notes submenu', () => {
-    it('new note button', () => {
+    it('new text note button', () => {
       selectSubmenuOption(actions.textNote);
       expect('#ic-note-form').to.be.visible();
+      b.click('button[name="nvm"]');
+    });
+
+    it('new image note button', () => {
+      selectSubmenuOption(actions.imageNote);
+      expect('#ic-image-form').to.be.visible();
       b.click('button[name="nvm"]');
     });
 
