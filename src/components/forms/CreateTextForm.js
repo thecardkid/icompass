@@ -46,20 +46,9 @@ export default class CreateTextForm extends Component {
     }
   }
 
-  renderHeader = ({ charCount }) => {
-    const spanStyle = { color: charCount > 300 ? 'red' : 'black' };
-
-    return (
-      <h1 className={'ic-modal-title'}>
-        {this.getHeader(this.props.mode)}
-        <span style={spanStyle}> {charCount}/300</span>
-      </h1>
-    );
-  };
-
   render() {
     return (
-      <TextForm renderHeader={this.renderHeader} defaultText={''}
+      <TextForm title={this.getHeader(this.props.mode)} defaultText={''}
                 submit={this.make} close={this.props.close}
                 bg={this.props.bg}
       />
