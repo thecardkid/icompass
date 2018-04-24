@@ -83,9 +83,10 @@ class StickyNote extends Component {
       background: n.color,
       padding: n.isImage ? '3px' : '0',
     };
+    const clazz = this.compactMode ? 'compact ic-img contents' : 'ic-img contents';
 
     return (
-      <div className="ic-img contents" style={s}>
+      <div className={clazz} style={s}>
         <img src={n.doodle || n.text}
              width={this.compactMode ? '100px' : '160px'}/>
         {this.getTooltip(n)}
@@ -99,9 +100,10 @@ class StickyNote extends Component {
     if (n.style.bold) clazz += ' bold';
     if (n.style.italic) clazz += ' italic';
     if (n.style.underline) clazz += ' underline';
+    const divClazz = this.compactMode ? 'compact contents' : 'contents';
 
     return (
-      <div style={style} className={'contents'}>
+      <div style={style} className={divClazz}>
         <p className={clazz} dangerouslySetInnerHTML={{ __html: linkifyHtml(n.text) }} />
         {this.getTooltip(n)}
       </div>
@@ -176,7 +178,7 @@ class StickyNote extends Component {
     }
 
     return (
-      <div className={`ic-sticky-note draggable ${n.draft ? 'draft' : ''} ${this.compactMode ? 'compact' : ''}`}
+      <div className={`ic-sticky-note draggable ${n.draft ? 'draft' : ''}`}
            style={style}
            onClick={this.handleClick}
            onDoubleClick={this.edit}

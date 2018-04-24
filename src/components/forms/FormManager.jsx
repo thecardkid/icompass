@@ -62,7 +62,7 @@ class FormManager extends Component {
   };
 
   editImageForm = () => {
-    if (this.props.draftMode) {
+    if (this.props.forms.formInfo.draft) {
      return (
         <EditImageForm title={'Edit photo draft'}
                        info={this.props.forms.formInfo}
@@ -73,7 +73,7 @@ class FormManager extends Component {
     }
 
     return (
-      <EditImageForm title={'Edit image link'}
+      <EditImageForm title={'Edit photo link'}
                      info={this.props.forms.formInfo}
                      ship={this.socket.emitEditNote}
                      {...this.props.commonAttrs}
