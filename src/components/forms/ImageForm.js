@@ -92,14 +92,14 @@ class ImageForm extends Component {
                 onClick={this.switchText}>
           <i className={'material-icons'}>text_format</i>
         </button>
-        <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
+        <ReactTooltip id={'text-tooltip'} place={'bottom'} effect={'solid'}/>
         <button className={'switch-form switch-doodle'}
                 data-tip="Create a sketch"
                 data-for="doodle-tooltip"
                 onClick={this.switchDoodle}>
           <i className={'material-icons'}>brush</i>
         </button>
-        <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+        <ReactTooltip id={'doodle-tooltip'} place={'bottom'} effect={'solid'}/>
       </div>
     );
   };

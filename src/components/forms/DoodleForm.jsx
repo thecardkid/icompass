@@ -166,14 +166,14 @@ class DoodleForm extends Component {
                         onClick={this.switchText}>
                   <i className={'material-icons'}>text_format</i>
                 </button>
-                <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
+                <ReactTooltip id={'text-tooltip'} place={'bottom'} effect={'solid'}/>
                 <button className={'switch-form switch-image'}
                         data-tip="Insert a photo"
                         data-for="doodle-tooltip"
                         onClick={this.switchImage}>
                   <i className={'material-icons'}>photo</i>
                 </button>
-                <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+                <ReactTooltip id={'doodle-tooltip'} place={'bottom'} effect={'solid'}/>
               </div>
               <button name="ship" onClick={this.submit(false)}>ship it</button>
               <button name={'draft'}
