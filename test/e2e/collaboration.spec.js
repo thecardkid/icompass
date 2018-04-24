@@ -11,7 +11,7 @@ const PROMPTS = require('../../lib/constants').PROMPTS;
 const expectNumUsers = (expected) => {
   b.click('button.ic-workspace-button');
   b.waitForVisible('div.ic-workspace-menu');
-  b.moveTo(b.elements('div.has-more').value[3].ELEMENT, 10, 10);
+  b.moveTo(b.elements('div.has-more').value[2].ELEMENT, 10, 10);
   b.waitForVisible('div.ic-users-submenu');
   expect('div.ic-user').to.have.count(expected);
   b.click('button.ic-workspace-button');
