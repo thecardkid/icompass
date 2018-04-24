@@ -115,6 +115,11 @@ class NoteManager extends Component {
     this.socket.emitMetric('draft submit');
   };
 
+  enterVisualMode = (idx) => {
+    this.props.uiX.visualMode(this.props.notes.length);
+    this.props.workspaceX.selectNote(idx - this.props.drafts.length);
+  };
+
   renderNote = (note, i) => {
     return (
       <StickyNote key={`note${i}`}
@@ -122,6 +127,7 @@ class NoteManager extends Component {
                   i={i}
                   submitDraft={this.submitDraft}
                   socket={this.socket}
+                  enterVisualMode={this.enterVisualMode}
                   // Can't delete note in visual mode, no need to check
                   destroy={this.socket.emitDeleteNote} />
     );
