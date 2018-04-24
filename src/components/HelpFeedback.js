@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
+
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 
@@ -34,8 +36,6 @@ export default class HelpFeedback extends Component {
 
   openReleaseNotes = () => {
     this.socket.emitMetric('help release notes');
-    window.open('https://github.com/thecardkid/icompass/releases', '_blank').focus();
-    this.hideMenu();
   };
 
   showFeedback = () => {
@@ -55,19 +55,21 @@ export default class HelpFeedback extends Component {
       <div className={'ic-menu ic-help-menu'}>
         <section className={'border-bottom'}>
           <div className={'ic-menu-item'} onClick={this.openPrompt}>
-            Prompt
+            Get Started
           </div>
         </section>
         <section>
-          <div className={'ic-menu-item'} onClick={this.openReleaseNotes}>
-            Release Notes
-          </div>
           <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
             Privacy Statement
           </div>
           <div className={'ic-menu-item'} onClick={this.showFeedback}>
             Provide Feedback
           </div>
+          <Link to={'https://github.com/thecardkid/icompass/releases'} target={'_blank'} onClick={this.openReleaseNotes}>
+            <div className={'ic-menu-item'}>
+              What's new?
+            </div>
+          </Link>
           <div className={'ic-menu-item'} onClick={this.contactUs}>
             Contact Us
           </div>
@@ -80,8 +82,7 @@ export default class HelpFeedback extends Component {
     return (
       <div id={'ic-help'}>
         <button className={'ic-help-button floating-button'}
-             onClick={this.toggleMenu}
-             onBlur={this.hideMenu}>
+             onClick={this.toggleMenu}>
           ?
           {this.state.active && this.renderHelpMenu()}
         </button>
