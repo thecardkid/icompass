@@ -60,6 +60,9 @@ class StickyNote extends Component {
   };
 
   submitDraft = () => {
+    if (this.visualMode) {
+      return this.toast.warn('You can\'t submit drafts in bulk edit mode');
+    }
     this.props.submitDraft(this.props.note, this.props.i);
   };
 

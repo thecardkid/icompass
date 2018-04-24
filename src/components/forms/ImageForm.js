@@ -63,8 +63,8 @@ class ImageForm extends Component {
     );
   };
 
-  submit = () => {
-    this.props.submit(this.state.imgSource);
+  submit = (isDraft) => () => {
+    this.props.submit(this.state.imgSource, isDraft);
   };
 
   switchText = () => {
@@ -118,7 +118,8 @@ class ImageForm extends Component {
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit}>ship it</button>
+              <button name="ship" onClick={this.submit(false)}>ship it</button>
+              {this.props.switch && <button name={'draft'} onClick={this.submit(true)}>as draft</button>}
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>

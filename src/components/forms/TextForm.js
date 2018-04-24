@@ -149,7 +149,7 @@ class TextForm extends Component {
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
               <button name="ship" onClick={this.submit(false)}>ship it</button>
-              {this.props.allowDraft && <button name={'draft'} onClick={this.submit(true)}>as draft</button>}
+              {this.props.switch && <button name={'draft'} onClick={this.submit(true)}>as draft</button>}
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>

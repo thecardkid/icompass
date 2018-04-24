@@ -52,19 +52,11 @@ class FormManager extends Component {
   };
 
   createImageForm = () => {
-    if (this.props.draftMode) {
-      return (
-        <CreateImageForm title={'Insert a photo draft'}
-                         info={this.props.forms.formInfo}
-                         ship={this.props.workspaceX.createDraft}
-                         {...this.props.commonAttrs}/>
-      );
-    }
-
     return (
       <CreateImageForm title={'Insert a photo'}
                        info={this.props.forms.formInfo}
-                       ship={this.socket.emitNewNote}
+                       asNote={this.socket.emitNewNote}
+                       asDraft={this.props.workspaceX.createDraft}
                        {...this.props.commonAttrs}/>
     );
   };
@@ -91,10 +83,11 @@ class FormManager extends Component {
 
   renderDoodleForm = () => {
     return (
-      <DoodleForm ship={this.props.draftMode ? this.props.workspaceX.createDoodleDraft : this.socket.emitNewNote}
+      <DoodleForm asDraft={this.props.workspaceX.createDoodleDraft}
+                  asNote={this.socket.emitNewNote}
                   info={this.props.forms.formInfo}
-                  color={this.props.color}
-                  {...this.props.commonAttrs} />
+                  {...this.props.commonAttrs}
+      />
     );
   };
 
@@ -132,7 +125,6 @@ class FormManager extends Component {
 const mapStateToProps = (state) => {
   return {
     me: state.users.me,
-    color: state.users.nameToColor[state.users.me],
     notes: state.notes,
     drafts: state.workspace.drafts,
     forms: state.ui.forms,
