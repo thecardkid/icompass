@@ -49,16 +49,25 @@ div#ic-modal-container {
         margin-left: 10px;
         padding: 0 10px;
         border-radius: 2px;
+      }
+
+      button#ic-modal-confirm {
         background: @dark;
         color: @light;
       }
 
+      button#ic-modal-cancel {
+        background: none;
+        color: @dark;
+        border: 1px solid @dark;
+      }
+
       button.danger {
-        background: @red;
+        background: @red !important;
       }
 
       button.confirm {
-        background: @blue;
+        background: @blue !important;
       }
     }
   }

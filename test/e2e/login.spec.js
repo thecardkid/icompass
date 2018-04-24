@@ -76,7 +76,7 @@ describe('login', () => {
         b.click('input[type=submit]');
         b.waitForVisible('#ic-modal');
 
-        expect('#ic-modal-body').to.have.text(/Email reminder/);
+        expect('#ic-modal-body').to.have.text(/Email Yourself/);
         expect('#ic-modal-input').to.be.visible();
       });
 

@@ -158,13 +158,12 @@ const ModalSingleton = (() => {
 
     promptForEmail(cb) {
       const html = `
-        <h3>Email reminder</h3>
+        <h3>Email Yourself a Link to this Workspace</h3>
         <p>
           You'll need the link to the compass to access it again. To email yourself the link now,
           enter your email address below. Leave blank if you do not want this email.
           <br/><br/>
-          I will not store your email address or send you spam. Otherwise leave this blank and
-          be sure to email or copy your link from the side panel in your workspace.
+          I will not store your email address or send you spam.
         </p>
       `;
       this.prompt(html, cb);
