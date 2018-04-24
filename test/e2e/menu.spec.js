@@ -108,7 +108,7 @@ describe('workspace menu', () => {
       it('wrong email format displays error message', () => {
         selectMenuOption(actions.email);
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(/Email reminder/);
+        expect('#ic-modal-body').to.have.text(/Email yourself/);
         b.setValue('#ic-modal-input', 'fakeemail');
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast');
