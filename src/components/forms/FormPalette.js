@@ -9,7 +9,7 @@ export default class FormPalette extends Component {
       <div className={'ic-form-palette'}>
         {_.map(STICKY_COLORS, (color) => {
           return (
-            <span className={'ic-palette-color'}
+            <span className={`ic-palette-color color-${color.substring(1)}`}
                   key={`color${color}`}
                   style={{background: color}}
                   onClick={this.props.setColor(color)}

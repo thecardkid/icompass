@@ -309,4 +309,18 @@ describe('forms', () => {
       expect('#ic-doodle-form').to.not.be.visible();
     });
   });
+
+  describe('colors', () => {
+    describe('text', () => {
+      b.moveToObject('body', 700, 700);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      b.setValue('#ic-form-text', 'hi');
+      b.click('.color-CCCCFF');
+      b.click('button[name=ship]');
+
+      expect('div.ic-sticky-note').to.have.count(6);
+      expect(b.getCssProperty('#note5 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
+    });
+  });
 });
