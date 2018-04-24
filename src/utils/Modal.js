@@ -75,7 +75,7 @@ const ModalSingleton = (() => {
     generateAlert(text) {
       return this.getModalHtml(
         text,
-        '<button id="ic-modal-confirm">OK</button>',
+        '<button id="ic-modal-confirm">Got it</button>',
       );
     }
 
@@ -121,6 +121,44 @@ const ModalSingleton = (() => {
       this.alert(text, () => {});
     };
 
+    alertCompassPrompt = () => {
+      const text = `
+        <h3>The Innovator's Compass</h3>
+        <p>Starting something or feeling stuck? Use five questions, asked by all kinds of innovators, to make things better.</p>
+        <p>Explore anything you're doing, alone or with others. You'll see challenges in new ways.</p>
+        <p>
+          <span class="bold">1. PEOPLE: Who could be involved?</span> ...including you? For and with everyone involved, explore...</p>
+        <p>
+          <span class="bold">2. OBSERVATIONS: What's happening? Why?</span> What are people doing? Saying? Thinking? Feeling? Why? See all sides, ups and downs.
+        </p>
+        <p>
+          <span class="bold">3. PRINCIPLES: What matters most</span> for everyone involved? Principles often compete - inspiring us to get creative!
+        </p>
+        <p>
+          <span class="bold">4. IDEAS: What ways are there?</span> Anyone and anything can help. Look around for ideas! Play with who/what/when/where/how.
+        </p>
+        <p>
+          <span class="bold">5. EXPERIMENTS: What's a step to try?</span> With little time/risk/cost? Do it! What happens for all involved (#1 & 2)?
+        </p>
+        <p>
+          Really explore. Look, listen, feel; use words, draw, move, make. In this order (P.O.P.I.E.) or any way that moves you forward.
+        </p>
+        <p>For more information, visit <a href="http://innovatorscompass.org" target="_blank">innovatorscompass.org</a>.</p>
+      `;
+      this.alert(text, () => {});
+    };
+
+    alertExplainModes = () => {
+      const text = `
+        <h3>What are these modes?</h3>
+        <p><b>Standard mode</b> is what you are in by default</p>
+        <p><b>Compact mode</b> make notes take up much less space - it is meant for smaller devices.</p>
+        <p><b>Bulk Edit</b> mode allows you to edit notes in bulk! Hold down Shift and click on any note to enter this mode.</p>
+      `;
+
+      this.alert(text, () => {});
+    };
+
     generatePrompt(html) {
       return this.getModalHtml(
         `${html}<input id="ic-modal-input" />`,
@@ -131,13 +169,12 @@ const ModalSingleton = (() => {
 
     promptForEmail(cb) {
       const html = `
-        <h3>Email reminder</h3>
+        <h3>Email Yourself a Link to this Workspace</h3>
         <p>
           You'll need the link to the compass to access it again. To email yourself the link now,
           enter your email address below. Leave blank if you do not want this email.
           <br/><br/>
-          I will not store your email address or send you spam. Otherwise leave this blank and
-          be sure to email or copy your link from the side panel in your workspace.
+          I will not store your email address or send you spam.
         </p>
       `;
       this.prompt(html, cb);

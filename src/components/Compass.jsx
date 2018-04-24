@@ -14,6 +14,7 @@ import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
+import { PROMPTS, EDITING_MODE } from '../../lib/constants';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -41,7 +42,23 @@ class Compass extends Component {
   }
 
   doubleClickCreate = (ev) => {
-    this.socket.emitMetric('double click create');
+    if (this.props.visualMode) {
+      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
+    }
+
+    if (ev.shiftKey) {
+      this.socket.emitMetric('double click image');
+      this.props.uiX.showImage(ev);
+      return;
+    }
+
+    if (ev.altKey) {
+      this.socket.emitMetric('double click doodle');
+      this.props.uiX.showDoodle(ev);
+      return;
+    }
+
+    this.socket.emitMetric('double click text');
     this.props.uiX.showNewNote(ev);
   };
 
@@ -75,7 +92,6 @@ class Compass extends Component {
   setCompassCenter = (center) => {
     this.animateQuadrants = true;
     this.props.compassX.setCenter(center);
-    setTimeout(() => this.props.uiX.setSidebarVisible(true), 3000);
   };
 
   fadeInQuadrants = (deltaTimeMs) => {
@@ -84,6 +100,9 @@ class Compass extends Component {
     setTimeout(() => $('#principles').css({opacity: 1}), start + deltaTimeMs);
     setTimeout(() => $('#ideas').css({opacity: 1}), start + (2 * deltaTimeMs));
     setTimeout(() => $('#experiments').css({opacity: 1}), start + (3 * deltaTimeMs));
+    setTimeout(() => {
+      this.toast.info('You\'re all set up! Double click anywhere to get started.');
+    }, start + (4 * deltaTimeMs));
   };
 
   getCenterCss(r) {
@@ -173,8 +192,6 @@ class Compass extends Component {
       if (this.animateQuadrants) {
         this.animateQuadrants = false;
         this.fadeInQuadrants(800);
-      } else {
-        this.fadeInQuadrants(0);
       }
 
       compass = this.renderCompassStructure();
@@ -193,6 +210,7 @@ const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     ui: state.ui,
+    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL,
   };
 };
 

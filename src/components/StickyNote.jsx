@@ -1,4 +1,5 @@
 import deepEqual from 'deep-equal';
+import linkifyHtml from 'linkifyjs/html';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -41,19 +42,16 @@ class StickyNote extends Component {
   setModes(props) {
     this.compactMode = props.ui.editingMode === EDITING_MODE.COMPACT || false;
     this.visualMode = props.ui.editingMode === EDITING_MODE.VISUAL || false;
-    this.draftMode = props.ui.editingMode === EDITING_MODE.DRAFT || false;
   }
 
   confirmDelete = () => {
     if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
     let n = this.props.note;
-    if (this.draftMode) {
-      if (n.draft) {
-        this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
-          if (discard) this.props.workspaceActions.undraft(this.props.i);
-        });
-      } else this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
+    if (n.draft) {
+      this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
+        if (discard) this.props.workspaceActions.undraft(this.props.i);
+      });
     } else {
       this.modal.confirm(MODALS.DELETE_NOTE, (deleteNote) => {
         if (deleteNote) this.props.destroy(n._id);
@@ -62,15 +60,18 @@ class StickyNote extends Component {
   };
 
   submitDraft = () => {
+    if (this.visualMode) {
+      return this.toast.warn('Cannot submit drafts in bulk edit mode');
+    }
     this.props.submitDraft(this.props.note, this.props.i);
   };
 
   getTooltip(n) {
     if (n.draft) {
       return (
-        <p className="ic-tooltip submit" onClick={this.submitDraft}>
-          <Tappable onTap={this.submitDraft}>submit</Tappable>
-        </p>
+        <button className="ic-tooltip submit" onClick={this.submitDraft} onTouchStart={this.submitDraft}>
+          submit
+        </button>
       );
     } else {
       return <p className="ic-tooltip">{n.user}</p>;
@@ -82,34 +83,30 @@ class StickyNote extends Component {
       background: n.color,
       padding: n.isImage ? '3px' : '0',
     };
+    const clazz = this.compactMode ? 'compact ic-img contents' : 'ic-img contents';
 
     return (
-      <a className="ic-img" style={s}>
+      <div className={clazz} style={s}>
         <img src={n.doodle || n.text}
              width={this.compactMode ? '100px' : '160px'}/>
         {this.getTooltip(n)}
-      </a>
+      </div>
     );
   };
 
   renderText = (n) => {
-    let style = { background: n.color, letterSpacing: '0px' };
-    let textStyle = '';
-    if (n.style.bold) textStyle += 'bold ';
-    if (n.style.italic) textStyle += 'italic ';
-    if (n.style.underline) textStyle += 'underline';
-
-    if (this.compactMode) {
-      style.letterSpacing = '-1px';
-      style.maxHeight = '70px';
-      style.overflow = 'auto';
-    }
+    let style = { background: n.color };
+    let clazz = 'text';
+    if (n.style.bold) clazz += ' bold';
+    if (n.style.italic) clazz += ' italic';
+    if (n.style.underline) clazz += ' underline';
+    const divClazz = this.compactMode ? 'compact contents' : 'contents';
 
     return (
-      <a style={style}>
-        <p className={textStyle}>{n.text}</p>
+      <div style={style} className={divClazz}>
+        <p className={clazz} dangerouslySetInnerHTML={{ __html: linkifyHtml(n.text) }} />
         {this.getTooltip(n)}
-      </a>
+      </div>
     );
   };
 
@@ -130,18 +127,41 @@ class StickyNote extends Component {
   };
 
   edit = () => {
-    if (this.props.note.doodle) return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
-    if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
-    if (this.draftMode && !this.props.note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
-    if (this.hasEditingRights) this.props.uiActions.showEdit(this.props.i);
+    if (this.props.note.doodle) {
+      return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
+    }
+
+    if (this.visualMode) {
+      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+    }
+
+    if (this.hasEditingRights) {
+      if (this.props.note.isImage) {
+        this.props.uiActions.editImage(this.props.i, this.props.note);
+      } else {
+        this.props.uiActions.showEdit(this.props.i, this.props.note);
+      }
+    }
   };
 
-  handleClick = () => {
+  handleClick = (ev) => {
     let now = Date.now();
     if (now - this.lastClick < 40) return;
 
+    if (!this.visualMode && ev.shiftKey) {
+      if (this.props.note.draft) {
+        return this.toast.warn('Cannot enter bulk mode by selecting a draft');
+      }
+
+      this.props.enterVisualMode(this.props.i);
+    }
+
     this.lastClick = now;
     if (this.visualMode) {
+      if (this.props.note.draft) {
+        return this.toast.warn('Cannot select drafts in bulk edit mode');
+      }
+
       this.props.socket.emitMetric('visual mode select');
       this.props.workspaceActions.selectNote(this.props.i);
     } else {
@@ -166,14 +186,15 @@ class StickyNote extends Component {
     }
 
     return (
-      <div className="ic-sticky-note draggable"
+      <div className={`ic-sticky-note draggable ${n.draft ? 'draft' : ''}`}
            style={style}
            onClick={this.handleClick}
+           onTouchStart={this.handleClick}
            onDoubleClick={this.edit}
            id={`note${i}`}
            height={n.doodle ? '100px' : null}>
         {this.getX()}
-        <Tappable onTap={this.handleClick} onPress={this.edit}>
+        <Tappable onPress={this.edit}>
           {this.getContents()}
         </Tappable>
       </div>

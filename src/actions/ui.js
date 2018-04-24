@@ -5,16 +5,51 @@ export const showNewNote = (event) => {
   };
 };
 
-export const showEdit = (noteIdx) => {
+export const showEdit = (idx, note) => {
   return {
     type: 'showEdit',
-    noteIdx,
+    idx,
+    note,
   };
 };
 
-export const showDoodle = () => {
+export const showImage = (event) => {
+  return {
+    type: 'showImage',
+    event,
+  };
+};
+
+export const editImage = (idx, note) => {
+  return {
+    type: 'editImage',
+    idx,
+    note,
+  };
+};
+
+export const showDoodle = (event) => {
   return {
     type: 'showDoodle',
+    event,
+  };
+};
+
+export const switchToImage = () => {
+  return {
+    type: 'switchToImage',
+  };
+};
+
+export const switchToDoodle = () => {
+  return {
+    type: 'switchToDoodle',
+  };
+};
+
+export const switchToText = () => {
+  return {
+    type: 'switchToText',
   };
 };
 
@@ -50,44 +85,6 @@ export const visualMode = (len) => {
   };
 };
 
-export const draftMode = () => {
-  return {
-    type: 'draftMode',
-  };
-};
-
-export const toggleAbout = () => {
-  return {
-    type: 'toggleAbout',
-  };
-};
-
-export const toggleChat = () => {
-  return {
-    type: 'toggleChat',
-  };
-};
-
-export const setChatVisible = (value) => {
-  return {
-    type: 'setChat',
-    value,
-  };
-};
-
-export const toggleSidebar = () => {
-  return {
-    type: 'toggleSidebar',
-  };
-};
-
-export const setSidebarVisible = (value) => {
-  return {
-    type: 'setSidebar',
-    value,
-  };
-};
-
 export const resize = (e) => {
   return {
     type: 'resize',
@@ -101,6 +98,18 @@ export const setScreenSize = (vw, vh) => {
     type: 'resize',
     screenWidth: vw,
     screenHeight: vh,
+  };
+};
+
+export const showShareModal = () => {
+  return {
+    type: 'showShareModal',
+  };
+};
+
+export const hideShareModal = () => {
+  return {
+    type: 'hideShareModal',
   };
 };
 

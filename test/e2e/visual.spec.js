@@ -5,15 +5,14 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const PROMPTS = require('../../lib/constants').PROMPTS;
-const MODALS = require('../../lib/constants').MODALS;
-const STICKY_COLORS = require('../../lib/constants').STICKY_COLORS;
+const { setup, cleanup, switchMode } = require('./utils');
+const { PROMPTS, MODALS, STICKY_COLORS } = require('../../lib/constants');
 const TEXT = 'this is a note',
     POSITIONS = [ {x: 250, y: 200}, {x: 350, y: 200}, {x: 450, y: 200}, {x: 550, y: 200} ];
 
 describe('visual mode', () => {
   beforeAll(() => {
-    require('./utils').setup();
+    setup();
 
     for (let i = 0; i < POSITIONS.length; i++) {
       let p = POSITIONS[i];
@@ -26,11 +25,11 @@ describe('visual mode', () => {
     }
   });
 
-  afterAll(require('./utils').cleanup);
+  afterAll(cleanup);
 
   it('visual mode toolbar is draggable', () => {
     expect('#ic-visual-toolbar').to.not.be.there();
-    b.click('#ic-mode-visual');
+    switchMode('#ic-bulk');
     b.waitForVisible('#ic-visual-toolbar');
 
     let pos = b.getLocation('#ic-visual-toolbar');
@@ -58,6 +57,13 @@ describe('visual mode', () => {
       expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.VISUAL_MODE_NO_CREATE, 'i'));
     });
 
+    it('exiting after double click does not open note form', () => {
+      b.click('#ic-bulk-cancel');
+      b.pause(500);
+      expect('#ic-note-form').to.not.be.visible();
+      switchMode('#ic-bulk');
+    });
+
     it('dragging disabled', () => {
       expect('#note0').to.be.visible();
       b.moveToObject('#note0', 10, 10);
@@ -82,8 +88,8 @@ describe('visual mode', () => {
     let borderCss;
 
     beforeAll(() => {
-      b.click('#ic-mode-normal');
-      b.click('#ic-mode-visual');
+      switchMode('#ic-standard');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
     });
 
@@ -124,7 +130,7 @@ describe('visual mode', () => {
     });
 
     it('clicking cancel exits visual mode', () => {
-      b.click('#ic-mode-visual');
+      switchMode('#ic-bulk');
       b.click('#ic-bulk-cancel');
       expect('#ic-visual-toolbar').to.not.be.visible();
     });
@@ -132,8 +138,8 @@ describe('visual mode', () => {
 
   describe('bulk editing', () => {
     beforeEach(() => {
-      b.click('#ic-mode-normal');
-      b.click('#ic-mode-visual');
+      switchMode('#ic-standard');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
     });
 
@@ -146,22 +152,22 @@ describe('visual mode', () => {
       b.click('button.underline');
       b.pause(200);
 
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.include('bold')
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.include('bold')
         .and.to.include('italic')
         .and.to.include('underline');
-      expect(b.getAttribute('#note1 span a p', 'class')[0]).to.not.include('bold')
+      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.not.include('bold')
         .and.to.not.include('italic')
         .and.to.not.include('underline');
 
       b.click('#note1');
       b.pause(200);
-      expect(b.getAttribute('#note1 span a p', 'class')[0]).to.include('bold')
+      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.include('bold')
         .and.to.include('italic')
         .and.to.include('underline');
 
       b.click('#note1');
       b.pause(200);
-      expect(b.getAttribute('#note1 span a p', 'class')[0]).to.not.include('bold')
+      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.not.include('bold')
         .and.to.not.include('italic')
         .and.to.not.include('underline');
 
@@ -172,7 +178,7 @@ describe('visual mode', () => {
     });
 
     it('sticky note coloring', () => {
-      const background = b.getCssProperty('#note0 span a', 'background-color').value;
+      const background = b.getCssProperty('#note0 span div.contents', 'background-color').value;
 
       b.click('#note0');
       b.click('#note1');
@@ -180,18 +186,18 @@ describe('visual mode', () => {
 
       b.click(`button${STICKY_COLORS[2]}`); // button#CCFFCC
       b.pause(200);
-      expect(b.getCssProperty('#note0 span a', 'background-color').value).to.equal('rgba(255,204,255,1)');
-      expect(b.getCssProperty('#note1 span a', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
 
       b.click(`button${STICKY_COLORS[4]}`);
       b.pause(500);
-      expect(b.getCssProperty('#note0 span a', 'background-color').value).to.equal('rgba(204,255,255,1)');
-      expect(b.getCssProperty('#note1 span a', 'background-color').value).to.equal('rgba(204,255,255,1)');
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
+      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
 
       b.click(`button${STICKY_COLORS[4]}`);
       b.pause(500);
-      expect(b.getCssProperty('#note0 span a', 'background-color').value).to.equal(background);
-      expect(b.getCssProperty('#note1 span a', 'background-color').value).to.equal(background);
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal(background);
+      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal(background);
 
       b.click('#note0');
       b.click('#note1');
@@ -200,8 +206,8 @@ describe('visual mode', () => {
 
   describe('submitting', () => {
     beforeEach(() => {
-      b.click('#ic-mode-normal');
-      b.click('#ic-mode-visual');
+      switchMode('#ic-standard');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
     });
 
@@ -215,27 +221,27 @@ describe('visual mode', () => {
       b.click('#ic-bulk-submit');
       b.pause(500);
 
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getAttribute('#note1 span a p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getCssProperty('#note0 span a', 'background-color').value).to.equal('rgba(204,255,204,1)');
-      expect(b.getCssProperty('#note1 span a', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
     });
 
     it('empty submit does nothing', () => {
-      b.click('#ic-mode-visual');
+      switchMode('#ic-bulk');
       b.click('#note0');
       b.click('#note1');
       b.click('#ic-bulk-submit');
       b.pause(1000);
-      expect(b.getAttribute('#note0 span a p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getAttribute('#note1 span a p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getCssProperty('#note0 span a', 'background-color').value).to.equal('rgba(204,255,204,1)');
-      expect(b.getCssProperty('#note1 span a', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
     });
   });
 
   it('bulk delete', () => {
-    b.click('#ic-mode-visual');
+    switchMode('#ic-bulk');
     b.click('#note0');
     b.click('#note1');
     b.click('#note2');

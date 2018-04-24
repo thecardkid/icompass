@@ -9,8 +9,8 @@ module.exports = {
       'react', 'react-dom', 'react-draggable',
       'react-redux', 'react-router', 'react-swipeable',
       'react-tappable', 'react-tooltip', 'redux', 'prop-types',
-      'deep-equal', 'html2canvas', 'interactjs',
-      'jquery', 'jspdf', 'underscore',
+      'deep-equal', 'interactjs',
+      'jquery', 'underscore',
     ],
   },
   output: {

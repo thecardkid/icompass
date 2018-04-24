@@ -17,6 +17,7 @@ describe('login', () => {
     expect('div[name=make]').to.be.visible();
   });
 
+  // TODO
   afterAll(() => {
     b.click('button[name=to-workspace]');
     b.waitForVisible('#ic-sidebar');
@@ -75,7 +76,7 @@ describe('login', () => {
         b.click('input[type=submit]');
         b.waitForVisible('#ic-modal');
 
-        expect('#ic-modal-body').to.have.text(/Email reminder/);
+        expect('#ic-modal-body').to.have.text(/Email Yourself/);
         expect('#ic-modal-input').to.be.visible();
       });
 

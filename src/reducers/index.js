@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 
-import chat from './chat';
 import compass from './compass';
 import notes from './notes';
 import ui from './ui';
@@ -11,7 +10,6 @@ const rootReducer = combineReducers({
   notes,
   compass,
   users,
-  chat,
   ui,
   workspace,
 });

@@ -46,29 +46,28 @@ class NoteManager extends Component {
   };
 
   componentWillUpdate(nextProps) {
-    this.notes = this.chooseDisplayedNotes(nextProps.workspace, nextProps.notes);
+    this.notes = this.chooseDisplayedNotes(nextProps);
   }
 
-  chooseDisplayedNotes(w, notes) {
-    if (this.props.visualMode) {
-      return _.map(notes, (note, i) => {
+  chooseDisplayedNotes({ workspace, notes, visualMode }) {
+    if (visualMode) {
+      const visualNotes = _.map(notes, (note, i) => {
         let copy = Object.assign({}, note);
         copy.style = Object.assign({}, note.style);
-        if (w.selected[i]) {
+        if (workspace.selected[i]) {
           if (!copy.doodle) {
-            if (w.bold !== null) copy.style.bold = w.bold;
-            if (w.italic !== null) copy.style.italic = w.italic;
-            if (w.underline !== null) copy.style.underline = w.underline;
+            if (workspace.bold !== null) copy.style.bold = workspace.bold;
+            if (workspace.italic !== null) copy.style.italic = workspace.italic;
+            if (workspace.underline !== null) copy.style.underline = workspace.underline;
           }
-          if (w.color !== null) copy.color = w.color;
+          if (workspace.color !== null) copy.color = workspace.color;
         }
 
         return copy;
       });
-    } else if (this.props.draftMode) {
-      return w.drafts.concat(notes);
+      return visualNotes.concat(workspace.drafts);
     } else {
-      return notes;
+      return workspace.drafts.concat(notes);
     }
   }
 
@@ -97,10 +96,13 @@ class NoteManager extends Component {
       y = this.notes[i].y + e.dy / this.props.ui.vh;
     let note = Object.assign({}, this.notes[i], { x, y });
 
-    if (this.props.draftMode && !note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
-    if (note.draft) this.props.workspaceX.dragDraft(i, x, y);
-    else if (this.socket.emitDragNote(note)) {
-      this.props.noteX.drag(i, x, y);
+    if (note.draft) {
+      return this.props.workspaceX.dragDraft(i, x, y);
+    } else {
+      i -= this.props.drafts.length;
+      if (this.socket.emitDragNote(note)) {
+        this.props.noteX.drag(i, x, y);
+      }
     }
   };
 
@@ -113,6 +115,11 @@ class NoteManager extends Component {
     this.socket.emitMetric('draft submit');
   };
 
+  enterVisualMode = (idx) => {
+    this.props.uiX.visualMode(this.props.notes.length);
+    this.props.workspaceX.selectNote(idx - this.props.drafts.length);
+  };
+
   renderNote = (note, i) => {
     return (
       <StickyNote key={`note${i}`}
@@ -120,6 +127,7 @@ class NoteManager extends Component {
                   i={i}
                   submitDraft={this.submitDraft}
                   socket={this.socket}
+                  enterVisualMode={this.enterVisualMode}
                   // Can't delete note in visual mode, no need to check
                   destroy={this.socket.emitDeleteNote} />
     );
@@ -139,11 +147,11 @@ class NoteManager extends Component {
 const mapStateToProps = (state) => {
   return {
     notes: state.notes,
+    drafts: state.workspace.drafts,
     workspace: state.workspace,
     ui: state.ui,
     color: state.users.nameToColor[state.users.me],
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
-    draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
   };
 };
 
