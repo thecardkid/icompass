@@ -222,7 +222,7 @@ describe('draft mode', () => {
       it('cannot submit drafts in bulk mode', () => {
         b.click('#note4 span div.contents button.submit');
         b.waitForVisible('#ic-toast');
-        expect('#ic-toast').to.have.text(/Cannot submit drafts/);
+        expect('#ic-toast').to.have.text(/Cannot select drafts/);
       });
     });
 
