@@ -7,12 +7,14 @@ import * as uiX from '../../actions/ui';
 
 import { REGEX } from '../../../lib/constants';
 import SocketSingleton from '../../utils/Socket';
+import FormPalette from './FormPalette';
 
 class ImageForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       imgSource: props.defaultUrl || '',
+      color: props.bg,
     };
     this.socket = SocketSingleton.getInstance();
     this.driveUrlRegex = /https:\/\/drive\.google\.com\/file\/d\/.*\/view\?usp=sharing/;
@@ -29,6 +31,10 @@ class ImageForm extends Component {
     }
 
     this.setState({ imgSource: value });
+  };
+
+  setColor = (color) => () => {
+    this.setState({ color });
   };
 
   renderPreview = () => {
@@ -64,7 +70,7 @@ class ImageForm extends Component {
   };
 
   submit = (isDraft) => () => {
-    this.props.submit(this.state.imgSource, isDraft);
+    this.props.submit(this.state, isDraft);
   };
 
   switchText = () => {
@@ -122,12 +128,13 @@ class ImageForm extends Component {
           <div className="ic-modal-contents">
             <div className="ic-modal-header">
               <h1 className="ic-modal-title">{this.props.title}</h1>
+              {this.props.colors && <FormPalette setColor={this.setColor}/>}
             </div>
             <textarea id="ic-form-text"
                       autoFocus
                       value={this.state.imgSource}
                       onChange={this.handleChange}
-                      style={{ background: this.props.bg }} />
+                      style={{ background: this.state.color }} />
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
