@@ -44,6 +44,7 @@ describe('draft mode', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
       expect('h1.ic-modal-title').to.have.text(/Edit this draft/);
+      expect('.ic-form-palette').to.not.be.visible();
     });
 
     it('can edit draft', () => {
@@ -122,6 +123,7 @@ describe('draft mode', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
       expect('h1.ic-modal-title').to.have.text(/Edit photo draft/);
+      expect('.ic-form-palette').to.not.be.visible();
       expect('#ic-form-text').to.have.text(DOG_PHOTO_LINK);
       expect('button[name=draft]').to.not.be.visible();
       b.click('button[name=nvm]');

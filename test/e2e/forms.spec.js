@@ -20,7 +20,11 @@ describe('forms', () => {
       b.moveToObject('body', 100, 200);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
+      expect('.ic-form-palette').to.be.visible();
+      expect('.ic-palette-color').to.have.count(6);
+
       b.setValue('#ic-form-text', 'text note');
+      b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
       expect('div.ic-sticky-note').to.have.count(1);
@@ -28,6 +32,7 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note0');
       expect(x).to.equal(100);
       expect(y).to.equal(200);
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('edit', () => {
@@ -35,10 +40,13 @@ describe('forms', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
       expect('#ic-form-text').to.have.text('text note');
+      expect('.ic-form-palette').to.be.visible();
+      b.click('.ic-color-FFCCFF');
       b.setValue('#ic-form-text', 'edited note');
       b.click('button[name=ship]');
       b.pause(200);
       expect('#note0').to.have.text(/edited note/);
+      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
     it('styling', () => {
@@ -125,21 +133,30 @@ describe('forms', () => {
       b.doDoubleClick();
       b.keys('Shift');
       b.waitForVisible('#ic-image-form');
+      expect('.ic-form-palette').to.be.visible();
+      expect('.ic-palette-color').to.have.count(6);
+
       b.setValue('#ic-form-text', imageUrl);
+      b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
       expect('div.ic-sticky-note').to.have.count(3);
       const { x, y } = b.getLocation('#note2');
       expect(x).to.equal(xoffset);
       expect(y).to.equal(yoffset);
+      expect(b.getCssProperty('#note2 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('edit', () => {
       b.moveToObject('#note2', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
+      expect('.ic-form-palette').to.be.visible();
+      expect('.ic-palette-color').to.have.count(6);
       expect('#ic-form-text').to.have.text(imageUrl);
-      b.click('button[name=nvm]');
+      b.click('.ic-color-FFCCFF');
+      b.click('button[name=ship]');
+      expect(b.getCssProperty('#note2 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
     it('converts drive link to thumbnail', () => {
@@ -173,6 +190,8 @@ describe('forms', () => {
       b.doDoubleClick();
       b.keys('Alt');
       b.waitForVisible('#ic-doodle-form');
+      expect('.ic-form-palette').to.be.visible();
+      expect('.ic-palette-color').to.have.count(6);
 
       // draw doodle
       b.moveToObject('#ic-doodle', 155, 75);
@@ -181,6 +200,7 @@ describe('forms', () => {
       b.buttonUp(0);
       b.pause(200);
 
+      b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
       expect('div.ic-sticky-note').to.have.count(4);
@@ -188,6 +208,7 @@ describe('forms', () => {
       expect(x).to.equal(xoffset);
       expect(y).to.equal(yoffset);
       expect(b.getAttribute('#note3 div.ic-img img', 'src')).to.contain('data:image/png;base64');
+      expect(b.getCssProperty('#note3 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('edit', () => {
@@ -307,20 +328,6 @@ describe('forms', () => {
       b.moveToObject('#ic-doodle-form', -20, -20);
       b.leftClick();
       expect('#ic-doodle-form').to.not.be.visible();
-    });
-  });
-
-  describe('colors', () => {
-    describe('text', () => {
-      b.moveToObject('body', 700, 700);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'hi');
-      b.click('.color-CCCCFF');
-      b.click('button[name=ship]');
-
-      expect('div.ic-sticky-note').to.have.count(6);
-      expect(b.getCssProperty('#note5 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
   });
 });
