@@ -98,23 +98,29 @@ class ImageForm extends Component {
     );
   };
 
+  dontClose(e) {
+    e.stopPropagation();
+  }
+
   render() {
     return (
-      <div className="ic-modal ic-form" id="ic-image-form">
-        <div className="ic-modal-contents">
-          <div className="ic-modal-header">
-            <h1 className="ic-modal-title">{this.props.title}</h1>
-          </div>
-          <textarea id="ic-form-text"
-                    autoFocus
-                    value={this.state.imgSource}
-                    onChange={this.handleChange}
-                    style={{ background: this.props.bg }} />
-          {this.renderPreview()}
-          <div className="note-form-footer">
-            {this.props.switch && this.renderSwitches()}
-            <button name="ship" onClick={this.submit}>ship it</button>
-            <button name="nvm" onClick={this.props.close}>never mind</button>
+      <div id={'ic-backdrop'} onClick={this.props.close}>
+        <div className="ic-modal ic-form" id="ic-image-form" onClick={this.dontClose}>
+          <div className="ic-modal-contents">
+            <div className="ic-modal-header">
+              <h1 className="ic-modal-title">{this.props.title}</h1>
+            </div>
+            <textarea id="ic-form-text"
+                      autoFocus
+                      value={this.state.imgSource}
+                      onChange={this.handleChange}
+                      style={{ background: this.props.bg }} />
+            {this.renderPreview()}
+            <div className="note-form-footer">
+              {this.props.switch && this.renderSwitches()}
+              <button name="ship" onClick={this.submit}>ship it</button>
+              <button name="nvm" onClick={this.props.close}>never mind</button>
+            </div>
           </div>
         </div>
       </div>

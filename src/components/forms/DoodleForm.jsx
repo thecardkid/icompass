@@ -118,48 +118,54 @@ class DoodleForm extends Component {
     this.props.uiX.switchToImage();
   };
 
+  dontClose(e) {
+    e.stopPropagation();
+  }
+
   render() {
     this.drawCanvas();
 
     return (
-      <div className="ic-modal ic-form" id="ic-doodle-form" style={this.props.style}>
-        <div className={'ic-modal-contents'}>
-          <div className={'ic-modal-header'}>
-            <h1 className={'ic-modal-title'}>Create a sketch</h1>
-            <button name="clear" onClick={this.clearCanvas}>clear</button>
-          </div>
-          <canvas id="ic-doodle"
-                  ref="canvas"
-                  width="410"
-                  height="250"
-                  onMouseDown={this.beginDraw}
-                  onMouseMove={this.draw}
-                  onMouseLeave={this.stopDraw}
-                  onMouseUp={this.stopDraw}
-                  onTouchStart={this.beginTouchDraw}
-                  onTouchMove={this.touchDraw}
-                  onTouchEnd={this.stopDraw}
-                  style={{ background: this.props.bg }}>
-          </canvas>
-          <div className="note-form-footer">
-            <div>
-              <button className={'switch-form switch-text'}
-                      data-tip="Create a text note"
-                      data-for="text-tooltip"
-                      onClick={this.switchText}>
-                <i className={'material-icons'}>text_format</i>
-              </button>
-              <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
-              <button className={'switch-form switch-image'}
-                      data-tip="Insert a photo"
-                      data-for="doodle-tooltip"
-                      onClick={this.switchImage}>
-                <i className={'material-icons'}>photo</i>
-              </button>
-              <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+      <div id={'ic-backdrop'} onClick={this.props.close}>
+        <div className="ic-modal ic-form" id="ic-doodle-form" onClick={this.dontClose}>
+          <div className={'ic-modal-contents'}>
+            <div className={'ic-modal-header'}>
+              <h1 className={'ic-modal-title'}>Create a sketch</h1>
+              <button name="clear" onClick={this.clearCanvas}>clear</button>
             </div>
-            <button name="ship" onClick={this.makeDoodle}>ship it</button>
-            <button name="nvm" onClick={this.props.close}>never mind</button>
+            <canvas id="ic-doodle"
+                    ref="canvas"
+                    width="410"
+                    height="250"
+                    onMouseDown={this.beginDraw}
+                    onMouseMove={this.draw}
+                    onMouseLeave={this.stopDraw}
+                    onMouseUp={this.stopDraw}
+                    onTouchStart={this.beginTouchDraw}
+                    onTouchMove={this.touchDraw}
+                    onTouchEnd={this.stopDraw}
+                    style={{ background: this.props.bg }}>
+            </canvas>
+            <div className="note-form-footer">
+              <div>
+                <button className={'switch-form switch-text'}
+                        data-tip="Create a text note"
+                        data-for="text-tooltip"
+                        onClick={this.switchText}>
+                  <i className={'material-icons'}>text_format</i>
+                </button>
+                <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
+                <button className={'switch-form switch-image'}
+                        data-tip="Insert a photo"
+                        data-for="doodle-tooltip"
+                        onClick={this.switchImage}>
+                  <i className={'material-icons'}>photo</i>
+                </button>
+                <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
+              </div>
+              <button name="ship" onClick={this.makeDoodle}>ship it</button>
+              <button name="nvm" onClick={this.props.close}>never mind</button>
+            </div>
           </div>
         </div>
       </div>

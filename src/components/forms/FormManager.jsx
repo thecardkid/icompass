@@ -115,38 +115,26 @@ class FormManager extends Component {
     return formRenderer();
   };
 
-  getForm = () => {
+  render() {
     const { forms } = this.props;
+    let renderer;
 
     if (forms.newText) {
-      return this.renderFormIfNotVisual(this.createTextForm);
+      renderer = this.createTextForm;
+    } else if (forms.editText) {
+      renderer = this.editTextForm;
+    } else if (forms.newImage) {
+      renderer = this.createImageForm;
+    } else if (forms.editImage) {
+      renderer = this.editImageForm;
+    } else if (forms.newDoodle) {
+      renderer = this.renderDoodleForm;
+    } else {
+      return null;
     }
 
-    if (forms.editText) {
-      return this.renderFormIfNotVisual(this.editTextForm);
-    }
-
-    if (forms.newImage) {
-      return this.renderFormIfNotVisual(this.createImageForm);
-    }
-
-    if (forms.editImage) {
-      return this.renderFormIfNotVisual(this.editImageForm);
-    }
-
-    if (forms.newDoodle) {
-      return this.renderFormIfNotVisual(this.renderDoodleForm);
-    }
-
-    return null;
+    return this.renderFormIfNotVisual(renderer);
   };
-
-  render() {
-    const form = this.getForm();
-
-    if (form) return <div id="ic-backdrop">{form}</div>;
-    return null;
-  }
 }
 
 const mapStateToProps = (state) => {

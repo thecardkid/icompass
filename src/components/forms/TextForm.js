@@ -116,6 +116,10 @@ class TextForm extends Component {
     );
   };
 
+  dontClose(e) {
+    e.stopPropagation();
+  }
+
   render() {
     const spanStyle = { color: this.state.charCount > 300 ? 'red' : 'black' };
 
@@ -125,26 +129,28 @@ class TextForm extends Component {
     if (this.state.style.underline) textStyle += 'underline';
 
     return (
-      <div className="ic-modal ic-form" id="ic-note-form">
-        <div className="ic-modal-contents">
-          <div className="ic-modal-header">
-            <h1 className={'ic-modal-title'}>
-              {this.props.title}
-              <span style={spanStyle}> {this.state.charCount}/300</span>
-            </h1>
-            {this.renderStyleToolbar()}
-          </div>
-          <textarea id="ic-form-text"
-                    className={textStyle}
-                    ref={'text'}
-                    autoFocus
-                    defaultValue={this.props.defaultText || ''}
-                    onChange={this.handleChange}
-                    style={{ background: this.props.bg }}/>
-          <div className="note-form-footer">
-            {this.props.switch && this.renderSwitches()}
-            <button name="ship" onClick={this.submit}>ship it</button>
-            <button name="nvm" onClick={this.props.close}>never mind</button>
+      <div id={'ic-backdrop'} onClick={this.props.close}>
+        <div className="ic-modal ic-form" id="ic-note-form" onClick={this.dontClose}>
+          <div className="ic-modal-contents">
+            <div className="ic-modal-header">
+              <h1 className={'ic-modal-title'}>
+                {this.props.title}
+                <span style={spanStyle}> {this.state.charCount}/300</span>
+              </h1>
+              {this.renderStyleToolbar()}
+            </div>
+            <textarea id="ic-form-text"
+                      className={textStyle}
+                      ref={'text'}
+                      autoFocus
+                      defaultValue={this.props.defaultText || ''}
+                      onChange={this.handleChange}
+                      style={{ background: this.props.bg }}/>
+            <div className="note-form-footer">
+              {this.props.switch && this.renderSwitches()}
+              <button name="ship" onClick={this.submit}>ship it</button>
+              <button name="nvm" onClick={this.props.close}>never mind</button>
+            </div>
           </div>
         </div>
       </div>
