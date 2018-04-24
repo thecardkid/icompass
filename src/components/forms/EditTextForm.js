@@ -10,7 +10,7 @@ export default class EditTextForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  edit = (text, isImage, style, color) => {
+  edit = (text, isImage, { style, color }) => {
     if (!text) return;
 
     const edited = {

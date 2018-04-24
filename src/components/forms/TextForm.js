@@ -20,7 +20,7 @@ class TextForm extends Component {
         underline: false,
         ...props.defaultStyle,
       },
-      color: null,
+      color: props.bg,
       charCount: (props.defaultText || '').length,
     };
 
@@ -63,7 +63,7 @@ class TextForm extends Component {
 
   submit = (isDraft) => () => {
     this.getText(({ text, isImage }) => {
-      this.props.submit(text, isImage, this.state.style, this.state.color, isDraft);
+      this.props.submit(text, isImage, this.state, isDraft);
     });
   };
 
@@ -167,7 +167,7 @@ class TextForm extends Component {
                       autoFocus
                       defaultValue={this.props.defaultText || ''}
                       onChange={this.handleChange}
-                      style={{ background: this.state.color || this.props.bg }}/>
+                      style={{ background: this.state.color }}/>
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
               <button name="ship" onClick={this.submit(false)}>ship it</button>
