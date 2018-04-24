@@ -89,7 +89,7 @@ class TextForm extends Component {
             <b>B</b>
           </button>
         </div>
-        <FormPalette setColor={this.setColor}/>
+        {this.props.colors && <FormPalette setColor={this.setColor}/>}
       </div>
     );
   }

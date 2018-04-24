@@ -34,6 +34,7 @@ export default class CreateTextForm extends Component {
                 close={this.props.close}
                 bg={this.props.bg}
                 switch={true}
+                colors={true}
       />
     );
   }

@@ -37,6 +37,7 @@ export default class EditTextForm extends Component {
                 close={this.props.close}
                 bg={this.props.info.color}
                 switch={false}
+                colors={!this.props.info.draft}
       />
     );
   }

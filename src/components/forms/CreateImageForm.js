@@ -40,6 +40,7 @@ export default class CreateImageForm extends Component {
                  close={this.props.close}
                  bg={this.props.bg}
                  switch={true}
+                 colors={true}
       />
     );
   }

@@ -128,7 +128,7 @@ class ImageForm extends Component {
           <div className="ic-modal-contents">
             <div className="ic-modal-header">
               <h1 className="ic-modal-title">{this.props.title}</h1>
-              <FormPalette setColor={this.setColor}/>
+              {this.props.colors && <FormPalette setColor={this.setColor}/>}
             </div>
             <textarea id="ic-form-text"
                       autoFocus
