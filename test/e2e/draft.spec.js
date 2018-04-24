@@ -121,7 +121,7 @@ describe('draft mode', () => {
       b.moveToObject('div.ic-img', 20, 20);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
-      expect('h1.ic-modal-title').to.have.text(/Edit photo link/);
+      expect('h1.ic-modal-title').to.have.text(/Edit photo draft/);
       expect('#ic-form-text').to.have.text(DOG_PHOTO_LINK);
       expect('button[name=draft]').to.not.be.visible();
       b.click('button[name=nvm]');
