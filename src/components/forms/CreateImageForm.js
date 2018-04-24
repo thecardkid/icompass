@@ -9,7 +9,7 @@ export default class CreateImageForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  make = (url) => {
+  make = (url, isDraft) => {
     if (!url) return;
 
     const { x, y } = this.props.info;
@@ -28,7 +28,8 @@ export default class CreateImageForm extends Component {
     };
 
     this.socket.emitMetric('note image');
-    this.props.ship(note);
+    if (isDraft) this.props.asDraft(note);
+    else this.props.asNote(note);
     this.props.close();
   };
 

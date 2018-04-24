@@ -34,10 +34,9 @@ class WorkspaceMenu extends Component {
       73: props.uiX.showImage,
       78: props.uiX.showNewNote,
       shift: {
-        49: this.handleChangeMode('standard'),
-        50: this.handleChangeMode('compact'),
-        51: this.handleChangeMode('draft'),
-        52: this.handleChangeMode('bulk'),
+        49: this.changeMode('standard'),
+        50: this.changeMode('compact'),
+        51: this.changeMode('bulk'),
       },
     };
     this.modal = ModalSingleton.getInstance();
@@ -57,7 +56,7 @@ class WorkspaceMenu extends Component {
     }
   };
 
-  changeMode = (mode) => {
+  changeMode = (mode) => () => {
     switch (mode) {
       case 'standard':
         this.toast.info('Switched to standard mode');
@@ -66,10 +65,6 @@ class WorkspaceMenu extends Component {
       case 'compact':
         this.toast.info('Switched to compact mode');
         return this.props.uiX.compactMode();
-
-      case 'draft':
-        this.toast.info('Switched to draft mode');
-        return this.props.uiX.draftMode();
 
       case 'bulk':
         this.toast.info('Switched to bulk edit mode');
@@ -80,25 +75,13 @@ class WorkspaceMenu extends Component {
     }
   };
 
-  handleChangeMode = (switchTo) => () => {
-    if (this.props.modes.draft && switchTo !== 'draft' && this.props.hasDrafts) {
-      this.modal.confirm(MODALS.EXIT_DRAFT_MODE, (confirmed) => {
-        if (confirmed) {
-          this.changeMode(switchTo);
-        }
-      });
-    } else {
-      this.changeMode(switchTo);
-    }
-  };
-
   showShareModal = () => {
     this.props.uiX.showShareModal();
   };
 
   buttonChangeMode = (switchTo) => () => {
     this.socket.emitMetric(`menu ${switchTo}`);
-    this.handleChangeMode(switchTo)();
+    this.changeMode(switchTo)();
   };
 
   openNewWorkspace = () => {

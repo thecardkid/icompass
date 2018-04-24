@@ -90,17 +90,20 @@ class DoodleForm extends Component {
     }
   };
 
-  makeDoodle = () => {
+  submit = (isDraft) => () => {
     if (this.state.x.length === 0) return;
     this.socket.emitMetric('note doodle');
     const { x, y } = this.props.info;
-    this.props.ship({
+    const note = {
       text: null,
       doodle: document.getElementById('ic-doodle').toDataURL(),
-      color: this.props.color,
+      color: this.props.bg,
       user: this.props.user,
       x, y,
-    });
+    };
+
+    if (isDraft) this.props.asDraft(note);
+    else this.props.asNote(note);
     this.props.close();
   };
 
@@ -163,7 +166,13 @@ class DoodleForm extends Component {
                 </button>
                 <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
               </div>
-              <button name="ship" onClick={this.makeDoodle}>ship it</button>
+              <button name="ship" onClick={this.submit(false)}>ship it</button>
+              <button name={'draft'}
+                      onClick={this.submit(true)}
+                      data-tip="Drafts are invisible to others until you submit them"
+                      data-for="draft-tooltip"
+                      >as draft</button>
+              <ReactTooltip id={'draft-tooltip'} place={'bottom'} effect={'solid'} delayShow={500}/>
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>

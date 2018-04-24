@@ -55,9 +55,9 @@ class TextForm extends Component {
     cb({ text, isImage: false });
   }
 
-  submit = () => {
+  submit = (isDraft) => () => {
     this.getText(({ text, isImage }) => {
-      this.props.submit(text, isImage, this.state.style);
+      this.props.submit(text, isImage, this.state.style, isDraft);
     });
   };
 
@@ -120,6 +120,19 @@ class TextForm extends Component {
     e.stopPropagation();
   }
 
+  renderDraftButton = () => {
+    return (
+      <div>
+        <button name={'draft'}
+                onClick={this.submit(true)}
+                data-tip="Drafts are invisible to others until you submit them"
+                data-for="draft-tooltip"
+        >as draft</button>
+        <ReactTooltip id={'draft-tooltip'} place={'bottom'} effect={'solid'} delayShow={500}/>
+      </div>
+    );
+  };
+
   render() {
     const spanStyle = { color: this.state.charCount > 300 ? 'red' : 'black' };
 
@@ -148,7 +161,8 @@ class TextForm extends Component {
                       style={{ background: this.props.bg }}/>
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit}>ship it</button>
+              <button name="ship" onClick={this.submit(false)}>ship it</button>
+              {this.props.switch && this.renderDraftButton()}
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>

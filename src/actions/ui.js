@@ -85,12 +85,6 @@ export const visualMode = (len) => {
   };
 };
 
-export const draftMode = () => {
-  return {
-    type: 'draftMode',
-  };
-};
-
 export const resize = (e) => {
   return {
     type: 'resize',

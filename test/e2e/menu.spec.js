@@ -25,8 +25,7 @@ const actions = {
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
   standardMode: Object.assign({}, modesSubmenu, { position: 0 }),
   compactMode: Object.assign({}, modesSubmenu, { position: 1 }),
-  draftMode: Object.assign({}, modesSubmenu, { position: 2 }),
-  bulkMode: Object.assign({}, modesSubmenu, { position: 3 }),
+  bulkMode: Object.assign({}, modesSubmenu, { position: 2 }),
 };
 
 const selectMenuOption = (count) => {
@@ -75,11 +74,6 @@ describe('workspace menu', () => {
     it('compact mode', () => {
       selectSubmenuOption(actions.compactMode);
       expect('#ic-toast').to.have.text(/compact/);
-    });
-
-    it('draft mode', () => {
-      selectSubmenuOption(actions.draftMode);
-      expect('#ic-toast').to.have.text(/draft/);
     });
 
     it('bulk edit mode', () => {

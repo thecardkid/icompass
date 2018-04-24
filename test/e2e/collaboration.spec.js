@@ -99,16 +99,17 @@ describe('collaboration', () => {
   describe('draft mode', () => {
     it('other users do not see drafts', () => {
       b.switchTab(tabs.webdriverio);
-      switchMode('#ic-draft');
       b.moveToObject('body', 300, 200);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
       b.setValue('#ic-form-text', 'webdriverio draft');
-      b.click('button[name=ship]').pause(200);
+      b.click('button[name=draft]').pause(200);
       expect('div.ic-sticky-note').to.have.count(2);
+      expect('.draft').to.have.count(1);
 
       b.switchTab(tabs.friendo);
       expect('div.ic-sticky-note').to.have.count(1);
+      expect('.draft').to.have.count(0);
     });
 
     it('notes submitted by others still show up while in draft mode', () => {
@@ -120,14 +121,16 @@ describe('collaboration', () => {
       b.click('button[name=ship]');
       b.waitForVisible('#note1');
       expect('.ic-sticky-note').to.have.count(2);
+      expect('.draft').to.have.count(0);
 
       b.switchTab(tabs.webdriverio);
       expect('.ic-sticky-note').to.have.count(3);
+      expect('.draft').to.have.count(1);
     });
 
     it('submitting a draft makes it visible to others', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('#note0 span div.contents p.submit');
+      b.click('#note0 span div.contents button.submit');
       b.pause(200);
       expect('#note2').to.have.text(/webdriverio draft/);
 

@@ -63,8 +63,8 @@ class ImageForm extends Component {
     );
   };
 
-  submit = () => {
-    this.props.submit(this.state.imgSource);
+  submit = (isDraft) => () => {
+    this.props.submit(this.state.imgSource, isDraft);
   };
 
   switchText = () => {
@@ -98,6 +98,19 @@ class ImageForm extends Component {
     );
   };
 
+  renderDraftButton = () => {
+    return (
+      <div>
+        <button name={'draft'}
+                onClick={this.submit(true)}
+                data-tip="Drafts are invisible to others until you submit them"
+                data-for="draft-tooltip"
+        >as draft</button>
+        <ReactTooltip id={'draft-tooltip'} place={'bottom'} effect={'solid'} delayShow={500}/>
+      </div>
+    );
+  };
+
   dontClose(e) {
     e.stopPropagation();
   }
@@ -118,7 +131,8 @@ class ImageForm extends Component {
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit}>ship it</button>
+              <button name="ship" onClick={this.submit(false)}>ship it</button>
+              {this.props.switch && this.renderDraftButton()}
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>
