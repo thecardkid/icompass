@@ -7,14 +7,22 @@ import { bindActionCreators } from 'redux';
 import * as uiX from '../../actions/ui';
 
 import Socket from '../../utils/Socket';
+import FormPalette from './FormPalette';
 
 let paint = false;
 
 class DoodleForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      color: props.bg,
+    };
     this.socket = Socket.getInstance();
   }
+
+  setColor = (color) => () => {
+    this.setState({ color });
+  };
 
   componentDidMount() {
     this.canvas = $('#ic-doodle');
@@ -97,7 +105,7 @@ class DoodleForm extends Component {
     const note = {
       text: null,
       doodle: document.getElementById('ic-doodle').toDataURL(),
-      color: this.props.bg,
+      color: this.state.color,
       user: this.props.user,
       x, y,
     };
@@ -135,6 +143,7 @@ class DoodleForm extends Component {
             <div className={'ic-modal-header'}>
               <h1 className={'ic-modal-title'}>Create a sketch</h1>
               <button name="clear" onClick={this.clearCanvas}>clear</button>
+              <FormPalette setColor={this.setColor} />
             </div>
             <canvas id="ic-doodle"
                     ref="canvas"
@@ -147,7 +156,7 @@ class DoodleForm extends Component {
                     onTouchStart={this.beginTouchDraw}
                     onTouchMove={this.touchDraw}
                     onTouchEnd={this.stopDraw}
-                    style={{ background: this.props.bg }}>
+                    style={{ background: this.state.color }}>
             </canvas>
             <div className="note-form-footer">
               <div>
