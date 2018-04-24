@@ -5,32 +5,31 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
+const { setup, cleanup, switchMode } = require('./utils');
 const PROMPTS = require('../../lib/constants').PROMPTS;
 
+const expectNumUsers = (expected) => {
+  b.click('button.ic-workspace-button');
+  b.waitForVisible('div.ic-workspace-menu');
+  b.moveTo(b.elements('div.has-more').value[2].ELEMENT, 10, 10);
+  b.waitForVisible('div.ic-users-submenu');
+  expect('div.ic-user').to.have.count(expected);
+  b.click('button.ic-workspace-button');
+};
+
 describe('collaboration', () => {
-  const colors = {};
   let tabs = {};
 
   beforeAll(() => {
-    require('./utils').setup();
-    colors.webdriverio = b.getCssProperty('.ic-user', 'background-color').value;
+    setup();
     tabs.webdriverio = b.getCurrentTabId();
-    b.click('button[name=share-edit]');
-    b.waitForVisible('#ic-modal');
+    const url = b.getUrl().substring(0, 43);
 
-    const text = b.getText('#ic-modal-body p');
-    const code = text.substring(text.length - 8);
-    const shareUrl = `http://localhost:8080/compass/edit/${code}/friendo`;
-    b.click('#ic-modal-confirm');
-
-    b.newWindow(shareUrl, 'friendo', 'width=2000,height=2000');
+    b.newWindow(`${url}/friendo`, 'friendo', 'width=2000,height=2000');
     b.setViewportSize({ width: 2000, height: 2000 });
     b.waitForVisible('#compass');
-    b.click('#ic-show-sidebar');
-    b.waitForVisible('#ic-sidebar');
+    b.pause(1000);
     tabs.friendo = b.getCurrentTabId();
-    colors.friendo = b.getCssProperty('.ic-user:nth-of-type(2)', 'background-color').value;
-    expect('.ic-user').to.have.count(2);
   });
 
   describe('continuous edit operations', () => {
@@ -39,22 +38,19 @@ describe('collaboration', () => {
       b.keys(['n']);
       b.waitForVisible('#ic-note-form');
       b.setValue('#ic-form-text', 'Friendo\'s note');
-      b.click('button[name=ship]');
-      b.waitForVisible('#note0');
-
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal(colors.friendo);
+      b.click('button[name=ship]').pause(200);
+      expect('div.ic-sticky-note').to.have.count(1);
     });
 
     it('webdriverio sees the note', () => {
       b.switchTab(tabs.webdriverio);
-      expect('#note0').to.be.visible();
+      expect('div.ic-sticky-note').to.have.count(1);
       expect('#note0').to.have.text(/Friendo's note/);
     });
 
     it('webdriverio drags the note and friendo sees the drag', () => {
       b.switchTab(tabs.friendo);
       const oldPos = b.getLocation('#note0');
-
       b.switchTab(tabs.webdriverio);
       b.moveToObject('#note0', 10, 10);
       b.buttonDown(0).pause(100);
@@ -63,14 +59,12 @@ describe('collaboration', () => {
 
       b.switchTab(tabs.friendo);
       const newPos = b.getLocation('#note0');
-
       expect(newPos.x).to.not.equal(oldPos.x);
       expect(newPos.y).to.not.equal(oldPos.y);
     });
 
     it('friendo makes an edit and webdriverio sees edit', () => {
       b.switchTab(tabs.friendo);
-
       b.doubleClick('#note0').pause(100);
       b.waitForVisible('#ic-note-form');
       b.setValue('#ic-form-text', 'edit');
@@ -88,82 +82,37 @@ describe('collaboration', () => {
       b.url('http://localhost:8080/');
 
       b.switchTab(tabs.friendo);
-      expect('.ic-user').to.have.count(1);
-      expect(b.getCssProperty('.ic-user', 'background-color').value).to.equal(colors.friendo);
+      expectNumUsers(1);
     });
 
     it('webdriverio logs in and both see 2 users', () => {
       b.switchTab(tabs.webdriverio);
       b.back();
-      b.waitForVisible('#compass');
-      b.click('#ic-show-sidebar');
-      b.waitForVisible('#ic-sidebar');
-      expect('.ic-user').to.have.count(2);
-      colors.webdriverio = b.getCssProperty('.ic-user:nth-of-type(2)', 'background-color').value;
+      b.waitForVisible('button.ic-workspace-button');
+      expectNumUsers(2);
 
       b.switchTab(tabs.friendo);
-      expect('.ic-user').to.have.count(2);
-    });
-  });
-
-  describe('chat', () => {
-    it('red alert on chat box if message received while chat is hidden', () => {
-      b.switchTab(tabs.webdriverio);
-      expect(b.getCssProperty('#ic-chat', 'bottom').value).to.equal('-270px');
-
-      b.switchTab(tabs.friendo);
-      b.click('#ic-show-chat').pause(500);
-      b.setValue('#message-text', ['first message', '\uE007']);
-      b.waitForVisible('div.mine');
-      expect('div.mine').to.have.text(/first message/);
-      expect(b.getCssProperty('div.mine', 'background-color').value).to.equal(colors.friendo);
-
-      b.switchTab(tabs.webdriverio);
-      expect(b.getCssProperty('button#ic-show-chat', 'background-color').value).to.equal('rgba(194,26,3,1)');
-    });
-
-    it('chat messages are rendered correctly', () => {
-      b.switchTab(tabs.webdriverio);
-      b.click('#ic-show-chat');
-      b.pause(500);
-
-      expect('div.theirs').to.be.visible();
-      expect('div.theirs').to.have.text(/first message/);
-      expect(b.getCssProperty('div.theirs', 'background-color').value).to.equal(colors.friendo);
-    });
-
-    it('renders both "mine" and "their" messages with correct colors', () => {
-      b.setValue('#message-text', ['second message', '\uE007']);
-      b.waitForVisible('div.mine');
-      expect('div.mine').to.have.text(/second message/);
-      expect(b.getCssProperty('div.mine', 'background-color').value).to.equal(colors.webdriverio);
-
-      b.switchTab(tabs.friendo);
-      expect('div.theirs').to.be.visible();
-      expect('div.theirs').to.have.text(/second message/);
-      expect(b.getCssProperty('div.theirs', 'background-color').value).to.equal(colors.webdriverio);
+      expectNumUsers(2);
     });
   });
 
   describe('draft mode', () => {
     it('other users do not see drafts', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('#ic-mode-draft');
       b.moveToObject('body', 300, 200);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
       b.setValue('#ic-form-text', 'webdriverio draft');
-      b.click('button[name=ship]');
-      b.waitForVisible('#note1');
-      expect('.ic-sticky-note').to.have.count(2);
+      b.click('button[name=draft]').pause(200);
+      expect('div.ic-sticky-note').to.have.count(2);
+      expect('.draft').to.have.count(1);
 
       b.switchTab(tabs.friendo);
-      expect('.ic-sticky-note').to.have.count(1);
+      expect('div.ic-sticky-note').to.have.count(1);
+      expect('.draft').to.have.count(0);
     });
 
     it('notes submitted by others still show up while in draft mode', () => {
-      // webdriverio in draft mode, friendo creates new note
-
       b.switchTab(tabs.friendo);
       b.moveToObject('body', 300, 600);
       b.doDoubleClick();
@@ -172,15 +121,17 @@ describe('collaboration', () => {
       b.click('button[name=ship]');
       b.waitForVisible('#note1');
       expect('.ic-sticky-note').to.have.count(2);
+      expect('.draft').to.have.count(0);
 
       b.switchTab(tabs.webdriverio);
       expect('.ic-sticky-note').to.have.count(3);
+      expect('.draft').to.have.count(1);
     });
 
     it('submitting a draft makes it visible to others', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('#note0 span div.contents p.submit');
-      b.pause(500);
+      b.click('#note0 span div.contents button.submit');
+      b.pause(200);
       expect('#note2').to.have.text(/webdriverio draft/);
 
       b.switchTab(tabs.friendo);
@@ -188,10 +139,10 @@ describe('collaboration', () => {
     });
   });
 
-  describe('visual mode', () => {
+  describe('bulk edit mode', () => {
     it('edits while in visual mode don\'t show up', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('#ic-mode-visual');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
       b.click('button.bold');
       b.click('#note0');
@@ -206,7 +157,7 @@ describe('collaboration', () => {
 
     it('deleting a note that is being edited by a user removes it from that user\'s screen', () => {
       b.switchTab(tabs.friendo);
-      b.click('#ic-mode-visual');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
       b.click('#note2');
       b.click('#ic-bulk-delete');
@@ -236,12 +187,7 @@ describe('collaboration', () => {
   describe('compass delete', () => {
     it('user who performs delete action gets redirected to home page', () => {
       b.switchTab(tabs.webdriverio);
-      b.click('#ic-sidebar button[name=destroyer]');
-      b.waitForVisible('#ic-modal');
-      b.click('#ic-modal-confirm');
-      b.pause(200);
-      b.waitForVisible('#ic-modal');
-      b.click('#ic-modal-confirm');
+      cleanup();
       b.pause(500);
       expect(b.getUrl()).to.equal('http://localhost:8080/');
     });

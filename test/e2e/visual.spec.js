@@ -5,15 +5,14 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const PROMPTS = require('../../lib/constants').PROMPTS;
-const MODALS = require('../../lib/constants').MODALS;
-const STICKY_COLORS = require('../../lib/constants').STICKY_COLORS;
+const { setup, cleanup, switchMode } = require('./utils');
+const { PROMPTS, MODALS, STICKY_COLORS } = require('../../lib/constants');
 const TEXT = 'this is a note',
     POSITIONS = [ {x: 250, y: 200}, {x: 350, y: 200}, {x: 450, y: 200}, {x: 550, y: 200} ];
 
 describe('visual mode', () => {
   beforeAll(() => {
-    require('./utils').setup();
+    setup();
 
     for (let i = 0; i < POSITIONS.length; i++) {
       let p = POSITIONS[i];
@@ -26,11 +25,11 @@ describe('visual mode', () => {
     }
   });
 
-  afterAll(require('./utils').cleanup);
+  afterAll(cleanup);
 
   it('visual mode toolbar is draggable', () => {
     expect('#ic-visual-toolbar').to.not.be.there();
-    b.click('#ic-mode-visual');
+    switchMode('#ic-bulk');
     b.waitForVisible('#ic-visual-toolbar');
 
     let pos = b.getLocation('#ic-visual-toolbar');
@@ -82,8 +81,8 @@ describe('visual mode', () => {
     let borderCss;
 
     beforeAll(() => {
-      b.click('#ic-mode-normal');
-      b.click('#ic-mode-visual');
+      switchMode('#ic-standard');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
     });
 
@@ -124,7 +123,7 @@ describe('visual mode', () => {
     });
 
     it('clicking cancel exits visual mode', () => {
-      b.click('#ic-mode-visual');
+      switchMode('#ic-bulk');
       b.click('#ic-bulk-cancel');
       expect('#ic-visual-toolbar').to.not.be.visible();
     });
@@ -132,8 +131,8 @@ describe('visual mode', () => {
 
   describe('bulk editing', () => {
     beforeEach(() => {
-      b.click('#ic-mode-normal');
-      b.click('#ic-mode-visual');
+      switchMode('#ic-standard');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
     });
 
@@ -200,8 +199,8 @@ describe('visual mode', () => {
 
   describe('submitting', () => {
     beforeEach(() => {
-      b.click('#ic-mode-normal');
-      b.click('#ic-mode-visual');
+      switchMode('#ic-standard');
+      switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
     });
 
@@ -222,7 +221,7 @@ describe('visual mode', () => {
     });
 
     it('empty submit does nothing', () => {
-      b.click('#ic-mode-visual');
+      switchMode('#ic-bulk');
       b.click('#note0');
       b.click('#note1');
       b.click('#ic-bulk-submit');
@@ -235,7 +234,7 @@ describe('visual mode', () => {
   });
 
   it('bulk delete', () => {
-    b.click('#ic-mode-visual');
+    switchMode('#ic-bulk');
     b.click('#note0');
     b.click('#note1');
     b.click('#note2');

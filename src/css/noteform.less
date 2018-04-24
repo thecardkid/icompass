@@ -1,11 +1,76 @@
-#ic-note-form {
-  width: 300px;
+.ic-form {
+  width: 350px;
   z-index: 3;
 
   h1 {
     width: 60%;
   }
 
+  textarea {
+    font-size: 18px;
+    margin-top: 10px;
+    width: 310px;
+    padding: 10px;
+    border: none;
+    font-family: @dosis;
+    resize: none;
+  }
+
+  div.note-form-footer {
+    margin-top: 10px;
+    height: 25px;
+
+    button {
+      float: right;
+      font-size: 14px;
+      padding: 5px;
+    }
+
+    button.switch-form {
+      float: left;
+      background: none;
+      margin-right: 5px;
+
+      i {
+        font-size: 21px;
+        line-height: 16px;
+        color: @dark;
+      }
+    }
+
+    button[name=nvm] {
+      background: none;
+      color: gray;
+    }
+
+    button[name=draft] {
+      background: none;
+      border: 1px solid @dark;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      color: @dark;
+      margin-left: 5px;
+      width: 60px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 4px;
+    }
+
+    button[name=ship] {
+      background: @dark;
+      color: @light;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      margin-left: 10px;
+      width: 60px;
+    }
+  }
+}
+
+#ic-note-form {
   div.ic-text-ibu {
     float: right;
     width: 40%;
@@ -21,41 +86,46 @@
   }
 
   textarea#ic-form-text {
-    font-size: 18px;
     height: 200px;
-    margin-top: 10px;
-    width: 260px;
-    padding: 10px;
-    border: none;
-    font-family: @defaultFont;
-    resize: none;
-  }
-
-  div.note-form-footer {
-    margin-top: 10px;
-    height: 25px;
-
-    button {
-      float: right;
-      font-size: 14px;
-      padding: 5px;
-      min-width: 60px;
-    }
-
-    button[name=nvm] {
-      background: none;
-      color: gray;
-    }
-
-    button[name=ship] {
-      background: @dark;
-      color: @light;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
-      .hasTransition(0.5);
-      margin-left: 5px;
-    }
   }
 }
 
+#ic-image-form {
+  textarea#ic-form-text {
+    height: 100px;
+  }
+
+  div.preview {
+    border-top: 1px solid #BBB;
+    text-align: center;
+    margin: 10px 0 20px;
+    padding-top: 5px;
+
+    p {
+      text-align: left;
+
+      span {
+        float: right;
+
+        i {
+          font-size: 19px;
+          color: @dark;
+        }
+      }
+    }
+
+    div.ic-image-help {
+      width: 230px;
+      margin: 5px 0;
+      font-family: @notosans;
+      font-size: 12px;
+      line-height: 15px;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 200px;
+      margin-top: 10px;
+    }
+  }
+}

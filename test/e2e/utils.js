@@ -11,15 +11,25 @@ const setup = () => {
   browser.waitForVisible('#ic-modal');
   browser.setValue('#ic-modal-input', 'topic');
   browser.click('#ic-modal-confirm');
-  browser.waitForVisible('#ic-sidebar', 4000);
+  browser.pause(2000);
 };
 
 const cleanup = () => {
-  browser.click('#ic-sidebar button[name=destroyer]');
+  browser.click('button.ic-workspace-button');
+  browser.waitForVisible('div.ic-workspace-menu');
+  browser.elements('div.ic-menu-item').value[9].click();
   browser.waitForVisible('#ic-modal', 1000);
   browser.click('#ic-modal-confirm');
   browser.waitForVisible('#ic-modal', 5000);
   browser.click('#ic-modal-confirm');
 };
 
-module.exports = { setup, cleanup };
+const switchMode = (modeId) => {
+  browser.click('button.ic-workspace-button');
+  browser.waitForVisible('div.ic-workspace-menu');
+  browser.moveTo(browser.elements('div.has-more').value[1].ELEMENT, 10, 10);
+  browser.waitForVisible('div.ic-modes-submenu');
+  browser.click(modeId);
+};
+
+module.exports = { setup, cleanup, switchMode };

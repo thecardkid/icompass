@@ -90,47 +90,6 @@ button.ic-corner-btn {
   font-size: 12px;
 }
 
-@corner-margin: 5px;
-
-button#ic-show-sidebar {
-  top: @corner-margin;
-  left: @corner-margin;
-  border: 1px solid black;
-}
-
-button#ic-show-chat {
-  bottom: @corner-margin;
-  right: @corner-margin;
-  border: 1px solid black;
-}
-
-button#ic-show-doodle {
-  left: @corner-margin;
-  bottom: @corner-margin;
-  border: 1px solid black;
-}
-
-div#ic-modes {
-  position: absolute;
-  background: @dark;
-  z-index: 2;
-  top: 0px;
-  right: 0px;
-
-  button {
-    float: right;
-    border-left: 1px solid black;
-    border-bottom: 1px solid black;
-    font-size: 12px;
-    padding: 1px 3px;
-  }
-
-  button.selected {
-    background: @dark;
-    color: @light;
-  }
-}
-
 div#ic-visual-toolbar {
   width: 105px;
   text-align: center;
@@ -180,14 +139,14 @@ div#ic-visual-toolbar {
 
 #hline {
   width: 100vw;
-  height: 4px;
+  height: 2px;
   background: @dark;
   position: absolute;
   z-index: -2;
 }
 
 #vline {
-  width: 4px;
+  width: 2px;
   height: 100vh;
   z-index: -2;
   background: @dark;

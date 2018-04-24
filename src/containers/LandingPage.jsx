@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory, Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 
@@ -200,8 +200,6 @@ class LandingPage extends Component {
           <div id="ic-landing">
             <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to
               make anything better</h1>
-            <div id="ic-tour"><Link to="/tutorial">First-timer? Take the tour!</Link></div>
-
             <div className="form section">
               <div id="header">
                 <div className={active ? 'active' : ''}

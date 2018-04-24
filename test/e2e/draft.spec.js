@@ -5,16 +5,13 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const PROMPTS = require('../../lib/constants').PROMPTS;
-const MODALS = require('../../lib/constants').MODALS;
+const { setup, cleanup } = require('./utils');
 const DOG_PHOTO_LINK = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
 const POSITIONS = [{ x: 400, y: 200 }, { x: 500, y: 200 }];
 
 describe('draft mode', () => {
   beforeAll(() => {
-    require('./utils').setup();
-
-    expect('body').to.be.there();
+    setup();
     for (let i = 0; i < POSITIONS.length; i++) {
       let p = POSITIONS[i];
       b.pause(100);
@@ -27,92 +24,21 @@ describe('draft mode', () => {
     }
   });
 
-  afterAll(() => {
-    b.keys(['s']);
-    b.waitForVisible('#ic-sidebar button[name=destroyer]');
-    require('./utils').cleanup();
-  });
-
-  describe('edit to normal notes are disabled', () => {
-    it('disables dragging', () => {
-      b.click('#ic-mode-draft');
-      b.moveToObject('#note0', 10, 10);
-      b.buttonDown(0);
-      b.pause(100);
-      b.moveToObject('body', -100, 0);
-      b.buttonUp(0);
-      b.waitForVisible('#ic-toast span');
-      expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-      expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.DRAFT_MODE_NO_CHANGE, 'i'));
-    });
-
-    it('disables editing text', () => {
-      b.pause(100);
-      b.moveToObject('#note0', 10, 10);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-toast span');
-      expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-      expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.DRAFT_MODE_NO_CHANGE, 'i'));
-      b.click('#ic-toast span');
-    });
-  });
+  afterAll(cleanup);
 
   describe('text draft', () => {
-    it('note form should have correct properties', () => {
-      b.keys(['s', 'c']);
-      b.click('#ic-mode-draft');
+    it('create', () => {
       b.moveToObject('body', 200, 500);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      expect(b.getCssProperty('#ic-form-text', 'background-color').value).to.equal('rgba(128,128,128,1)');
-      expect('h1.ic-modal-title').to.have.text(/Create a draft/);
+      b.setValue('#ic-form-text', 'draft 0');
+      b.click('button[name=draft]');
+      b.pause(200);
+      expect('.ic-sticky-note').to.have.count(3);
+      expect('.draft').to.have.count(1);
+      expect(b.getCssProperty('.draft span div.contents', 'background-color').value).to.equal('rgba(128,128,128,1)');
     });
 
-    it('can make draft note', () => {
-      b.setValue('#ic-form-text', 'A draft text note');
-      b.click('button[name=ship]');
-      b.waitForVisible('#note2');
-      expect('#note0').to.have.text(/A draft text note/);
-      expect('#note0 span div.contents p.submit').to.be.visible();
-    });
-  });
-
-  describe('image draft', () => {
-    it('image form should render correctly', () => {
-      b.moveToObject('body', 400, 500);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', DOG_PHOTO_LINK);
-      b.click('button[name=ship]');
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(new RegExp(MODALS.IMPORT_IMAGE.text, 'i'));
-      b.click('#ic-modal-confirm');
-    });
-
-    it('renders draft with image', () => {
-      b.pause(1000);
-      expect('#note1 span div.contents img').to.be.there();
-      expect('#note1 span div.contents p.submit').to.be.there();
-    });
-  });
-
-  describe('doodle draft', () => {
-    it('create doodle draft', () => {
-      b.keys(['d']);
-      b.waitForVisible('#ic-doodle-form');
-      b.moveToObject('#ic-doodle', 155, 75);
-      b.buttonDown(0);
-      b.moveToObject('#ic-doodle', 255, 175);
-      b.buttonUp(0);
-      b.pause(1000);
-      b.click('button[name=ship]');
-      b.waitForVisible('#note2');
-      b.pause(1000);
-      expect(b.getAttribute('#note2 span div.contents img', 'src')).to.contain('data:image/png;base64');
-    });
-  });
-
-  describe('edit draft', () => {
     it('form has correct heading', () => {
       b.moveToObject('#note0', 10, 10);
       b.doDoubleClick();
@@ -120,14 +46,117 @@ describe('draft mode', () => {
       expect('h1.ic-modal-title').to.have.text(/Edit this draft/);
     });
 
-    it('can make edit', () => {
-      b.setValue('#ic-form-text', 'Edited text');
+    it('can edit draft', () => {
+      b.setValue('#ic-form-text', 'Edited draft');
       b.click('button[name=bold]').click('button[name=underline]');
       b.click('button[name=ship]');
       b.pause(200);
-      expect('#note0').to.have.text(/Edited text/);
-      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('bold');
-      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.contain('underline');
+      expect('#note0').to.have.text(/Edited draft/);
+      expect(b.getAttribute('#note0 span div.contents p', 'class')).to.contain('bold');
+      expect(b.getAttribute('#note0 span div.contents p', 'class')).to.contain('underline');
+    });
+
+    it('can drag draft', () => {
+      const oldPos = b.getLocation('#note0');
+      b.moveToObject('#note0', 10, 10);
+      b.buttonDown(0);
+      b.moveToObject('#note0', -40, -40);
+      b.buttonUp(0);
+      const newPosition = b.getLocation('#note0');
+
+      expect(oldPos.x - newPosition.x).to.equal(50);
+      expect(oldPos.y - newPosition.y).to.equal(50);
+    });
+
+    describe('can still edit non-draft', () => {
+      it('form has correct title and does not have draft button', () => {
+        b.moveToObject('#note1', 10, 10);
+        b.doDoubleClick();
+        b.waitForVisible('#ic-note-form');
+        expect('h1.ic-modal-title').to.have.text(/Edit this note/);
+        expect('button[name=draft]').to.not.be.visible();
+      });
+
+      it('can make edit', () => {
+        b.setValue('#ic-form-text', 'Edited note');
+        b.click('button[name=ship]');
+        expect('#note1').to.have.text(/Edited note/);
+      });
+
+      it('can drag', () => {
+        const oldPos = b.getLocation('#note1');
+        b.moveToObject('#note1', 10, 10);
+        b.buttonDown(0);
+        b.moveToObject('#note1', 30, 30);
+        b.buttonUp(0);
+        const newPosition = b.getLocation('#note1');
+
+        expect(oldPos.x - newPosition.x).to.equal(-20);
+        expect(oldPos.y - newPosition.y).to.equal(-20);
+      });
+    });
+  });
+
+  describe('image draft', () => {
+    it('image form should render correctly', () => {
+      b.moveToObject('body', 400, 500);
+      b.keys('Shift');
+      b.doDoubleClick();
+      b.keys('Shift');
+      b.waitForVisible('#ic-image-form');
+      b.setValue('#ic-form-text', DOG_PHOTO_LINK);
+      b.click('button[name=draft]');
+      b.pause(200);
+      expect('.ic-sticky-note').to.have.count(4);
+      expect('.draft').to.have.count(2);
+      expect('.ic-img').to.have.count(1);
+    });
+
+    it('renders draft with image', () => {
+      expect('#note1 span div.contents img').to.be.there();
+      expect('#note1 span div.contents button.submit').to.be.there();
+    });
+
+    it('edit image draft', () => {
+      b.moveToObject('div.ic-img', 20, 20);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-image-form');
+      expect('h1.ic-modal-title').to.have.text(/Edit photo draft/);
+      expect('#ic-form-text').to.have.text(DOG_PHOTO_LINK);
+      expect('button[name=draft]').to.not.be.visible();
+      b.click('button[name=nvm]');
+    });
+
+    it('can drag', () => {
+      const oldPos = b.getLocation('#note1');
+      b.moveToObject('#note1', 10, 10);
+      b.buttonDown(0);
+      b.moveToObject('#note1', 30, 30);
+      b.buttonUp(0);
+      const newPosition = b.getLocation('#note1');
+
+      expect(oldPos.x - newPosition.x).to.equal(-20);
+      expect(oldPos.y - newPosition.y).to.equal(-20);
+    });
+  });
+
+  describe('doodle draft', () => {
+    it('create doodle draft', () => {
+      b.keys('Alt');
+      b.keys('d');
+      b.keys('Alt');
+      b.waitForVisible('#ic-doodle-form');
+      b.moveToObject('#ic-doodle', 155, 75);
+      b.buttonDown(0);
+      b.moveToObject('#ic-doodle', 255, 175);
+      b.buttonUp(0);
+      b.pause(1000);
+      b.click('button[name=draft]');
+      b.pause(200);
+      expect('.ic-sticky-note').to.have.count(5);
+      expect('.draft').to.have.count(3);
+      expect('.ic-img').to.have.count(2);
+      expect(b.getAttribute('#note2 span div.contents img', 'src')).to.contain('data:image/png;base64');
     });
 
     it('cannot edit doodle', () => {
@@ -135,47 +164,81 @@ describe('draft mode', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-toast span');
       expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-      expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.CANNOT_EDIT_DOODLE, 'i'));
+      expect('#ic-toast span').to.have.text(/Doodles cannot be changed/);
     });
-  });
 
-  describe('delete draft', () => {
-    it('delete draft', () => {
-      b.moveToObject('body', 100, 100);
-      b.doDoubleClick();
-      b.setValue('#ic-form-text', 'To be deleted');
-      b.click('button[name=ship]');
-      b.moveToObject('#note3', 20, 20);
-      b.click('#note3 button.ic-close-window');
-      b.click('#ic-modal-confirm');
-      b.pause(100);
+    it('can drag', () => {
+      const oldPos = b.getLocation('#note2');
+      b.moveToObject('#note2', 10, 10);
+      b.buttonDown(0);
+      b.moveToObject('#note2', 30, 30);
+      b.buttonUp(0);
+      const newPosition = b.getLocation('#note2');
+
+      expect(oldPos.x - newPosition.x).to.equal(-20);
+      expect(oldPos.y - newPosition.y).to.equal(-20);
     });
   });
 
   describe('submit drafts', () => {
-    it('submit #note2', () => {
-      b.click('#note2 span div.contents p.submit');
+    it('submit #note0', () => {
+      b.click('#note0 span div.contents button.submit');
       b.pause(100);
-      expect(b.getCssProperty('#note2 span div.contents', 'background').value).to.not.contain('rgb(128,128,128)');
+      expect('.ic-sticky-note').to.have.count(5);
+      expect('.draft').to.have.count(2);
+      expect('.ic-img').to.have.count(2);
     });
 
     it('submit #note1', () => {
-      b.click('#note1 span div.contents p.submit');
+      b.click('#note1 span div.contents button.submit');
       b.pause(100);
-      expect(b.getCssProperty('#note1 span div.contents', 'background').value).to.not.contain('rgb(128,128,128)');
+      expect('.ic-sticky-note').to.have.count(5);
+      expect('.draft').to.have.count(1);
+      expect('.ic-img').to.have.count(2);
+    });
+  });
+
+  describe('others', () => {
+    it('compact mode does not discard drafts', () => {
+      b.keys(['Shift', '2', 'Shift']);
+      expect('.compact').to.have.count(5);
     });
 
-    describe('changing mode', () => {
-      it('trigger warning', () => {
-        b.click('#ic-mode-normal');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.EXIT_DRAFT_MODE.text, 'i'));
+    describe('bulk edit mode', () => {
+      it('does not discard drafts', () => {
+        b.keys(['Shift', '3', 'Shift']);
+        expect('.ic-sticky-note').to.have.count(5);
       });
 
-      it('discard draft if accept alert', () => {
-        b.click('#ic-modal-confirm');
-        expect(b.getCssProperty('#note0 span div.contents', 'background').value).to.not.contain('rgb(128,128,128)');
+      it('cannot select draft in bulk mode', () => {
+        b.click('#ic-toast');
+        b.moveToObject('#note4', 50, 50); // drafts come last in bulk mode
+        b.leftClick();
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/Cannot select drafts/);
+        b.click('#ic-toast');
       });
+
+      it('cannot submit drafts in bulk mode', () => {
+        b.click('#note4 span div.contents button.submit');
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/Cannot submit drafts/);
+      });
+    });
+
+    it('has correct prompt when deleting draft', () => {
+      b.keys(['Shift', '1', 'Shift']); // enter standard mode
+      b.moveToObject('#note0', 164, 2); // delete the doodle
+      b.leftClick();
+      b.waitForVisible('#ic-modal');
+      expect('#ic-modal-body').to.have.text(/Discard this draft/);
+    });
+
+    it('can discard draft', () => {
+      b.click('#ic-modal-confirm');
+      b.pause(200);
+      expect('.ic-sticky-note').to.have.count(4);
+      expect('.draft').to.have.count(0);
     });
   });
 });
