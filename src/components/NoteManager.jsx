@@ -65,10 +65,8 @@ class NoteManager extends Component {
 
         return copy;
       });
-    } else if (this.props.draftMode) {
-      return w.drafts.concat(notes);
     } else {
-      return notes;
+      return w.drafts.concat(notes);
     }
   }
 
@@ -97,10 +95,13 @@ class NoteManager extends Component {
       y = this.notes[i].y + e.dy / this.props.ui.vh;
     let note = Object.assign({}, this.notes[i], { x, y });
 
-    if (this.props.draftMode && !note.draft) return this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
-    if (note.draft) this.props.workspaceX.dragDraft(i, x, y);
-    else if (this.socket.emitDragNote(note)) {
-      this.props.noteX.drag(i, x, y);
+    if (note.draft) {
+      return this.props.workspaceX.dragDraft(i, x, y);
+    } else {
+      i -= this.props.drafts.length;
+      if (this.socket.emitDragNote(note)) {
+        this.props.noteX.drag(i, x, y);
+      }
     }
   };
 
@@ -139,6 +140,7 @@ class NoteManager extends Component {
 const mapStateToProps = (state) => {
   return {
     notes: state.notes,
+    drafts: state.workspace.drafts,
     workspace: state.workspace,
     ui: state.ui,
     color: state.users.nameToColor[state.users.me],

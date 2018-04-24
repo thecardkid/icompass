@@ -17,7 +17,7 @@ class ModesSubmenu extends Component {
   }
 
   render() {
-    const { normal, compact, bulk, draft } = this.props.modes;
+    const { normal, compact, bulk } = this.props;
 
     return (
       <div className={'ic-menu ic-modes-submenu'}>
@@ -32,15 +32,10 @@ class ModesSubmenu extends Component {
             Compact
             <span className={'ic-shortcut'}>shift+2</span>
           </div>
-          <div id={'ic-draft'} className={'ic-menu-item'} onClick={this.props.changeMode('draft')}>
-            <span className={draft ? 'active' : 'inactive'} />
-            Draft
-            <span className={'ic-shortcut'}>shift+3</span>
-          </div>
           <div id={'ic-bulk'} className={'ic-menu-item'} onClick={this.props.changeMode('bulk')}>
             <span className={bulk ? 'active' : 'inactive'} />
             Bulk Edit
-            <span className={'ic-shortcut'}>shift+4</span>
+            <span className={'ic-shortcut'}>shift+3</span>
           </div>
         </section>
         <section>
@@ -56,15 +51,9 @@ class ModesSubmenu extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    notes: state.notes,
-    ui: state.ui,
-    modes: {
-      normal: state.ui.editingMode === EDITING_MODE.NORMAL || false,
-      compact: state.ui.editingMode === EDITING_MODE.COMPACT || false,
-      bulk: state.ui.editingMode === EDITING_MODE.VISUAL || false,
-      draft: state.ui.editingMode === EDITING_MODE.DRAFT || false,
-    },
-    hasDrafts: (state.workspace.drafts || []).length > 0,
+    normal: state.ui.editingMode === EDITING_MODE.NORMAL || false,
+    compact: state.ui.editingMode === EDITING_MODE.COMPACT || false,
+    bulk: state.ui.editingMode === EDITING_MODE.VISUAL || false,
   };
 };
 

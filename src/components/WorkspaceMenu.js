@@ -36,8 +36,7 @@ class WorkspaceMenu extends Component {
       shift: {
         49: this.handleChangeMode('standard'),
         50: this.handleChangeMode('compact'),
-        51: this.handleChangeMode('draft'),
-        52: this.handleChangeMode('bulk'),
+        51: this.handleChangeMode('bulk'),
       },
     };
     this.modal = ModalSingleton.getInstance();
@@ -66,10 +65,6 @@ class WorkspaceMenu extends Component {
       case 'compact':
         this.toast.info('Switched to compact mode');
         return this.props.uiX.compactMode();
-
-      case 'draft':
-        this.toast.info('Switched to draft mode');
-        return this.props.uiX.draftMode();
 
       case 'bulk':
         this.toast.info('Switched to bulk edit mode');

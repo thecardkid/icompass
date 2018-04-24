@@ -24,25 +24,17 @@ class FormManager extends Component {
   }
 
   createTextForm = () => {
-    if (this.props.draftMode) {
-      return (
-        <CreateTextForm title={'Create a draft'}
-                        info={this.props.forms.formInfo}
-                        ship={this.props.workspaceX.createDraft}
-                        {...this.props.commonAttrs} />
-      );
-    }
-
     return (
       <CreateTextForm title={'Create a note'}
                       info={this.props.forms.formInfo}
-                      ship={this.socket.emitNewNote}
+                      asNote={this.socket.emitNewNote}
+                      asDraft={this.props.workspaceX.createDraft}
                       {...this.props.commonAttrs} />
     );
   };
 
   editTextForm = () => {
-    if (this.props.draftMode) {
+    if (this.props.forms.formInfo.draft) {
       return (
         <EditTextForm title={'Edit this draft'}
                       info={this.props.forms.formInfo}
@@ -52,7 +44,7 @@ class FormManager extends Component {
     }
 
     return (
-      <EditTextForm title={'Edit this draft'}
+      <EditTextForm title={'Edit this note'}
                       info={this.props.forms.formInfo}
                       ship={this.socket.emitEditNote}
                       {...this.props.commonAttrs} />

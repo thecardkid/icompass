@@ -111,7 +111,7 @@ class Workspace extends Component {
     if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
 
     let formAttrs = {
-      bg: this.props.draftMode ? 'grey' : this.props.users.nameToColor[this.props.users.me],
+      bg: this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
       close: this.props.uiActions.closeForm,
     };

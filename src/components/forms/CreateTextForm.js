@@ -10,7 +10,7 @@ export default class CreateTextForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  make = (text, isImage, style) => {
+  make = (text, isImage, style, isDraft) => {
     if (!text) return;
 
     const { x, y } = this.props.info;
@@ -22,7 +22,8 @@ export default class CreateTextForm extends Component {
     };
 
     this.socket.emitMetric(`note ${isImage ? 'image' : 'create'}`);
-    this.props.ship(note);
+    if (isDraft) this.props.asDraft(note);
+    else this.props.asNote(note);
     this.props.close();
   };
 
@@ -34,6 +35,7 @@ export default class CreateTextForm extends Component {
                 close={this.props.close}
                 bg={this.props.bg}
                 switch={true}
+                allowDraft={true}
       />
     );
   }

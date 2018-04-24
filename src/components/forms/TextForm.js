@@ -55,9 +55,9 @@ class TextForm extends Component {
     cb({ text, isImage: false });
   }
 
-  submit = () => {
+  submit = (isDraft) => () => {
     this.getText(({ text, isImage }) => {
-      this.props.submit(text, isImage, this.state.style);
+      this.props.submit(text, isImage, this.state.style, isDraft);
     });
   };
 
@@ -148,7 +148,8 @@ class TextForm extends Component {
                       style={{ background: this.props.bg }}/>
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit}>ship it</button>
+              <button name="ship" onClick={this.submit(false)}>ship it</button>
+              {this.props.allowDraft && <button name={'draft'} onClick={this.submit(true)}>as draft</button>}
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>
