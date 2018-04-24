@@ -61,7 +61,7 @@ class StickyNote extends Component {
 
   submitDraft = () => {
     if (this.visualMode) {
-      return this.toast.warn('You can\'t submit drafts in bulk edit mode');
+      return this.toast.warn('Cannot submit drafts in bulk edit mode');
     }
     this.props.submitDraft(this.props.note, this.props.i);
   };
@@ -101,7 +101,7 @@ class StickyNote extends Component {
     if (n.style.underline) clazz += ' underline';
 
     return (
-      <div style={style} className={this.compactMode ? 'contents compact' : 'contents'}>
+      <div style={style} className={'contents'}>
         <p className={clazz} dangerouslySetInnerHTML={{ __html: linkifyHtml(n.text) }} />
         {this.getTooltip(n)}
       </div>
@@ -176,7 +176,7 @@ class StickyNote extends Component {
     }
 
     return (
-      <div className="ic-sticky-note draggable"
+      <div className={`ic-sticky-note draggable ${n.draft ? 'draft' : ''} ${this.compactMode ? 'compact' : ''}`}
            style={style}
            onClick={this.handleClick}
            onDoubleClick={this.edit}
