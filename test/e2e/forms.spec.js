@@ -272,13 +272,41 @@ describe('forms', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
       expect('.switch-form').to.have.count(0);
+      b.click('button[name=nvm]');
     });
 
     it('editing text does not allow switching', () => {
       b.moveToObject('#note0', 10, 10);
       b.doDoubleClick();
-      b.waitForVisible('#ic-image-form');
+      b.waitForVisible('#ic-note-form');
       expect('.switch-form').to.have.count(0);
+      b.click('button[name=nvm]');
+    });
+  });
+
+  describe('clicking backdrop closes form', () => {
+    it('closes text form', () => {
+      b.keys('n');
+      b.waitForVisible('#ic-note-form');
+      b.moveToObject('#ic-note-form', -20, -20);
+      b.leftClick();
+      expect('#ic-note-form').to.not.be.visible();
+    });
+
+    it('closes image form', () => {
+      b.keys('i');
+      b.waitForVisible('#ic-image-form');
+      b.moveToObject('#ic-image-form', -20, -20);
+      b.leftClick();
+      expect('#ic-image-form').to.not.be.visible();
+    });
+
+    it('closes doodle form', () => {
+      b.keys('d');
+      b.waitForVisible('#ic-doodle-form');
+      b.moveToObject('#ic-doodle-form', -20, -20);
+      b.leftClick();
+      expect('#ic-doodle-form').to.not.be.visible();
     });
   });
 });
