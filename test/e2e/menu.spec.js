@@ -26,6 +26,7 @@ const actions = {
   standardMode: Object.assign({}, modesSubmenu, { position: 0 }),
   compactMode: Object.assign({}, modesSubmenu, { position: 1 }),
   bulkMode: Object.assign({}, modesSubmenu, { position: 2 }),
+  explainModes: Object.assign({}, modesSubmenu, { position: 3 }),
 };
 
 const selectMenuOption = (count) => {
@@ -85,6 +86,13 @@ describe('workspace menu', () => {
       selectSubmenuOption(actions.standardMode);
       expect('#ic-toast').to.have.text(/standard/);
     });
+
+    it('explain modes', () => {
+      selectSubmenuOption(actions.explainModes);
+      b.waitForVisible('#ic-modal');
+      expect('#ic-modal-body').to.have.text(/What are these modes/);
+      b.click('#ic-modal-confirm');
+    });
   });
 
   describe('main menu', () => {
@@ -92,7 +100,7 @@ describe('workspace menu', () => {
       it('pins menu', () => {
         selectMenuOption(actions.pin);
         expect('.ic-workspace-menu').to.be.visible();
-        b.click('.ic-help-button');
+        b.click('#ideas');
         expect('.ic-workspace-menu').to.be.visible();
         b.click('.ic-workspace-button');
         expect('.ic-workspace-menu').to.be.visible();

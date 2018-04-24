@@ -9,9 +9,9 @@ const { setup, cleanup } = require('./utils');
 
 const actions = {
   prompt: 0,
-  release: 1,
-  privacy: 2,
-  feedback: 3,
+  privacy: 1,
+  feedback: 2,
+  release: 3,
 };
 
 const selectHelpOption = (count) => {

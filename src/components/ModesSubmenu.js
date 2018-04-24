@@ -39,7 +39,7 @@ class ModesSubmenu extends Component {
           </div>
         </section>
         <section>
-          <div className={'ic-menu-item'}>
+          <div className={'ic-menu-item'} onClick={this.modal.alertExplainModes}>
             <span className={'inactive'} />
             What are these?
           </div>

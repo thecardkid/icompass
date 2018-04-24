@@ -148,6 +148,17 @@ const ModalSingleton = (() => {
       this.alert(text, () => {});
     };
 
+    alertExplainModes = () => {
+      const text = `
+        <h3>What are these modes?</h3>
+        <p><b>Standard mode</b> is what you are in by default</p>
+        <p><b>Compact mode</b> make notes take up much less space - it is meant for smaller devices.</p>
+        <p><b>Bulk Edit</b> mode allows you to edit notes in bulk! Hold down Shift and click on any note to enter this mode.</p>
+      `;
+
+      this.alert(text, () => {});
+    };
+
     generatePrompt(html) {
       return this.getModalHtml(
         `${html}<input id="ic-modal-input" />`,
