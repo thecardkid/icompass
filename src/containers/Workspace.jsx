@@ -23,6 +23,7 @@ import Toast from '../utils/Toast';
 import { PROMPTS, EDITING_MODE, REGEX } from '../../lib/constants';
 import { browserHistory } from 'react-router';
 import WorkspaceMenu from '../components/WorkspaceMenu';
+import ShareModal from '../components/ShareModal';
 
 class Workspace extends Component {
   constructor(props) {
@@ -125,6 +126,10 @@ class Workspace extends Component {
         <FormManager commonAttrs={formAttrs} />
         <HelpFeedback />
         <WorkspaceMenu />
+        <ShareModal show={this.props.ui.showShareModal}
+                    close={this.props.uiActions.hideShareModal}
+                    compass={this.props.compass}
+        />
       </div>
     );
   }

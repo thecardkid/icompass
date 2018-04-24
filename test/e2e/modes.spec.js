@@ -21,11 +21,9 @@ describe('view modes', () => {
 
     b.click('button.ic-workspace-button');
     b.waitForVisible('div.ic-workspace-menu');
-    b.moveTo(browser.elements('div.has-more').value[0].ELEMENT, 10, 10);
-    b.waitForVisible('div.ic-share-submenu');
-    b.elements('div.ic-share-submenu div.ic-menu-item').value[1].click();
-    b.waitForVisible('#ic-modal');
-    viewCode = b.getText('#ic-modal-body p').substring(35, 43);
+    b.elements('div.ic-menu-item').value[4].click();
+    b.waitForVisible('.ic-share');
+    viewCode = b.getValue('input#ic-view-link').substring(35, 43);
     viewURL = `http://localhost:8080/compass/view/${viewCode}`;
   });
 

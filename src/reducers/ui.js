@@ -9,6 +9,7 @@ const defaultState = {
     editText: false,
     editImage: false,
   },
+  showShareModal: false,
   focusedNote: -1,
   vw: 0,
   vh: 0,
@@ -127,6 +128,12 @@ export default (state = defaultState, action) => {
 
     case 'draftMode':
       return { ...state, editingMode: EDITING_MODE.DRAFT };
+
+    case 'showShareModal':
+      return { ...state, showShareModal: true };
+
+    case 'hideShareModal':
+      return { ...state, showShareModal: false };
 
     case 'resetUI':
       return defaultState;

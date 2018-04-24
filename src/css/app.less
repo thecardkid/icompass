@@ -1,11 +1,12 @@
-@import "reset.less";
-@import "floatingbuttons.less";
-@import "compass.less";
-@import "noteform.less";
-@import "landing.less";
-@import "doodleform.less";
-@import "stickynote.less";
-@import "bookmarklist.less";
+@import "reset";
+@import "floatingbuttons";
+@import "compass";
+@import "noteform";
+@import "landing";
+@import "doodleform";
+@import "stickynote";
+@import "bookmarklist";
+@import "modal";
 
 @dosis: 'Dosis', sans-serif;
 @notosans: 'Noto Sans', sans-serif;
@@ -191,67 +192,3 @@ div#ic-toast {
   }
 }
 
-div#ic-modal-container {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 10;
-
-  div#ic-backdrop {
-    z-index: -1;
-  }
-
-  div#ic-modal {
-    width: 350px;
-    padding: 10px 20px;
-    background: white;
-    margin: 100px auto 0;
-    border-radius: 2px;
-    .boxshadow(3px, 7px, rgba(33, 33, 33, 0.7));
-
-    div#ic-modal-body {
-      font-size: 18px;
-      text-align: left;
-      padding: 10px 0;
-      margin-top: 10px;
-
-      p {
-        margin-top: 10px;
-        font-size: 15px;
-      }
-
-      input {
-        border: 1px solid grey;
-        width: 93%;
-        font-size: 15px;
-        margin-top: 15px;
-        border-radius: 2px;
-        padding: 5px 10px;
-      }
-    }
-
-    div#ic-modal-footer {
-      height: 30px;
-      margin-top: 15px;
-
-      button {
-        float: right;
-        height: 28px;
-        font-size: 13px;
-        margin-left: 10px;
-        padding: 0 10px;
-        border-radius: 2px;
-        background: @dark;
-        color: @light;
-      }
-
-      button.danger {
-        background: @red;
-      }
-
-      button.confirm {
-        background: @blue;
-      }
-    }
-  }
-}
