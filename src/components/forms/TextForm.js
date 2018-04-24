@@ -98,14 +98,14 @@ class TextForm extends Component {
   renderSwitches = () => {
     return (
       <div>
-        <button className={'switch-form'}
+        <button className={'switch-form switch-image'}
                 data-tip="Insert a photo"
                 data-for="image-tooltip"
                 onClick={this.switchImage}>
           <i className={'material-icons'}>photo</i>
         </button>
         <ReactTooltip id={'image-tooltip'} place={'top'} effect={'solid'}/>
-        <button className={'switch-form'}
+        <button className={'switch-form switch-doodle'}
                 data-tip="Create a sketch"
                 data-for="doodle-tooltip"
                 onClick={this.switchDoodle}>

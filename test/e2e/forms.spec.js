@@ -7,6 +7,8 @@ const b = browser;
 
 const { setup, cleanup } = require('./utils');
 const imageUrl = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
+const driveUrl = 'https://drive.google.com/file/d/12345/view?usp=sharing';
+const expectedDriveUrl = 'https://drive.google.com/thumbnail?id=12345';
 
 describe('forms', () => {
   beforeAll(setup);
@@ -140,6 +142,16 @@ describe('forms', () => {
       b.click('button[name=nvm]');
     });
 
+    it('converts drive link to thumbnail', () => {
+      b.moveToObject('#note2', 10, 1);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-image-form');
+      b.setValue('#ic-form-text', driveUrl);
+      b.pause(200);
+      expect('#ic-form-text').to.have.text(expectedDriveUrl);
+      b.click('button[name=nvm]');
+    });
+
     it('drag', () => {
       b.moveToObject('#note2', 10, 10);
       b.buttonDown(0);
@@ -194,6 +206,79 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note3');
       expect(xoffset - x).to.equal(0);
       expect(yoffset - y).to.equal(-30);
+    });
+  });
+
+  describe('form switching', () => {
+    it('text to image', () => {
+      b.moveToObject('body', 500, 500);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      expect('.switch-form').to.have.count(2);
+      b.click('.switch-image');
+      expect('#ic-note-form').to.not.be.visible();
+      expect('#ic-image-form').to.be.visible();
+    });
+
+    it('image to doodle', () => {
+      b.click('.switch-doodle');
+      expect('#ic-image-form').to.not.be.visible();
+      expect('#ic-doodle-form').to.be.visible();
+    });
+
+    it('doodle to text', () => {
+      b.click('.switch-text');
+      expect('#ic-doodle-form').to.not.be.visible();
+      expect('#ic-note-form').to.be.visible();
+    });
+
+    it('text to doodle', () => {
+      b.click('.switch-doodle');
+      expect('#ic-text-form').to.not.be.visible();
+      expect('#ic-doodle-form').to.be.visible();
+    });
+
+    it('doodle to image', () => {
+      b.click('.switch-image');
+      expect('#ic-doodle-form').to.not.be.visible();
+      expect('#ic-image-form').to.be.visible();
+    });
+
+    it('image to text', () => {
+      b.click('.switch-text');
+      expect('#ic-image-form').to.not.be.visible();
+      expect('#ic-note-form').to.be.visible();
+      b.click('button[name=nvm]');
+    });
+
+    it('switching form maintains note position', () => {
+      b.moveToObject('body', 500, 500);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      expect('.switch-form').to.have.count(2);
+      b.click('.switch-image');
+      b.setValue('#ic-form-text', imageUrl);
+      b.click('button[name=ship]');
+      b.pause(200);
+      expect('div.ic-sticky-note').to.have.count(5);
+
+      const { x, y } = b.getLocation('#note4');
+      expect(x).to.equal(500);
+      expect(y).to.equal(500);
+    });
+
+    it('editing image does not allow switching', () => {
+      b.moveToObject('#note4', 10, 10);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-image-form');
+      expect('.switch-form').to.have.count(0);
+    });
+
+    it('editing text does not allow switching', () => {
+      b.moveToObject('#note0', 10, 10);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-image-form');
+      expect('.switch-form').to.have.count(0);
     });
   });
 });

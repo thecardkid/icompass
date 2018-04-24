@@ -143,14 +143,14 @@ class DoodleForm extends Component {
           </canvas>
           <div className="note-form-footer">
             <div>
-              <button className={'switch-form'}
+              <button className={'switch-form switch-text'}
                       data-tip="Create a text note"
                       data-for="text-tooltip"
                       onClick={this.switchText}>
                 <i className={'material-icons'}>text_format</i>
               </button>
               <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
-              <button className={'switch-form'}
+              <button className={'switch-form switch-image'}
                       data-tip="Insert a photo"
                       data-for="doodle-tooltip"
                       onClick={this.switchImage}>

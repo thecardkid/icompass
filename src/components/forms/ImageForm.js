@@ -15,12 +15,13 @@ class ImageForm extends Component {
       imgSource: props.defaultUrl || '',
     };
     this.socket = SocketSingleton.getInstance();
+    this.driveUrlRegex = /https:\/\/drive\.google\.com\/file\/d\/.*\/view\?usp=sharing/;
   }
 
   handleChange = (e) => {
     const { value } = e.target;
 
-    if (value.includes('drive.google.com')) {
+    if (this.driveUrlRegex.test(value)) {
       const fileId = value.split('/')[5];
       const imgSource = `https://drive.google.com/thumbnail?id=${fileId}`;
       this.setState({ imgSource });
@@ -79,14 +80,14 @@ class ImageForm extends Component {
   renderSwitches = () => {
     return (
       <div>
-        <button className={'switch-form'}
+        <button className={'switch-form switch-text'}
                 data-tip="Create a text note"
                 data-for="text-tooltip"
                 onClick={this.switchText}>
           <i className={'material-icons'}>text_format</i>
         </button>
         <ReactTooltip id={'text-tooltip'} place={'top'} effect={'solid'}/>
-        <button className={'switch-form'}
+        <button className={'switch-form switch-doodle'}
                 data-tip="Create a sketch"
                 data-for="doodle-tooltip"
                 onClick={this.switchDoodle}>
