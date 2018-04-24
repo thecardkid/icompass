@@ -107,6 +107,18 @@ export const setScreenSize = (vw, vh) => {
   };
 };
 
+export const showShareModal = () => {
+  return {
+    type: 'showShareModal',
+  };
+};
+
+export const hideShareModal = () => {
+  return {
+    type: 'hideShareModal',
+  };
+};
+
 export const reset = () => {
   return {
     type: 'resetUI',

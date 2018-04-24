@@ -9,21 +9,17 @@ const { setup, cleanup } = require('./utils');
 const PROMPTS = require('../../lib/constants').PROMPTS;
 const MODALS = require('../../lib/constants').MODALS;
 
-const shareSubmenu = { submenu: 'div.ic-share-submenu', submenuPosition: 0 };
-const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 1 };
-const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 2 };
+const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
+const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
 
 const actions = {
   pin: 0,
   newWorkspace: 1,
   email: 2,
   bookmark: 3,
+  share: 4,
   logout: 8,
   deleteWorkspace: 9,
-  editLink: Object.assign({}, shareSubmenu, { position: 0 }),
-  viewLink: Object.assign({}, shareSubmenu, { position: 1 }),
-  pdf: Object.assign({}, shareSubmenu, { position: 2 }),
-  twitter: Object.assign({},  shareSubmenu,{  position: 3 }),
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
@@ -53,35 +49,6 @@ describe('workspace menu', () => {
   afterAll(() => {
     b.back();
     cleanup();
-  });
-
-  describe('share submenu', () => {
-    it('share edit link', () => {
-      selectSubmenuOption(actions.editLink);
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/Share this link below/);
-      expect('#ic-modal-body p').to.have.text(/\/compass\/edit/);
-      b.click('#ic-modal-confirm');
-    });
-
-    it('share view mode', () => {
-      selectSubmenuOption(actions.viewLink);
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/Share this link below/);
-      expect('#ic-modal-body p').to.have.text(/\/compass\/view/);
-      b.click('#ic-modal-confirm');
-    });
-
-    it('export button', () => {
-      selectSubmenuOption(actions.pdf);
-      b.waitForVisible('#ic-modal');
-      expect(b.getText('#ic-modal-body')).to.contain('I see you want to save this compass as a PDF');
-      b.click('#ic-modal-cancel');
-    });
-
-    // it('tweet button is there', () => {
-    //   expect('button[name=tweet]').to.be.visible();
-    // });
   });
 
   describe('notes submenu', () => {
@@ -159,6 +126,39 @@ describe('workspace menu', () => {
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast span');
         expect('#ic-toast span').to.have.text(/email/);
+      });
+    });
+
+    describe('share modal', () => {
+      it('shows modal', () => {
+        selectMenuOption(actions.share);
+        expect('.ic-share').to.be.visible();
+      });
+
+      it('can x out', () => {
+        b.click('button.ic-close-window');
+        expect('.ic-share').to.not.be.visible();
+      });
+
+      it('backdrop closes modal', () => {
+        selectMenuOption(actions.share);
+        b.waitForVisible('.ic-share');
+        b.moveToObject('.ic-share', -20, -20);
+        b.leftClick();
+        expect('.ic-share').to.not.be.visible();
+      });
+
+      it('copy edit link', () => {
+        selectMenuOption(actions.share);
+        b.click('button.copy-edit');
+        expect('#ic-toast').to.be.visible();
+        expect('#ic-toast').to.have.text(/Edit link has been copied/);
+      });
+
+      it('copy view link', () => {
+        b.click('button.copy-view');
+        expect('#ic-toast').to.be.visible();
+        expect('#ic-toast').to.have.text(/View-only link has been copied/);
       });
     });
 

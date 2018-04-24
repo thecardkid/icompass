@@ -6,7 +6,6 @@ import _ from 'underscore';
 
 import ModesSubmenu from './ModesSubmenu';
 import NotesSubmenu from './NotesSubmenu';
-import ShareSubmenu from './ShareSubmenu';
 import ShortcutManager from './ShortcutManager';
 
 import ModalSingleton from '../utils/Modal';
@@ -24,7 +23,6 @@ class WorkspaceMenu extends Component {
     this.state = {
       active: false,
       submenus: {
-        share: false,
         notes: false,
         modes: false,
         users: false,
@@ -94,6 +92,10 @@ class WorkspaceMenu extends Component {
     }
   };
 
+  showShareModal = () => {
+    this.props.uiX.showShareModal();
+  };
+
   buttonChangeMode = (switchTo) => () => {
     this.socket.emitMetric(`menu ${switchTo}`);
     this.handleChangeMode(switchTo)();
@@ -157,7 +159,6 @@ class WorkspaceMenu extends Component {
 
   hideSubmenus = () => {
     this.setState({ submenus: {
-      share: false,
       notes: false,
       modes: false,
       users: false,
@@ -187,7 +188,7 @@ class WorkspaceMenu extends Component {
   };
 
   renderMenu = () => {
-    const { share, notes, modes, users } = this.state.submenus;
+    const { notes, modes, users } = this.state.submenus;
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -206,12 +207,11 @@ class WorkspaceMenu extends Component {
           <div className={'ic-menu-item'} onClick={this.bookmark}>
             Save as Bookmark
           </div>
+          <div className={'ic-menu-item'} onClick={this.showShareModal}>
+            Share Workspace
+          </div>
         </section>
         <section className={'border-bottom'}>
-          <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('share')}>
-            {share && <ShareSubmenu compass={this.props.compass}/>}
-            Share
-          </div>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
             Insert Note
             {notes && <NotesSubmenu uiX={this.props.uiX}/>}
@@ -250,7 +250,6 @@ class WorkspaceMenu extends Component {
     this.setState({
       active: false,
       submenus: {
-        share: false,
         notes: false,
         modes: false,
         users: false,
