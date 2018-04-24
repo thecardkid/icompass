@@ -142,7 +142,6 @@ const mapStateToProps = (state) => {
     ui: state.ui,
     workspace: state.workspace,
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
-    draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
   };
 };
 

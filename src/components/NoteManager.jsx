@@ -46,27 +46,28 @@ class NoteManager extends Component {
   };
 
   componentWillUpdate(nextProps) {
-    this.notes = this.chooseDisplayedNotes(nextProps.workspace, nextProps.notes);
+    this.notes = this.chooseDisplayedNotes(nextProps);
   }
 
-  chooseDisplayedNotes(w, notes) {
-    if (this.props.visualMode) {
-      return _.map(notes, (note, i) => {
+  chooseDisplayedNotes({ workspace, notes, visualMode }) {
+    if (visualMode) {
+      const visualNotes = _.map(notes, (note, i) => {
         let copy = Object.assign({}, note);
         copy.style = Object.assign({}, note.style);
-        if (w.selected[i]) {
+        if (workspace.selected[i]) {
           if (!copy.doodle) {
-            if (w.bold !== null) copy.style.bold = w.bold;
-            if (w.italic !== null) copy.style.italic = w.italic;
-            if (w.underline !== null) copy.style.underline = w.underline;
+            if (workspace.bold !== null) copy.style.bold = workspace.bold;
+            if (workspace.italic !== null) copy.style.italic = workspace.italic;
+            if (workspace.underline !== null) copy.style.underline = workspace.underline;
           }
-          if (w.color !== null) copy.color = w.color;
+          if (workspace.color !== null) copy.color = workspace.color;
         }
 
         return copy;
       });
+      return visualNotes.concat(workspace.drafts);
     } else {
-      return w.drafts.concat(notes);
+      return workspace.drafts.concat(notes);
     }
   }
 
@@ -145,7 +146,6 @@ const mapStateToProps = (state) => {
     ui: state.ui,
     color: state.users.nameToColor[state.users.me],
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
-    draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
   };
 };
 

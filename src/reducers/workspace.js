@@ -85,13 +85,15 @@ export default (state = defaultState, action) => {
   switch (action.type) {
     case 'normalMode':
     case 'compactMode':
-    case 'draftMode':
-      return defaultState;
+      return {
+        ...defaultState,
+        drafts: [...state.drafts],
+      };
 
     case 'visualMode':
       return {
-        ...defaultState,
-        selected: (new Array(action.len)).fill(false),
+        ...state,
+        selected: (new Array(action.len + state.drafts.length)).fill(false),
       };
 
     case 'selectNote':

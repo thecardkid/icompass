@@ -126,9 +126,6 @@ export default (state = defaultState, action) => {
     case 'visualMode':
       return { ...state, editingMode: EDITING_MODE.VISUAL };
 
-    case 'draftMode':
-      return { ...state, editingMode: EDITING_MODE.DRAFT };
-
     case 'showShareModal':
       return { ...state, showShareModal: true };
 

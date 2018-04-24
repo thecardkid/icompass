@@ -42,19 +42,16 @@ class StickyNote extends Component {
   setModes(props) {
     this.compactMode = props.ui.editingMode === EDITING_MODE.COMPACT || false;
     this.visualMode = props.ui.editingMode === EDITING_MODE.VISUAL || false;
-    this.draftMode = props.ui.editingMode === EDITING_MODE.DRAFT || false;
   }
 
   confirmDelete = () => {
     if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
     let n = this.props.note;
-    if (this.draftMode) {
-      if (n.draft) {
-        this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
-          if (discard) this.props.workspaceActions.undraft(this.props.i);
-        });
-      } else this.toast.warn(PROMPTS.DRAFT_MODE_NO_CHANGE);
+    if (n.draft) {
+      this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
+        if (discard) this.props.workspaceActions.undraft(this.props.i);
+      });
     } else {
       this.modal.confirm(MODALS.DELETE_NOTE, (deleteNote) => {
         if (deleteNote) this.props.destroy(n._id);
@@ -148,6 +145,10 @@ class StickyNote extends Component {
 
     this.lastClick = now;
     if (this.visualMode) {
+      if (this.props.note.draft) {
+        return this.toast.warn('Cannot select drafts in bulk edit mode');
+      }
+
       this.props.socket.emitMetric('visual mode select');
       this.props.workspaceActions.selectNote(this.props.i);
     } else {

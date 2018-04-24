@@ -136,7 +136,6 @@ const mapStateToProps = (state) => {
     notes: state.notes,
     drafts: state.workspace.drafts,
     forms: state.ui.forms,
-    draftMode: state.ui.editingMode === EDITING_MODE.DRAFT || false,
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
   };
 };
