@@ -94,6 +94,7 @@ class FormManager extends Component {
   renderFormIfNotVisual = (formRenderer) => {
     if (this.props.visualMode) {
       this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
+      this.props.uiX.closeForm(); // so form does not open when user leaves visual mode
       return null;
     }
 

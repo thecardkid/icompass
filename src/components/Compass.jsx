@@ -14,6 +14,7 @@ import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
+import { PROMPTS, EDITING_MODE } from '../../lib/constants';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -41,6 +42,10 @@ class Compass extends Component {
   }
 
   doubleClickCreate = (ev) => {
+    if (this.props.visualMode) {
+      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
+    }
+
     if (ev.shiftKey) {
       this.socket.emitMetric('double click image');
       this.props.uiX.showImage(ev);
@@ -205,6 +210,7 @@ const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     ui: state.ui,
+    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL,
   };
 };
 

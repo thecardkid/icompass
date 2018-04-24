@@ -35,7 +35,7 @@ class ModesSubmenu extends Component {
           <div id={'ic-bulk'} className={'ic-menu-item'} onClick={this.props.changeMode('bulk')}>
             <span className={bulk ? 'active' : 'inactive'} />
             Bulk Edit
-            <span className={'ic-shortcut'}>shift+3</span>
+            <span className={'ic-shortcut'}>shift+click</span>
           </div>
         </section>
         <section>

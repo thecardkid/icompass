@@ -30,14 +30,8 @@ class WorkspaceMenu extends Component {
     };
     this.pinned = false;
     this.shortcuts = {
-      68: props.uiX.showDoodle,
-      73: props.uiX.showImage,
-      78: props.uiX.showNewNote,
-      shift: {
-        49: this.changeMode('standard'),
-        50: this.changeMode('compact'),
-        51: this.changeMode('bulk'),
-      },
+      49: this.changeMode('standard'),
+      50: this.changeMode('compact'),
     };
     this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
@@ -45,14 +39,12 @@ class WorkspaceMenu extends Component {
   }
 
   _handleShortcuts = (e) => {
-    let shortcuts = this.shortcuts;
+    if (!e.shiftKey) return;
 
-    if (e.shiftKey) shortcuts = this.shortcuts.shift;
-
-    if (_.has(shortcuts, e.which)) {
+    if (_.has(this.shortcuts, e.which)) {
       e.preventDefault();
       this.socket.emitMetric('shortcut key', e.which);
-      shortcuts[e.which]();
+      this.shortcuts[e.which]();
     }
   };
 

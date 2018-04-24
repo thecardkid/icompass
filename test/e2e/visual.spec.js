@@ -57,6 +57,13 @@ describe('visual mode', () => {
       expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.VISUAL_MODE_NO_CREATE, 'i'));
     });
 
+    it('exiting after double click does not open note form', () => {
+      b.click('#ic-bulk-cancel');
+      b.pause(500);
+      expect('#ic-note-form').to.not.be.visible();
+      switchMode('#ic-bulk');
+    });
+
     it('dragging disabled', () => {
       expect('#note0').to.be.visible();
       b.moveToObject('#note0', 10, 10);

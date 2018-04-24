@@ -144,9 +144,17 @@ class StickyNote extends Component {
     }
   };
 
-  handleClick = () => {
+  handleClick = (ev) => {
     let now = Date.now();
     if (now - this.lastClick < 40) return;
+
+    if (!this.visualMode && ev.shiftKey) {
+      if (this.props.note.draft) {
+        return this.toast.warn('Cannot enter bulk mode by selecting a draft');
+      }
+
+      this.props.enterVisualMode(this.props.i);
+    }
 
     this.lastClick = now;
     if (this.visualMode) {
@@ -181,11 +189,12 @@ class StickyNote extends Component {
       <div className={`ic-sticky-note draggable ${n.draft ? 'draft' : ''}`}
            style={style}
            onClick={this.handleClick}
+           onTouchStart={this.handleClick}
            onDoubleClick={this.edit}
            id={`note${i}`}
            height={n.doodle ? '100px' : null}>
         {this.getX()}
-        <Tappable onTap={this.handleClick} onPress={this.edit}>
+        <Tappable onPress={this.edit}>
           {this.getContents()}
         </Tappable>
       </div>
