@@ -30,6 +30,7 @@ class WorkspaceMenu extends Component {
         users: false,
       },
     };
+    this.pinned = false;
     this.shortcuts = {
       68: props.uiX.showDoodle,
       73: props.uiX.showImage,
@@ -163,6 +164,11 @@ class WorkspaceMenu extends Component {
     }});
   };
 
+  togglePin = () => {
+    this.pinned = !this.pinned;
+    this.setState({});
+  };
+
   renderUsersSubmenu = () => {
     const { me } = this.props.users;
     const users = _.map(this.props.users.nameToColor, (color, name) => {
@@ -185,6 +191,11 @@ class WorkspaceMenu extends Component {
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
+        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
+          <div className={'ic-menu-item'} onClick={this.togglePin}>
+            {this.pinned ? 'Unpin Menu' : 'Pin Menu'}
+          </div>
+        </section>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.openNewWorkspace}>
             New Workspace
@@ -234,6 +245,8 @@ class WorkspaceMenu extends Component {
   };
 
   hideMenu = () => {
+    if (this.pinned) return;
+
     this.setState({
       active: false,
       submenus: {

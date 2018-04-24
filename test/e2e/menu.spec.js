@@ -14,11 +14,12 @@ const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 1 };
 const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 2 };
 
 const actions = {
-  newWorkspace: 0,
-  email: 1,
-  bookmark: 2,
-  logout: 7,
-  deleteWorkspace: 8,
+  pin: 0,
+  newWorkspace: 1,
+  email: 2,
+  bookmark: 3,
+  logout: 8,
+  deleteWorkspace: 9,
   editLink: Object.assign({}, shareSubmenu, { position: 0 }),
   viewLink: Object.assign({}, shareSubmenu, { position: 1 }),
   pdf: Object.assign({}, shareSubmenu, { position: 2 }),
@@ -126,6 +127,22 @@ describe('workspace menu', () => {
   });
 
   describe('main menu', () => {
+    describe('pinning', () => {
+      it('pins menu', () => {
+        selectMenuOption(actions.pin);
+        expect('.ic-workspace-menu').to.be.visible();
+        b.click('.ic-help-button');
+        expect('.ic-workspace-menu').to.be.visible();
+        b.click('.ic-workspace-button');
+        expect('.ic-workspace-menu').to.be.visible();
+      });
+
+      it('unpins menu', () => {
+        b.elements('.ic-menu-item').value[0].click(); // click the unpin button
+        expect('.ic-workspace-menu').to.not.be.visible();
+      });
+    });
+
     describe('email reminder', () => {
       it('wrong email format displays error message', () => {
         selectMenuOption(actions.email);
