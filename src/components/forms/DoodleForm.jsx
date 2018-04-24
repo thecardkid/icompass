@@ -167,7 +167,12 @@ class DoodleForm extends Component {
                 <ReactTooltip id={'doodle-tooltip'} place={'top'} effect={'solid'}/>
               </div>
               <button name="ship" onClick={this.submit(false)}>ship it</button>
-              <button name={'draft'} onClick={this.submit(true)}>as draft</button>
+              <button name={'draft'}
+                      onClick={this.submit(true)}
+                      data-tip="Drafts are invisible to others until you submit them"
+                      data-for="draft-tooltip"
+                      >as draft</button>
+              <ReactTooltip id={'draft-tooltip'} place={'bottom'} effect={'solid'} delayShow={500}/>
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>

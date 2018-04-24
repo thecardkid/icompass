@@ -98,6 +98,19 @@ class ImageForm extends Component {
     );
   };
 
+  renderDraftButton = () => {
+    return (
+      <div>
+        <button name={'draft'}
+                onClick={this.submit(true)}
+                data-tip="Drafts are invisible to others until you submit them"
+                data-for="draft-tooltip"
+        >as draft</button>
+        <ReactTooltip id={'draft-tooltip'} place={'bottom'} effect={'solid'} delayShow={500}/>
+      </div>
+    );
+  };
+
   dontClose(e) {
     e.stopPropagation();
   }
@@ -119,7 +132,7 @@ class ImageForm extends Component {
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
               <button name="ship" onClick={this.submit(false)}>ship it</button>
-              {this.props.switch && <button name={'draft'} onClick={this.submit(true)}>as draft</button>}
+              {this.props.switch && this.renderDraftButton()}
               <button name="nvm" onClick={this.props.close}>never mind</button>
             </div>
           </div>
