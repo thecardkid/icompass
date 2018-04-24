@@ -8,6 +8,7 @@ import * as uiX from '../../actions/ui';
 import { COLORS, MODALS, PROMPTS, REGEX } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
+import FormPalette from './FormPalette';
 
 class TextForm extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class TextForm extends Component {
         underline: false,
         ...props.defaultStyle,
       },
+      color: null,
       charCount: (props.defaultText || '').length,
     };
 
@@ -33,6 +35,10 @@ class TextForm extends Component {
         [style]: !this.state.style[style]
       },
     });
+  };
+
+  setColor = (color) => () => {
+    this.setState({ color });
   };
 
   handleChange = () => {
@@ -57,7 +63,7 @@ class TextForm extends Component {
 
   submit = (isDraft) => () => {
     this.getText(({ text, isImage }) => {
-      this.props.submit(text, isImage, this.state.style, isDraft);
+      this.props.submit(text, isImage, this.state.style, this.state.color, isDraft);
     });
   };
 
@@ -65,22 +71,25 @@ class TextForm extends Component {
     const selectedStyle = { background: COLORS.DARK, color: 'white' };
 
     return (
-      <div className="ic-text-ibu">
-        <button name="underline"
-                style={this.state.style.underline ? selectedStyle : null}
-                onClick={this.toggleStyle('underline')}>
-          <u>U</u>
-        </button>
-        <button name="italic"
-                style={this.state.style.italic ? selectedStyle : null}
-                onClick={this.toggleStyle('italic')}>
-          <i>I</i>
-        </button>
-        <button name="bold"
-                style={this.state.style.bold ? selectedStyle : null}
-                onClick={this.toggleStyle('bold')}>
-          <b>B</b>
-        </button>
+      <div>
+        <div className="ic-text-ibu">
+          <button name="underline"
+                  style={this.state.style.underline ? selectedStyle : null}
+                  onClick={this.toggleStyle('underline')}>
+            <u>U</u>
+          </button>
+          <button name="italic"
+                  style={this.state.style.italic ? selectedStyle : null}
+                  onClick={this.toggleStyle('italic')}>
+            <i>I</i>
+          </button>
+          <button name="bold"
+                  style={this.state.style.bold ? selectedStyle : null}
+                  onClick={this.toggleStyle('bold')}>
+            <b>B</b>
+          </button>
+        </div>
+        <FormPalette setColor={this.setColor}/>
       </div>
     );
   }
@@ -158,7 +167,7 @@ class TextForm extends Component {
                       autoFocus
                       defaultValue={this.props.defaultText || ''}
                       onChange={this.handleChange}
-                      style={{ background: this.props.bg }}/>
+                      style={{ background: this.state.color || this.props.bg }}/>
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
               <button name="ship" onClick={this.submit(false)}>ship it</button>

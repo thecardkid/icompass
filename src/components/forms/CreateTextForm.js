@@ -10,14 +10,14 @@ export default class CreateTextForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  make = (text, isImage, style, isDraft) => {
+  make = (text, isImage, style, color, isDraft) => {
     if (!text) return;
 
     const { x, y } = this.props.info;
     let note = {
       text, isImage, x, y, style,
       doodle: null,
-      color: this.props.bg,
+      color: color || this.props.bg,
       user: this.props.user,
     };
 

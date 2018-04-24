@@ -10,7 +10,7 @@ export default class EditTextForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  edit = (text, isImage, style) => {
+  edit = (text, isImage, style, color) => {
     if (!text) return;
 
     const edited = {
@@ -18,6 +18,7 @@ export default class EditTextForm extends Component {
       text,
       isImage,
       style,
+      color,
     };
     const { idx } = edited;
     delete edited.idx;
