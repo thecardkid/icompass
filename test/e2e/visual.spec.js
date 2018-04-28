@@ -152,22 +152,22 @@ describe('visual mode', () => {
       b.click('button.underline');
       b.pause(200);
 
-      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.include('bold')
+      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.include('bold')
         .and.to.include('italic')
         .and.to.include('underline');
-      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.not.include('bold')
+      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.not.include('bold')
         .and.to.not.include('italic')
         .and.to.not.include('underline');
 
       b.click('#note1');
       b.pause(200);
-      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.include('bold')
+      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.include('bold')
         .and.to.include('italic')
         .and.to.include('underline');
 
       b.click('#note1');
       b.pause(200);
-      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.not.include('bold')
+      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.not.include('bold')
         .and.to.not.include('italic')
         .and.to.not.include('underline');
 
@@ -178,7 +178,7 @@ describe('visual mode', () => {
     });
 
     it('sticky note coloring', () => {
-      const background = b.getCssProperty('#note0 span div.contents', 'background-color').value;
+      const background = b.getCssProperty('#note0 div.contents', 'background-color').value;
 
       b.click('#note0');
       b.click('#note1');
@@ -186,18 +186,18 @@ describe('visual mode', () => {
 
       b.click(`button${STICKY_COLORS[2]}`); // button#CCFFCC
       b.pause(200);
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
-      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
 
       b.click(`button${STICKY_COLORS[4]}`);
       b.pause(500);
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
-      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
+      expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
+      expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
 
       b.click(`button${STICKY_COLORS[4]}`);
       b.pause(500);
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal(background);
-      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal(background);
+      expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal(background);
+      expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal(background);
 
       b.click('#note0');
       b.click('#note1');
@@ -221,10 +221,10 @@ describe('visual mode', () => {
       b.click('#ic-bulk-submit');
       b.pause(500);
 
-      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
-      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
     });
 
     it('empty submit does nothing', () => {
@@ -233,10 +233,10 @@ describe('visual mode', () => {
       b.click('#note1');
       b.click('#ic-bulk-submit');
       b.pause(1000);
-      expect(b.getAttribute('#note0 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getAttribute('#note1 span div.contents p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
-      expect(b.getCssProperty('#note1 span div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
+      expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
+      expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
     });
   });
 
