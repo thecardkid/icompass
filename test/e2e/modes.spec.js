@@ -63,10 +63,34 @@ describe('view modes', () => {
       expect('#hline').to.be.visible();
       expect('.ic-workspace-button').to.not.be.there();
       expect('.ic-help-button').to.not.be.there();
+      expectCompassStructure();
     });
   });
 
   describe('edit mode', () => {
+    it('from login page', () => {
+      b.url('http://localhost:8080');
+      b.waitForVisible('body');
+      b.click('div[name=find]');
+      b.setValue('#compass-code', editCode);
+      b.setValue('#username', 'sandbox');
+      b.click('input[type=submit]');
+      b.waitForVisible('#ic-modal');
+
+      expect('#ic-modal-body').to.have.text(/edit access/);
+      expect('#ic-modal-body').to.have.text(/sandbox/);
+
+      b.click('#ic-modal-confirm');
+      b.waitForVisible('#compass');
+
+      expect('#center').to.be.visible();
+      expect('#vline').to.be.visible();
+      expect('#hline').to.be.visible();
+      expect('.ic-workspace-button').to.be.there();
+      expect('.ic-help-button').to.be.there();
+      expectCompassStructure();
+    });
+
     it('valid username', () => {
       b.url(`${editURL}/sandbox`);
       b.waitForVisible('#compass');
