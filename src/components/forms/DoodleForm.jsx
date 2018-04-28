@@ -87,6 +87,14 @@ class DoodleForm extends Component {
     if (paint) this.strokeTo(e.touches[0].clientX, e.touches[0].clientY);
   };
 
+  undo = () => {
+    const { strokes } = this.state;
+    if (strokes.length > 0) {
+      strokes.pop();
+    }
+    this.setState({ strokes });
+  };
+
   drawCanvas = () => {
     if (!this.$canvas) return;
 
@@ -156,7 +164,12 @@ class DoodleForm extends Component {
           <div className={'ic-modal-contents'}>
             <div className={'ic-modal-header'}>
               <h1 className={'ic-modal-title'}>Create a sketch</h1>
-              <button name="clear" onClick={this.clearCanvas}>clear</button>
+              <div id={'ic-doodle-controls'}>
+                <button name="clear" onClick={this.clearCanvas}>clear</button>
+                <button name="undo" onClick={this.undo}>
+                  <i className="material-icons">undo</i>
+                </button>
+              </div>
               <FormPalette setColor={this.setColor} />
             </div>
             <canvas id="ic-doodle"
