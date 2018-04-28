@@ -9,6 +9,26 @@ const b = browser;
 
 const MODALS = require('../../lib/constants.js').MODALS;
 
+const expectCompassStructure = () => {
+  expect('#observations').to.be.visible();
+  expect('#observations h1').to.have.text(/OBSERVATIONS/);
+  expect('#observations h2').to.have.text(/What's happening\? Why\?/);
+
+  expect('#principles').to.be.visible();
+  expect('#principles h1').to.have.text(/PRINCIPLES/);
+  expect('#principles h2').to.have.text(/What matters most\?/);
+
+  expect('#ideas').to.be.visible();
+  expect('#ideas h1').to.have.text(/IDEAS/);
+  expect('#ideas h2').to.have.text(/What ways are there\?/);
+
+  expect('#experiments').to.be.visible();
+  expect('#experiments h1').to.have.text(/EXPERIMENTS/);
+  expect('#experiments h2').to.have.text(/What's a step to try\?/);
+};
+
+module.exports = { expectCompassStructure };
+
 describe('basic functionality', () => {
   beforeAll(setup);
 
@@ -20,22 +40,7 @@ describe('basic functionality', () => {
     expect('.ic-workspace-button').to.be.visible();
     expect('.ic-help-button').to.be.visible();
     expect('#center').to.have.text('topic');
-
-    expect('#observations').to.be.visible();
-    expect('#observations h1').to.have.text(/OBSERVATIONS/);
-    expect('#observations h2').to.have.text(/What's happening\? Why\?/);
-
-    expect('#principles').to.be.visible();
-    expect('#principles h1').to.have.text(/PRINCIPLES/);
-    expect('#principles h2').to.have.text(/What matters most\?/);
-
-    expect('#ideas').to.be.visible();
-    expect('#ideas h1').to.have.text(/IDEAS/);
-    expect('#ideas h2').to.have.text(/What ways are there\?/);
-
-    expect('#experiments').to.be.visible();
-    expect('#experiments h1').to.have.text(/EXPERIMENTS/);
-    expect('#experiments h2').to.have.text(/What's a step to try\?/);
+    expectCompassStructure();
   });
 
   describe('key bindings', () => {
