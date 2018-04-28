@@ -22,7 +22,7 @@ describe('view modes', () => {
 
     b.click('button.ic-workspace-button');
     b.waitForVisible('div.ic-workspace-menu');
-    b.elements('div.ic-menu-item').value[4].click();
+    b.elements('div.ic-menu-item').value[3].click();
     b.waitForVisible('.ic-share');
     viewCode = b.getValue('input#ic-view-link').substring(35, 43);
     viewURL = `http://localhost:8080/compass/view/${viewCode}`;

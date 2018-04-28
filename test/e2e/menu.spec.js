@@ -13,13 +13,12 @@ const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
 const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
 
 const actions = {
-  pin: 0,
-  newWorkspace: 1,
-  email: 2,
-  bookmark: 3,
-  share: 4,
-  logout: 8,
-  deleteWorkspace: 9,
+  newWorkspace: 0,
+  email: 1,
+  bookmark: 2,
+  share: 3,
+  logout: 7,
+  deleteWorkspace: 8,
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
