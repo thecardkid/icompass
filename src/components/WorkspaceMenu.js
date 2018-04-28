@@ -104,7 +104,7 @@ class WorkspaceMenu extends Component {
       if (!status) return;
 
       if (REGEX.EMAIL.test(email)) {
-        return this.socket.emitSendMail(this.props.compass.editCode, this.props.me, email);
+        return this.socket.emitSendMail(this.props.compass.editCode, this.props.users.me, email);
       } else {
         this.toast.error(`"${email}" is not a valid email address`);
         this.emailReminder();
