@@ -28,7 +28,6 @@ class WorkspaceMenu extends Component {
         users: false,
       },
     };
-    this.pinned = false;
     this.shortcuts = {
       68: props.uiX.showDoodle,
       73: props.uiX.showImage,
@@ -60,14 +59,17 @@ class WorkspaceMenu extends Component {
     switch (mode) {
       case 'standard':
         this.toast.info('Switched to standard mode');
+        this.hideMenu();
         return this.props.uiX.normalMode();
 
       case 'compact':
         this.toast.info('Switched to compact mode');
+        this.hideMenu();
         return this.props.uiX.compactMode();
 
       case 'bulk':
         this.toast.info('Switched to bulk edit mode');
+        this.hideMenu();
         return this.props.uiX.visualMode(this.props.notes.length);
 
       default:
@@ -77,6 +79,7 @@ class WorkspaceMenu extends Component {
 
   showShareModal = () => {
     this.props.uiX.showShareModal();
+    this.hideMenu();
   };
 
   buttonChangeMode = (switchTo) => () => {
@@ -87,11 +90,13 @@ class WorkspaceMenu extends Component {
   openNewWorkspace = () => {
     this.socket.emitMetric('menu new workspace');
     window.open('/', '_blank').focus();
+    this.hideMenu();
   };
 
   triggerEmailModal = () => {
     this.socket.emitMetric('menu email');
     this.emailReminder();
+    this.hideMenu();
   };
 
   emailReminder = () => {
@@ -117,6 +122,7 @@ class WorkspaceMenu extends Component {
         this.toast.success(PROMPTS.SAVE_SUCCESS);
       }
     }, topic);
+    this.hideMenu();
   };
 
   logout = () => {
@@ -132,6 +138,7 @@ class WorkspaceMenu extends Component {
         this.socket.emitDeleteCompass(this.props.compass._id);
       }
     });
+    this.hideMenu();
   };
 
   showSubmenu = (submenu) => () => {
@@ -146,11 +153,6 @@ class WorkspaceMenu extends Component {
       modes: false,
       users: false,
     }});
-  };
-
-  togglePin = () => {
-    this.pinned = !this.pinned;
-    this.setState({});
   };
 
   renderUsersSubmenu = () => {
@@ -176,11 +178,6 @@ class WorkspaceMenu extends Component {
     return (
       <div className={'ic-menu ic-workspace-menu'}>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
-          <div className={'ic-menu-item'} onClick={this.togglePin}>
-            {this.pinned ? 'Unpin Menu' : 'Pin Menu'}
-          </div>
-        </section>
-        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.openNewWorkspace}>
             New Workspace
           </div>
@@ -197,11 +194,11 @@ class WorkspaceMenu extends Component {
         <section className={'border-bottom'}>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
             Insert Note
-            {notes && <NotesSubmenu uiX={this.props.uiX}/>}
+            {notes && <NotesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
           </div>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
             Editing Modes
-            {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode}/>}
+            {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode} hideMenu={this.hideMenu}/>}
           </div>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('users')}>
             Collaborators
@@ -228,8 +225,6 @@ class WorkspaceMenu extends Component {
   };
 
   hideMenu = () => {
-    if (this.pinned) return;
-
     this.setState({
       active: false,
       submenus: {
@@ -244,11 +239,10 @@ class WorkspaceMenu extends Component {
     return (
       <div id={'ic-workspace-menu'}>
         <button className={'ic-workspace-button floating-button'}
-              onClick={this.toggleMenu}
-              onBlur={this.hideMenu}>
+              onClick={this.toggleMenu}>
           <i className="material-icons">menu</i>
-          {this.state.active && this.renderMenu()}
         </button>
+        {this.state.active && this.renderMenu()}
         <ShortcutManager handle={this._handleShortcuts} />
       </div>
     );

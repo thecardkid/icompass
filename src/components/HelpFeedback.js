@@ -84,8 +84,8 @@ export default class HelpFeedback extends Component {
         <button className={'ic-help-button floating-button'}
              onClick={this.toggleMenu}>
           ?
-          {this.state.active && this.renderHelpMenu()}
         </button>
+        {this.state.active && this.renderHelpMenu()}
       </div>
     );
   }
