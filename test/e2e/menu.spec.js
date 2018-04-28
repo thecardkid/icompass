@@ -95,22 +95,6 @@ describe('workspace menu', () => {
   });
 
   describe('main menu', () => {
-    describe('pinning', () => {
-      it('pins menu', () => {
-        selectMenuOption(actions.pin);
-        expect('.ic-workspace-menu').to.be.visible();
-        b.click('#ideas');
-        expect('.ic-workspace-menu').to.be.visible();
-        b.click('.ic-workspace-button');
-        expect('.ic-workspace-menu').to.be.visible();
-      });
-
-      it('unpins menu', () => {
-        b.elements('.ic-menu-item').value[0].click(); // click the unpin button
-        expect('.ic-workspace-menu').to.not.be.visible();
-      });
-    });
-
     describe('email reminder', () => {
       it('wrong email format displays error message', () => {
         selectMenuOption(actions.email);
