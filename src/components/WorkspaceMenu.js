@@ -193,11 +193,11 @@ class WorkspaceMenu extends Component {
         </section>
         <section className={'border-bottom'}>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
-            Insert Note
+            Add Note
             {notes && <NotesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
           </div>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
-            Editing Modes
+            Change Mode
             {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode} hideMenu={this.hideMenu}/>}
           </div>
           <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('users')}>
