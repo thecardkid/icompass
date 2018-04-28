@@ -170,7 +170,11 @@ class LandingPage extends Component {
   notifyPrivileges = (viewOnly) => {
     let mode = viewOnly ? 'view-only' : 'edit';
     this.modal.alert(`You will be logged in as "${this.state.username}" with ${mode} access.`, () => {
-      browserHistory.push(`/compass/view/${this.state.data.code}/${this.state.username}`);
+      if (mode === 'view-only') {
+        browserHistory.push(`/compass/view/${this.state.data.code}/${this.state.username}`);
+      } else {
+        browserHistory.push(`/compass/edit/${this.state.data.code}/${this.state.username}`);
+      }
     });
   };
 

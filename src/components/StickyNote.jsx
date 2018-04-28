@@ -20,7 +20,6 @@ class StickyNote extends Component {
     this.modal = Modal.getInstance();
     this.hasEditingRights = !this.props.compass.viewOnly;
     this.setModes(this.props);
-    this.lastClick = 0;
   }
 
   shouldComponentUpdate(nextProps) {
@@ -144,10 +143,7 @@ class StickyNote extends Component {
     }
   };
 
-  handleClick = (ev) => {
-    let now = Date.now();
-    if (now - this.lastClick < 40) return;
-
+  clickNote = (ev) => {
     if (!this.visualMode && ev.shiftKey) {
       if (this.props.note.draft) {
         return this.toast.warn('Cannot enter bulk mode by selecting a draft');
@@ -156,7 +152,6 @@ class StickyNote extends Component {
       this.props.enterVisualMode(this.props.i);
     }
 
-    this.lastClick = now;
     if (this.visualMode) {
       if (this.props.note.draft) {
         return this.toast.warn('Cannot select drafts in bulk edit mode');
@@ -167,6 +162,14 @@ class StickyNote extends Component {
     } else {
       this.props.uiActions.focusOnNote(this.props.i);
     }
+  };
+
+  onTouchStart = () => {
+    this.longPress = setTimeout(() => this.edit(), 1000);
+  };
+
+  onTouchRelease = () => {
+    clearTimeout(this.longPress);
   };
 
   render() {
@@ -188,15 +191,14 @@ class StickyNote extends Component {
     return (
       <div className={`ic-sticky-note draggable ${n.draft ? 'draft' : ''}`}
            style={style}
-           onClick={this.handleClick}
-           onTouchStart={this.handleClick}
+           onClick={this.clickNote}
            onDoubleClick={this.edit}
+           onTouchStart={this.onTouchStart}
+           onTouchEnd={this.onTouchRelease}
            id={`note${i}`}
            height={n.doodle ? '100px' : null}>
         {this.getX()}
-        <Tappable onPress={this.edit}>
-          {this.getContents()}
-        </Tappable>
+        {this.getContents()}
       </div>
     );
   }

@@ -13,13 +13,12 @@ const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
 const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
 
 const actions = {
-  pin: 0,
-  newWorkspace: 1,
-  email: 2,
-  bookmark: 3,
-  share: 4,
-  logout: 8,
-  deleteWorkspace: 9,
+  newWorkspace: 0,
+  email: 1,
+  bookmark: 2,
+  share: 3,
+  logout: 7,
+  deleteWorkspace: 8,
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
@@ -96,27 +95,13 @@ describe('workspace menu', () => {
   });
 
   describe('main menu', () => {
-    describe('pinning', () => {
-      it('pins menu', () => {
-        selectMenuOption(actions.pin);
-        expect('.ic-workspace-menu').to.be.visible();
-        b.click('#ideas');
-        expect('.ic-workspace-menu').to.be.visible();
-        b.click('.ic-workspace-button');
-        expect('.ic-workspace-menu').to.be.visible();
-      });
-
-      it('unpins menu', () => {
-        b.elements('.ic-menu-item').value[0].click(); // click the unpin button
-        expect('.ic-workspace-menu').to.not.be.visible();
-      });
-    });
-
     describe('email reminder', () => {
       it('wrong email format displays error message', () => {
         selectMenuOption(actions.email);
         b.waitForVisible('#ic-modal');
         expect('#ic-modal-body').to.have.text(/Email Yourself/);
+        expect('#ic-modal-cancel').to.be.visible();
+        expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.be.empty;
         b.setValue('#ic-modal-input', 'fakeemail');
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast');

@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
-import Tappable from 'react-tappable/lib/Tappable';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
@@ -62,16 +61,28 @@ class Compass extends Component {
     this.props.uiX.showNewNote(ev);
   };
 
+  onTouchStart = (ev) => {
+    ev.persist();
+    this.longPress = setTimeout(() => this.doubleClickCreate(ev), 1000);
+  };
+
+  onTouchRelease = () => {
+    clearTimeout(this.longPress);
+  };
+
   renderQuadrant = (q) => {
     return (
-      <Tappable onPress={this.doubleClickCreate} key={q.id}>
-        <div onDoubleClick={this.doubleClickCreate} className="ic-quadrant" id={q.id}>
-          <div>
-            <h1>{q.id.toUpperCase()}</h1>
-            <h2>{q.prompt}</h2>
-          </div>
+      <div onDoubleClick={this.doubleClickCreate}
+           onTouchStart={this.onTouchStart}
+           onTouchEnd={this.onTouchRelease}
+           className="ic-quadrant"
+           key={`quadrant-${q.id}`}
+           id={q.id}>
+        <div>
+          <h1>{q.id.toUpperCase()}</h1>
+          <h2>{q.prompt}</h2>
         </div>
-      </Tappable>
+      </div>
     );
   };
 

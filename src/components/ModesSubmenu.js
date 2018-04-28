@@ -16,6 +16,11 @@ class ModesSubmenu extends Component {
     this.socket = SocketSingleton.getInstance();
   }
 
+  alertExplainModes = () => {
+    this.modal.alertExplainModes();
+    this.props.hideMenu();
+  };
+
   render() {
     const { normal, compact, bulk } = this.props;
 
@@ -39,7 +44,7 @@ class ModesSubmenu extends Component {
           </div>
         </section>
         <section>
-          <div className={'ic-menu-item'} onClick={this.modal.alertExplainModes}>
+          <div className={'ic-menu-item'} onClick={this.alertExplainModes}>
             <span className={'inactive'} />
             What are these?
           </div>

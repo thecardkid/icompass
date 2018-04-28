@@ -36,7 +36,7 @@ describe('draft mode', () => {
       b.pause(200);
       expect('.ic-sticky-note').to.have.count(3);
       expect('.draft').to.have.count(1);
-      expect(b.getCssProperty('.draft span div.contents', 'background-color').value).to.equal('rgba(128,128,128,1)');
+      expect(b.getCssProperty('.draft div.contents', 'background-color').value).to.equal('rgba(128,128,128,1)');
     });
 
     it('form has correct heading', () => {
@@ -53,8 +53,8 @@ describe('draft mode', () => {
       b.click('button[name=ship]');
       b.pause(200);
       expect('#note0').to.have.text(/Edited draft/);
-      expect(b.getAttribute('#note0 span div.contents p', 'class')).to.contain('bold');
-      expect(b.getAttribute('#note0 span div.contents p', 'class')).to.contain('underline');
+      expect(b.getAttribute('#note0 div.contents p', 'class')).to.contain('bold');
+      expect(b.getAttribute('#note0 div.contents p', 'class')).to.contain('underline');
     });
 
     it('can drag draft', () => {
@@ -114,8 +114,8 @@ describe('draft mode', () => {
     });
 
     it('renders draft with image', () => {
-      expect('#note1 span div.contents img').to.be.there();
-      expect('#note1 span div.contents button.submit').to.be.there();
+      expect('#note1 div.contents img').to.be.there();
+      expect('#note1 div.contents button.submit').to.be.there();
     });
 
     it('edit image draft', () => {
@@ -158,7 +158,7 @@ describe('draft mode', () => {
       expect('.ic-sticky-note').to.have.count(5);
       expect('.draft').to.have.count(3);
       expect('.ic-img').to.have.count(2);
-      expect(b.getAttribute('#note2 span div.contents img', 'src')).to.contain('data:image/png;base64');
+      expect(b.getAttribute('#note2 div.contents img', 'src')).to.contain('data:image/png;base64');
     });
 
     it('cannot edit doodle', () => {
@@ -166,7 +166,7 @@ describe('draft mode', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-toast span');
       expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-      expect('#ic-toast span').to.have.text(/Doodles cannot be changed/);
+      expect('#ic-toast span').to.have.text(/Sketches cannot be edited/);
     });
 
     it('can drag', () => {
@@ -184,7 +184,7 @@ describe('draft mode', () => {
 
   describe('submit drafts', () => {
     it('submit #note0', () => {
-      b.click('#note0 span div.contents button.submit');
+      b.click('#note0 div.contents button.submit');
       b.pause(100);
       expect('.ic-sticky-note').to.have.count(5);
       expect('.draft').to.have.count(2);
@@ -192,7 +192,7 @@ describe('draft mode', () => {
     });
 
     it('submit #note1', () => {
-      b.click('#note1 span div.contents button.submit');
+      b.click('#note1 div.contents button.submit');
       b.pause(100);
       expect('.ic-sticky-note').to.have.count(5);
       expect('.draft').to.have.count(1);
@@ -222,7 +222,7 @@ describe('draft mode', () => {
       });
 
       it('cannot submit drafts in bulk mode', () => {
-        b.click('#note4 span div.contents button.submit');
+        b.click('#note4 div.contents button.submit');
         b.waitForVisible('#ic-toast');
         expect('#ic-toast').to.have.text(/Cannot select drafts/);
       });

@@ -101,13 +101,6 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitMessage = (username, text) => {
-      if (!text) return;
-      if (this.checkConnected()) {
-        this.socket.emit('message', { username, text });
-      }
-    };
-
     emitCreateCompass = (topic, username) => {
       if (this.checkConnected()) {
         this.socket.emit('create compass', { topic, username });

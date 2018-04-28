@@ -111,7 +111,7 @@ class ImageForm extends Component {
                 onClick={this.submit(true)}
                 data-tip="Drafts are invisible to others until you submit them"
                 data-for="draft-tooltip"
-        >as draft</button>
+        >Draft</button>
         <ReactTooltip id={'draft-tooltip'} place={'bottom'} effect={'solid'} delayShow={500}/>
       </div>
     );
@@ -138,9 +138,9 @@ class ImageForm extends Component {
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit(false)}>ship it</button>
+              <button name="ship" onClick={this.submit(false)}>Submit</button>
               {this.props.switch && this.renderDraftButton()}
-              <button name="nvm" onClick={this.props.close}>never mind</button>
+              <button name="nvm" onClick={this.props.close}>Cancel</button>
             </div>
           </div>
         </div>
