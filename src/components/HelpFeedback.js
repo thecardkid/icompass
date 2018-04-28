@@ -38,6 +38,7 @@ export default class HelpFeedback extends Component {
 
   openReleaseNotes = () => {
     this.socket.emitMetric('help release notes');
+    this.hideMenu();
   };
 
   showFeedback = () => {
