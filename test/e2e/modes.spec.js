@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
+const { expectCompassStructure } = require('./functionality.spec');
 const { setup, cleanup } = require('./utils');
 
 const expect = chai.expect;
@@ -38,6 +39,8 @@ describe('view modes', () => {
       expect('#hline').to.be.visible();
       expect('.ic-workspace-button').to.not.be.there();
       expect('.ic-help-button').to.not.be.there();
+
+      expectCompassStructure();
     });
 
     it('from login page', () => {
@@ -73,6 +76,7 @@ describe('view modes', () => {
       expect('#hline').to.be.visible();
       expect('.ic-workspace-button').to.be.visible;
       expect('.ic-help-button').to.be.visible;
+      expectCompassStructure();
     });
 
     it('invalid code and invalid username', () => {
