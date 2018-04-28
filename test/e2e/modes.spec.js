@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
+const { expectCompassStructure } = require('./functionality.spec');
 const { setup, cleanup } = require('./utils');
 
 const expect = chai.expect;
@@ -21,7 +22,7 @@ describe('view modes', () => {
 
     b.click('button.ic-workspace-button');
     b.waitForVisible('div.ic-workspace-menu');
-    b.elements('div.ic-menu-item').value[4].click();
+    b.elements('div.ic-menu-item').value[3].click();
     b.waitForVisible('.ic-share');
     viewCode = b.getValue('input#ic-view-link').substring(35, 43);
     viewURL = `http://localhost:8080/compass/view/${viewCode}`;
@@ -38,6 +39,8 @@ describe('view modes', () => {
       expect('#hline').to.be.visible();
       expect('.ic-workspace-button').to.not.be.there();
       expect('.ic-help-button').to.not.be.there();
+
+      expectCompassStructure();
     });
 
     it('from login page', () => {
@@ -60,10 +63,34 @@ describe('view modes', () => {
       expect('#hline').to.be.visible();
       expect('.ic-workspace-button').to.not.be.there();
       expect('.ic-help-button').to.not.be.there();
+      expectCompassStructure();
     });
   });
 
   describe('edit mode', () => {
+    it('from login page', () => {
+      b.url('http://localhost:8080');
+      b.waitForVisible('body');
+      b.click('div[name=find]');
+      b.setValue('#compass-code', editCode);
+      b.setValue('#username', 'sandbox');
+      b.click('input[type=submit]');
+      b.waitForVisible('#ic-modal');
+
+      expect('#ic-modal-body').to.have.text(/edit access/);
+      expect('#ic-modal-body').to.have.text(/sandbox/);
+
+      b.click('#ic-modal-confirm');
+      b.waitForVisible('#compass');
+
+      expect('#center').to.be.visible();
+      expect('#vline').to.be.visible();
+      expect('#hline').to.be.visible();
+      expect('.ic-workspace-button').to.be.there();
+      expect('.ic-help-button').to.be.there();
+      expectCompassStructure();
+    });
+
     it('valid username', () => {
       b.url(`${editURL}/sandbox`);
       b.waitForVisible('#compass');
@@ -73,6 +100,7 @@ describe('view modes', () => {
       expect('#hline').to.be.visible();
       expect('.ic-workspace-button').to.be.visible;
       expect('.ic-help-button').to.be.visible;
+      expectCompassStructure();
     });
 
     it('invalid code and invalid username', () => {

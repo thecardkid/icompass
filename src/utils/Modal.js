@@ -161,28 +161,54 @@ const ModalSingleton = (() => {
 
     generatePrompt(html) {
       return this.getModalHtml(
-        `${html}<input id="ic-modal-input" />`,
+        `${html}<input id="ic-modal-input"/>`,
         '<button id="ic-modal-confirm">Submit</button>',
         '<button id="ic-modal-cancel">Cancel</button>',
       );
     }
 
     promptForEmail(cb) {
-      const html = `
+      let html = `
         <h3>Email Yourself a Link to this Workspace</h3>
         <p>
           You'll need the link to the compass to access it again. To email yourself the link now,
-          enter your email address below. Leave blank if you do not want this email.
+          enter your email address below.
+          <br/><br/>
+          I will not store your email address or send you spam.
+        </p>
+        <input id="ic-modal-input" placeholder="enter email or leave blank">
+      `;
+
+      html = this.getModalHtml(
+        html,
+        '<button id="ic-modal-confirm">Submit</button>',
+      );
+
+      return this._prompt(html, cb);
+    }
+
+    saveViaEmail(cb) {
+      let html = `
+        <h3>Email Yourself a Link to this Workspace</h3>
+        <p>
+          You'll need the link to the compass to access it again. To email yourself the link now,
+          enter your email address below.
           <br/><br/>
           I will not store your email address or send you spam.
         </p>
       `;
-      this.prompt(html, cb);
+
+      return this.prompt(html, cb);
     }
 
     promptForCenter(warn, cb) {
-      const html = '<h3>1. Who could be involved, including you?</h3><p>For and with everyone involved, explore...</p>';
-      $('#ic-modal-container').empty().append(this.generatePrompt(html));
+      const html = this.getModalHtml(
+        `<h3>1. Who\'s involved, including you?</h3>
+         <input id="ic-modal-input" />
+         <p>For and with everyone involved, explore...</p>`,
+        '<button id="ic-modal-confirm">Submit</button>',
+      );
+      $('#ic-modal-container').empty().append(html);
       $('#ic-modal-input').focus();
       this.addBackdropIfNecessary();
       this.show = true;
@@ -222,9 +248,13 @@ const ModalSingleton = (() => {
       $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
     }
 
-    prompt(text, cb, value) {
-      $('#ic-modal-container').empty().append(this.generatePrompt(text));
-      $('#ic-modal-input').val(value || '').select();
+    prompt(text, cb, value = '') {
+      this._prompt(this.generatePrompt(text), cb, value);
+    }
+
+    _prompt(html, cb, value = '') {
+      $('#ic-modal-container').empty().append(html);
+      $('#ic-modal-input').val(value).select();
       this.addBackdropIfNecessary();
       this.show = true;
 

@@ -170,7 +170,11 @@ class LandingPage extends Component {
   notifyPrivileges = (viewOnly) => {
     let mode = viewOnly ? 'view-only' : 'edit';
     this.modal.alert(`You will be logged in as "${this.state.username}" with ${mode} access.`, () => {
-      browserHistory.push(`/compass/view/${this.state.data.code}/${this.state.username}`);
+      if (mode === 'view-only') {
+        browserHistory.push(`/compass/view/${this.state.data.code}/${this.state.username}`);
+      } else {
+        browserHistory.push(`/compass/edit/${this.state.data.code}/${this.state.username}`);
+      }
     });
   };
 
@@ -200,6 +204,9 @@ class LandingPage extends Component {
           <div id="ic-landing">
             <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to
               make anything better</h1>
+            <a href={'https://youtu.be/3IbxFHQ5Dxo'} className={'ic-guide'}>
+              First-timer? Watch this short two-minute video!
+            </a>
             <div className="form section">
               <div id="header">
                 <div className={active ? 'active' : ''}

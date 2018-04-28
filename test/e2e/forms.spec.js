@@ -32,7 +32,7 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note0');
       expect(x).to.equal(100);
       expect(y).to.equal(200);
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
+      expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('edit', () => {
@@ -46,7 +46,7 @@ describe('forms', () => {
       b.click('button[name=ship]');
       b.pause(200);
       expect('#note0').to.have.text(/edited note/);
-      expect(b.getCssProperty('#note0 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
     it('styling', () => {
@@ -99,7 +99,7 @@ describe('forms', () => {
       b.click('#ic-modal-cancel');
       b.pause(100);
       expect('div.ic-img').to.have.count(0);
-      expect('#note1 span div.contents p a').to.be.there(); // expect embedded link
+      expect('#note1 div.contents p a').to.be.there(); // expect embedded link
     });
 
     it('accepting image prompt should render image', () => {
@@ -144,7 +144,7 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note2');
       expect(x).to.equal(xoffset);
       expect(y).to.equal(yoffset);
-      expect(b.getCssProperty('#note2 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
+      expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('edit', () => {
@@ -156,7 +156,7 @@ describe('forms', () => {
       expect('#ic-form-text').to.have.text(imageUrl);
       b.click('.ic-color-FFCCFF');
       b.click('button[name=ship]');
-      expect(b.getCssProperty('#note2 span div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
     it('converts drive link to thumbnail', () => {
@@ -208,14 +208,14 @@ describe('forms', () => {
       expect(x).to.equal(xoffset);
       expect(y).to.equal(yoffset);
       expect(b.getAttribute('#note3 div.ic-img img', 'src')).to.contain('data:image/png;base64');
-      expect(b.getCssProperty('#note3 span div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
+      expect(b.getCssProperty('#note3 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('edit', () => {
       b.moveToObject('#note3', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-toast');
-      expect('#ic-toast').to.have.text(/Doodles cannot be changed/);
+      expect('#ic-toast').to.have.text(/Sketches cannot be edited/);
       b.click('#ic-toast');
     });
 

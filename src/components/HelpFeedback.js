@@ -4,6 +4,8 @@ import { Link } from 'react-router';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 
+import { COLORS } from '../../lib/constants';
+
 export default class HelpFeedback extends Component {
   constructor() {
     super();
@@ -34,8 +36,14 @@ export default class HelpFeedback extends Component {
     this.hideMenu();
   };
 
+  openGuide = () => {
+    this.socket.emitMetric('help guide');
+    this.hideMenu();
+  };
+
   openReleaseNotes = () => {
     this.socket.emitMetric('help release notes');
+    this.hideMenu();
   };
 
   showFeedback = () => {
@@ -59,6 +67,11 @@ export default class HelpFeedback extends Component {
           </div>
         </section>
         <section>
+          <Link to={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.openGuide}>
+            <div className={'ic-menu-item'}>
+              iCompass Guide
+            </div>
+          </Link>
           <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
             Privacy Statement
           </div>
@@ -82,10 +95,11 @@ export default class HelpFeedback extends Component {
     return (
       <div id={'ic-help'}>
         <button className={'ic-help-button floating-button'}
+                style={{background: this.state.active ? COLORS.BLUE : ''}}
              onClick={this.toggleMenu}>
           ?
-          {this.state.active && this.renderHelpMenu()}
         </button>
+        {this.state.active && this.renderHelpMenu()}
       </div>
     );
   }
