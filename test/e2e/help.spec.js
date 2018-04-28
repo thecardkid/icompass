@@ -9,9 +9,10 @@ const { setup, cleanup } = require('./utils');
 
 const actions = {
   prompt: 0,
-  privacy: 1,
-  feedback: 2,
-  release: 3,
+  guide: 1,
+  privacy: 2,
+  feedback: 3,
+  release: 4,
 };
 
 const selectHelpOption = (count) => {
@@ -35,10 +36,17 @@ describe('help menu', () => {
     b.click('#ic-modal-confirm');
   });
 
+  it('quick start guide', () => {
+    selectHelpOption(actions.guide);
+    b.pause(200);
+    expect(b.getTabIds()).to.have.length(2);
+    b.switchTab(this.tabId);
+  });
+
   it('release notes', () => {
     selectHelpOption(actions.release);
     b.pause(200);
-    expect(b.getTabIds()).to.have.length(2);
+    expect(b.getTabIds()).to.have.length(3);
     b.switchTab(this.tabId);
   });
 

@@ -204,6 +204,9 @@ class LandingPage extends Component {
           <div id="ic-landing">
             <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to
               make anything better</h1>
+            <a href={'https://youtu.be/3IbxFHQ5Dxo'} className={'ic-guide'}>
+              First-timer? Watch this short two-minute video!
+            </a>
             <div className="form section">
               <div id="header">
                 <div className={active ? 'active' : ''}

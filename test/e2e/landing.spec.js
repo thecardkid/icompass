@@ -2,6 +2,7 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
+const { cleanup } = require('./utils');
 const expect = chai.expect;
 const b = browser;
 
@@ -17,11 +18,11 @@ describe('login', () => {
     expect('div[name=make]').to.be.visible();
   });
 
-  // TODO
-  afterAll(() => {
-    b.click('button[name=to-workspace]');
-    b.waitForVisible('#ic-sidebar');
-    require('./utils').cleanup();
+  afterAll(cleanup);
+
+  it('has link to guide', () => {
+    expect('a.ic-guide').to.be.visible();
+    expect(b.getAttribute('a.ic-guide', 'href')).to.equal('https://youtu.be/3IbxFHQ5Dxo');
   });
 
   describe('make flow', () => {

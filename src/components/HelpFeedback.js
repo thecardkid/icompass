@@ -36,6 +36,11 @@ export default class HelpFeedback extends Component {
     this.hideMenu();
   };
 
+  openGuide = () => {
+    this.socket.emitMetric('help guide');
+    this.hideMenu();
+  };
+
   openReleaseNotes = () => {
     this.socket.emitMetric('help release notes');
     this.hideMenu();
@@ -62,6 +67,11 @@ export default class HelpFeedback extends Component {
           </div>
         </section>
         <section>
+          <Link to={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.openGuide}>
+            <div className={'ic-menu-item'}>
+              iCompass Guide
+            </div>
+          </Link>
           <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
             Privacy Statement
           </div>
