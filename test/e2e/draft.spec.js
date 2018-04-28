@@ -166,7 +166,7 @@ describe('draft mode', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-toast span');
       expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-      expect('#ic-toast span').to.have.text(/Doodles cannot be changed/);
+      expect('#ic-toast span').to.have.text(/Sketches cannot be edited/);
     });
 
     it('can drag', () => {
