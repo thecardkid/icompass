@@ -215,7 +215,7 @@ describe('forms', () => {
       b.moveToObject('#note3', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-toast');
-      expect('#ic-toast').to.have.text(/Doodles cannot be changed/);
+      expect('#ic-toast').to.have.text(/Sketches cannot be edited/);
       b.click('#ic-toast');
     });
 
