@@ -4,6 +4,8 @@ import { Link } from 'react-router';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 
+import { COLORS } from '../../lib/constants';
+
 export default class HelpFeedback extends Component {
   constructor() {
     super();
@@ -82,6 +84,7 @@ export default class HelpFeedback extends Component {
     return (
       <div id={'ic-help'}>
         <button className={'ic-help-button floating-button'}
+                style={{background: this.state.active ? COLORS.BLUE : ''}}
              onClick={this.toggleMenu}>
           ?
         </button>

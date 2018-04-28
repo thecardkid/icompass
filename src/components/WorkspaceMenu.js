@@ -14,7 +14,7 @@ import ToastSingleton from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-import { EDITING_MODE, MODALS, PROMPTS, REGEX } from '../../lib/constants';
+import { EDITING_MODE, MODALS, PROMPTS, REGEX, COLORS } from '../../lib/constants';
 import Storage from '../utils/Storage';
 
 class WorkspaceMenu extends Component {
@@ -239,6 +239,7 @@ class WorkspaceMenu extends Component {
     return (
       <div id={'ic-workspace-menu'}>
         <button className={'ic-workspace-button floating-button'}
+                style={{background: this.state.active ? COLORS.BLUE : ''}}
               onClick={this.toggleMenu}>
           <i className="material-icons">menu</i>
         </button>
