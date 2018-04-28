@@ -18,6 +18,7 @@ class DoodleForm extends Component {
     this.state = {
       color: props.bg,
       strokes: [],
+      redoStack: [],
     };
     this.socket = Socket.getInstance();
   }
@@ -53,7 +54,7 @@ class DoodleForm extends Component {
       x: x - this.$canvas.offset().left,
       y: y - this.$canvas.offset().top,
     }]);
-    this.setState({ strokes });
+    this.setState({ strokes, redoStack: [] });
   };
 
   strokeTo = (x, y) => {
@@ -88,11 +89,19 @@ class DoodleForm extends Component {
   };
 
   undo = () => {
-    const { strokes } = this.state;
+    const { strokes, redoStack } = this.state;
     if (strokes.length > 0) {
-      strokes.pop();
+      redoStack.push(strokes.pop());
     }
-    this.setState({ strokes });
+    this.setState({ strokes, redoStack });
+  };
+
+  redo = () => {
+    const { strokes, redoStack } = this.state;
+    if (redoStack.length > 0) {
+      strokes.push(redoStack.pop());
+    }
+    this.setState({ strokes, redoStack });
   };
 
   drawCanvas = () => {
@@ -138,7 +147,7 @@ class DoodleForm extends Component {
   };
 
   clearCanvas = () => {
-    this.setState({ strokes: [] });
+    this.setState({ strokes: [], redoStack: [] });
   };
 
   switchText = () => {
@@ -166,6 +175,9 @@ class DoodleForm extends Component {
               <h1 className={'ic-modal-title'}>Create a sketch</h1>
               <div id={'ic-doodle-controls'}>
                 <button name="clear" onClick={this.clearCanvas}>clear</button>
+                <button name="redo" onClick={this.redo}>
+                  <i className="material-icons">redo</i>
+                </button>
                 <button name="undo" onClick={this.undo}>
                   <i className="material-icons">undo</i>
                 </button>
