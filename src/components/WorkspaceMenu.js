@@ -100,7 +100,7 @@ class WorkspaceMenu extends Component {
   };
 
   emailReminder = () => {
-    this.modal.promptForEmail((status, email) => {
+    this.modal.saveViaEmail((status, email) => {
       if (!status) return;
 
       if (REGEX.EMAIL.test(email)) {

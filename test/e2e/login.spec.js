@@ -70,13 +70,15 @@ describe('login', () => {
     });
 
     describe('valid input', () => {
-      beforeAll(() => {
+      it('can create compass and is prompted for email', () => {
         b.setValue('#compass-center', 'topic');
         b.setValue('#username', 'sandbox');
         b.click('input[type=submit]');
         b.waitForVisible('#ic-modal');
 
         expect('#ic-modal-body').to.have.text(/Email Yourself/);
+        expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.equal('enter email or leave blank');
+        expect('#ic-modal-cancel').to.not.be.visible();
         expect('#ic-modal-input').to.be.visible();
       });
 

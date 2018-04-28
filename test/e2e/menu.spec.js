@@ -100,6 +100,8 @@ describe('workspace menu', () => {
         selectMenuOption(actions.email);
         b.waitForVisible('#ic-modal');
         expect('#ic-modal-body').to.have.text(/Email Yourself/);
+        expect('#ic-modal-cancel').to.be.visible();
+        expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.be.empty;
         b.setValue('#ic-modal-input', 'fakeemail');
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast');
