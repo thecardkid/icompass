@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
+import _ from 'underscore';
 
 import * as uiX from '../../actions/ui';
 
@@ -16,6 +17,7 @@ class DoodleForm extends Component {
     super(props);
     this.state = {
       color: props.bg,
+      strokes: [],
     };
     this.socket = Socket.getInstance();
   }
@@ -25,10 +27,9 @@ class DoodleForm extends Component {
   };
 
   componentDidMount() {
-    this.canvas = $('#ic-doodle');
+    this.$canvas = $('#ic-doodle');
     $(document).on('touchstart', this.preventDefaultIfCanvas);
     $(document).on('touchmove', this.preventDefaultIfCanvas);
-    this.setState({ x: [], y: [], drag: [] });
   }
 
   componentWillUnmount() {
@@ -41,25 +42,36 @@ class DoodleForm extends Component {
   }
 
   preventDefaultIfCanvas(e) {
-    if (e.target === document.getElementById('ic-doodle'))
+    if (e.target === document.getElementById('ic-doodle')) {
       e.preventDefault();
+    }
   }
 
-  addClick = (xPos, yPos, evDrag) => {
-    let { x, y, drag } = this.state;
-    x.push(xPos - this.canvas.offset().left);
-    y.push(yPos - this.canvas.offset().top);
-    drag.push(evDrag ? 1 : 0);
-    this.setState({ x, y, drag });
+  beginStroke = (x, y) => {
+    const { strokes } = this.state;
+    strokes.push([{
+      x: x - this.$canvas.offset().left,
+      y: y - this.$canvas.offset().top,
+    }]);
+    this.setState({ strokes });
+  };
+
+  strokeTo = (x, y) => {
+    const { strokes } = this.state;
+    strokes[strokes.length -1].push({
+      x: x - this.$canvas.offset().left,
+      y: y - this.$canvas.offset().top,
+    });
+    this.setState({ strokes });
   };
 
   beginDraw = (e) => {
     paint = true;
-    this.addClick(e.clientX, e.clientY, false);
+    this.beginStroke(e.clientX, e.clientY);
   };
 
   draw = (e) => {
-    if (paint) this.addClick(e.clientX, e.clientY, true);
+    if (paint) this.strokeTo(e.clientX, e.clientY);
   };
 
   stopDraw = () => {
@@ -68,15 +80,15 @@ class DoodleForm extends Component {
 
   beginTouchDraw = (e) => {
     paint = true;
-    this.addClick(e.touches[0].clientX, e.touches[0].clientY, false);
+    this.beginStroke(e.touches[0].clientX, e.touches[0].clientY);
   };
 
   touchDraw = (e) => {
-    if (paint) this.addClick(e.touches[0].clientX, e.touches[0].clientY, true);
+    if (paint) this.strokeTo(e.touches[0].clientX, e.touches[0].clientY);
   };
 
   drawCanvas = () => {
-    if (!this.canvas) return;
+    if (!this.$canvas) return;
 
     const ctx = this.refs.canvas.getContext('2d');
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -84,22 +96,24 @@ class DoodleForm extends Component {
     ctx.lineJoin = 'round';
     ctx.lineWidth = 5;
 
-    let { x, y, drag } = this.state;
+    const { strokes } = this.state;
 
-    for (let i = 0; i < x.length; i++) {
+    _.each(strokes, stroke => {
       ctx.beginPath();
+      ctx.moveTo(stroke[0].x, stroke[0].y);
 
-      if (drag[i] && i) ctx.moveTo(x[i - 1], y[i - 1]);
-      else ctx.moveTo(x[i] - 1, y[i]);
+      _.each(stroke, point => {
+        ctx.lineTo(point.x, point.y);
+        ctx.moveTo(point.x, point.y);
+      });
 
-      ctx.lineTo(x[i], y[i]);
       ctx.closePath();
       ctx.stroke();
-    }
+    });
   };
 
   submit = (isDraft) => () => {
-    if (this.state.x.length === 0) return;
+    if (this.state.strokes.length === 0) return;
     this.socket.emitMetric('note doodle');
     const { x, y } = this.props.info;
     const note = {
@@ -116,7 +130,7 @@ class DoodleForm extends Component {
   };
 
   clearCanvas = () => {
-    this.setState({ x: [], y: [], drag: [] });
+    this.setState({ strokes: [] });
   };
 
   switchText = () => {
