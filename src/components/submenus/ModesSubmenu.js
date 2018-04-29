@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import ModalSingleton from '../utils/Modal';
-import SocketSingleton from '../utils/Socket';
+import ModalSingleton from '../../utils/Modal';
+import SocketSingleton from '../../utils/Socket';
 
-import * as uiX from '../actions/ui';
+import * as uiX from '../../actions/ui';
 
-import { EDITING_MODE } from '../../lib/constants';
+import { EDITING_MODE } from '../../../lib/constants';
 
 class ModesSubmenu extends Component {
   constructor() {

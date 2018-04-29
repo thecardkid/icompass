@@ -124,10 +124,10 @@ class ImageForm extends Component {
   render() {
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
-        <div className="ic-modal ic-form" id="ic-image-form" onClick={this.dontClose}>
-          <div className="ic-modal-contents">
-            <div className="ic-modal-header">
-              <h1 className="ic-modal-title">{this.props.title}</h1>
+        <div className="ic-form" id="ic-image-form" onClick={this.dontClose}>
+          <div className="contents">
+            <div className="header">
+              <h1 className="title">{this.props.title}</h1>
               {this.props.colors && <FormPalette setColor={this.setColor}/>}
             </div>
             <textarea id="ic-form-text"

@@ -1,9 +1,27 @@
 .ic-form {
+  position: absolute;
+  background: var(--modal-bg);
+  color: @dark;
+  text-align: center;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
   width: 350px;
-  z-index: 3;
+  z-index: @formZIndex;
 
-  h1 {
-    width: 60%;
+  .contents {
+    margin: 10px;
+
+    .header {
+      height: 30px;
+
+      h1.title {
+        height: 30px;
+        line-height: 30px;
+        text-align: left;
+        float: left;
+      }
+    }
   }
 
   textarea {
@@ -53,13 +71,11 @@
       i {
         font-size: 21px;
         line-height: 16px;
-        color: @dark;
       }
     }
 
     button[name=nvm] {
       background: none;
-      color: @dark;
     }
 
     button[name=draft] {
@@ -68,7 +84,6 @@
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
       border-radius: 3px;
-      color: @dark;
       margin-left: 5px;
       width: 60px;
       -webkit-box-sizing: border-box;
@@ -79,7 +94,7 @@
 
     button[name=ship] {
       background: @dark;
-      color: @light;
+      color: var(--modal-bg);
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
       border-radius: 3px;

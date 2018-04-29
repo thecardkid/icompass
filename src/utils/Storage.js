@@ -1,6 +1,26 @@
 import _ from 'underscore';
 
 export default {
+  getUserPrefs() {
+    return JSON.parse(localStorage.getItem('prefs')) || {};
+  },
+
+  setUserPrefs(prefs) {
+    localStorage.setItem('prefs', JSON.stringify(prefs));
+  },
+
+  setDarkTheme(value) {
+    const prefs = this.getUserPrefs();
+    prefs.darkTheme = value;
+    this.setUserPrefs(prefs);
+    return value;
+  },
+
+  getDarkTheme() {
+    const prefs = this.getUserPrefs();
+    return prefs.darkTheme || false;
+  },
+
   getWorkspace(editCode) {
     const all = JSON.parse(localStorage.getItem('workspaces')) || {};
     return all[editCode] || {};

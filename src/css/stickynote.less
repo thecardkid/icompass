@@ -4,10 +4,10 @@
     float: left;
     cursor: pointer;
     position: absolute;
-    z-index: 0;
+    z-index: @stickiesZIndex;
 
     button.ic-close-window {
-      z-index: 1;
+      z-index: @stickiesCloseWindowZIndex;
     }
 
     div.contents {
@@ -16,7 +16,9 @@
       display: block;
       max-width: 160px;
       letter-spacing: 0;
-      .boxshadow(3px, 7px, rgba(33, 33, 33, 0.7));
+      -webkit-box-shadow: var(--shadow);
+      -moz-box-shadow: var(--shadow);
+      box-shadow: var(--shadow);
       .wordwrap;
 
       p.text {
@@ -49,7 +51,7 @@
       bottom: -6px;
       right: -5px;
       font-size: 12px;
-      padding: 1px;
+      padding: 1px 4px;
 
       &.on-hover-only {
         display: none;

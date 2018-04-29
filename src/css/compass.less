@@ -2,6 +2,7 @@
   width: 100vw;
   height: 100vh;
   cursor: default;
+  background: var(--app-background);
 
   #note-manager {
     width: 100vw;
@@ -10,15 +11,18 @@
 }
 
 .ic-quadrant {
-  color: #CACACA;
+  color: var(--quadrant-text);
   text-align: center;
   position: absolute;
   cursor: default;
   width: 50vw;
   height: 50vh;
-  z-index: 0;
+  z-index: @quadrantsZIndex;
   opacity: 0;
-  .hasTransition(0.3s);
+  -moz-transition: 0.3s opacity ease-in-out;
+  -o-transition: 0.3s opacity ease-in-out;
+  -webkit-transition: 0.3s opacity ease-in-out;
+  transition: 0.3s opacity ease-in-out;
 
   div {
     margin-top: 23vh;
@@ -52,8 +56,8 @@
 div.ic-compass-label {
   position: absolute;
   display: inline-block;
-  background: white;
-  color: @dark;
+  background: var(--bg);
+  color: var(--standout);
   text-align: center;
   padding: 3px;
   font-size: 12px;
@@ -66,7 +70,7 @@ div.ic-compass-label {
   background: @dark;
   color: @light;
   text-align: center;
-  z-index: -1;
+  z-index: @centerZIndex;
 
   p#first-prompt {
     margin-top: 42px;
@@ -88,7 +92,7 @@ div#ic-visual-toolbar {
   position: absolute;
   background: @dark;
   color: @light;
-  z-index: 3;
+  z-index: @bulkToolbarZIndex;
   cursor: move;
   top: 50px;
   right: 50px;
@@ -131,16 +135,16 @@ div#ic-visual-toolbar {
 #hline {
   width: 100vw;
   height: 2px;
-  background: @dark;
+  z-index: @dividersZIndex;
+  background: var(--structure-bg);
   position: absolute;
-  z-index: -2;
 }
 
 #vline {
   width: 2px;
   height: 100vh;
-  z-index: -2;
-  background: @dark;
+  z-index: @dividersZIndex;
+  background: var(--structure-bg);
   position: absolute;
 }
 
@@ -152,6 +156,6 @@ div#ic-visual-toolbar {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, .7);
-  z-index: 4;
+  background: var(--backdrop);
+  z-index: @backdropZIndex;
 }

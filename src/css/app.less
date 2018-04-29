@@ -7,6 +7,7 @@
 @import "stickynote";
 @import "bookmarklist";
 @import "modal";
+@import "zIndex";
 
 @dosis: 'Dosis', sans-serif;
 @notosans: 'Noto Sans', sans-serif;
@@ -16,8 +17,31 @@
 @light: #EDEDED;
 @blue: #288AFF;
 @yellow: #EDFF4C;
-@twitterBlue: #55ACEE;
 @red: #C21A03;
+
+:root {
+  --structure-bg: @dark;
+  --bg: @light;
+  --standout: @dark;
+  --app-background: none;
+  --quadrant-text: #cacaca;
+  --shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);
+
+  --modal-bg: @light;
+  --backdrop: rgba(0, 0, 0, .7);
+}
+
+.dark-theme {
+  --structure-bg: #686868;
+  --bg: @dark;
+  --standout: @light;
+  --app-background: #232323;
+  --quadrant-text: #555;
+  --shadow: 3px 3px 7px rgba(10, 10, 10, 1);
+
+  --modal-bg: #bbb;
+  --backdrop: rgba(0, 0, 0, .4);
+}
 
 .wordwrap {
   white-space: pre-wrap; // CSS3
@@ -85,22 +109,6 @@ textarea:focus {
   outline: none;
 }
 
-button.ic-button {
-  width: 130px;
-  margin: 10px 5px;
-  height: 30px;
-  font-size: 14px;
-  color: @light;
-  background: @dark;
-  .hasTransition(0.5s);
-  border: 1px solid @dark;
-}
-
-button.ic-button:hover {
-  color: @dark;
-  background: @light;
-}
-
 button.ic-close-window {
   position: absolute;
   background: transparent;
@@ -110,30 +118,6 @@ button.ic-close-window {
   font-size: 25px;
   cursor: pointer;
   color: @light;
-}
-
-div.ic-modal {
-  position: absolute;
-  z-index: 2;
-  background: @light;
-  text-align: center;
-  border-radius: 4px;
-
-  div.ic-modal-contents {
-    margin: 10px;
-
-    div.ic-modal-header {
-      height: 30px;
-
-      h1.ic-modal-title {
-        width: 50%;
-        height: 30px;
-        line-height: 30px;
-        text-align: left;
-        float: left;
-      }
-    }
-  }
 }
 
 div#ic-404 {
@@ -160,7 +144,7 @@ div#ic-toast {
   width: 100%;
   text-align: center;
   top: 20px;
-  z-index: 11; // must be higher than #ic-modal-container
+  z-index: @toastZIndex;
 
   span {
     border-radius: 4px;
