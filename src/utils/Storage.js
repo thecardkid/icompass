@@ -29,7 +29,7 @@ export default {
     }
 
     if (idx >= ws.drafts.length) {
-      return;
+      return ws.drafts;
     }
 
     ws.drafts[idx] = draft;
@@ -43,8 +43,8 @@ export default {
       return;
     }
 
-    if (ws.drafts.length <= idx) {
-      return;
+    if (ws.drafts.length === 0 || ws.drafts.length <= idx) {
+      return ws.drafts;
     }
 
     ws.drafts.splice(idx, 1);

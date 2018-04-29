@@ -27,7 +27,6 @@ const createDraft = (state, action) => {
   note.draft = true;
   note.color = 'grey';
   const drafts = Storage.addDraft(state.editCode, note);
-
   return { ...state, drafts };
 };
 
@@ -66,7 +65,6 @@ const updateSelected = (state, action) => {
   if (action.len > state.selected.length) {
     return { ...state, selected: state.selected.concat([false]) };
   }
-
   return state;
 };
 
@@ -93,6 +91,7 @@ export default (state = defaultState, action) => {
     case 'compactMode':
       return {
         ...defaultState,
+        editCode: state.editCode,
         drafts: [...state.drafts],
       };
 
