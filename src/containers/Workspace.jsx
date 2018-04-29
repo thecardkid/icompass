@@ -28,6 +28,7 @@ import ShareModal from '../components/ShareModal';
 class Workspace extends Component {
   constructor(props) {
     super(props);
+    this.state = { dark: false };
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
 
@@ -118,10 +119,18 @@ class Workspace extends Component {
     };
 
     return (
-      <div>
+      <div className={this.state.dark ? 'dark-theme' : ''}>
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
+        <button onClick={() => {this.setState({ dark: !this.state.dark });}} style={{
+          position: 'absolute',
+          top: '0',
+          right: '0',
+          zIndex: 500,
+        }}>
+          Toggle dark
+        </button>
         <HelpFeedback />
         <WorkspaceMenu />
         <Compass />

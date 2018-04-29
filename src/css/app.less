@@ -17,8 +17,27 @@
 @light: #EDEDED;
 @blue: #288AFF;
 @yellow: #EDFF4C;
-@twitterBlue: #55ACEE;
 @red: #C21A03;
+
+:root {
+  --structure-bg: @dark;
+  --bg: @light;
+  --standout: @dark;
+  --app-background: none;
+  --quadrant-text: #cacaca;
+
+  --sticky-shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);
+}
+
+.dark-theme {
+  --structure-bg: #686868;
+  --bg: @dark;
+  --standout: @light;
+  --app-background: #232323;
+  --quadrant-text: #555;
+
+  --sticky-shadow: 3px 3px 7px rgba(10, 10, 10, 1);
+}
 
 .wordwrap {
   white-space: pre-wrap; // CSS3
@@ -84,22 +103,6 @@ a {
 
 textarea:focus {
   outline: none;
-}
-
-button.ic-button {
-  width: 130px;
-  margin: 10px 5px;
-  height: 30px;
-  font-size: 14px;
-  color: @light;
-  background: @dark;
-  .hasTransition(0.5s);
-  border: 1px solid @dark;
-}
-
-button.ic-button:hover {
-  color: @dark;
-  background: @light;
 }
 
 button.ic-close-window {
