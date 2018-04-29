@@ -1,9 +1,26 @@
 .ic-form {
+  position: absolute;
+  background: @light;
+  text-align: center;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
   width: 350px;
   z-index: @formZIndex;
 
-  h1 {
-    width: 60%;
+  .contents {
+    margin: 10px;
+
+    .header {
+      height: 30px;
+
+      h1.title {
+        height: 30px;
+        line-height: 30px;
+        text-align: left;
+        float: left;
+      }
+    }
   }
 
   textarea {

@@ -169,10 +169,10 @@ class DoodleForm extends Component {
 
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
-        <div className="ic-modal ic-form" id="ic-doodle-form" onClick={this.dontClose}>
-          <div className={'ic-modal-contents'}>
-            <div className={'ic-modal-header'}>
-              <h1 className={'ic-modal-title'}>Create a sketch</h1>
+        <div className="ic-form" id="ic-doodle-form" onClick={this.dontClose}>
+          <div className={'contents'}>
+            <div className={'header'}>
+              <h1 className={'title'}>Create a sketch</h1>
               <div id={'ic-doodle-controls'}>
                 <button name="clear" onClick={this.clearCanvas}>clear</button>
                 <button name="redo" onClick={this.redo}>

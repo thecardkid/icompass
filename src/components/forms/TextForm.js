@@ -152,10 +152,10 @@ class TextForm extends Component {
 
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
-        <div className="ic-modal ic-form" id="ic-note-form" onClick={this.dontClose}>
-          <div className="ic-modal-contents">
-            <div className="ic-modal-header">
-              <h1 className={'ic-modal-title'}>
+        <div className="ic-form" id="ic-note-form" onClick={this.dontClose}>
+          <div className="contents">
+            <div className="header">
+              <h1 className={'title'}>
                 {this.props.title}
                 <span style={spanStyle}> {this.state.charCount}/300</span>
               </h1>
