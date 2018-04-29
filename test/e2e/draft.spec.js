@@ -43,7 +43,7 @@ describe('draft mode', () => {
       b.moveToObject('#note0', 10, 10);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      expect('h1.ic-modal-title').to.have.text(/Edit this draft/);
+      expect('h1.title').to.have.text(/Edit this draft/);
       expect('.ic-form-palette').to.not.be.visible();
     });
 
@@ -74,7 +74,7 @@ describe('draft mode', () => {
         b.moveToObject('#note1', 10, 10);
         b.doDoubleClick();
         b.waitForVisible('#ic-note-form');
-        expect('h1.ic-modal-title').to.have.text(/Edit this note/);
+        expect('h1.title').to.have.text(/Edit this note/);
         expect('button[name=draft]').to.not.be.visible();
       });
 
@@ -122,7 +122,7 @@ describe('draft mode', () => {
       b.moveToObject('div.ic-img', 20, 20);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
-      expect('h1.ic-modal-title').to.have.text(/Edit photo draft/);
+      expect('h1.title').to.have.text(/Edit photo draft/);
       expect('.ic-form-palette').to.not.be.visible();
       expect('#ic-form-text').to.have.text(DOG_PHOTO_LINK);
       expect('button[name=draft]').to.not.be.visible();
