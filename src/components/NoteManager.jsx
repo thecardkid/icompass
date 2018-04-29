@@ -11,11 +11,11 @@ import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
-import { EDITING_MODE, DRAGGABLE_RESTRICTIONS, PROMPTS } from '../../lib/constants';
+import { EDITING_MODE } from '../../lib/constants';
 
 class NoteManager extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.notes = [];
     this.toast = Toast.getInstance();
 
@@ -26,8 +26,13 @@ class NoteManager extends Component {
     });
 
     interact('.draggable').draggable({
-      restrict: DRAGGABLE_RESTRICTIONS,
+      restrict: {
+        restriction: 'parent',
+        endOnly: true,
+        elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
+      },
       autoScroll: true,
+      onstart: this.dragStart,
       onmove: this.dragTarget,
       onend: this.dragEnd,
     });
@@ -36,8 +41,13 @@ class NoteManager extends Component {
   onUpdateNotes = (notes) => {
     this.props.noteX.updateAll(notes);
 
-    if (this.props.visualMode)
+    if (this.props.visualMode) {
       this.props.workspaceX.updateSelected(notes.length);
+    }
+
+    _.each(notes, (note, idx) => {
+      this.setTranslation(document.getElementById(`note${idx}`), 0, 0);
+    });
   };
 
   onDeleteNotes = (deletedIdx) => {
@@ -72,22 +82,79 @@ class NoteManager extends Component {
   }
 
   setTranslation(target, x, y) {
+    const leftPx = target.style.left;
+    const topPx = target.style.top;
+    const left = parseFloat(leftPx.substring(0, leftPx.length - 2));
+    const top = parseFloat(topPx.substring(0, topPx.length - 2));
+
+    const xMax = this.props.ui.vw - left - 20;
+    const xMin = -left;
+    const yMax = this.props.ui.vh - top - 20;
+    const yMin = -top;
+
+    x = Math.min(xMax, Math.max(xMin, x));
+    y = Math.min(yMax, Math.max(yMin, y));
+
     target.style.webkitTransform =
       target.style.transform = `translate(${x}px, ${y}px)`;
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
   }
 
+  dragStart = (e) => {
+    e.target.dragging = true;
+  };
+
+  dragAll = (noteId, { dx, dy }) => {
+    _.each(noteId, id => {
+      const $note = document.getElementById(id);
+      let x = (parseFloat($note.getAttribute('data-x')) || 0) + dx;
+      let y = (parseFloat($note.getAttribute('data-y')) || 0) + dy;
+      this.setTranslation($note, x, y);
+    });
+  };
+
+  getSelectedIds = () => {
+    const selectedIds = {
+      htmlIds: [],
+      mongoIds: [],
+    };
+    _.each(this.props.notes, (n, i) => {
+      if (this.props.workspace.selected[i]) {
+        selectedIds.htmlIds.push(`note${i}`);
+        selectedIds.mongoIds.push(n._id);
+      }
+    });
+    return selectedIds;
+  };
+
   dragTarget = (e) => {
-    if (!this.props.visualMode) {
-      let x = (parseFloat(e.target.getAttribute('data-x')) || 0) + e.dx;
-      let y = (parseFloat(e.target.getAttribute('data-y')) || 0) + e.dy;
-      this.setTranslation(e.target, x, y);
+    if (this.props.visualMode) {
+      const noteIndex = e.target.id.substring(4);
+      if (!this.props.workspace.selected[noteIndex]) return;
+
+      this.dragAll(this.getSelectedIds().htmlIds, e);
+      return;
     }
+
+    this.dragAll([e.target.id], e);
+  };
+
+  bulkDrag = (ids, { dx, dy }) => {
+    dx /= this.props.ui.vw;
+    dy /= this.props.ui.vh;
+    this.socket.emitWorkspace('bulk drag notes', ids, { dx, dy });
   };
 
   dragEnd = (e) => {
-    if (this.props.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+    e.target.doneDrag = true;
+    if (this.props.visualMode) {
+      const noteIndex = e.target.id.substring(4);
+      if (!this.props.workspace.selected[noteIndex]) return;
+
+      this.bulkDrag(this.getSelectedIds().mongoIds, e);
+      return;
+    }
 
     this.setTranslation(e.target, 0, 0);
 
