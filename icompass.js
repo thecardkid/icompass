@@ -4,6 +4,7 @@ let helmet = require('helmet');
 let path = require('path');
 
 let logger = require('./lib/logger.js');
+let routes = require('./routes/routes.js');
 
 let app = express();
 let db;
@@ -23,6 +24,8 @@ app.use(helmet({
     setOnOldIE: true,
   },
 }));
+
+app.get('/api/v1/edit', routes.getByEditCode);
 
 app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
