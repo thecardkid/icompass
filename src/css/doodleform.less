@@ -8,18 +8,25 @@ div#ic-doodle-form {
       text-align: left;
     }
 
-    button[name=clear] {
-      float: right;
-      font-size: 14px;
-      padding: 5px;
-      min-width: 60px;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
+    div#ic-doodle-controls {
+      button {
+        float: right;
+        margin-left: 5px;
+        font-size: 14px;
+        padding: 5px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        height: 27px;
+
+        i {
+          font-size: 17px;
+        }
+      }
     }
   }
 
-  canvas {
+  canvas#ic-doodle {
     width: 100%;
   }
 

@@ -46,6 +46,8 @@ class WorkspaceMenu extends Component {
   _handleShortcuts = (e) => {
     let shortcuts = this.shortcuts;
 
+    if (e.metaKey) return;
+
     if (e.shiftKey) shortcuts = this.shortcuts.shift;
 
     if (_.has(shortcuts, e.which)) {

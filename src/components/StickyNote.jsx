@@ -144,6 +144,19 @@ class StickyNote extends Component {
   };
 
   clickNote = (ev) => {
+    if (ev.target.parentElement &&
+      ev.target.parentElement.parentElement) {
+      if (ev.target.parentElement.parentElement.doneDrag) {
+        ev.target.parentElement.parentElement.dragging = false;
+        ev.target.parentElement.parentElement.doneDrag = false;
+        return;
+      }
+
+      if (ev.target.parentElement.parentElement.dragging) {
+        return;
+      }
+    }
+
     if (!this.visualMode && ev.shiftKey) {
       if (this.props.note.draft) {
         return this.toast.warn('Cannot enter bulk mode by selecting a draft');
