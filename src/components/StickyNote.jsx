@@ -207,7 +207,8 @@ class StickyNote extends Component {
       style = {
         left: n.x * this.props.ui.vw,
         top: n.y * this.props.ui.vh,
-        zIndex: i === this.props.ui.focusedNote ? 1 : 0,
+        // from src/css/zIndex.less
+        zIndex: i === this.props.ui.focusedNote ? 3 : 2,
       };
 
     let sel = this.props.workspace.selected;

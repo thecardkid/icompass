@@ -7,6 +7,7 @@
 @import "stickynote";
 @import "bookmarklist";
 @import "modal";
+@import "zIndex";
 
 @dosis: 'Dosis', sans-serif;
 @notosans: 'Noto Sans', sans-serif;
@@ -114,7 +115,6 @@ button.ic-close-window {
 
 div.ic-modal {
   position: absolute;
-  z-index: 2;
   background: @light;
   text-align: center;
   border-radius: 4px;
@@ -160,7 +160,7 @@ div#ic-toast {
   width: 100%;
   text-align: center;
   top: 20px;
-  z-index: 11; // must be higher than #ic-modal-container
+  z-index: @toastZIndex;
 
   span {
     border-radius: 4px;
