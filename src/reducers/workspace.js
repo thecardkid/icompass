@@ -1,8 +1,11 @@
 import _ from 'underscore';
 
+import Storage from '../utils/Storage';
+
 const defaultState = {
   selected: [],
   drafts: [],
+  editCode: null,
   color: null, bold: null, italic: null, underline: null,
 };
 
@@ -23,29 +26,23 @@ const createDraft = (state, action) => {
   let note = Object.assign({}, action.note);
   note.draft = true;
   note.color = 'grey';
+  const drafts = Storage.addDraft(state.editCode, note);
 
-  return {
-    ...state,
-    drafts: state.drafts.concat([note]),
-  };
+  return { ...state, drafts };
 };
 
 const dragDraft = (state, action) => {
   let { idx, x, y } = action;
   let n = state.drafts[idx];
   let dragged = Object.assign({}, n, { x, y });
-  let drafts = state.drafts.slice(0, idx)
-    .concat(dragged)
-    .concat(state.drafts.slice(idx + 1));
+  const drafts = Storage.setDraft(state.editCode, idx, dragged);
   return { ...state, drafts };
 };
 
 const editDraft = (state, action) => {
   let { idx, updated } = action;
   let n = Object.assign({}, state.drafts[idx], updated);
-  let drafts = state.drafts.slice(0, idx)
-    .concat(n)
-    .concat(state.drafts.slice(idx + 1));
+  const drafts = Storage.setDraft(state.editCode, idx, n);
   return { ...state, drafts };
 };
 
@@ -55,11 +52,8 @@ const createDoodleDraft = (state, action) => {
     draft: true,
     color: 'grey',
   };
-
-  return {
-    ...state,
-    drafts: state.drafts.concat(note),
-  };
+  const drafts = Storage.addDraft(state.editCode, note);
+  return { ...state, drafts };
 };
 
 /*
@@ -77,8 +71,20 @@ const updateSelected = (state, action) => {
 };
 
 const undraft = (state, action) => {
-  let drafts = _.filter(state.drafts, (e, i) => i !== action.idx);
+  let drafts = Storage.removeDraft(state.editCode, action.idx);
   return { ...state, drafts };
+};
+
+const setEditCode = (state, action) => {
+  const { editCode } = action;
+  if (editCode == null) return state;
+  const drafts = Storage.getDrafts(editCode);
+
+  return {
+    ...state,
+    editCode,
+    drafts,
+  };
 };
 
 export default (state = defaultState, action) => {
@@ -120,6 +126,9 @@ export default (state = defaultState, action) => {
 
     case 'removeNotesIfSelected':
       return removeNotesIfSelected(state, action);
+
+    case 'setEditCode':
+      return setEditCode(state, action);
 
     case 'createDraft':
       return createDraft(state, action);
