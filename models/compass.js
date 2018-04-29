@@ -33,6 +33,7 @@ let compassSchema = mongoose.Schema({
     isImage: Boolean,
     x: Number,
     y: Number,
+    upvotes: Number,
   }],
 });
 
@@ -89,6 +90,25 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
 
     c.save(function(err, updatedCompass) {
       if (err) logger.error('Could not update note in compass', id, updatedNote, err);
+      cb(updatedCompass);
+    });
+  });
+};
+
+compassSchema.statics.plusOneNote = function(id, noteId, cb) {
+  this.findOne({ _id: id }, function(err, c) {
+    if (err) logger.error('Could not find compass to update note', id, noteId, err);
+
+    let note;
+    for (let i = 0; i < c.notes.length; i++) {
+      note = c.notes[i];
+      if (note._id.toString() === noteId) {
+        note.upvotes = (note.upvotes || 0) + 1;
+      }
+    }
+
+    c.save(function(err, updatedCompass) {
+      if (err) logger.error('Could not update note in compass', id, noteId, err);
       cb(updatedCompass);
     });
   });

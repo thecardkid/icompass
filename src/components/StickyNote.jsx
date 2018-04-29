@@ -65,6 +65,10 @@ class StickyNote extends Component {
     this.props.submitDraft(this.props.note, this.props.i);
   };
 
+  upvote = () => {
+    this.props.socket.emitWorkspace('+1 note', this.props.note._id);
+  };
+
   getTooltip(n) {
     if (n.draft) {
       return (
@@ -73,7 +77,17 @@ class StickyNote extends Component {
         </button>
       );
     } else {
-      return <p className="ic-tooltip">{n.user}</p>;
+      let upvoteButtonClass = 'ic-upvote';
+      if (!n.upvotes) {
+        upvoteButtonClass += ' on-hover-only';
+      }
+
+      return (
+        <div>
+          <p className="ic-tooltip">{n.user}</p>
+          <p className={upvoteButtonClass} onClick={this.upvote}>+{n.upvotes || 1}</p>
+        </div>
+      );
     }
   }
 
@@ -125,7 +139,9 @@ class StickyNote extends Component {
     }
   };
 
-  edit = () => {
+  edit = (ev) => {
+    if (ev.target.className === 'ic-upvote') return;
+
     if (this.props.note.doodle) {
       return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
     }
