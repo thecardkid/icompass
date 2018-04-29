@@ -42,6 +42,20 @@
       padding: 1px;
     }
 
+    p.ic-upvote {
+      position: absolute;
+      color: @dark;
+      background: @light;
+      bottom: -6px;
+      right: -5px;
+      font-size: 12px;
+      padding: 1px;
+
+      &.on-hover-only {
+        display: none;
+      }
+    }
+
     button.ic-tooltip {
       display: block;
       letter-spacing: 0;
@@ -61,6 +75,10 @@
   }
 
   div.ic-sticky-note:hover button.ic-close-window {
+    display: block;
+  }
+
+  div.ic-sticky-note:hover p.on-hover-only {
     display: block;
   }
 }
