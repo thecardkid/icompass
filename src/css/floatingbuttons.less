@@ -123,6 +123,63 @@ div.ic-menu-item {
     font-family: @dosis;
   }
 
+  .switch {
+    position: relative;
+    float: right;
+    display: inline-block;
+    width: 25px;
+    height: 11px;
+    margin-top: 8px;
+
+    input[type=checkbox] {
+      display: none;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(18px);
+      -ms-transform: translateX(18px);
+      transform: translateX(18px);
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+      -webkit-border-radius: 34px;
+      -moz-border-radius: 34px;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 15px;
+      width: 15px;
+      left: -4px;
+      bottom: -2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+    }
+  }
+
   span.ic-shortcut {
     font-family: @inconsolata;
     float: right;

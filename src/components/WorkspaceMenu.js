@@ -1,11 +1,12 @@
+import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import ModesSubmenu from './ModesSubmenu';
-import NotesSubmenu from './NotesSubmenu';
+import ModesSubmenu from './submenus/ModesSubmenu';
+import NotesSubmenu from './submenus/NotesSubmenu';
 import ShortcutManager from './ShortcutManager';
 
 import ModalSingleton from '../utils/Modal';
@@ -22,12 +23,14 @@ class WorkspaceMenu extends Component {
     super(props);
     this.state = {
       active: false,
+      darkTheme: Storage.getDarkTheme(),
       submenus: {
         notes: false,
         modes: false,
         users: false,
       },
     };
+
     this.shortcuts = {
       68: props.uiX.showDoodle,
       73: props.uiX.showImage,
@@ -174,6 +177,11 @@ class WorkspaceMenu extends Component {
     );
   };
 
+  toggleDarkTheme = (e) => {
+    const darkTheme = Storage.setDarkTheme(e.target.checked);
+    this.setState({ darkTheme });
+  };
+
   renderMenu = () => {
     const { notes, modes, users } = this.state.submenus;
 
@@ -183,6 +191,15 @@ class WorkspaceMenu extends Component {
           <div className={'ic-menu-item'} onClick={this.openNewWorkspace}>
             New Workspace
           </div>
+          <div className={'ic-menu-item'}>
+            Dark Theme
+            <label className={'switch'}>
+              <input type={'checkbox'} onChange={this.toggleDarkTheme} checked={this.state.darkTheme}/>
+              <span className={'slider'} />
+            </label>
+          </div>
+        </section>
+        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.triggerEmailModal}>
             Save via Email
           </div>
@@ -238,6 +255,14 @@ class WorkspaceMenu extends Component {
   };
 
   render() {
+    if (this.state.darkTheme) {
+      $('#container').addClass('dark-theme');
+      $('#ic-modal-container').addClass('dark-theme');
+    } else {
+      $('#container').removeClass('dark-theme');
+      $('#ic-modal-container').removeClass('dark-theme');
+    }
+
     return (
       <div id={'ic-workspace-menu'}>
         <button className={'ic-workspace-button floating-button'}
