@@ -51,6 +51,13 @@ export const editDraft = (updated, idx) => {
   };
 };
 
+export const setEditCode = (editCode) => {
+  return {
+    type: 'setEditCode',
+    editCode,
+  };
+};
+
 export const createDoodleDraft = (note) => {
   return {
     type: 'createDoodleDraft',

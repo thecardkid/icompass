@@ -17,7 +17,7 @@ import HelpFeedback from '../components/HelpFeedback';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket.js';
+import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 
 import { PROMPTS, EDITING_MODE, REGEX } from '../../lib/constants';
@@ -60,6 +60,7 @@ class Workspace extends Component {
 
     this.props.compassActions.set(data.compass, data.viewOnly);
     this.props.noteActions.updateAll(data.compass.notes);
+    this.props.workspaceActions.setEditCode(data.compass.editCode);
     this.props.userActions.me(data.username);
   };
 

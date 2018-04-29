@@ -182,8 +182,15 @@ describe('draft mode', () => {
     });
   });
 
+  it('drafts are saved in local storage', () => {
+    b.refresh().pause(5000);
+    b.waitForVisible('.ic-sticky-note');
+    expect('.ic-sticky-note').to.have.count(5);
+    expect('.draft').to.have.count(3);
+  });
+
   describe('submit drafts', () => {
-    it('submit #note0', () => {
+    it('submit text note', () => {
       b.click('#note0 div.contents button.submit');
       b.pause(100);
       expect('.ic-sticky-note').to.have.count(5);
@@ -191,8 +198,8 @@ describe('draft mode', () => {
       expect('.ic-img').to.have.count(2);
     });
 
-    it('submit #note1', () => {
-      b.click('#note1 div.contents button.submit');
+    it('submit image note', () => {
+      b.click('#note0 div.contents button.submit');
       b.pause(100);
       expect('.ic-sticky-note').to.have.count(5);
       expect('.draft').to.have.count(1);

@@ -1,6 +1,62 @@
 import _ from 'underscore';
 
 export default {
+  getWorkspace(editCode) {
+    const all = JSON.parse(localStorage.getItem('workspaces')) || {};
+    return all[editCode] || {};
+  },
+
+  setWorkspace(editCode, ws) {
+    const all = JSON.parse(localStorage.getItem('workspaces')) || {};
+    all[editCode] = ws;
+    localStorage.setItem('workspaces', JSON.stringify(all));
+  },
+
+  addDraft(editCode, draft) {
+    const ws = this.getWorkspace(editCode);
+    if (!_.has(ws, 'drafts')) {
+      ws.drafts = [];
+    }
+    ws.drafts.push(draft);
+    this.setWorkspace(editCode, ws);
+    return ws.drafts;
+  },
+
+  setDraft(editCode, idx, draft) {
+    const ws = this.getWorkspace(editCode);
+    if (!_.has(ws, 'drafts')) {
+      return;
+    }
+
+    if (idx >= ws.drafts.length) {
+      return ws.drafts;
+    }
+
+    ws.drafts[idx] = draft;
+    this.setWorkspace(editCode, ws);
+    return ws.drafts;
+  },
+
+  removeDraft(editCode, idx) {
+    const ws = this.getWorkspace(editCode);
+    if (!_.has(ws, 'drafts')) {
+      return;
+    }
+
+    if (ws.drafts.length === 0 || ws.drafts.length <= idx) {
+      return ws.drafts;
+    }
+
+    ws.drafts.splice(idx, 1);
+    this.setWorkspace(editCode, ws);
+    return ws.drafts;
+  },
+
+  getDrafts(editCode) {
+    const ws = this.getWorkspace(editCode);
+    return ws.drafts || [];
+  },
+
   getBookmarks() {
     return JSON.parse(localStorage.getItem('bookmarks')) || [];
   },
