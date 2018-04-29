@@ -14,11 +14,12 @@ const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
 
 const actions = {
   newWorkspace: 0,
-  email: 1,
-  bookmark: 2,
-  share: 3,
-  logout: 7,
-  deleteWorkspace: 8,
+  darkTheme: 1,
+  email: 2,
+  bookmark: 3,
+  share: 4,
+  logout: 8,
+  deleteWorkspace: 9,
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
@@ -95,6 +96,36 @@ describe('workspace menu', () => {
   });
 
   describe('main menu', () => {
+    describe('dark theme', () => {
+      it('can turn on', () => {
+        b.click('.ic-workspace-button');
+        b.waitForVisible('div.ic-workspace-menu');
+        b.click('span.slider');
+        b.pause(200);
+        expect('.dark-theme').to.have.count(2);
+      });
+
+      it('saves in local storage', () => {
+        b.refresh();
+        b.waitForVisible('#compass');
+        expect('.dark-theme').to.have.count(2);
+      });
+
+      it('can turn off', () => {
+        b.click('.ic-workspace-button');
+        b.waitForVisible('div.ic-workspace-menu');
+        b.click('span.slider');
+        b.pause(200);
+        expect('.dark-theme').to.have.count(0);
+      });
+
+      it('saves in local storage again', () => {
+        b.refresh();
+        b.waitForVisible('#compass');
+        expect('.dark-theme').to.have.count(0);
+      });
+    });
+
     describe('email reminder', () => {
       it('wrong email format displays error message', () => {
         selectMenuOption(actions.email);
