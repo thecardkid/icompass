@@ -140,6 +140,7 @@ class Workspace extends Component {
                     close={this.props.uiActions.hideShareModal}
                     compass={this.props.compass}
         />
+        <div id={'ic-modal-container'} />
       </div>
     );
   }

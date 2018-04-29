@@ -13,10 +13,12 @@ div#ic-modal-container {
   div#ic-modal {
     width: 350px;
     padding: 10px 20px;
-    background: white;
+    background: var(--modal-bg);
     margin: 100px auto 0;
     border-radius: 2px;
-    .boxshadow(3px, 7px, rgba(33, 33, 33, 0.7));
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    box-shadow: var(--shadow);
 
     div#ic-modal-body {
       font-size: 18px;
@@ -75,13 +77,13 @@ div#ic-modal-container {
 }
 
 div.ic-share {
-  background: @light;
+  background: var(--modal-bg);
   position: absolute;
   font-family: @notosans;
   width: 400px;
 
   div.contents {
-    margin: 15px 25px 30px !important;
+    margin: 25px 25px 30px !important;
 
     div.header {
       h1.title {
@@ -91,7 +93,7 @@ div.ic-share {
 
       button.ic-close-window {
         color: #343434;
-        top: 10px;
+        top: 15px;
         right: 11px;
         font-family: inherit;
         font-weight: bold;
