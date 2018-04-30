@@ -25,6 +25,8 @@ app.use(helmet({
   },
 }));
 
+app.use(logger.api);
+
 app.get('/api/v1/edit', routes.getByEditCode);
 
 app.get('*', function(request, response) {
@@ -48,4 +50,4 @@ function cleanup() {
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
 
-export default app;
+module.exports = app;
