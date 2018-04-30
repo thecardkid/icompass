@@ -13,15 +13,13 @@ img.ic-background {
 }
 
 div#ic-front-container {
-  width: 100vw;
-  height: 100vh;
   font-family: @notosans;
   position: absolute;
   color: white;
+  margin-left: 300px;
+  margin-top: 145px;
 
   div#message {
-    margin-left: 300px;
-    margin-top: 145px;
     width: 700px;
 
     h1 {
@@ -37,8 +35,8 @@ div#ic-front-container {
   }
 
   div#get-started-form {
-    margin-left: 300px;
     margin-top: 30px;
+    color: white;
 
     input {
       margin: 5px 0 10px;
@@ -50,17 +48,40 @@ div#ic-front-container {
       -webkit-border-radius: 5px;
       -moz-border-radius: 5px;
       border-radius: 5px;
-      color: white;
+      color: inherit;
     }
 
-    input[type=submit] {
+    button[type=submit] {
+      color: inherit;
+      font-size: 15px;
+      font-family: inherit;
       margin-top: 30px;
+      padding: 10px 10px 10px 15px;
+      text-align: left;
       width: 150px;
-      background-color: rgba(40, 138, 255, 0.9);
+      background-color: rgba(40, 138, 255, 0.8);
       -webkit-border-radius: 0;
       -moz-border-radius: 0;
       border-radius: 0;
+      .hasTransition(0.3s);
+
+      i {
+        float: right;
+        margin-top: -2px;
+        margin-right: 10px;
+      }
     }
+
+    button:hover {
+      width: 200px;
+      background-color: rgba(40, 138, 255, 1);
+    }
+  }
+
+  a.ic-guide {
+    margin-top: 50px;
+    color: white;
+    display: block;
   }
 }
 
