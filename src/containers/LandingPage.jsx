@@ -114,7 +114,7 @@ class LandingPage extends Component {
         </Tappable>
         <img src={'https://image.ibb.co/k5TBWx/icompass_Artboard_1_4x_8.png'} className={'ic-background'} style={this.sizeImage()}/>
         {/*<BookmarkList start={this.start}/>*/}
-        <div id={'ic-front-container'}>
+        <div id={'ic-landing-container'}>
           <div id={'message'}>
             <h1>Innovators' Compass</h1>
             <h2>Powerful questions, and space to explore them, to make anything better.</h2>
@@ -125,7 +125,7 @@ class LandingPage extends Component {
               <input id="compass-center"
                      ref="topic"
                      required />
-              <p>Your name</p>
+              <p>Your first name</p>
               <input id="username"
                      ref="username"
                      maxLength={15}
