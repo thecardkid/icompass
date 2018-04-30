@@ -2,7 +2,7 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import Tappable from 'react-tappable/lib/Tappable';
+// import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 
 import * as uiX from '../actions/ui';
@@ -192,39 +192,46 @@ class LandingPage extends Component {
   };
 
   render() {
-    const active = this.state.formType === FORM_TYPE.MAKE;
+    // const active = this.state.formType === FORM_TYPE.MAKE;
 
     return (
       <div>
+        <img src={'https://image.ibb.co/k5TBWx/icompass_Artboard_1_4x_8.png'} className={'ic-background'}/>
         <BookmarkList start={this.start}/>
-        <div id="ic-landing-container" style={{ width: this.props.ui.vw - 200 }}>
-          <Tappable onTap={this.toast.clear}>
-            <div id="ic-toast" onClick={this.toast.clear} />
-          </Tappable>
-          <div id="ic-landing">
-            <h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to
-              make anything better</h1>
-            <a href={'https://youtu.be/3IbxFHQ5Dxo'} className={'ic-guide'}>
-              First-timer? Watch this short two-minute video!
-            </a>
-            <div className="form section">
-              <div id="header">
-                <div className={active ? 'active' : ''}
-                     name="make"
-                     onClick={this.setFormType(FORM_TYPE.MAKE)}>
-                  create workspace
-                </div>
-                <div className={active ? '' : 'active'}
-                     name="find"
-                     onClick={this.setFormType(FORM_TYPE.FIND)}>
-                  find workspace
-                </div>
-              </div>
-              {this.renderForm()}
-            </div>
-            {this.renderFetchResult()}
+        <div id={'ic-front-container'}>
+          <div id={'message'}>
+            <h1>Welcome to Innovators' Compass</h1>
+            <h2>Powerful questions, and space to explore them, to make anything better</h2>
           </div>
         </div>
+        {/*<div id="ic-landing-container" style={{ width: this.props.ui.vw - 200 }}>*/}
+          {/*<Tappable onTap={this.toast.clear}>*/}
+            {/*<div id="ic-toast" onClick={this.toast.clear} />*/}
+          {/*</Tappable>*/}
+          {/*<div id="ic-landing">*/}
+            {/*<h1 id="ic-welcome">Welcome to Innovators' Compass!<br/> Powerful questions, and space to explore them, to*/}
+              {/*make anything better</h1>*/}
+            {/*<a href={'https://youtu.be/3IbxFHQ5Dxo'} className={'ic-guide'}>*/}
+              {/*First-timer? Watch this short two-minute video!*/}
+            {/*</a>*/}
+            {/*<div className="form section">*/}
+              {/*<div id="header">*/}
+                {/*<div className={active ? 'active' : ''}*/}
+                     {/*name="make"*/}
+                     {/*onClick={this.setFormType(FORM_TYPE.MAKE)}>*/}
+                  {/*create workspace*/}
+                {/*</div>*/}
+                {/*<div className={active ? '' : 'active'}*/}
+                     {/*name="find"*/}
+                     {/*onClick={this.setFormType(FORM_TYPE.FIND)}>*/}
+                  {/*find workspace*/}
+                {/*</div>*/}
+              {/*</div>*/}
+              {/*{this.renderForm()}*/}
+            {/*</div>*/}
+            {/*{this.renderFetchResult()}*/}
+          {/*</div>*/}
+        {/*</div>*/}
       </div>
     );
   }
