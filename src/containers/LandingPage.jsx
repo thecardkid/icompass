@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import * as uiX from '../actions/ui';
 
-import BookmarkList from '../components/BookmarkList.jsx';
+// import BookmarkList from '../components/BookmarkList.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
@@ -191,17 +191,51 @@ class LandingPage extends Component {
       return this.notifyPrivileges(this.state.data.viewOnly);
   };
 
+  sizeImage() {
+    const r = 1.9174434087882823;
+    const { vw, vh } = this.props.ui;
+    const screenRatio = vw / vh;
+
+    if (screenRatio <= r) {
+      return {
+        width: r * vh,
+        height: vh,
+      };
+    } else {
+      return {
+        width: vw,
+        height: vw / r,
+      };
+    }
+  }
+
   render() {
     // const active = this.state.formType === FORM_TYPE.MAKE;
 
     return (
       <div>
-        <img src={'https://image.ibb.co/k5TBWx/icompass_Artboard_1_4x_8.png'} className={'ic-background'}/>
-        <BookmarkList start={this.start}/>
+        <img src={'https://image.ibb.co/k5TBWx/icompass_Artboard_1_4x_8.png'} className={'ic-background'} style={this.sizeImage()}/>
+        {/*<BookmarkList start={this.start}/>*/}
         <div id={'ic-front-container'}>
           <div id={'message'}>
-            <h1>Welcome to Innovators' Compass</h1>
-            <h2>Powerful questions, and space to explore them, to make anything better</h2>
+            <h1>Innovators' Compass</h1>
+            <h2>Powerful questions, and space to explore them, to make anything better.</h2>
+          </div>
+          <div id={'get-started-form'}>
+            <form onSubmit={this.validateFindInput}>
+              <p>What are you designing <u>about</u>?</p>
+              <input id="compass-center"
+                     ref="topic"
+                     required />
+              <p>Your name</p>
+              <input id="username"
+                     ref="username"
+                     maxLength={15}
+                     required />
+              <br/>
+              <input type="submit"
+                     value="Get started" />
+            </form>
           </div>
         </div>
         {/*<div id="ic-landing-container" style={{ width: this.props.ui.vw - 200 }}>*/}
