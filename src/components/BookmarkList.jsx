@@ -18,7 +18,7 @@ export default class BookmarkList extends Component {
     this.state = {
       bookmarks: b,
       show: new Array(b.length).fill(false),
-      showBookmarks: true,
+      showBookmarks: Storage.getShowBookmarks(),
     };
 
     this.renderBookmark = this.renderBookmark.bind(this);
@@ -87,7 +87,8 @@ export default class BookmarkList extends Component {
   }
 
   toggleBookmarks = () => {
-    this.setState({ showBookmarks: !this.state.showBookmarks });
+    const showBookmarks = Storage.setShowBookmarks(!this.state.showBookmarks);
+    this.setState({ showBookmarks });
   };
 
   render() {

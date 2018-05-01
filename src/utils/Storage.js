@@ -21,6 +21,18 @@ export default {
     return prefs.darkTheme || false;
   },
 
+  setShowBookmarks(value) {
+    const prefs = this.getUserPrefs();
+    prefs.showBookmarks = value;
+    this.setUserPrefs(prefs);
+    return value;
+  },
+
+  getShowBookmarks() {
+    const prefs = this.getUserPrefs();
+    return prefs.showBookmarks == null ? false : prefs.showBookmarks;
+  },
+
   getWorkspace(editCode) {
     const all = JSON.parse(localStorage.getItem('workspaces')) || {};
     return all[editCode] || {};
