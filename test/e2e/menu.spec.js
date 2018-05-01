@@ -224,6 +224,19 @@ describe('workspace menu', () => {
         b.click('#ic-modal-confirm');
         expect('div.ic-saved').to.not.be.there();
       });
+
+      it('can hide bookmarks', () => {
+        b.click('#bookmark-button');
+        b.pause(500);
+        expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('-200px');
+        expect('#bookmark-button').to.be.visible();
+      });
+
+      it('can unhide bookmarks', () => {
+        b.click('#bookmark-button');
+        b.pause(500);
+        expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('0px');
+      });
     });
   });
 });
