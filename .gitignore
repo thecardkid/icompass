@@ -11,6 +11,9 @@ bundle.js.gz
 main.css
 main.css.map
 
+public/*.png
+public/*.jpg
+
 .ctagsignore
 tags
 mocha.opts

@@ -66,6 +66,11 @@ module.exports = {
           { loader: 'less-loader' },
         ],
       },
+      {
+        test: /\.(png|jpg|jpeg|mp4)$/,
+        include: [path.join(__dirname, '../../public/static')],
+        loader: 'file-loader',
+      },
     ],
   },
   stats: {
