@@ -26,6 +26,7 @@ jobs:
     script:
     - npm run lint
     - npm run mocha
+    - npm run api
   - stage: end to end tests
     before_install:
     - docker-compose --version
