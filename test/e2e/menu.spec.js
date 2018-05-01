@@ -193,36 +193,72 @@ describe('workspace menu', () => {
         b.click('#ic-toast span');
       });
 
-      it('logout button, as well as bookmark has correct info', () => {
+      it('logout button', () => {
         selectMenuOption(actions.logout);
-        b.waitForVisible('div.ic-saved');
         expect(b.getUrl()).to.equal('http://localhost:8080/');
-        b.click('div.ic-saved a');
-        b.waitForVisible('#compass');
-        expect(b.getUrl()).to.contain('http://localhost:8080/compass/edit');
-        b.back();
-        b.waitForVisible('#ic-landing');
-        b.click('div.ic-saved #arrow');
-        b.pause(100);
-        expect('div.ic-saved a').to.have.text('My bookmark');
-        expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
       });
 
-      it('can edit bookmark', () => {
-        b.click('button.edit');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
-        b.setValue('#ic-modal-input', 'Changed name');
-        b.click('#ic-modal-confirm');
-        expect('div.ic-saved a').to.have.text('Changed name');
-      });
+      describe('bookmarks', () => {
+        it('can unhide bookmarks', () => {
+          b.click('#bookmark-button');
+          b.pause(500);
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('0px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('200px');
+        });
 
-      it('can remove bookmark', () => {
-        b.click('button.remove');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
-        b.click('#ic-modal-confirm');
-        expect('div.ic-saved').to.not.be.there();
+        it('remembers user showed bookmarks', () => {
+          b.refresh();
+          b.waitForVisible('#bookmark-button');
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('0px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('200px');
+        });
+
+        it('bookmark has correct info', () => {
+          b.click('div.ic-saved #arrow');
+          b.pause(100);
+          expect('div.ic-saved a').to.have.text('My bookmark');
+          expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
+        });
+
+        it('bookmark leads to correct workspace', () => {
+          b.click('div.ic-saved a');
+          b.waitForVisible('#compass');
+          expect(b.getUrl()).to.contain('http://localhost:8080/compass/edit');
+          b.back();
+          b.click('div.ic-saved #arrow');
+          b.pause(500);
+        });
+
+        it('can edit bookmark', () => {
+          b.click('button.edit');
+          b.waitForVisible('#ic-modal');
+          expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
+          b.setValue('#ic-modal-input', 'Changed name');
+          b.click('#ic-modal-confirm');
+          expect('div.ic-saved a').to.have.text('Changed name');
+        });
+
+        it('can remove bookmark', () => {
+          b.click('button.remove');
+          b.waitForVisible('#ic-modal');
+          expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
+          b.click('#ic-modal-confirm');
+          expect('div.ic-saved').to.not.be.there();
+        });
+
+        it('can hide bookmarks', () => {
+          b.click('#bookmark-button');
+          b.pause(500);
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('-200px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('0px');
+        });
+
+        it('remembers user hid bookmarks', () => {
+          b.refresh();
+          b.waitForVisible('#bookmark-button');
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('-200px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('0px');
+        });
       });
     });
   });
