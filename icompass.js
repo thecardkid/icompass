@@ -27,7 +27,7 @@ app.use(helmet({
 
 app.use(logger.api);
 
-app.get('/api/v1/edit', routes.getByEditCode);
+app.use('/api/v1', routes);
 
 app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
