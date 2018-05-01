@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import * as uiX from '../actions/ui';
 
-// import BookmarkList from '../components/BookmarkList.jsx';
+import BookmarkList from '../components/BookmarkList.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
@@ -15,14 +15,11 @@ import Toast from '../utils/Toast';
 
 import { ERROR_MSG, REGEX } from '../../lib/constants';
 
-const FORM_TYPE = { MAKE: 0, FIND: 1 };
-
 class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
-    this.state = { formType: FORM_TYPE.MAKE };
 
     this.socket = Socket.getInstance();
     this.socket.subscribe({
@@ -108,12 +105,12 @@ class LandingPage extends Component {
 
   render() {
     return (
-      <div>
+      <div id={'ic-landing'}>
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
         <img src={'https://image.ibb.co/k5TBWx/icompass_Artboard_1_4x_8.png'} className={'ic-background'} style={this.sizeImage()}/>
-        {/*<BookmarkList start={this.start}/>*/}
+        <BookmarkList start={this.start}/>
         <div id={'ic-landing-container'}>
           <div id={'message'}>
             <h1>Innovators' Compass</h1>
