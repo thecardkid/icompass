@@ -14,6 +14,7 @@ import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 import { PROMPTS, EDITING_MODE } from '../../lib/constants';
+import SelectArea from './SelectArea';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -25,6 +26,8 @@ const QUADRANTS = [
 class Compass extends Component {
   constructor(props) {
     super(props);
+
+    this.state = { select: false };
 
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
@@ -70,11 +73,18 @@ class Compass extends Component {
     clearTimeout(this.longPress);
   };
 
+  onMouseDown = (ev) => {
+    // mouseup event handled in <SelectArea>
+    ev.preventDefault();
+    this.setState({ select: {x: ev.clientX, y: ev.clientY} });
+  };
+
   renderQuadrant = (q) => {
     return (
       <div onDoubleClick={this.doubleClickCreate}
            onTouchStart={this.onTouchStart}
            onTouchEnd={this.onTouchRelease}
+           onMouseDown={this.onMouseDown}
            className="ic-quadrant"
            key={`quadrant-${q.id}`}
            id={q.id}>
@@ -212,6 +222,7 @@ class Compass extends Component {
 
     return (
       <div id="compass">
+        <SelectArea show={this.state.select} ui={this.props.ui}/>
         {compass}
         {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>
