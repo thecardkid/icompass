@@ -228,7 +228,7 @@ class Compass extends Component {
 
     return (
       <div id="compass">
-        <SelectArea show={this.state.select} ui={this.props.ui} done={this.onMouseUp}/>
+        <SelectArea show={this.state.select} done={this.onMouseUp}/>
         {compass}
         {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>

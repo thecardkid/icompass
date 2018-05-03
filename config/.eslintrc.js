@@ -1,31 +1,32 @@
 module.exports = {
-  'parser': 'babel-eslint',
-  'env': {
+  parser: 'babel-eslint',
+  env: {
     'browser': true,
     'node': true,
     'jquery': true,
     'mocha': true,
     'jasmine': true,
     'webdriverio/wdio': true,
+    'es6': true,
   },
-  'extends': [
+  extends: [
     'eslint:recommended',
     'plugin:react/recommended',
   ],
-  'parserOptions': {
-    'ecmaVersion': 6,
-    'ecmaFeatures': {
-      'experimentalObjectRestSpread': true,
-      'jsx': true,
+  parserOptions: {
+    ecmaVersion: 6,
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true,
+      jsx: true,
     },
-    'sourceType': 'module',
+    sourceType: 'module',
   },
-  'plugins': [
+  plugins: [
     'react',
     'webdriverio',
     'jasmine',
   ],
-  'rules': {
+  rules: {
     'react/prop-types': 0,
     'indent': 0,
     'linebreak-style': [
