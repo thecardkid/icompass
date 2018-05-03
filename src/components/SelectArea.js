@@ -20,6 +20,7 @@ export default class SelectArea extends Component {
     $(window).off('mousemove', this.onMouseMove);
     $(window).off('mouseup', this.onMouseUp);
     $('#select-area').removeAttr('style');
+    this.props.done();
   };
 
   onMouseMove = (ev) => {
