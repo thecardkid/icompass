@@ -65,7 +65,8 @@ class StickyNote extends Component {
     this.props.submitDraft(this.props.note, this.props.i);
   };
 
-  upvote = () => {
+  upvote = (ev) => {
+    ev.stopPropagation();
     this.props.socket.emitWorkspace('+1 note', this.props.note._id);
   };
 
