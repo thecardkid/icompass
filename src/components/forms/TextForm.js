@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
 
+import FormPalette from './FormPalette';
+import ShortcutManager from '../ShortcutManager';
+
 import * as uiX from '../../actions/ui';
 
 import { COLORS, MODALS, PROMPTS, REGEX } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
-import FormPalette from './FormPalette';
 
 class TextForm extends Component {
   constructor(props) {
@@ -27,6 +29,24 @@ class TextForm extends Component {
     this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }
+
+  _handleShortcuts = (e) => {
+    if (e.metaKey) {
+      switch(e.which) {
+        case 66:
+          this.toggleStyle('bold')();
+          break;
+
+        case 73:
+          this.toggleStyle('italic')();
+          break;
+
+        case 85:
+          this.toggleStyle('underline')();
+          break;
+      }
+    }
+  };
 
   toggleStyle = (style) => () => {
     this.setState({
@@ -152,6 +172,7 @@ class TextForm extends Component {
 
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
+        <ShortcutManager handle={this._handleShortcuts} formShortcut={true}/>
         <div className="ic-form" id="ic-note-form" onClick={this.dontClose}>
           <div className="contents">
             <div className="header">
