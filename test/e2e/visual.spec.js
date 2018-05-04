@@ -296,6 +296,36 @@ describe('visual mode', () => {
     });
   });
 
+  describe('drag select', () => {
+    it('shows selecting area', () => {
+      expect('#select-area').to.not.be.visible();
+      b.moveToObject('body', 100, 100);
+      b.buttonDown(0);
+      b.moveToObject('body', 600, 600);
+      expect('#select-area').to.be.visible();
+      expect(b.getCssProperty('#select-area', 'width').value).to.equal('500px');
+      expect(b.getCssProperty('#select-area', 'height').value).to.equal('500px');
+      b.buttonUp(0);
+    });
+
+    it('select notes that intersect with the area', () => {
+      expect(b.getCssProperty('#note0', 'border-color').value).to.equal('rgb(40,138,255)');
+      expect(b.getCssProperty('#note1', 'border-color').value).to.equal('rgb(40,138,255)');
+      expect(b.getCssProperty('#note2', 'border-color').value).to.equal('rgb(40,138,255)');
+      expect(b.getCssProperty('#note3', 'border-color').value).to.equal('rgb(40,138,255)');
+      expect('#ic-visual-toolbar').to.be.visible();
+    });
+
+    it('can click off to exit bulk edit mode', () => {
+      b.click('div#experiments');
+      expect(b.getCssProperty('#note0', 'border-color').value).to.equal('rgb(0,0,0)');
+      expect(b.getCssProperty('#note1', 'border-color').value).to.equal('rgb(0,0,0)');
+      expect(b.getCssProperty('#note2', 'border-color').value).to.equal('rgb(0,0,0)');
+      expect(b.getCssProperty('#note3', 'border-color').value).to.equal('rgb(0,0,0)');
+      expect('#ic-visual-toolbar').to.not.be.visible();
+    });
+  });
+
   it('bulk delete', () => {
     switchMode('#ic-bulk');
     b.click('#note0');
