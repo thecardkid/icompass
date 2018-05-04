@@ -100,7 +100,7 @@ export default class BookmarkList extends Component {
         <div id={'bookmark-button'}
              style={{left: showBookmarks ? '200px' : '0'}}
              onClick={this.toggleBookmarks}>
-          <i className="material-icons">star_rate</i>
+          <i className="material-icons">bookmark</i>
         </div>
         <div id="contents">
           <h1>Bookmarks</h1>
