@@ -65,7 +65,8 @@ class StickyNote extends Component {
     this.props.submitDraft(this.props.note, this.props.i);
   };
 
-  upvote = () => {
+  upvote = (ev) => {
+    ev.stopPropagation();
     this.props.socket.emitWorkspace('+1 note', this.props.note._id);
   };
 
@@ -85,7 +86,7 @@ class StickyNote extends Component {
       return (
         <div>
           <p className="ic-tooltip">{n.user}</p>
-          <p className={upvoteButtonClass} onClick={this.upvote}>+{n.upvotes || 1}</p>
+          {this.hasEditingRights && <p className={upvoteButtonClass} onClick={this.upvote}>+{n.upvotes || 1}</p>}
         </div>
       );
     }

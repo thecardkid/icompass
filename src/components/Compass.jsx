@@ -14,6 +14,7 @@ import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 import { PROMPTS, EDITING_MODE } from '../../lib/constants';
+import SelectArea from './SelectArea';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -25,6 +26,8 @@ const QUADRANTS = [
 class Compass extends Component {
   constructor(props) {
     super(props);
+
+    this.state = { select: false };
 
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
@@ -41,6 +44,8 @@ class Compass extends Component {
   }
 
   doubleClickCreate = (ev) => {
+    this.setState({ select: false });
+
     if (this.props.visualMode) {
       return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
     }
@@ -70,11 +75,30 @@ class Compass extends Component {
     clearTimeout(this.longPress);
   };
 
+  onMouseDown = (ev) => {
+    if (ev.target.className !== 'ic-quadrant') return;
+    this.setState({ select: {x: ev.clientX, y: ev.clientY} });
+  };
+
+  onMouseUp = () => {
+    this.setState({ select: false });
+  };
+
+  onClick = (ev) => {
+    if (ev.target.className !== 'ic-quadrant') return;
+    if (this.props.visualMode) {
+      this.props.uiX.normalMode();
+    }
+  };
+
   renderQuadrant = (q) => {
     return (
       <div onDoubleClick={this.doubleClickCreate}
+           onClick={this.onClick}
            onTouchStart={this.onTouchStart}
            onTouchEnd={this.onTouchRelease}
+           onMouseDown={this.onMouseDown}
+           onMouseUp={this.onMouseUp}
            className="ic-quadrant"
            key={`quadrant-${q.id}`}
            id={q.id}>
@@ -212,6 +236,7 @@ class Compass extends Component {
 
     return (
       <div id="compass">
+        {!this.props.viewOnly && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
         {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>
