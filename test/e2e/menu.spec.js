@@ -153,14 +153,7 @@ describe('workspace menu', () => {
         expect('.ic-share').to.be.visible();
       });
 
-      it('can x out', () => {
-        b.click('button.ic-close-window');
-        expect('.ic-share').to.not.be.visible();
-      });
-
       it('backdrop closes modal', () => {
-        selectMenuOption(actions.share);
-        b.waitForVisible('.ic-share');
         b.moveToObject('.ic-share', -20, -20);
         b.leftClick();
         expect('.ic-share').to.not.be.visible();
@@ -177,6 +170,11 @@ describe('workspace menu', () => {
         b.click('button.copy-view');
         expect('#ic-toast').to.be.visible();
         expect('#ic-toast').to.have.text(/View-only link has been copied/);
+      });
+
+      it('can x out', () => {
+        b.click('button.ic-close-window');
+        expect('.ic-share').to.not.be.visible();
       });
     });
 
