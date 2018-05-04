@@ -130,7 +130,7 @@ describe('workspace menu', () => {
       it('wrong email format displays error message', () => {
         selectMenuOption(actions.email);
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(/Receive a link/);
+        expect('#ic-modal-body').to.have.text(/Receive a Link/);
         expect('#ic-modal-cancel').to.be.visible();
         expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.be.empty;
         b.setValue('#ic-modal-input', 'fakeemail');
