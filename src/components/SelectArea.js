@@ -96,7 +96,7 @@ class SelectArea extends Component {
         if (!this.originallyVisualMode) {
           i -= this.props.numDrafts;
         }
-        this.props.workspaceX.selectNote(i);
+        this.props.workspaceX.ensureSelectNote(i);
       });
       this.ignoreUpdate = false;
     }

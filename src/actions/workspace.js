@@ -1,3 +1,10 @@
+export const ensureSelectNote = (idx) => {
+  return {
+    type: 'ensureSelectNote',
+    idx,
+  };
+};
+
 export const selectNote = (idx) => {
   return {
     type: 'selectNote',

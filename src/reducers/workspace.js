@@ -85,6 +85,32 @@ const setEditCode = (state, action) => {
   };
 };
 
+const toggleSelect = (state, action) => {
+  let idx = parseInt(action.idx);
+  if (isNaN(idx)) return state;
+
+  const selected = [
+    ...state.selected.slice(0, idx),
+    !state.selected[idx],
+    ...state.selected.slice(idx + 1)
+  ];
+
+  return { ...state, selected };
+};
+
+const select = (state, action) => {
+  let idx = parseInt(action.idx);
+  if (isNaN(idx)) return state;
+
+  const selected = [
+    ...state.selected.slice(0, idx),
+    true,
+    ...state.selected.slice(idx + 1),
+  ];
+
+  return { ...state, selected };
+};
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case 'normalMode':
@@ -102,25 +128,10 @@ export default (state = defaultState, action) => {
       };
 
     case 'selectNote':
-      let { idx } = action;
-      if (typeof idx !== 'number') {
-        idx = Number(idx);
+      return toggleSelect(state, action);
 
-        if (isNaN(idx)) {
-          return state;
-        }
-      }
-
-      const selected = [
-        ...state.selected.slice(0, idx),
-        !state.selected[idx],
-        ...state.selected.slice(idx + 1)
-      ];
-
-      return {
-        ...state,
-        selected,
-      };
+    case 'ensureSelectNote':
+      return select(state, action);
 
     case 'toggleBold':
       return { ...state, bold: !state.bold };
