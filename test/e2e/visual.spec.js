@@ -47,34 +47,14 @@ describe('visual mode', () => {
     expect(pos.x).to.not.equal(newPos.x);
   });
 
-  describe('modifications are disabled', () => {
-    afterEach(() => {
-      b.click('#ic-toast span');
-      b.waitForVisible('#ic-toast span', 1000, true);
-    });
-
-    it('no new note', () => {
-      b.moveToObject('body', 200, 500);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-toast span');
-      expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-      expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.VISUAL_MODE_NO_CREATE, 'i'));
-    });
-
-    it('exiting after double click does not open note form', () => {
-      b.click('#ic-bulk-cancel');
-      b.pause(500);
-      expect('#ic-note-form').to.not.be.visible();
-      switchMode('#ic-bulk');
-    });
-
-    it('editing disabled', () => {
-      b.moveToObject('#note0', 10, 10);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-toast span');
-      expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-      expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.VISUAL_MODE_NO_CHANGE, 'i'));
-    });
+  it('editing disabled', () => {
+    b.moveToObject('#note0', 10, 10);
+    b.doDoubleClick();
+    b.waitForVisible('#ic-toast span');
+    expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
+    expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.VISUAL_MODE_NO_CHANGE, 'i'));
+    b.click('#ic-toast span');
+    b.waitForVisible('#ic-toast span', 1000, true);
   });
 
   describe('renders correctly', () => {
