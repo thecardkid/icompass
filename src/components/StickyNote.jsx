@@ -74,7 +74,7 @@ class StickyNote extends Component {
     if (n.draft) {
       return (
         <button className="ic-tooltip submit" onClick={this.submitDraft} onTouchStart={this.submitDraft}>
-          submit
+          publish
         </button>
       );
     } else {
