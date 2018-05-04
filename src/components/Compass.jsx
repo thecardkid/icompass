@@ -9,12 +9,14 @@ import * as uiX from '../actions/ui';
 
 import NoteManager from '../components/NoteManager.jsx';
 import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
+import SelectArea from './SelectArea';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
+import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
+
 import { PROMPTS, EDITING_MODE } from '../../lib/constants';
-import SelectArea from './SelectArea';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -37,6 +39,7 @@ class Compass extends Component {
     });
 
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
+    this.bookmarked = Storage.hasBookmark(this.props.compass.editCode);
 
     if (this.props.compass.center.length === 0) {
       this.setPeopleInvolved();
@@ -236,6 +239,7 @@ class Compass extends Component {
 
     return (
       <div id="compass">
+        {this.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         {!this.props.viewOnly && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
         {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}

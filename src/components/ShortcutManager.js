@@ -33,13 +33,13 @@ class ShortcutManager extends Component {
     if (this.props.formVisible) {
       if (e.which === KEYCODES.ESC) {
         this.props.uiX.closeForm();
+      } else if (this.props.formShortcut) {
+        this.props.handle(e);
       }
       return;
     }
 
-    if (document.activeElement.id === 'message-text') return;
     if (document.activeElement.id === 'ic-modal-input') return;
-
 
     this.props.handle(e);
   };
