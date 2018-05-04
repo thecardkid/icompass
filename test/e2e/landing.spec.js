@@ -64,7 +64,7 @@ describe('landing page', () => {
       b.click('button[type=submit]');
       b.waitForVisible('#ic-modal');
 
-      expect('#ic-modal-body').to.have.text(/Email Yourself/);
+      expect('#ic-modal-body').to.have.text(/Receive a link/);
       expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.equal('enter email or leave blank');
       expect('#ic-modal-cancel').to.not.be.visible();
       expect('#ic-modal-input').to.be.visible();

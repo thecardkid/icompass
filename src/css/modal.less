@@ -19,16 +19,23 @@ div#ic-modal-container {
     -webkit-box-shadow: var(--shadow);
     -moz-box-shadow: var(--shadow);
     box-shadow: var(--shadow);
+    font-family: @notosans;
 
     div#ic-modal-body {
-      font-size: 18px;
+      font-size: 19px;
       text-align: left;
       padding: 10px 0;
       margin-top: 10px;
 
+      h3 {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+
       p {
         margin-top: 10px;
-        font-size: 15px;
+        font-size: 13px;
+        line-height: 15px;
       }
 
       input {
@@ -39,6 +46,10 @@ div#ic-modal-container {
         border-radius: 2px;
         padding: 5px 10px;
       }
+
+      a {
+        color: inherit;
+      }
     }
 
     div#ic-modal-footer {
@@ -48,10 +59,11 @@ div#ic-modal-container {
       button {
         float: right;
         height: 28px;
-        font-size: 13px;
+        font-size: 12px;
         margin-left: 10px;
         padding: 0 10px;
         border-radius: 2px;
+        font-family: inherit;
       }
 
       button#ic-modal-confirm {

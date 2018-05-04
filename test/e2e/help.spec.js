@@ -10,9 +10,10 @@ const { setup, cleanup } = require('./utils');
 const actions = {
   prompt: 0,
   guide: 1,
-  privacy: 2,
-  feedback: 3,
+  about: 2,
+  privacy: 3,
   release: 4,
+  contact: 5,
 };
 
 const selectHelpOption = (count) => {
@@ -43,6 +44,13 @@ describe('help menu', () => {
     b.switchTab(this.tabId);
   });
 
+  it('about us', () => {
+    selectHelpOption(actions.about);
+    b.waitForVisible('#ic-modal');
+    expect('#ic-modal-body').to.have.text(/Hi!/);
+    b.click('#ic-modal-confirm');
+  });
+
   it('release notes', () => {
     selectHelpOption(actions.release);
     b.pause(200);
@@ -57,8 +65,8 @@ describe('help menu', () => {
     b.click('#ic-modal-confirm');
   });
 
-  it('feedback', () => {
-    selectHelpOption(actions.feedback);
+  it('contact', () => {
+    selectHelpOption(actions.contact);
     b.waitForVisible('#ic-modal');
     expect('#ic-modal-body').to.have.text(/We'd love to hear from you/);
     b.click('#ic-modal-confirm');
