@@ -1,12 +1,10 @@
-@higherThanIcToast: 12;
-
 div#ic-help {
   button.ic-help-button {
     font-size: 20px;
     font-weight: 300;
     bottom: 10px;
     right: 10px;
-    z-index: @higherThanIcToast;
+    z-index: @floatingButtonZIndex;
   }
 
   div.__react_component_tooltip {
@@ -34,7 +32,7 @@ button.ic-workspace-button {
   left: 10px;
   font-size: 20px;
   font-weight: 300;
-  z-index: @higherThanIcToast;
+  z-index: @floatingButtonZIndex;
 
   i {
     margin-top: 6px;
@@ -45,13 +43,13 @@ button.ic-workspace-button {
 div.ic-help-menu {
   bottom: 50px;
   right: 10px;
-  z-index: @higherThanIcToast;
+  z-index: @floatingButtonZIndex
 }
 
 div.ic-workspace-menu {
   top: 50px;
   left: 10px;
-  z-index: @higherThanIcToast;
+  z-index: @floatingButtonZIndex;
 }
 
 div.ic-menu {
