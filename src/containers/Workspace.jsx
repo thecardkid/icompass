@@ -122,7 +122,7 @@ class Workspace extends Component {
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
-        <HelpFeedback />
+        <HelpFeedback editCode={this.props.compass.editCode}/>
         <WorkspaceMenu />
         <Compass />
         <VisualModeToolbar show={this.props.visualMode} />

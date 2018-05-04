@@ -121,7 +121,7 @@ class WorkspaceMenu extends Component {
     const { topic, editCode } = this.props.compass;
 
     if (Storage.hasBookmark(editCode)) {
-      this.modal.alert('<h3>This workspace has already been bookmarked!</h3><p>Check for the yellow bookmark icon at the top right.</p>');
+      this.modal.alert('<h3>Already bookmarked!</h3><p>Check for the yellow bookmark icon at the top right.</p>');
     } else {
       this.socket.emitMetric('menu bookmark');
       this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
