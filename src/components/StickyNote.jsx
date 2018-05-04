@@ -86,7 +86,7 @@ class StickyNote extends Component {
       return (
         <div>
           <p className="ic-tooltip">{n.user}</p>
-          <p className={upvoteButtonClass} onClick={this.upvote}>+{n.upvotes || 1}</p>
+          {this.hasEditingRights && <p className={upvoteButtonClass} onClick={this.upvote}>+{n.upvotes || 1}</p>}
         </div>
       );
     }
