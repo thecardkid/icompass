@@ -84,9 +84,17 @@ class Compass extends Component {
     this.setState({ select: false });
   };
 
+  onClick = (ev) => {
+    if (ev.target.className !== 'ic-quadrant') return;
+    if (this.props.visualMode) {
+      this.props.uiX.normalMode();
+    }
+  };
+
   renderQuadrant = (q) => {
     return (
       <div onDoubleClick={this.doubleClickCreate}
+           onClick={this.onClick}
            onTouchStart={this.onTouchStart}
            onTouchEnd={this.onTouchRelease}
            onMouseDown={this.onMouseDown}
@@ -228,7 +236,7 @@ class Compass extends Component {
 
     return (
       <div id="compass">
-        <SelectArea show={this.state.select} done={this.onMouseUp}/>
+        {!this.props.viewOnly && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
         {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>
