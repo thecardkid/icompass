@@ -86,8 +86,11 @@ class SelectArea extends Component {
 
   onMouseUp = () => {
     if (this.highlighted.size > 0) {
-      this.ignoreUpdate = true;
-      this.props.uiX.visualMode(this.props.numNotes);
+      if (!this.originallyVisualMode) {
+        this.ignoreUpdate = true;
+        this.props.uiX.visualMode(this.props.numNotes);
+      }
+
       this.highlighted.forEach(noteIdx => {
         let i = noteIdx;
         if (!this.originallyVisualMode) {

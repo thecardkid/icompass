@@ -102,13 +102,24 @@ export default (state = defaultState, action) => {
       };
 
     case 'selectNote':
+      let { idx } = action;
+      if (typeof idx !== 'number') {
+        idx = Number(idx);
+
+        if (isNaN(idx)) {
+          return state;
+        }
+      }
+
+      const selected = [
+        ...state.selected.slice(0, idx),
+        !state.selected[idx],
+        ...state.selected.slice(idx + 1)
+      ];
+
       return {
         ...state,
-        selected: [
-          ...state.selected.slice(0, action.idx),
-          !state.selected[action.idx],
-          ...state.selected.slice(action.idx + 1)
-        ],
+        selected,
       };
 
     case 'toggleBold':

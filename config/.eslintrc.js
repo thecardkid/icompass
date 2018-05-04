@@ -46,5 +46,6 @@ module.exports = {
     'react/jsx-indent': 0,
     'no-useless-escape': 0,
     'react/no-unescaped-entities': 0,
+    'no-case-declarations': 0,
   },
 };
