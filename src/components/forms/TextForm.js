@@ -191,7 +191,7 @@ class TextForm extends Component {
                       style={{ background: this.state.color }}/>
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit(false)}>Submit</button>
+              <button name="ship" onClick={this.submit(false)}>{this.props.switch ? 'Publish' : 'Edit'}</button>
               {this.props.switch && this.renderDraftButton()}
               <button name="nvm" onClick={this.props.close}>Cancel</button>
             </div>
