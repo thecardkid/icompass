@@ -11,12 +11,12 @@ import ShortcutManager from './ShortcutManager';
 
 import ModalSingleton from '../utils/Modal';
 import SocketSingleton from '../utils/Socket';
+import Storage from '../utils/Storage';
 import ToastSingleton from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 import { EDITING_MODE, MODALS, PROMPTS, REGEX, COLORS } from '../../lib/constants';
-import Storage from '../utils/Storage';
 
 class WorkspaceMenu extends Component {
   constructor(props) {
@@ -119,14 +119,20 @@ class WorkspaceMenu extends Component {
 
   bookmark = () => {
     const { topic, editCode } = this.props.compass;
-    this.socket.emitMetric('menu bookmark');
-    this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
-      if (submit) {
-        let username = this.props.users.me.replace(/\d+/g, '');
-        Storage.addBookmark(bookmarkName, editCode, username);
-        this.toast.success(PROMPTS.SAVE_SUCCESS);
-      }
-    }, topic);
+
+    if (Storage.hasBookmark(editCode)) {
+      this.modal.alert('<h3>This workspace has already been bookmarked!</h3><p>Check for the yellow bookmark icon at the top right.</p>');
+    } else {
+      this.socket.emitMetric('menu bookmark');
+      this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
+        if (submit) {
+          let username = this.props.users.me.replace(/\d+/g, '');
+          Storage.addBookmark(bookmarkName, editCode, username);
+          this.toast.success(PROMPTS.SAVE_SUCCESS);
+        }
+      }, topic);
+    }
+
     this.hideMenu();
   };
 

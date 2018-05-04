@@ -93,6 +93,19 @@ export default {
     return JSON.parse(localStorage.getItem('bookmarks')) || [];
   },
 
+  hasBookmark(code) {
+    const bookmarks = this.getBookmarks();
+
+    for (let i = 0; i < bookmarks.length; i++) {
+      const thisCode = bookmarks[i].href.split('/')[3];
+      if (code === thisCode) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+
   setBookmarks(b) {
     localStorage.setItem('bookmarks', JSON.stringify(b));
   },
