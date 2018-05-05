@@ -72,7 +72,7 @@ describe('view modes', () => {
       b.url(`http://localhost:8080/compass/view/${editCode}/sandbox`);
       b.waitForVisible('#ic-modal');
 
-      expect('#ic-modal-body').to.have.text(/I couldn't find your compass/);
+      expect('#ic-modal-body').to.have.text(/Workspace not found/);
 
       b.click('#ic-modal-confirm');
       b.waitForVisible('#ic-landing');
