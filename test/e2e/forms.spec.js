@@ -1,5 +1,6 @@
 const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
+const path = require('path');
 chai.use(chaiWebdriver(browser));
 
 const expect = chai.expect;
@@ -177,6 +178,29 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note2');
       expect(xoffset - x).to.equal(-30);
       expect(yoffset - y).to.equal(-30);
+    });
+
+    describe('s3 upload', () => {
+      it('file too large', () => {
+        b.moveToObject('body', 700, 700);
+        b.keys('Shift');
+        b.doDoubleClick();
+        b.keys('Shift');
+        b.waitForVisible('#ic-image-form');
+        expect('input[name=s3-uploader]').to.be.there();
+
+        b.chooseFile('input[name=s3-uploader]', path.join('./test/e2e/files/toolarge.jpg'));
+        b.pause(500);
+        expect('#ic-toast').to.be.visible();
+        expect('#ic-toast').to.have.text(/cannot be larger than 1MB/);
+      });
+
+      it('upload success', () => {
+        b.chooseFile('input[name=s3-uploader]', path.join('./test/e2e/files/shouldpass.jpg'));
+        b.waitForVisible('div.preview img');
+        expect(b.getText('#ic-form-text')).to.include('https://s3.us-east-2.amazonaws.com/innovatorscompass');
+        b.click('button[name=nvm]');
+      });
     });
   });
 
