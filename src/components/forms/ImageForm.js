@@ -145,6 +145,7 @@ class ImageForm extends Component {
                                 s3Url={'https://s3.us-east-2.amazonaws.com/innovatorscompass'}
                                 upload={{server: HOST}}
                                 maxSize={1024 * 1024 * 5 /* 5MB */} />
+            <span id={'s3-uploader-status'}>Drag and Drop</span>
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
