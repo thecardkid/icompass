@@ -96,25 +96,15 @@ div.ic-compass-label {
 }
 
 div#ic-visual-toolbar {
-  width: 105px;
   text-align: center;
   padding: 5px;
   position: absolute;
-  background: @dark;
+  background: var(--modal-bg);
   color: @light;
   z-index: @bulkToolbarZIndex;
   cursor: move;
   top: 50px;
   right: 50px;
-
-  div#ic-visual-hint {
-    margin-top: 5px;
-    font-size: 12px;
-  }
-
-  div.ic-visual-group {
-    margin: 5px 0;
-  }
 
   button.ic-visual-color {
     border-radius: 100%;
@@ -126,19 +116,21 @@ div#ic-visual-toolbar {
     height: 30px;
     margin: 0 2.5px;
     font-size: 13px;
+    float: right;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: @light;
   }
 
-  div.ic-visual-actions {
-    button {
-      width: 90%;
-      height: 20px;
-      border: 2px solid @dark;
-    }
+  button#ic-bulk-delete {
+    background: @red;
+    color: @light;
+  }
 
-    button#ic-bulk-delete {
-      background: @red;
-      color: @light;
-    }
+  button#ic-bulk-submit {
+    background: #23C12B;
+    color: @light;
   }
 }
 
