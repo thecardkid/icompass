@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
+import DropzoneS3Uploader from 'react-dropzone-s3-uploader';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 
+import FormPalette from './FormPalette';
+
 import * as uiX from '../../actions/ui';
 
-import { REGEX } from '../../../lib/constants';
+import { REGEX, HOST } from '../../../lib/constants';
 import SocketSingleton from '../../utils/Socket';
-import FormPalette from './FormPalette';
+import ToastSingleton from '../../utils/Toast';
+
+const OneMB = 1024 * 1024;
 
 class ImageForm extends Component {
   constructor(props) {
@@ -15,8 +20,10 @@ class ImageForm extends Component {
     this.state = {
       imgSource: props.defaultUrl || '',
       color: props.bg,
+      progress: false,
     };
     this.socket = SocketSingleton.getInstance();
+    this.toast = ToastSingleton.getInstance();
     this.driveUrlRegex = /https:\/\/drive\.google\.com\/file\/d\/.*\/view\?usp=sharing/;
   }
 
@@ -73,13 +80,15 @@ class ImageForm extends Component {
     this.props.submit(this.state, isDraft);
   };
 
+  onImageUpload = (info) => {
+    this.setState({ imgSource: info.fileUrl });
+  };
+
   switchText = () => {
-    this.socket.emitMetric('switch image to text');
     this.props.uiX.switchToText();
   };
 
   switchDoodle = () => {
-    this.socket.emitMetric('switch image to doodle');
     this.props.uiX.switchToDoodle();
   };
 
@@ -121,6 +130,20 @@ class ImageForm extends Component {
     e.stopPropagation();
   }
 
+  onProgress = (percentage, textState) => {
+    this.setState({
+      progress: textState !== 'Upload completed',
+    });
+  };
+
+  onRejected = (file) => {
+    if (file.length < 0) return;
+
+    if (file[0].size > OneMB) {
+      this.toast.error('Image cannot be larger than 1MB');
+    }
+  };
+
   render() {
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
@@ -135,6 +158,18 @@ class ImageForm extends Component {
                       value={this.state.imgSource}
                       onChange={this.handleChange}
                       style={{ background: this.state.color }} />
+            <DropzoneS3Uploader onFinish={this.onImageUpload}
+                                onProgress={this.onProgress}
+                                onDropRejected={this.onRejected}
+                                s3Url={'https://s3.us-east-2.amazonaws.com/innovatorscompass'}
+                                upload={{server: HOST}}
+                                maxSize={OneMB}
+                                accept={'image/*'}
+                                multiple={false}
+                                name={'s3-uploader'} />
+            <span id={'s3-uploader-status'}>
+              {this.state.progress ? 'Uploading...' : 'Drag and Drop'}
+            </span>
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}

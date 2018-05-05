@@ -13,8 +13,6 @@ import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
 import Toast from '../utils/Toast';
 
-import backgroundImage from '../../public/static/bg.jpg';
-
 import { ERROR_MSG, REGEX } from '../../lib/constants';
 
 class LandingPage extends Component {
@@ -111,7 +109,7 @@ class LandingPage extends Component {
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
-        <img src={backgroundImage} className={'ic-background'} style={this.sizeImage()}/>
+        <img src={'https://s3.us-east-2.amazonaws.com/innovatorscompass/landing.jpg'} className={'ic-background'} style={this.sizeImage()}/>
         <BookmarkList start={this.start}/>
         <div id={'ic-landing-container'}>
           <div id={'message'}>

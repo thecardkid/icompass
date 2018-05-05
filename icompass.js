@@ -2,6 +2,7 @@ let bodyParser = require('body-parser');
 let express = require('express');
 let helmet = require('helmet');
 let path = require('path');
+const s3Router = require('react-dropzone-s3-uploader/s3router');
 
 let logger = require('./lib/logger.js');
 let routes = require('./routes/routes.js');
@@ -28,6 +29,14 @@ app.use(helmet({
 app.use(logger.api);
 
 app.use('/api/v1', routes);
+
+app.use('/s3', s3Router({
+  bucket: 'innovatorscompass',
+  region: 'us-east-2',
+  headers: {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'},
+  ACL: 'public-read',
+  uniquePrefix: true,
+}));
 
 app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
