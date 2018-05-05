@@ -7,8 +7,8 @@ export default class ShareModal extends Component {
   constructor(props) {
     super(props);
 
-    this.editLink = `${HOST}compass/edit/${this.props.compass.editCode}`;
-    this.viewLink = `${HOST}compass/view/${this.props.compass.viewCode}`;
+    this.editLink = `${HOST}/compass/edit/${this.props.compass.editCode}`;
+    this.viewLink = `${HOST}/compass/view/${this.props.compass.viewCode}`;
     this.toast = ToastSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }

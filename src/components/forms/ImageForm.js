@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import DropzoneS3Uploader from 'react-dropzone-s3-uploader';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
@@ -8,6 +9,8 @@ import * as uiX from '../../actions/ui';
 import { REGEX } from '../../../lib/constants';
 import SocketSingleton from '../../utils/Socket';
 import FormPalette from './FormPalette';
+
+import { HOST } from '../../../lib/constants';
 
 class ImageForm extends Component {
   constructor(props) {
@@ -73,13 +76,15 @@ class ImageForm extends Component {
     this.props.submit(this.state, isDraft);
   };
 
+  onImageUpload = (info) => {
+    this.setState({ imgSource: info.fileUrl });
+  };
+
   switchText = () => {
-    this.socket.emitMetric('switch image to text');
     this.props.uiX.switchToText();
   };
 
   switchDoodle = () => {
-    this.socket.emitMetric('switch image to doodle');
     this.props.uiX.switchToDoodle();
   };
 
@@ -134,7 +139,12 @@ class ImageForm extends Component {
                       autoFocus
                       value={this.state.imgSource}
                       onChange={this.handleChange}
+                      placeholder={'Paste image URL here, or drag and drop below'}
                       style={{ background: this.state.color }} />
+            <DropzoneS3Uploader onFinish={this.onImageUpload}
+                                s3Url={'https://s3.us-east-2.amazonaws.com/innovatorscompass'}
+                                upload={{server: HOST}}
+                                maxSize={1024 * 1024 * 5 /* 5MB */} />
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
