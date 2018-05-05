@@ -48,6 +48,7 @@
     "webpack": "3.6.0"
   },
   "dependencies": {
+    "attr-accept": "1.1.2",
     "body-parser": "1.17.1",
     "deep-equal": "1.0.1",
     "emailjs": "1.0.8",
