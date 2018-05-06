@@ -21,6 +21,7 @@ class ImageForm extends Component {
       imgSource: props.defaultUrl || '',
       color: props.bg,
       progress: false,
+      showAlt: false,
     };
     this.socket = SocketSingleton.getInstance();
     this.toast = ToastSingleton.getInstance();
@@ -52,7 +53,7 @@ class ImageForm extends Component {
 
     return (
       <div className="preview">
-        <div>
+        <div style={{minHeight: '10px'}}>
           <p>Preview</p>
           <span data-tip data-for="help-tooltip"><i className={'material-icons'}>help</i></span>
           <ReactTooltip id={'help-tooltip'} place={'top'} effect={'solid'} data-multiline={true}>
@@ -143,6 +144,10 @@ class ImageForm extends Component {
     }
   };
 
+  toggleAlt = () => {
+    this.setState({ showAlt: !this.state.showAlt });
+  };
+
   render() {
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
@@ -150,6 +155,17 @@ class ImageForm extends Component {
           <div className="contents">
             <div className="header">
               <h1 className="title">{this.props.title}</h1>
+              <button id={'toggle-alt'}
+                      onClick={this.toggleAlt}
+                      data-tip
+                      data-for={'alt-tooltip'}>
+                Alt
+              </button>
+              <ReactTooltip id={'alt-tooltip'} place={'top'} effect={'solid'}>
+                <div id={'alt-tooltip-div'}>
+                  Alternative text is used by screen readers, search engines, or when the image cannot be loaded
+                </div>
+              </ReactTooltip>
               {this.props.colors && <FormPalette setColor={this.setColor}/>}
             </div>
             <textarea id="ic-form-text"
@@ -166,6 +182,14 @@ class ImageForm extends Component {
                                 accept={'image/*'}
                                 multiple={false}
                                 name={'s3-uploader'} />
+            {this.state.showAlt && <div>
+              <textarea id={'ic-image-alt-text'}
+                        placeholder={'Alternate text'}
+                     style={{ background: this.state.color }} />
+              <p id={'ic-alt-text-label'}>
+                This text will be used by screen readers, search engines, or when the image cannot be loaded
+              </p>
+            </div>}
             <span id={'s3-uploader-status'}>
               {this.state.progress ? 'Uploading...' : 'Drag and Drop'}
             </span>
