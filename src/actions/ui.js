@@ -1,3 +1,10 @@
+export const setBookmark = (show) => {
+  return {
+    type: 'setBookmark',
+    show,
+  };
+};
+
 export const showNewNote = (event) => {
   return {
     type: 'showNewNote',

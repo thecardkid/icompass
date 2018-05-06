@@ -195,6 +195,10 @@ describe('workspace menu', () => {
         b.click('#ic-toast span');
       });
 
+      it('bookmark indicator appears', () => {
+        expect('div#ic-bookmark-indicator').to.be.visible();
+      });
+
       it('logout button', () => {
         selectMenuOption(actions.logout);
         expect(b.getUrl()).to.equal('http://localhost:8080/');
