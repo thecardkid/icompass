@@ -142,5 +142,13 @@ export default {
     this.setBookmarks(b);
     return b;
   },
+
+  getVersion() {
+    return JSON.parse(localStorage.getItem('app-version')) || 'v0.0.0';
+  },
+
+  setVersion(version) {
+    localStorage.setItem('app-version', JSON.stringify(version));
+  }
 };
 
