@@ -3,11 +3,9 @@
   background: var(--modal-bg);
   color: @dark;
   text-align: center;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   width: 350px;
   z-index: @formZIndex;
+  .border-radius(4px);
 
   .contents {
     margin: 10px;
@@ -88,25 +86,19 @@
     button[name=draft] {
       background: none;
       border: 1px solid @dark;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
       margin-left: 5px;
       width: 60px;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
       padding: 4px;
+      .border-box;
+      .border-radius(3px);
     }
 
     button[name=ship] {
       background: @dark;
       color: var(--modal-bg);
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
       margin-left: 10px;
       width: 60px;
+      .border-radius(3px);
     }
   }
 }
@@ -120,9 +112,7 @@ div.ic-form-palette {
   span.ic-palette-color {
     width: 11px;
     height: 11px;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    border-radius: 100%;
+    .border-radius(100%);
     border: 1px solid gray;
     margin: 0 2px;
     display: inline-block;
@@ -141,7 +131,15 @@ div.ic-form-palette {
       width: 30px;
       margin: 0 2px;
       float: right;
-      border-radius: 3px;
+      .border-radius(3px);
+      .border-box;
+      border: 1px solid @dark;
+      color: @dark;
+
+      &.active {
+        background: @dark;
+        color: white;
+      }
     }
   }
 
@@ -163,12 +161,8 @@ div.ic-form-palette {
     background: none;
     border: 1px solid @dark;
     color: @dark;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    .border-box;
+    .border-radius(3px);
     font-size: 13px;
     margin-left: 5px;
 

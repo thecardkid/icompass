@@ -8,7 +8,7 @@ import ShortcutManager from '../ShortcutManager';
 
 import * as uiX from '../../actions/ui';
 
-import { COLORS, MODALS, PROMPTS, REGEX } from '../../../lib/constants';
+import { MODALS, PROMPTS, REGEX } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
 
@@ -88,23 +88,23 @@ class TextForm extends Component {
   };
 
   renderStyleToolbar() {
-    const selectedStyle = { background: COLORS.DARK, color: 'white' };
+    const { bold, italic, underline } = this.state.style;
 
     return (
       <div>
         <div className="ic-text-ibu">
           <button name="underline"
-                  style={this.state.style.underline ? selectedStyle : null}
+                  className={underline ? 'active' : ''}
                   onClick={this.toggleStyle('underline')}>
             <u>U</u>
           </button>
           <button name="italic"
-                  style={this.state.style.italic ? selectedStyle : null}
+                  className={italic ? 'active' : ''}
                   onClick={this.toggleStyle('italic')}>
             <i>I</i>
           </button>
           <button name="bold"
-                  style={this.state.style.bold ? selectedStyle : null}
+                  className={bold ? 'active' : ''}
                   onClick={this.toggleStyle('bold')}>
             <b>B</b>
           </button>

@@ -19,12 +19,10 @@ button.floating-button {
   color: white;
   width: @r;
   height: @r;
-  -webkit-border-radius: 100%;
-  -moz-border-radius: 100%;
-  border-radius: 100%;
   text-align: center;
   line-height: @r;
   cursor: pointer;
+  .border-radius(100%);
 }
 
 button.ic-workspace-button {
@@ -57,12 +55,8 @@ div.ic-menu {
   position: fixed;
   width: 150px;
   background: @dark;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  .border-box;
+  .border-radius(3px);
 
   section {
     padding: 5px 0;
@@ -106,9 +100,7 @@ div.ic-menu-item {
   color: @light;
   background: none;
   font-family: @notosans;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  .border-box;
 
   a {
     color: inherit;
@@ -157,9 +149,7 @@ div.ic-menu-item {
       background-color: #ccc;
       -webkit-transition: .4s;
       transition: .4s;
-      -webkit-border-radius: 34px;
-      -moz-border-radius: 34px;
-      border-radius: 34px;
+      .border-radius(34px);
     }
 
     .slider:before {
@@ -172,9 +162,7 @@ div.ic-menu-item {
       background-color: white;
       -webkit-transition: .4s;
       transition: .4s;
-      -webkit-border-radius: 50%;
-      -moz-border-radius: 50%;
-      border-radius: 50%;
+      .border-radius(50%);
     }
   }
 

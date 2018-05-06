@@ -74,7 +74,7 @@ div.ic-compass-label {
 }
 
 #center {
-  border-radius: 25%;
+  .border-radius(25%);
   position: absolute;
   background: @dark;
   color: @light;
@@ -107,7 +107,7 @@ div#ic-visual-toolbar {
   right: 50px;
 
   button.ic-visual-color {
-    border-radius: 100%;
+    .border-radius(100%);
     border: 2px solid @dark;
   }
 
@@ -117,10 +117,8 @@ div#ic-visual-toolbar {
     margin: 0 2.5px;
     font-size: 13px;
     float: right;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
     background: @light;
+    .border-radius(3px);
   }
 
   button#ic-bulk-delete {
