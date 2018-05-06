@@ -47,7 +47,13 @@ describe('visual mode', () => {
     expect(pos.x).to.not.equal(newPos.x);
   });
 
+  it('escape key switches to normal mode', () => {
+    b.keys('\uE00C'); // ESCAPE
+    expect('#ic-visual-toolbar').to.not.be.visible();
+  });
+
   it('editing disabled', () => {
+    switchMode('#ic-bulk');
     b.moveToObject('#note0', 10, 10);
     b.doDoubleClick();
     b.waitForVisible('#ic-toast span');
