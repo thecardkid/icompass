@@ -160,13 +160,22 @@ div.ic-form-palette {
     height: 30px;
     width: 30px;
     font-family: @notosans;
-    background: #343434;
-    color: white;
+    background: none;
+    border: 1px solid @dark;
+    color: @dark;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
     font-size: 13px;
     margin-left: 5px;
+
+    &.active {
+      background: @dark;
+      color: white;
+    }
   }
 
   p#ic-alt-text-label {

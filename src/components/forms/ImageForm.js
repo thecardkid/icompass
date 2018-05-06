@@ -161,6 +161,7 @@ class ImageForm extends Component {
             <div className="header">
               <h1 className="title">{this.props.title}</h1>
               <button id={'toggle-alt'}
+                      className={this.state.showAlt ? 'active': ''}
                       onClick={this.toggleAlt}
                       data-tip
                       data-for={'alt-tooltip'}>
