@@ -129,6 +129,7 @@ class WorkspaceMenu extends Component {
           let username = this.props.users.me.replace(/\d+/g, '');
           Storage.addBookmark(bookmarkName, editCode, username);
           this.toast.success(PROMPTS.SAVE_SUCCESS);
+          this.props.uiX.setBookmark(true);
         }
       }, topic);
     }

@@ -9,6 +9,7 @@ const defaultState = {
     editText: false,
     editImage: false,
   },
+  bookmarked: false,
   showShareModal: false,
   focusedNote: -1,
   vw: 0,
@@ -40,6 +41,12 @@ const showNewNote = (state, action, formType) => {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case 'setBookmark':
+      return {
+        ...state,
+        bookmarked: action.show,
+      };
+
     case 'showNewNote':
       return showNewNote(state, action, 'newText');
 

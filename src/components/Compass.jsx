@@ -39,9 +39,9 @@ class Compass extends Component {
     });
 
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
-    this.bookmarked = Storage.hasBookmark(this.props.compass.editCode);
+    props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
 
-    if (this.props.compass.center.length === 0) {
+    if (props.compass.center.length === 0) {
       this.setPeopleInvolved();
     }
   }
@@ -239,7 +239,7 @@ class Compass extends Component {
 
     return (
       <div id="compass">
-        {this.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
+        {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         {!this.props.viewOnly && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
         {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
