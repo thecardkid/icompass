@@ -9,13 +9,13 @@ export default class EditImageForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  edit = ({ imgSource, color }) => {
+  edit = ({ imgSource, color, altText }) => {
     if (!imgSource) return;
 
     const edited = {
       ...this.props.info,
       text: imgSource,
-      color,
+      color, altText,
     };
     const { idx } = edited;
     delete edited.idx;
@@ -29,6 +29,7 @@ export default class EditImageForm extends Component {
     return (
       <ImageForm title={this.props.title}
                  defaultUrl={this.props.info.text}
+                 defaultAlt={this.props.info.altText}
                  submit={this.edit}
                  close={this.props.close}
                  bg={this.props.info.color}

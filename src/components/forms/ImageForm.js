@@ -21,14 +21,15 @@ class ImageForm extends Component {
       imgSource: props.defaultUrl || '',
       color: props.bg,
       progress: false,
-      showAlt: false,
+      showAlt: (props.defaultAlt || '').length > 0,
+      altText: props.defaultAlt || '',
     };
     this.socket = SocketSingleton.getInstance();
     this.toast = ToastSingleton.getInstance();
     this.driveUrlRegex = /https:\/\/drive\.google\.com\/file\/d\/.*\/view\?usp=sharing/;
   }
 
-  handleChange = (e) => {
+  updateImgSource = (e) => {
     const { value } = e.target;
 
     if (this.driveUrlRegex.test(value)) {
@@ -39,6 +40,10 @@ class ImageForm extends Component {
     }
 
     this.setState({ imgSource: value });
+  };
+
+  updateAlt = (e) => {
+    this.setState({ altText: e.target.value });
   };
 
   setColor = (color) => () => {
@@ -171,7 +176,7 @@ class ImageForm extends Component {
             <textarea id="ic-form-text"
                       autoFocus
                       value={this.state.imgSource}
-                      onChange={this.handleChange}
+                      onChange={this.updateImgSource}
                       style={{ background: this.state.color }} />
             <DropzoneS3Uploader onFinish={this.onImageUpload}
                                 onProgress={this.onProgress}
@@ -185,7 +190,9 @@ class ImageForm extends Component {
             {this.state.showAlt && <div>
               <textarea id={'ic-image-alt-text'}
                         placeholder={'Alternate text'}
-                     style={{ background: this.state.color }} />
+                        value={this.state.altText}
+                        onChange={this.updateAlt}
+                        style={{ background: this.state.color }} />
               <p id={'ic-alt-text-label'}>
                 This text will be used by screen readers, search engines, or when the image cannot be loaded
               </p>

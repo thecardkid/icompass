@@ -102,6 +102,7 @@ class StickyNote extends Component {
     return (
       <div className={clazz} style={s}>
         <img src={n.doodle || n.text}
+             alt={n.altText || ''}
              width={this.compactMode ? '100px' : '160px'}/>
         {this.getTooltip(n)}
       </div>
