@@ -163,14 +163,15 @@ div.ic-form-palette {
 
     p {
       text-align: left;
+      float: left;
+    }
 
-      span {
-        float: right;
+    span {
+      float: right;
 
-        i {
-          font-size: 19px;
-          color: @dark;
-        }
+      i {
+        font-size: 19px;
+        color: @dark;
       }
     }
 
@@ -180,6 +181,14 @@ div.ic-form-palette {
       font-family: @notosans;
       font-size: 12px;
       line-height: 15px;
+
+      p {
+        margin-top: 10px;
+      }
+
+      p:last-child {
+        margin-bottom: 10px;
+      }
     }
 
     img {
