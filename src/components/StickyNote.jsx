@@ -195,8 +195,9 @@ class StickyNote extends Component {
     }
   };
 
-  onTouchStart = () => {
-    this.longPress = setTimeout(() => this.edit(), 1000);
+  onTouchStart = (ev) => {
+    ev.persist();
+    this.longPress = setTimeout(() => this.edit(ev), 1000);
   };
 
   onTouchRelease = () => {
