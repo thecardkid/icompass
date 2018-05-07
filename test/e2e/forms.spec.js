@@ -128,7 +128,7 @@ describe('forms', () => {
     const xoffset = 100;
     const yoffset = 500;
 
-    it('create', () => {
+    it('shows form', () => {
       b.moveToObject('body', xoffset, yoffset);
       b.keys('Shift');
       b.doDoubleClick();
@@ -136,8 +136,20 @@ describe('forms', () => {
       b.waitForVisible('#ic-image-form');
       expect('.ic-form-palette').to.be.visible();
       expect('.ic-palette-color').to.have.count(6);
+    });
 
+    it('can toggle alt text', () => {
+      expect('#ic-image-alt-text').to.not.be.visible();
+      b.click('#toggle-alt');
+      expect('#ic-image-alt-text').to.be.visible();
+      b.click('#toggle-alt');
+      expect('#ic-image-alt-text').to.not.be.visible();
+    });
+
+    it('create', () => {
+      b.click('#toggle-alt');
       b.setValue('#ic-form-text', imageUrl);
+      b.setValue('#ic-image-alt-text', 'alternative text');
       b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
@@ -148,16 +160,30 @@ describe('forms', () => {
       expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
+    it('alt tag is there', () => {
+      expect(b.getAttribute('#note2 div.contents img', 'alt')).to.equal('alternative text');
+    });
+
     it('edit', () => {
       b.moveToObject('#note2', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
+      expect('#ic-image-alt-text').to.be.visible();
       expect('.ic-form-palette').to.be.visible();
       expect('.ic-palette-color').to.have.count(6);
       expect('#ic-form-text').to.have.text(imageUrl);
-      b.click('.ic-color-FFCCFF');
+      expect('#ic-image-alt-text').to.have.text('alternative text');
+      b.click('.ic-color-FFCCFF'); // change color
       b.click('button[name=ship]');
       expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+    });
+
+    it('editing an image without alt text does not show alt text field', () => {
+      b.moveToObject('#note1', 10, 1);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-image-form');
+      expect('#ic-image-alt-text').to.not.be.visible();
+      b.click('button[name=nvm]');
     });
 
     it('converts drive link to thumbnail', () => {

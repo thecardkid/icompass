@@ -15,7 +15,7 @@ div#ic-modal-container {
     padding: 10px 20px;
     background: var(--modal-bg);
     margin: 100px auto 0;
-    border-radius: 2px;
+    .border-radius(2px);
     -webkit-box-shadow: var(--shadow);
     -moz-box-shadow: var(--shadow);
     box-shadow: var(--shadow);
@@ -43,7 +43,7 @@ div#ic-modal-container {
         width: 93%;
         font-size: 15px;
         margin-top: 15px;
-        border-radius: 2px;
+        .border-radius(2px);
         padding: 5px 10px;
       }
 
@@ -62,8 +62,8 @@ div#ic-modal-container {
         font-size: 12px;
         margin-left: 10px;
         padding: 0 10px;
-        border-radius: 2px;
         font-family: inherit;
+        .border-radius(2px);
       }
 
       button#ic-modal-confirm {
@@ -126,14 +126,12 @@ div.ic-share {
         margin: 3px 0;
         width: 80%;
         border: 1px solid #ddd;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
         padding: 7px 5px;
         color: #888;
         font-size: 11px;
         font-family: inherit;
         display: inline-block;
+        .border-box;
       }
 
       button {

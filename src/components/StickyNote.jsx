@@ -102,6 +102,7 @@ class StickyNote extends Component {
     return (
       <div className={clazz} style={s}>
         <img src={n.doodle || n.text}
+             alt={n.altText || ''}
              width={this.compactMode ? '100px' : '160px'}/>
         {this.getTooltip(n)}
       </div>
@@ -194,8 +195,9 @@ class StickyNote extends Component {
     }
   };
 
-  onTouchStart = () => {
-    this.longPress = setTimeout(() => this.edit(), 1000);
+  onTouchStart = (ev) => {
+    ev.persist();
+    this.longPress = setTimeout(() => this.edit(ev), 1000);
   };
 
   onTouchRelease = () => {

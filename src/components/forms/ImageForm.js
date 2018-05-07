@@ -21,13 +21,15 @@ class ImageForm extends Component {
       imgSource: props.defaultUrl || '',
       color: props.bg,
       progress: false,
+      showAlt: (props.defaultAlt || '').length > 0,
+      altText: props.defaultAlt || '',
     };
     this.socket = SocketSingleton.getInstance();
     this.toast = ToastSingleton.getInstance();
     this.driveUrlRegex = /https:\/\/drive\.google\.com\/file\/d\/.*\/view\?usp=sharing/;
   }
 
-  handleChange = (e) => {
+  updateImgSource = (e) => {
     const { value } = e.target;
 
     if (this.driveUrlRegex.test(value)) {
@@ -38,6 +40,10 @@ class ImageForm extends Component {
     }
 
     this.setState({ imgSource: value });
+  };
+
+  updateAlt = (e) => {
+    this.setState({ altText: e.target.value });
   };
 
   setColor = (color) => () => {
@@ -52,26 +58,25 @@ class ImageForm extends Component {
 
     return (
       <div className="preview">
-        <p>
-          Preview
-          <span data-tip
-                data-for="help-tooltip"
-          ><i className={'material-icons'}>help</i></span>
+        <div style={{minHeight: '10px'}}>
+          <p>Preview</p>
+          <span data-tip data-for="help-tooltip"><i className={'material-icons'}>help</i></span>
           <ReactTooltip id={'help-tooltip'} place={'top'} effect={'solid'} data-multiline={true}>
             <div className={'ic-image-help'}>
               <h1>Troubleshooting</h1>
-              <br/>
               <p>
-                To insert an image from Google Images, click once to expand the image, then <u>Right Click > Copy Image Address</u> and paste in the link.
+                If the image you are trying to upload is larger than 1MB, please upload to Google Drive first and link it from there.
               </p>
-              <br/>
               <p>
                 To insert an image from Google Drive, go that image and click on <u>Share > Get Shareable Link</u>, and use the link given (the link should end with "usp=sharing").
               </p>
+              <p>
+                To insert an image from Google Images, click once to expand the image, then <u>Right Click > Copy Image Address</u> and paste in the link.
+              </p>
             </div>
           </ReactTooltip>
-        </p>
-        {img}
+          {img}
+        </div>
       </div>
     );
   };
@@ -144,6 +149,10 @@ class ImageForm extends Component {
     }
   };
 
+  toggleAlt = () => {
+    this.setState({ showAlt: !this.state.showAlt });
+  };
+
   render() {
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
@@ -151,12 +160,24 @@ class ImageForm extends Component {
           <div className="contents">
             <div className="header">
               <h1 className="title">{this.props.title}</h1>
+              <button id={'toggle-alt'}
+                      className={this.state.showAlt ? 'active': ''}
+                      onClick={this.toggleAlt}
+                      data-tip
+                      data-for={'alt-tooltip'}>
+                Alt
+              </button>
+              <ReactTooltip id={'alt-tooltip'} place={'top'} effect={'solid'}>
+                <div id={'alt-tooltip-div'}>
+                  Alternative text is used by screen readers, search engines, or when the image cannot be loaded
+                </div>
+              </ReactTooltip>
               {this.props.colors && <FormPalette setColor={this.setColor}/>}
             </div>
             <textarea id="ic-form-text"
                       autoFocus
                       value={this.state.imgSource}
-                      onChange={this.handleChange}
+                      onChange={this.updateImgSource}
                       style={{ background: this.state.color }} />
             <DropzoneS3Uploader onFinish={this.onImageUpload}
                                 onProgress={this.onProgress}
@@ -167,6 +188,16 @@ class ImageForm extends Component {
                                 accept={'image/*'}
                                 multiple={false}
                                 name={'s3-uploader'} />
+            {this.state.showAlt && <div>
+              <textarea id={'ic-image-alt-text'}
+                        placeholder={'Alternate text'}
+                        value={this.state.altText}
+                        onChange={this.updateAlt}
+                        style={{ background: this.state.color }} />
+              <p id={'ic-alt-text-label'}>
+                This text will be used by screen readers, search engines, or when the image cannot be loaded
+              </p>
+            </div>}
             <span id={'s3-uploader-status'}>
               {this.state.progress ? 'Uploading...' : 'Drag and Drop'}
             </span>

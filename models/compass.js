@@ -34,6 +34,7 @@ let compassSchema = mongoose.Schema({
     x: Number,
     y: Number,
     upvotes: Number,
+    altText: String,
   }],
 });
 
