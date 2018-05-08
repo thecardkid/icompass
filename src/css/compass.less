@@ -111,16 +111,16 @@ div#ic-visual-toolbar {
   text-align: center;
   padding: 5px;
   position: absolute;
-  background: var(--modal-bg);
-  color: @light;
+  background: var(--standout);
   z-index: @bulkToolbarZIndex;
   cursor: move;
   top: 50px;
   right: 50px;
+  .border-radius(3px);
 
-  button.ic-visual-color {
+  span.ic-palette-color {
     .border-radius(100%);
-    border: 2px solid @dark;
+    border: 1px solid @dark;
   }
 
   button {
@@ -129,8 +129,14 @@ div#ic-visual-toolbar {
     margin: 0 2.5px;
     font-size: 13px;
     float: right;
-    background: @light;
+    background: none;
+    color: var(--bg);
     .border-radius(3px);
+
+    &.active {
+      background: var(--bg);
+      color: var(--standout);
+    }
   }
 
   button#ic-bulk-delete {
