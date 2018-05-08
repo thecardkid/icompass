@@ -43,7 +43,9 @@ class StickyNote extends Component {
     this.visualMode = props.ui.editingMode === EDITING_MODE.VISUAL || false;
   }
 
-  confirmDelete = () => {
+  confirmDelete = (ev) => {
+    ev.stopPropagation();
+
     if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
     let n = this.props.note;
