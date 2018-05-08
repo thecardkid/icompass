@@ -338,6 +338,29 @@ describe('forms', () => {
       expect(y).to.equal(500);
     });
 
+    it('switching form after changing note color retains that color', () => {
+      b.moveToObject('body', 600, 600);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      b.click('span.ic-color-FFCCFF');
+      expect(b.getCssProperty('#ic-form-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
+
+      b.click('.switch-doodle');
+      expect(b.getCssProperty('#ic-doodle', 'background-color').value).to.equal('rgba(255,204,255,1)');
+
+      b.click('.switch-image');
+      expect(b.getCssProperty('#ic-form-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      b.click('#toggle-alt');
+      b.waitForVisible('#ic-image-alt-text');
+      expect(b.getCssProperty('#ic-image-alt-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
+
+      b.setValue('#ic-form-text', imageUrl);
+      b.click('button[name=ship]');
+      b.pause(200);
+      expect('div.ic-sticky-note').to.have.count(6);
+      expect(b.getCssProperty('#note5 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+    });
+
     it('editing image does not allow switching', () => {
       b.moveToObject('#note4', 10, 10);
       b.doDoubleClick();

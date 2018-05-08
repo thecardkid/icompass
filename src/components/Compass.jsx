@@ -79,7 +79,7 @@ class Compass extends Component {
   };
 
   onMouseDown = (ev) => {
-    if (ev.target.className !== 'ic-quadrant') return;
+    if (ev.target.className !== 'interactable') return;
     this.setState({ select: {x: ev.clientX, y: ev.clientY} });
   };
 
@@ -88,7 +88,7 @@ class Compass extends Component {
   };
 
   onClick = (ev) => {
-    if (ev.target.className !== 'ic-quadrant') return;
+    if (ev.target.className !== 'interactable') return;
     if (this.props.visualMode) {
       this.props.uiX.normalMode();
     }
@@ -96,15 +96,16 @@ class Compass extends Component {
 
   renderQuadrant = (q) => {
     return (
-      <div onDoubleClick={this.doubleClickCreate}
-           onClick={this.onClick}
-           onTouchStart={this.onTouchStart}
-           onTouchEnd={this.onTouchRelease}
-           onMouseDown={this.onMouseDown}
-           onMouseUp={this.onMouseUp}
-           className="ic-quadrant"
+      <div className="ic-quadrant"
            key={`quadrant-${q.id}`}
            id={q.id}>
+        <div className={'interactable'}
+             onDoubleClick={this.doubleClickCreate}
+             onClick={this.onClick}
+             onTouchStart={this.onTouchStart}
+             onTouchEnd={this.onTouchRelease}
+             onMouseDown={this.onMouseDown}
+             onMouseUp={this.onMouseUp} />
         <div>
           <h1>{q.id.toUpperCase()}</h1>
           <h2>{q.prompt}</h2>

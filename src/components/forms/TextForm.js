@@ -59,6 +59,7 @@ class TextForm extends Component {
 
   setColor = (color) => () => {
     this.setState({ color });
+    this.props.uiX.changeFormColor(color);
   };
 
   handleChange = () => {

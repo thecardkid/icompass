@@ -9,14 +9,9 @@ import Modal from '../utils/Modal';
 import * as uiActions from '../actions/ui';
 import * as workspaceActions from '../actions/workspace';
 
-import { COLORS, MODALS } from '../../lib/constants';
+import { MODALS } from '../../lib/constants';
 import Socket from '../utils/Socket';
 import FormPalette from './forms/FormPalette';
-
-const SELECTED = {
-  background: COLORS.DARK,
-  color: 'white',
-};
 
 class VisualModeToolbar extends Component {
   constructor(props) {
@@ -84,18 +79,15 @@ class VisualModeToolbar extends Component {
             <button id="ic-bulk-submit" onClick={this.submit}>
               <i className={'material-icons'}>check</i>
             </button>
-            <button className="ic-bulk-edit underline"
-                    style={underline ? SELECTED : null}
+            <button className={`underline ${underline ? 'active' : ''}`}
                     onClick={this.toggleUnderline}>
               <u>U</u>
             </button>
-            <button className="ic-bulk-edit italic"
-                    style={italic ? SELECTED : null}
+            <button className={`italic ${italic ? 'active' : ''}`}
                     onClick={this.toggleItalic}>
               <i>I</i>
             </button>
-            <button className="ic-bulk-edit bold"
-                    style={bold ? SELECTED : null}
+            <button className={`bold ${bold ? 'active': ''}`}
                     onClick={this.toggleBold}>
               <b>B</b>
             </button>
