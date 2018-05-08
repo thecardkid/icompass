@@ -64,7 +64,6 @@ describe('visual mode', () => {
   });
 
   describe('renders correctly', () => {
-
     beforeAll(() => {
       switchMode('#ic-standard');
       switchMode('#ic-bulk');
@@ -73,19 +72,19 @@ describe('visual mode', () => {
 
     it('bold button', () => {
       b.click('button.bold');
-      expect(b.getCssProperty('button.bold', 'background-color').value).to.equal('rgba(52,52,52,1)');
+      expect(b.getCssProperty('button.bold', 'background-color').value).to.equal('rgba(237,237,237,1)');
       b.click('button.bold');
     });
 
     it('italic button', () => {
       b.click('button.italic');
-      expect(b.getCssProperty('button.italic', 'background-color').value).to.equal('rgba(52,52,52,1)');
+      expect(b.getCssProperty('button.italic', 'background-color').value).to.equal('rgba(237,237,237,1)');
       b.click('button.italic');
     });
 
     it('underline button', () => {
       b.click('button.underline');
-      expect(b.getCssProperty('button.underline', 'background-color').value).to.equal('rgba(52,52,52,1)');
+      expect(b.getCssProperty('button.underline', 'background-color').value).to.equal('rgba(237,237,237,1)');
       b.click('button.underline');
     });
 
