@@ -58,8 +58,9 @@ jobs:
     - docker build -t $DOCKER_TAG .
     - export REPO=$DOCKER_USER/icompass
     - docker images
-    - docker tag $DOCKER_TAG $REPO:latest $REPO:$TRAVIS_TAG
-    - docker push $REPO:develop
+    - docker tag $DOCKER_TAG $REPO:latest
+    - docker push $REPO:latest
+    - docker tag $DOCKER_TAG $REPO:$TRAVIS_TAG
     - docker push $REPO:$TRAVIS_TAG
   - stage: deploy develop
     if: branch = develop
@@ -68,6 +69,7 @@ jobs:
     - docker build -t $DOCKER_TAG .
     - export REPO=$DOCKER_USER/icompass
     - docker images
-    - docker tag $DOCKER_TAG $REPO:develop $REPO:$TRAVIS_TAG
+    - docker tag $DOCKER_TAG $REPO:develop
     - docker push $REPO:develop
+    - docker tag $DOCKER_TAG $REPO:$TRAVIS_TAG
     - docker push $REPO:$TRAVIS_TAG
