@@ -1,7 +1,7 @@
 FROM node:carbon
 
 WORKDIR /app
-ADD ../ /app
+ADD ./ /app
 
 RUN npm install
 RUN npm run build
