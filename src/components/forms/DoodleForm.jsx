@@ -16,7 +16,7 @@ class DoodleForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: props.bg,
+      color: props.info.color || props.bg,
       strokes: [],
       redoStack: [],
     };
@@ -25,6 +25,7 @@ class DoodleForm extends Component {
 
   setColor = (color) => () => {
     this.setState({ color });
+    this.props.uiX.changeFormColor(color);
   };
 
   componentDidMount() {

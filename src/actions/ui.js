@@ -60,6 +60,13 @@ export const switchToText = () => {
   };
 };
 
+export const changeFormColor = (color) => {
+  return {
+    type: 'changeFormColor',
+    color,
+  };
+};
+
 export const closeForm = () => {
   return {
     type: 'closeForm',

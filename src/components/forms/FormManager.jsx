@@ -3,18 +3,18 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import DoodleForm from './DoodleForm.jsx';
+import CreateImageForm from './CreateImageForm';
 import CreateTextForm from './CreateTextForm';
+import EditImageForm from './EditImageForm';
 import EditTextForm from './EditTextForm';
 
 import * as uiX from '../../actions/ui';
 import * as workspaceX from '../../actions/workspace';
 
-import { EDITING_MODE, PROMPTS } from '../../../lib/constants';
 import Socket from '../../utils/Socket';
 import Toast from '../../utils/Toast';
-import ImageForm from './ImageForm';
-import CreateImageForm from './CreateImageForm';
-import EditImageForm from './EditImageForm';
+
+import { EDITING_MODE, PROMPTS } from '../../../lib/constants';
 
 class FormManager extends Component {
   constructor(props) {

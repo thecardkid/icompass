@@ -38,7 +38,7 @@ export default class CreateImageForm extends Component {
                  defaultText={''}
                  submit={this.make}
                  close={this.props.close}
-                 bg={this.props.bg}
+                 bg={this.props.info.color || this.props.bg}
                  switch={true}
                  colors={true}
       />

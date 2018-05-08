@@ -118,6 +118,18 @@ export default (state = defaultState, action) => {
         forms: { ...defaultState.forms },
       };
 
+    case 'changeFormColor':
+      return {
+        ...state,
+        forms: {
+          ...state.forms,
+          formInfo: {
+            ...state.forms.formInfo,
+            color: action.color,
+          },
+        },
+      };
+
     case 'focusOnNote':
       return { ...state, focusedNote: action.idx };
 
