@@ -3,16 +3,18 @@ import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import Modal from '../utils/Modal';
+import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
+import ToastSingleton from '../utils/Toast';
 
 import { MODALS } from '../../lib/constants';
-import Socket from '../utils/Socket';
 
 export default class BookmarkList extends Component {
   constructor(props) {
     super(props);
     this.modal = Modal.getInstance();
     this.socket = Socket.getInstance();
+    this.toast = ToastSingleton.getInstance();
 
     let b = Storage.getBookmarks();
     this.state = {
@@ -91,6 +93,63 @@ export default class BookmarkList extends Component {
     this.setState({ showBookmarks });
   };
 
+  importBookmarks = (e) => {
+    const reader = new FileReader();
+    reader.onload = this.onReaderLoad;
+    reader.readAsText(e.target.files[0]);
+  };
+
+  onReaderLoad = (ev) => {
+    const uploadedJSON = ev.target.result;
+
+    try {
+      const bookmarks = JSON.parse(uploadedJSON);
+
+      if (_.isEmpty(bookmarks)) return;
+
+      const validBookmarks = [];
+      for (let i = 0; i < bookmarks.length; i++) {
+        const { center, href, name } = bookmarks[i];
+
+        if (!center || !href || !name) {
+          throw new Error;
+        }
+
+        validBookmarks.push({ center, href, name });
+      }
+
+      Storage.setBookmarks(validBookmarks);
+
+      this.setState({
+        bookmarks: validBookmarks,
+        show: new Array(validBookmarks.length).fill(false),
+      });
+      this.toast.success('Bookmarks imported!');
+    } catch (ex) {
+      this.modal.alert('<h3>Whoops</h3><p>The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.</p>');
+    }
+  };
+
+  exportBookmarks = () => {
+    this.modal.prompt(
+      '<h3>Export bookmarks</h3><p>Enter a name for the file:</p>',
+      (accepted, filename) => {
+        if (!accepted || !filename) return;
+
+        const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(Storage.getBookmarks()));
+        const anchor = this.refs.exporter;
+        anchor.setAttribute('href', data);
+        anchor.setAttribute('download', `${filename}.json`);
+        anchor.click();
+      },
+      'icompass-bookmarks',
+    );
+  };
+
+  clickFile = () => {
+    this.refs.importer.click();
+  };
+
   render() {
     let list = _.map(this.state.bookmarks, this.renderBookmark);
     const { showBookmarks } = this.state;
@@ -107,6 +166,17 @@ export default class BookmarkList extends Component {
           <div id="ic-bookmark-list">
             {list}
           </div>
+        </div>
+        <div id={'ic-bookmark-footer'}>
+          <button id={'import'} onClick={this.clickFile}>Import</button>
+          <button id={'export'} onClick={this.exportBookmarks}>Export</button>
+          <a className={'hidden'} ref={'exporter'} />
+          <input className={'hidden'}
+                 type={'file'}
+                 id={'importer'}
+                 ref={'importer'}
+                 multiple={false}
+                 onChange={this.importBookmarks}/>
         </div>
       </div>
     );
