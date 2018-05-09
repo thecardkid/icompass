@@ -248,6 +248,35 @@ const ModalSingleton = (() => {
       $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
     }
 
+    editCenter(currentVal, cb) {
+      const html = this.getModalHtml(
+        `<h3>1. Who\'s involved, including you?</h3>
+         <input id="ic-modal-input"/>
+         <p>For and with everyone involved, explore...</p>`,
+        '<button id="ic-modal-confirm">Submit</button>',
+        '<button id="ic-modal-cancel">Cancel</button>',
+      );
+
+      $('#ic-modal-container').empty().append(html);
+      $('#ic-modal-input').val(currentVal).select();
+      this.addBackdropIfNecessary();
+      this.show = true;
+
+      $('#ic-modal-confirm').on('click', () => {
+        const value = $('#ic-modal-input').val();
+        cb(value);
+        this.close();
+      });
+      $('#ic-modal-cancel').on('click', () => {
+        this.close();
+        cb(null);
+      });
+      $('#ic-backdrop').on('click', () => {
+        this.close();
+        cb(null);
+      });
+    }
+
     promptForUsername(warn, cb) {
       const html = '<h3>Welcome to this workspace!</h3><p>Please enter your name as it would appear to others:</p>';
       $('#ic-modal-container').empty().append(this.generatePrompt(html));

@@ -129,7 +129,10 @@ class Compass extends Component {
   }
 
   setCompassCenter = (center) => {
-    this.animateQuadrants = true;
+    if (this.props.compass.center.length === 0) {
+      // animate only if setting center for a new workspace
+      this.animateQuadrants = true;
+    }
     this.props.compassX.setCenter(center);
   };
 
@@ -181,6 +184,16 @@ class Compass extends Component {
     });
   };
 
+  editPeopleInvolved = () => {
+    this.modal.editCenter(this.props.compass.center, (edited) => {
+      if (!edited) {
+        return;
+      }
+
+      this.socket.emitSetCenter(this.props.compass._id, edited);
+    });
+  };
+
   renderPromptFirstQuestion() {
     const style = Object.assign(this.getCenterCss(100, 100), {zIndex: 5});
     return (
@@ -203,13 +216,15 @@ class Compass extends Component {
       css = this.getCenterTextCss(11, length = 100);
     } else if (center.length <= 70) {
       css = this.getCenterTextCss(14, length = 120);
-    } else {
+    } else { // center text at most 100
       css = this.getCenterTextCss(16, length = 140);
     }
 
     return (
       <div>
-        <div id="center" style={this.getCenterCss(length, length)}>
+        <div id="center"
+             style={this.getCenterCss(length, length)}
+             onDoubleClick={this.editPeopleInvolved} >
           <p className="wordwrap" style={css}>{center}</p>
         </div>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
