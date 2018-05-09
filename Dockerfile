@@ -7,4 +7,4 @@ RUN npm install
 
 EXPOSE 8080
 
-CMD npm run build && node icompass.js
+CMD npm run start-server
