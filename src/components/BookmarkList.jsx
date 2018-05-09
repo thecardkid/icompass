@@ -99,30 +99,45 @@ export default class BookmarkList extends Component {
     reader.readAsText(e.target.files[0]);
   };
 
+  isValidBookmark({ center, href, name }) {
+    if (!center || !href || !name) {
+      return false;
+    }
+
+    const hrefRegex = /^\/compass\/edit\/[a-z0-9]{8}\/[a-zA-Z]{1,15}$/;
+    if (!hrefRegex.test(href)) return false;
+
+    const usernameRegex = /^[a-zA-Z]{1,15}$/;
+    return usernameRegex.test(name);
+  }
+
   onReaderLoad = (ev) => {
     const uploadedJSON = ev.target.result;
 
     try {
       const bookmarks = JSON.parse(uploadedJSON);
 
-      if (_.isEmpty(bookmarks)) return;
+      if (_.isEmpty(bookmarks)) {
+        return this.toast.info('Nothing happened - the file was empty');
+      }
 
       const validBookmarks = [];
       for (let i = 0; i < bookmarks.length; i++) {
         const { center, href, name } = bookmarks[i];
-
-        if (!center || !href || !name) {
+        if (!this.isValidBookmark({ center, href, name })) {
           throw new Error;
         }
 
         validBookmarks.push({ center, href, name });
       }
 
-      Storage.setBookmarks(validBookmarks);
+      Storage.addAllBookmarks(validBookmarks);
+
+      const newBookmarks = Storage.getBookmarks();
 
       this.setState({
-        bookmarks: validBookmarks,
-        show: new Array(validBookmarks.length).fill(false),
+        bookmarks: newBookmarks,
+        show: new Array(newBookmarks.length).fill(false),
       });
       this.toast.success('Bookmarks imported!');
     } catch (ex) {
