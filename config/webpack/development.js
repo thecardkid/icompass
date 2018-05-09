@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   devtool: 'eval',
@@ -7,6 +8,14 @@ module.exports = {
     path: path.join(__dirname, '../../public'),
     filename: 'bundle.js',
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        HOST: JSON.stringify('http://localhost:8080'),
+        S3_URL: JSON.stringify('https://s3.us-east-2.amazonaws.com/innovatorscompass'),
+      }
+    }),
+  ],
   module: {
     rules: [
       {
@@ -32,6 +41,11 @@ module.exports = {
           { loader: 'css-loader', options: { importLoaders: 1 } },
           { loader: 'less-loader' },
         ],
+      },
+      {
+        test: /\.(png|jpg|jpeg|mp4)$/,
+        include: [path.join(__dirname, '../../public/static')],
+        loader: 'file-loader',
       },
     ],
   },

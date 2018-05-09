@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
+import _ from 'underscore';
 
 import * as uiX from '../../actions/ui';
 
@@ -15,20 +16,22 @@ class DoodleForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: props.bg,
+      color: props.info.color || props.bg,
+      strokes: [],
+      redoStack: [],
     };
     this.socket = Socket.getInstance();
   }
 
   setColor = (color) => () => {
     this.setState({ color });
+    this.props.uiX.changeFormColor(color);
   };
 
   componentDidMount() {
-    this.canvas = $('#ic-doodle');
+    this.$canvas = $('#ic-doodle');
     $(document).on('touchstart', this.preventDefaultIfCanvas);
     $(document).on('touchmove', this.preventDefaultIfCanvas);
-    this.setState({ x: [], y: [], drag: [] });
   }
 
   componentWillUnmount() {
@@ -41,25 +44,36 @@ class DoodleForm extends Component {
   }
 
   preventDefaultIfCanvas(e) {
-    if (e.target === document.getElementById('ic-doodle'))
+    if (e.target === document.getElementById('ic-doodle')) {
       e.preventDefault();
+    }
   }
 
-  addClick = (xPos, yPos, evDrag) => {
-    let { x, y, drag } = this.state;
-    x.push(xPos - this.canvas.offset().left);
-    y.push(yPos - this.canvas.offset().top);
-    drag.push(evDrag ? 1 : 0);
-    this.setState({ x, y, drag });
+  beginStroke = (x, y) => {
+    const { strokes } = this.state;
+    strokes.push([{
+      x: x - this.$canvas.offset().left,
+      y: y - this.$canvas.offset().top,
+    }]);
+    this.setState({ strokes, redoStack: [] });
+  };
+
+  strokeTo = (x, y) => {
+    const { strokes } = this.state;
+    strokes[strokes.length -1].push({
+      x: x - this.$canvas.offset().left,
+      y: y - this.$canvas.offset().top,
+    });
+    this.setState({ strokes });
   };
 
   beginDraw = (e) => {
     paint = true;
-    this.addClick(e.clientX, e.clientY, false);
+    this.beginStroke(e.clientX, e.clientY);
   };
 
   draw = (e) => {
-    if (paint) this.addClick(e.clientX, e.clientY, true);
+    if (paint) this.strokeTo(e.clientX, e.clientY);
   };
 
   stopDraw = () => {
@@ -68,15 +82,31 @@ class DoodleForm extends Component {
 
   beginTouchDraw = (e) => {
     paint = true;
-    this.addClick(e.touches[0].clientX, e.touches[0].clientY, false);
+    this.beginStroke(e.touches[0].clientX, e.touches[0].clientY);
   };
 
   touchDraw = (e) => {
-    if (paint) this.addClick(e.touches[0].clientX, e.touches[0].clientY, true);
+    if (paint) this.strokeTo(e.touches[0].clientX, e.touches[0].clientY);
+  };
+
+  undo = () => {
+    const { strokes, redoStack } = this.state;
+    if (strokes.length > 0) {
+      redoStack.push(strokes.pop());
+    }
+    this.setState({ strokes, redoStack });
+  };
+
+  redo = () => {
+    const { strokes, redoStack } = this.state;
+    if (redoStack.length > 0) {
+      strokes.push(redoStack.pop());
+    }
+    this.setState({ strokes, redoStack });
   };
 
   drawCanvas = () => {
-    if (!this.canvas) return;
+    if (!this.$canvas) return;
 
     const ctx = this.refs.canvas.getContext('2d');
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -84,22 +114,24 @@ class DoodleForm extends Component {
     ctx.lineJoin = 'round';
     ctx.lineWidth = 5;
 
-    let { x, y, drag } = this.state;
+    const { strokes } = this.state;
 
-    for (let i = 0; i < x.length; i++) {
+    _.each(strokes, stroke => {
       ctx.beginPath();
+      ctx.moveTo(stroke[0].x, stroke[0].y);
 
-      if (drag[i] && i) ctx.moveTo(x[i - 1], y[i - 1]);
-      else ctx.moveTo(x[i] - 1, y[i]);
+      _.each(stroke, point => {
+        ctx.lineTo(point.x, point.y);
+        ctx.moveTo(point.x, point.y);
+      });
 
-      ctx.lineTo(x[i], y[i]);
       ctx.closePath();
       ctx.stroke();
-    }
+    });
   };
 
   submit = (isDraft) => () => {
-    if (this.state.x.length === 0) return;
+    if (this.state.strokes.length === 0) return;
     this.socket.emitMetric('note doodle');
     const { x, y } = this.props.info;
     const note = {
@@ -116,7 +148,7 @@ class DoodleForm extends Component {
   };
 
   clearCanvas = () => {
-    this.setState({ x: [], y: [], drag: [] });
+    this.setState({ strokes: [], redoStack: [] });
   };
 
   switchText = () => {
@@ -138,11 +170,19 @@ class DoodleForm extends Component {
 
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
-        <div className="ic-modal ic-form" id="ic-doodle-form" onClick={this.dontClose}>
-          <div className={'ic-modal-contents'}>
-            <div className={'ic-modal-header'}>
-              <h1 className={'ic-modal-title'}>Create a sketch</h1>
-              <button name="clear" onClick={this.clearCanvas}>clear</button>
+        <div className="ic-form" id="ic-doodle-form" onClick={this.dontClose}>
+          <div className={'contents'}>
+            <div className={'header'}>
+              <h1 className={'title'}>Create a sketch</h1>
+              <div id={'ic-doodle-controls'}>
+                <button name="clear" onClick={this.clearCanvas}>clear</button>
+                <button name="redo" onClick={this.redo}>
+                  <i className="material-icons">redo</i>
+                </button>
+                <button name="undo" onClick={this.undo}>
+                  <i className="material-icons">undo</i>
+                </button>
+              </div>
               <FormPalette setColor={this.setColor} />
             </div>
             <canvas id="ic-doodle"
@@ -175,7 +215,7 @@ class DoodleForm extends Component {
                 </button>
                 <ReactTooltip id={'doodle-tooltip'} place={'bottom'} effect={'solid'}/>
               </div>
-              <button name="ship" onClick={this.submit(false)}>Submit</button>
+              <button name="ship" onClick={this.submit(false)}>Publish</button>
               <button name={'draft'}
                       onClick={this.submit(true)}
                       data-tip="Drafts are invisible to others until you submit them"

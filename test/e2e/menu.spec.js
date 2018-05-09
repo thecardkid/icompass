@@ -14,11 +14,12 @@ const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
 
 const actions = {
   newWorkspace: 0,
-  email: 1,
-  bookmark: 2,
-  share: 3,
-  logout: 7,
-  deleteWorkspace: 8,
+  darkTheme: 1,
+  email: 2,
+  bookmark: 3,
+  share: 4,
+  logout: 8,
+  deleteWorkspace: 9,
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
@@ -95,11 +96,41 @@ describe('workspace menu', () => {
   });
 
   describe('main menu', () => {
+    describe('dark theme', () => {
+      it('can turn on', () => {
+        b.click('.ic-workspace-button');
+        b.waitForVisible('div.ic-workspace-menu');
+        b.click('span.slider');
+        b.pause(200);
+        expect('.dark-theme').to.have.count(2);
+      });
+
+      it('saves in local storage', () => {
+        b.refresh();
+        b.waitForVisible('#compass');
+        expect('.dark-theme').to.have.count(2);
+      });
+
+      it('can turn off', () => {
+        b.click('.ic-workspace-button');
+        b.waitForVisible('div.ic-workspace-menu');
+        b.click('span.slider');
+        b.pause(200);
+        expect('.dark-theme').to.have.count(0);
+      });
+
+      it('saves in local storage again', () => {
+        b.refresh();
+        b.waitForVisible('#compass');
+        expect('.dark-theme').to.have.count(0);
+      });
+    });
+
     describe('email reminder', () => {
       it('wrong email format displays error message', () => {
         selectMenuOption(actions.email);
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(/Email Yourself/);
+        expect('#ic-modal-body').to.have.text(/Receive a Link/);
         expect('#ic-modal-cancel').to.be.visible();
         expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.be.empty;
         b.setValue('#ic-modal-input', 'fakeemail');
@@ -122,14 +153,7 @@ describe('workspace menu', () => {
         expect('.ic-share').to.be.visible();
       });
 
-      it('can x out', () => {
-        b.click('button.ic-close-window');
-        expect('.ic-share').to.not.be.visible();
-      });
-
       it('backdrop closes modal', () => {
-        selectMenuOption(actions.share);
-        b.waitForVisible('.ic-share');
         b.moveToObject('.ic-share', -20, -20);
         b.leftClick();
         expect('.ic-share').to.not.be.visible();
@@ -147,9 +171,18 @@ describe('workspace menu', () => {
         expect('#ic-toast').to.be.visible();
         expect('#ic-toast').to.have.text(/View-only link has been copied/);
       });
+
+      it('can x out', () => {
+        b.click('button.ic-close-window');
+        expect('.ic-share').to.not.be.visible();
+      });
     });
 
     describe('bookmarking', () => {
+      it('bookmark indicator invisible if workspace not bookmarked', () => {
+        expect('#ic-bookmark').to.not.be.visible();
+      });
+
       it('toast displays success status', () => {
         selectMenuOption(actions.bookmark);
         b.waitForVisible('#ic-modal');
@@ -162,36 +195,138 @@ describe('workspace menu', () => {
         b.click('#ic-toast span');
       });
 
-      it('logout button, as well as bookmark has correct info', () => {
+      it('bookmark indicator appears', () => {
+        expect('div#ic-bookmark-indicator').to.be.visible();
+      });
+
+      it('logout button', () => {
         selectMenuOption(actions.logout);
-        b.waitForVisible('div.ic-saved');
         expect(b.getUrl()).to.equal('http://localhost:8080/');
-        b.click('div.ic-saved a');
-        b.waitForVisible('#compass');
-        expect(b.getUrl()).to.contain('http://localhost:8080/compass/edit');
-        b.back();
-        b.waitForVisible('#ic-landing');
-        b.click('div.ic-saved #arrow');
-        b.pause(100);
-        expect('div.ic-saved a').to.have.text('My bookmark');
-        expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
       });
 
-      it('can edit bookmark', () => {
-        b.click('button.edit');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
-        b.setValue('#ic-modal-input', 'Changed name');
-        b.click('#ic-modal-confirm');
-        expect('div.ic-saved a').to.have.text('Changed name');
-      });
+      describe('bookmarks', () => {
+        it('can unhide bookmarks', () => {
+          b.click('#bookmark-button');
+          b.pause(500);
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('0px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('200px');
+        });
 
-      it('can remove bookmark', () => {
-        b.click('button.remove');
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
-        b.click('#ic-modal-confirm');
-        expect('div.ic-saved').to.not.be.there();
+        it('remembers user showed bookmarks', () => {
+          b.refresh();
+          b.waitForVisible('#bookmark-button');
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('0px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('200px');
+        });
+
+        it('bookmark has correct info', () => {
+          b.click('div.ic-saved #arrow');
+          b.pause(100);
+          expect('div.ic-saved a').to.have.text('My bookmark');
+          expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
+        });
+
+        it('bookmark leads to correct workspace', () => {
+          b.click('div.ic-saved a');
+          b.waitForVisible('#compass');
+          expect(b.getUrl()).to.contain('http://localhost:8080/compass/edit');
+        });
+
+        it('bookmark indicator exists if workspace has been bookmarked', () => {
+          expect('div#ic-bookmark-indicator').to.be.visible();
+        });
+
+        it('bookmark prompt indicates workspace is already bookmarked', () => {
+          selectMenuOption(actions.bookmark);
+          b.waitForVisible('#ic-modal');
+          expect('#ic-modal-body').to.have.text(/Already bookmarked/);
+          b.click('#ic-modal-confirm');
+          b.back();
+        });
+
+        it('can edit bookmark', () => {
+          b.click('div.ic-saved #arrow');
+          b.pause(500);
+          b.click('button.edit');
+          b.waitForVisible('#ic-modal');
+          expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
+          b.setValue('#ic-modal-input', 'Changed name');
+          b.click('#ic-modal-confirm');
+          expect('div.ic-saved a').to.have.text('Changed name');
+        });
+
+        it('can remove bookmark', () => {
+          b.click('button.remove');
+          b.waitForVisible('#ic-modal');
+          expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
+          b.click('#ic-modal-confirm');
+          expect('div.ic-saved').to.not.be.there();
+        });
+
+
+
+        describe('import bookmarks', () => {
+          it('notifies if empty file', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/empty.json');
+            b.pause(200);
+            expect('#ic-toast').to.be.visible();
+            expect('#ic-toast').to.have.text(/Nothing happened/);
+          });
+
+          it('errors if not json', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
+            b.pause(200);
+            expect('#ic-toast').to.be.visible();
+            expect('#ic-toast').to.have.text(/Invalid file type/);
+          });
+
+          it('aborts if attribute is missing', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
+            b.pause(200);
+            expect('#ic-modal').to.be.visible();
+            expect('#ic-modal-body').to.have.text(/correct format/);
+            b.click('#ic-modal-confirm');
+          });
+
+          it('aborts if href is invalid', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
+            b.pause(200);
+            expect('#ic-modal').to.be.visible();
+            expect('#ic-modal-body').to.have.text(/correct format/);
+            b.click('#ic-modal-confirm');
+          });
+
+          it('aborts if username is invalid', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
+            b.pause(200);
+            expect('#ic-modal').to.be.visible();
+            expect('#ic-modal-body').to.have.text(/correct format/);
+            b.click('#ic-modal-confirm');
+          });
+
+          it('succeeds and adds to existing bookmarks, without checking for duplicates', () => {
+            expect('.ic-saved').to.have.count(0);
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/valid.json');
+            b.pause(200);
+            expect('#ic-toast').to.be.visible();
+            expect('#ic-toast').to.have.text(/Bookmarks imported/);
+            expect('.ic-saved').to.have.count(1);
+          });
+        });
+
+        it('can hide bookmarks', () => {
+          b.click('#bookmark-button');
+          b.pause(500);
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('-200px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('0px');
+        });
+
+        it('remembers user hid bookmarks', () => {
+          b.refresh();
+          b.waitForVisible('#bookmark-button');
+          expect(b.getCssProperty('#ic-bookmarks', 'left').value).to.equal('-200px');
+          expect(b.getCssProperty('#bookmark-button', 'left').value).to.equal('0px');
+        });
       });
     });
   });

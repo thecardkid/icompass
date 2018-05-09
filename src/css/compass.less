@@ -2,6 +2,7 @@
   width: 100vw;
   height: 100vh;
   cursor: default;
+  background: var(--app-background);
 
   #note-manager {
     width: 100vw;
@@ -9,23 +10,46 @@
   }
 }
 
+div#ic-bookmark-indicator {
+  position: absolute;
+  top: -5px;
+  right: 10px;
+  color: @yellow;
+}
+
 .ic-quadrant {
-  color: #CACACA;
+  color: var(--quadrant-text);
   text-align: center;
   position: absolute;
   cursor: default;
   width: 50vw;
   height: 50vh;
-  z-index: 0;
+  z-index: @quadrantsZIndex;
   opacity: 0;
-  .hasTransition(0.3s);
+  -moz-transition: 0.3s opacity ease-in-out;
+  -o-transition: 0.3s opacity ease-in-out;
+  -webkit-transition: 0.3s opacity ease-in-out;
+  transition: 0.3s opacity ease-in-out;
+  .unselectable;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  div {
-    margin-top: 23vh;
+  h1 {
+    z-index: 0;
+    letter-spacing: 5px;
+    display: inline-block;
+  }
 
-    h1 {
-      letter-spacing: 5px;
-    }
+  h2 {
+    z-index: 0;
+  }
+
+  div.interactable {
+    position: absolute;
+    z-index: 1; // must be higher than h1 and h2
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -52,21 +76,24 @@
 div.ic-compass-label {
   position: absolute;
   display: inline-block;
-  background: white;
-  color: @dark;
+  background: var(--bg);
+  color: var(--standout);
   text-align: center;
   padding: 3px;
   font-size: 12px;
   width: 60px;
+  .unselectable;
 }
 
 #center {
-  border-radius: 25%;
+  .border-radius(25%);
   position: absolute;
   background: @dark;
   color: @light;
   text-align: center;
-  z-index: -1;
+  z-index: @centerZIndex;
+  cursor: pointer;
+  .unselectable;
 
   p#first-prompt {
     margin-top: 42px;
@@ -82,29 +109,19 @@ div.ic-compass-label {
 }
 
 div#ic-visual-toolbar {
-  width: 105px;
   text-align: center;
   padding: 5px;
   position: absolute;
-  background: @dark;
-  color: @light;
-  z-index: 3;
+  background: var(--standout);
+  z-index: @bulkToolbarZIndex;
   cursor: move;
   top: 50px;
   right: 50px;
+  .border-radius(3px);
 
-  div#ic-visual-hint {
-    margin-top: 5px;
-    font-size: 12px;
-  }
-
-  div.ic-visual-group {
-    margin: 5px 0;
-  }
-
-  button.ic-visual-color {
-    border-radius: 100%;
-    border: 2px solid @dark;
+  span.ic-palette-color {
+    .border-radius(100%);
+    border: 1px solid @dark;
   }
 
   button {
@@ -112,35 +129,41 @@ div#ic-visual-toolbar {
     height: 30px;
     margin: 0 2.5px;
     font-size: 13px;
+    float: right;
+    background: none;
+    color: var(--bg);
+    .border-radius(3px);
+
+    &.active {
+      background: var(--bg);
+      color: var(--standout);
+    }
   }
 
-  div.ic-visual-actions {
-    button {
-      width: 90%;
-      height: 20px;
-      border: 2px solid @dark;
-    }
+  button#ic-bulk-delete {
+    background: @red;
+    color: @light;
+  }
 
-    button#ic-bulk-delete {
-      background: @red;
-      color: @light;
-    }
+  button#ic-bulk-submit {
+    background: #23C12B;
+    color: @light;
   }
 }
 
 #hline {
   width: 100vw;
   height: 2px;
-  background: @dark;
+  z-index: @dividersZIndex;
+  background: var(--structure-bg);
   position: absolute;
-  z-index: -2;
 }
 
 #vline {
   width: 2px;
   height: 100vh;
-  z-index: -2;
-  background: @dark;
+  z-index: @dividersZIndex;
+  background: var(--structure-bg);
   position: absolute;
 }
 
@@ -152,6 +175,6 @@ div#ic-visual-toolbar {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, .7);
-  z-index: 4;
+  background: var(--backdrop);
+  z-index: @backdropZIndex;
 }

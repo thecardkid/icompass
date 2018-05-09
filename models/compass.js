@@ -33,6 +33,8 @@ let compassSchema = mongoose.Schema({
     isImage: Boolean,
     x: Number,
     y: Number,
+    upvotes: Number,
+    altText: String,
   }],
 });
 
@@ -82,11 +84,32 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
       note = c.notes[i];
       if (note._id.toString() === updatedNote._id) {
         Object.assign(note, updatedNote);
+        note.x = Math.min(0.98, Math.max(0, note.x));
+        note.y = Math.min(0.98, Math.max(0, note.y));
       }
     }
 
     c.save(function(err, updatedCompass) {
       if (err) logger.error('Could not update note in compass', id, updatedNote, err);
+      cb(updatedCompass);
+    });
+  });
+};
+
+compassSchema.statics.plusOneNote = function(id, noteId, cb) {
+  this.findOne({ _id: id }, function(err, c) {
+    if (err) logger.error('Could not find compass to update note', id, noteId, err);
+
+    let note;
+    for (let i = 0; i < c.notes.length; i++) {
+      note = c.notes[i];
+      if (note._id.toString() === noteId) {
+        note.upvotes = (note.upvotes || 0) + 1;
+      }
+    }
+
+    c.save(function(err, updatedCompass) {
+      if (err) logger.error('Could not update note in compass', id, noteId, err);
       cb(updatedCompass);
     });
   });
@@ -105,6 +128,28 @@ compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb
           if (s.underline !== null) note.style.underline = s.underline;
         }
         if (transformation.color) note.color = transformation.color;
+      }
+      return note;
+    });
+
+    c.save(function(err, updatedCompass) {
+      if (err) logger.error('Could not update notes in compass', id, noteIds, err);
+      cb(updatedCompass);
+    });
+  });
+};
+
+compassSchema.statics.bulkDragNotes = function(id, noteIds, { dx, dy }, cb) {
+  this.findOne({ _id: id }, function(err, c) {
+    if (err) return logger.error('Could not find compass to update note', id, noteIds, err);
+
+    c.notes = _.map(c.notes, function(note) {
+      if (_.contains(noteIds, note._id.toString())) {
+        note.x += dx;
+        note.y += dy;
+
+        note.x = Math.min(0.98, Math.max(0, note.x));
+        note.y = Math.min(0.98, Math.max(0, note.y));
       }
       return note;
     });

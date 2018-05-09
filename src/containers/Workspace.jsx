@@ -17,7 +17,8 @@ import HelpFeedback from '../components/HelpFeedback';
 import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
 
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket.js';
+import Socket from '../utils/Socket';
+import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
 import { PROMPTS, EDITING_MODE, REGEX } from '../../lib/constants';
@@ -60,6 +61,7 @@ class Workspace extends Component {
 
     this.props.compassActions.set(data.compass, data.viewOnly);
     this.props.noteActions.updateAll(data.compass.notes);
+    this.props.workspaceActions.setEditCode(data.compass.editCode);
     this.props.userActions.me(data.username);
   };
 
@@ -92,6 +94,25 @@ class Workspace extends Component {
 
   componentDidMount() {
     $(window).on('resize', this.props.uiActions.resize);
+    this.notifyIfNewVersion();
+  }
+
+  notifyIfNewVersion() {
+    if (_.has(window, 'Notification')) {
+      const appVersion = 'v2.1.0';
+      if (Storage.getVersion() !== appVersion) {
+        Storage.setVersion(appVersion);
+        const title = 'A new version of iCompass has been released!';
+        const options = {
+          body: `Click to see what\'s new in ${appVersion}`,
+          icon: 'https://s3.us-east-2.amazonaws.com/innovatorscompass/favicon.png',
+        };
+
+        const n = new Notification(title, options);
+
+        n.onclick = () => window.open('https://github.com/thecardkid/icompass/releases');
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -121,7 +142,7 @@ class Workspace extends Component {
         <Tappable onTap={this.toast.clear}>
           <div id="ic-toast" onClick={this.toast.clear} />
         </Tappable>
-        <HelpFeedback />
+        <HelpFeedback editCode={this.props.compass.editCode}/>
         <WorkspaceMenu />
         <Compass />
         <VisualModeToolbar show={this.props.visualMode} />

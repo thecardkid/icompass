@@ -9,6 +9,7 @@ const defaultState = {
     editText: false,
     editImage: false,
   },
+  bookmarked: false,
   showShareModal: false,
   focusedNote: -1,
   vw: 0,
@@ -40,6 +41,12 @@ const showNewNote = (state, action, formType) => {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case 'setBookmark':
+      return {
+        ...state,
+        bookmarked: action.show,
+      };
+
     case 'showNewNote':
       return showNewNote(state, action, 'newText');
 
@@ -109,6 +116,18 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         forms: { ...defaultState.forms },
+      };
+
+    case 'changeFormColor':
+      return {
+        ...state,
+        forms: {
+          ...state.forms,
+          formInfo: {
+            ...state.forms.formInfo,
+            color: action.color,
+          },
+        },
       };
 
     case 'focusOnNote':

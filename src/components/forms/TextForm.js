@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
 
+import FormPalette from './FormPalette';
+import ShortcutManager from '../ShortcutManager';
+
 import * as uiX from '../../actions/ui';
 
-import { COLORS, MODALS, PROMPTS, REGEX } from '../../../lib/constants';
+import { MODALS, PROMPTS, REGEX } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
-import FormPalette from './FormPalette';
 
 class TextForm extends Component {
   constructor(props) {
@@ -28,6 +30,24 @@ class TextForm extends Component {
     this.socket = SocketSingleton.getInstance();
   }
 
+  _handleShortcuts = (e) => {
+    if (e.metaKey) {
+      switch(e.which) {
+        case 66:
+          this.toggleStyle('bold')();
+          break;
+
+        case 73:
+          this.toggleStyle('italic')();
+          break;
+
+        case 85:
+          this.toggleStyle('underline')();
+          break;
+      }
+    }
+  };
+
   toggleStyle = (style) => () => {
     this.setState({
       style: {
@@ -39,6 +59,7 @@ class TextForm extends Component {
 
   setColor = (color) => () => {
     this.setState({ color });
+    this.props.uiX.changeFormColor(color);
   };
 
   handleChange = () => {
@@ -68,23 +89,23 @@ class TextForm extends Component {
   };
 
   renderStyleToolbar() {
-    const selectedStyle = { background: COLORS.DARK, color: 'white' };
+    const { bold, italic, underline } = this.state.style;
 
     return (
       <div>
         <div className="ic-text-ibu">
           <button name="underline"
-                  style={this.state.style.underline ? selectedStyle : null}
+                  className={underline ? 'active' : ''}
                   onClick={this.toggleStyle('underline')}>
             <u>U</u>
           </button>
           <button name="italic"
-                  style={this.state.style.italic ? selectedStyle : null}
+                  className={italic ? 'active' : ''}
                   onClick={this.toggleStyle('italic')}>
             <i>I</i>
           </button>
           <button name="bold"
-                  style={this.state.style.bold ? selectedStyle : null}
+                  className={bold ? 'active' : ''}
                   onClick={this.toggleStyle('bold')}>
             <b>B</b>
           </button>
@@ -152,10 +173,11 @@ class TextForm extends Component {
 
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
-        <div className="ic-modal ic-form" id="ic-note-form" onClick={this.dontClose}>
-          <div className="ic-modal-contents">
-            <div className="ic-modal-header">
-              <h1 className={'ic-modal-title'}>
+        <ShortcutManager handle={this._handleShortcuts} formShortcut={true}/>
+        <div className="ic-form" id="ic-note-form" onClick={this.dontClose}>
+          <div className="contents">
+            <div className="header">
+              <h1 className={'title'}>
                 {this.props.title}
                 <span style={spanStyle}> {this.state.charCount}/300</span>
               </h1>
@@ -170,7 +192,7 @@ class TextForm extends Component {
                       style={{ background: this.state.color }}/>
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit(false)}>Submit</button>
+              <button name="ship" onClick={this.submit(false)}>{this.props.switch ? 'Publish' : 'Edit'}</button>
               {this.props.switch && this.renderDraftButton()}
               <button name="nvm" onClick={this.props.close}>Cancel</button>
             </div>

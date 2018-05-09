@@ -7,8 +7,8 @@ export default class ShareModal extends Component {
   constructor(props) {
     super(props);
 
-    this.editLink = `${HOST}compass/edit/${this.props.compass.editCode}`;
-    this.viewLink = `${HOST}compass/view/${this.props.compass.viewCode}`;
+    this.editLink = `${HOST}/compass/edit/${this.props.compass.editCode}`;
+    this.viewLink = `${HOST}/compass/view/${this.props.compass.viewCode}`;
     this.toast = ToastSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }
@@ -44,10 +44,10 @@ export default class ShareModal extends Component {
 
     return (
       <div id={'ic-backdrop'} onClick={this.props.close}>
-        <div className={'ic-modal ic-share'} onClick={this.dontClose}>
-          <div className={'ic-modal-contents'}>
-            <div className={'ic-modal-header'}>
-              <h1 className={'ic-modal-title'}>Share this Workspace</h1>
+        <div className={'ic-share'} onClick={this.dontClose}>
+          <div className={'contents'}>
+            <div className={'header'}>
+              <h1 className={'title'}>Share this Workspace</h1>
               <button className={'ic-close-window'} onClick={this.props.close}>X</button>
             </div>
             <div className={'ic-share-link'}>

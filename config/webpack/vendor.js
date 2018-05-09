@@ -6,11 +6,23 @@ let PUBLIC = path.resolve(__dirname, '../../public/');
 module.exports = {
   entry: {
     'vendor': [
-      'react', 'react-dom', 'react-draggable',
-      'react-redux', 'react-router', 'react-swipeable',
-      'react-tappable', 'react-tooltip', 'redux', 'prop-types',
-      'deep-equal', 'interactjs',
-      'jquery', 'underscore',
+      'attr-accept',
+      'deep-equal',
+      'interactjs',
+      'jquery',
+      'linkifyjs',
+      'react',
+      'react-dom',
+      'react-draggable',
+      'react-dropzone-s3-uploader',
+      'react-redux',
+      'react-router',
+      'react-swipeable',
+      'react-tappable',
+      'react-tooltip',
+      'redux',
+      'socket.io-client',
+      'underscore',
     ],
   },
   output: {

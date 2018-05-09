@@ -2,8 +2,10 @@ let bodyParser = require('body-parser');
 let express = require('express');
 let helmet = require('helmet');
 let path = require('path');
+const s3Router = require('react-dropzone-s3-uploader/s3router');
 
 let logger = require('./lib/logger.js');
+let routes = require('./routes/routes.js');
 
 let app = express();
 let db;
@@ -22,6 +24,18 @@ app.use(helmet({
   xssFilter: {
     setOnOldIE: true,
   },
+}));
+
+app.use(logger.api);
+
+app.use('/api/v1', routes);
+
+app.use('/s3', s3Router({
+  bucket: process.env.S3_BUCKET || 'innovatorscompass',
+  region: 'us-east-2',
+  headers: {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'},
+  ACL: 'public-read',
+  uniquePrefix: true,
 }));
 
 app.get('*', function(request, response) {
@@ -44,3 +58,5 @@ function cleanup() {
 
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
+
+module.exports = app;

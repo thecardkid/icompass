@@ -9,12 +9,12 @@ export default class CreateImageForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  make = ({ imgSource, color }, isDraft) => {
+  make = ({ imgSource, color, altText }, isDraft) => {
     if (!imgSource) return;
 
     const { x, y } = this.props.info;
     let note = {
-      x, y, color,
+      x, y, color, altText,
       text: imgSource,
       isImage: true,
       doodle: null,
@@ -38,7 +38,7 @@ export default class CreateImageForm extends Component {
                  defaultText={''}
                  submit={this.make}
                  close={this.props.close}
-                 bg={this.props.bg}
+                 bg={this.props.info.color || this.props.bg}
                  switch={true}
                  colors={true}
       />

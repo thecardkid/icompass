@@ -43,7 +43,9 @@ class StickyNote extends Component {
     this.visualMode = props.ui.editingMode === EDITING_MODE.VISUAL || false;
   }
 
-  confirmDelete = () => {
+  confirmDelete = (ev) => {
+    ev.stopPropagation();
+
     if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
 
     let n = this.props.note;
@@ -65,15 +67,30 @@ class StickyNote extends Component {
     this.props.submitDraft(this.props.note, this.props.i);
   };
 
+  upvote = (ev) => {
+    ev.stopPropagation();
+    this.props.socket.emitWorkspace('+1 note', this.props.note._id);
+  };
+
   getTooltip(n) {
     if (n.draft) {
       return (
         <button className="ic-tooltip submit" onClick={this.submitDraft} onTouchStart={this.submitDraft}>
-          submit
+          publish
         </button>
       );
     } else {
-      return <p className="ic-tooltip">{n.user}</p>;
+      let upvoteButtonClass = 'ic-upvote';
+      if (!n.upvotes) {
+        upvoteButtonClass += ' on-hover-only';
+      }
+
+      return (
+        <div>
+          <p className="ic-tooltip">{n.user}</p>
+          {this.hasEditingRights && <p className={upvoteButtonClass} onClick={this.upvote}>+{n.upvotes || 1}</p>}
+        </div>
+      );
     }
   }
 
@@ -87,6 +104,7 @@ class StickyNote extends Component {
     return (
       <div className={clazz} style={s}>
         <img src={n.doodle || n.text}
+             alt={n.altText || ''}
              width={this.compactMode ? '100px' : '160px'}/>
         {this.getTooltip(n)}
       </div>
@@ -125,7 +143,9 @@ class StickyNote extends Component {
     }
   };
 
-  edit = () => {
+  edit = (ev) => {
+    if (ev.target.className === 'ic-upvote') return;
+
     if (this.props.note.doodle) {
       return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
     }
@@ -144,6 +164,19 @@ class StickyNote extends Component {
   };
 
   clickNote = (ev) => {
+    if (ev.target.parentElement &&
+      ev.target.parentElement.parentElement) {
+      if (ev.target.parentElement.parentElement.doneDrag) {
+        ev.target.parentElement.parentElement.dragging = false;
+        ev.target.parentElement.parentElement.doneDrag = false;
+        return;
+      }
+
+      if (ev.target.parentElement.parentElement.dragging) {
+        return;
+      }
+    }
+
     if (!this.visualMode && ev.shiftKey) {
       if (this.props.note.draft) {
         return this.toast.warn('Cannot enter bulk mode by selecting a draft');
@@ -164,8 +197,9 @@ class StickyNote extends Component {
     }
   };
 
-  onTouchStart = () => {
-    this.longPress = setTimeout(() => this.edit(), 1000);
+  onTouchStart = (ev) => {
+    ev.persist();
+    this.longPress = setTimeout(() => this.edit(ev), 1000);
   };
 
   onTouchRelease = () => {
@@ -178,7 +212,8 @@ class StickyNote extends Component {
       style = {
         left: n.x * this.props.ui.vw,
         top: n.y * this.props.ui.vh,
-        zIndex: i === this.props.ui.focusedNote ? 1 : 0,
+        // from src/css/zIndex.less
+        zIndex: i === this.props.ui.focusedNote ? 3 : 2,
       };
 
     let sel = this.props.workspace.selected;

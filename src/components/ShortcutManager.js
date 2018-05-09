@@ -7,7 +7,7 @@ import * as uiX from '../actions/ui';
 
 import SocketSingleton from '../utils/Socket';
 
-import { KEYCODES } from '../../lib/constants';
+import { KEYCODES, EDITING_MODE } from '../../lib/constants';
 import ModalSingleton from '../utils/Modal';
 
 class ShortcutManager extends Component {
@@ -26,20 +26,26 @@ class ShortcutManager extends Component {
   }
 
   keydown = (e) => {
-    if (this.modal.show && e.which === KEYCODES.ESC) {
+    const isEscapeKey = e.which === KEYCODES.ESC;
+
+    if (this.modal.show && isEscapeKey) {
       return this.modal.close();
     }
 
+    if (this.props.visualMode && isEscapeKey) {
+      this.props.uiX.normalMode();
+    }
+
     if (this.props.formVisible) {
-      if (e.which === KEYCODES.ESC) {
+      if (isEscapeKey) {
         this.props.uiX.closeForm();
+      } else if (this.props.formShortcut) {
+        this.props.handle(e);
       }
       return;
     }
 
-    if (document.activeElement.id === 'message-text') return;
     if (document.activeElement.id === 'ic-modal-input') return;
-
 
     this.props.handle(e);
   };
@@ -54,6 +60,7 @@ const mapStateToProps = (state) => {
 
   return {
     formVisible: forms.newImage || forms.editImage || forms.newText || forms.editText || forms.newDoodle,
+    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL,
   };
 };
 

@@ -1,5 +1,6 @@
 const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
+const path = require('path');
 chai.use(chaiWebdriver(browser));
 
 const expect = chai.expect;
@@ -127,7 +128,7 @@ describe('forms', () => {
     const xoffset = 100;
     const yoffset = 500;
 
-    it('create', () => {
+    it('shows form', () => {
       b.moveToObject('body', xoffset, yoffset);
       b.keys('Shift');
       b.doDoubleClick();
@@ -135,8 +136,20 @@ describe('forms', () => {
       b.waitForVisible('#ic-image-form');
       expect('.ic-form-palette').to.be.visible();
       expect('.ic-palette-color').to.have.count(6);
+    });
 
+    it('can toggle alt text', () => {
+      expect('#ic-image-alt-text').to.not.be.visible();
+      b.click('#toggle-alt');
+      expect('#ic-image-alt-text').to.be.visible();
+      b.click('#toggle-alt');
+      expect('#ic-image-alt-text').to.not.be.visible();
+    });
+
+    it('create', () => {
+      b.click('#toggle-alt');
       b.setValue('#ic-form-text', imageUrl);
+      b.setValue('#ic-image-alt-text', 'alternative text');
       b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
@@ -147,16 +160,30 @@ describe('forms', () => {
       expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
+    it('alt tag is there', () => {
+      expect(b.getAttribute('#note2 div.contents img', 'alt')).to.equal('alternative text');
+    });
+
     it('edit', () => {
       b.moveToObject('#note2', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
+      expect('#ic-image-alt-text').to.be.visible();
       expect('.ic-form-palette').to.be.visible();
       expect('.ic-palette-color').to.have.count(6);
       expect('#ic-form-text').to.have.text(imageUrl);
-      b.click('.ic-color-FFCCFF');
+      expect('#ic-image-alt-text').to.have.text('alternative text');
+      b.click('.ic-color-FFCCFF'); // change color
       b.click('button[name=ship]');
       expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+    });
+
+    it('editing an image without alt text does not show alt text field', () => {
+      b.moveToObject('#note1', 10, 1);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-image-form');
+      expect('#ic-image-alt-text').to.not.be.visible();
+      b.click('button[name=nvm]');
     });
 
     it('converts drive link to thumbnail', () => {
@@ -177,6 +204,29 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note2');
       expect(xoffset - x).to.equal(-30);
       expect(yoffset - y).to.equal(-30);
+    });
+
+    describe('s3 upload', () => {
+      it('file too large', () => {
+        b.moveToObject('body', 700, 700);
+        b.keys('Shift');
+        b.doDoubleClick();
+        b.keys('Shift');
+        b.waitForVisible('#ic-image-form');
+        expect('input[name=s3-uploader]').to.be.there();
+
+        b.chooseFile('input[name=s3-uploader]', path.join('./test/e2e/files/toolarge.jpg'));
+        b.pause(500);
+        expect('#ic-toast').to.be.visible();
+        expect('#ic-toast').to.have.text(/cannot be larger than 1MB/);
+      });
+
+      it('upload success', () => {
+        b.chooseFile('input[name=s3-uploader]', path.join('./test/e2e/files/shouldpass.jpg'));
+        b.waitForVisible('div.preview img');
+        expect(b.getText('#ic-form-text')).to.include('https://s3.us-east-2.amazonaws.com/innovatorscompass');
+        b.click('button[name=nvm]');
+      });
     });
   });
 
@@ -286,6 +336,29 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note4');
       expect(x).to.equal(500);
       expect(y).to.equal(500);
+    });
+
+    it('switching form after changing note color retains that color', () => {
+      b.moveToObject('body', 600, 600);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      b.click('span.ic-color-FFCCFF');
+      expect(b.getCssProperty('#ic-form-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
+
+      b.click('.switch-doodle');
+      expect(b.getCssProperty('#ic-doodle', 'background-color').value).to.equal('rgba(255,204,255,1)');
+
+      b.click('.switch-image');
+      expect(b.getCssProperty('#ic-form-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      b.click('#toggle-alt');
+      b.waitForVisible('#ic-image-alt-text');
+      expect(b.getCssProperty('#ic-image-alt-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
+
+      b.setValue('#ic-form-text', imageUrl);
+      b.click('button[name=ship]');
+      b.pause(200);
+      expect('div.ic-sticky-note').to.have.count(6);
+      expect(b.getCssProperty('#note5 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
     it('editing image does not allow switching', () => {

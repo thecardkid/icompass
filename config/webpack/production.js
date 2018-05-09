@@ -10,6 +10,12 @@ module.exports = {
     filename: 'bundle.js',
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        HOST: JSON.stringify(process.env.HOST || 'https://icompass.me'),
+        S3_URL: JSON.stringify(`https://s3.us-east-2.amazonaws.com/${process.env.S3_BUCKET || 'innovatorscompass'}`),
+      }
+    }),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.DllReferencePlugin({
       context: __dirname,
@@ -65,6 +71,11 @@ module.exports = {
           { loader: 'css-loader', options: { importLoaders: 1 } },
           { loader: 'less-loader' },
         ],
+      },
+      {
+        test: /\.(png|jpg|jpeg|mp4)$/,
+        include: [path.join(__dirname, '../../public/static')],
+        loader: 'file-loader',
       },
     ],
   },

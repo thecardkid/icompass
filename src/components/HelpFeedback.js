@@ -25,36 +25,26 @@ export default class HelpFeedback extends Component {
   };
 
   showPrivacyStatement = () => {
-    this.socket.emitMetric('help show privacy');
     this.modal.alertPrivacyStatement();
     this.hideMenu();
   };
 
   openPrompt = () => {
-    this.socket.emitMetric('help prompt');
     this.modal.alertCompassPrompt();
     this.hideMenu();
   };
 
-  openGuide = () => {
-    this.socket.emitMetric('help guide');
-    this.hideMenu();
-  };
-
   openReleaseNotes = () => {
-    this.socket.emitMetric('help release notes');
     this.hideMenu();
   };
 
   showFeedback = () => {
-    this.socket.emitMetric('help show feedback');
-    this.modal.alertFeedback();
+    this.modal.alertFeedback(this.props.editCode);
     this.hideMenu();
   };
 
-  contactUs = () => {
-    this.socket.emitMetric('help contact us');
-    window.location.href = 'mailto:hieumaster95@gmail.com';
+  showAboutUs = () => {
+    this.modal.alertAboutUs();
     this.hideMenu();
   };
 
@@ -65,25 +55,25 @@ export default class HelpFeedback extends Component {
           <div className={'ic-menu-item'} onClick={this.openPrompt}>
             Get Started
           </div>
-        </section>
-        <section>
-          <Link to={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.openGuide}>
+          <Link to={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.hideMenu}>
             <div className={'ic-menu-item'}>
               iCompass Guide
             </div>
           </Link>
+        </section>
+        <section>
+          <div className={'ic-menu-item'} onClick={this.showAboutUs}>
+            About Us
+          </div>
           <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
             Privacy Statement
-          </div>
-          <div className={'ic-menu-item'} onClick={this.showFeedback}>
-            Provide Feedback
           </div>
           <Link to={'https://github.com/thecardkid/icompass/releases'} target={'_blank'} onClick={this.openReleaseNotes}>
             <div className={'ic-menu-item'}>
               What's new?
             </div>
           </Link>
-          <div className={'ic-menu-item'} onClick={this.contactUs}>
+          <div className={'ic-menu-item'} onClick={this.showFeedback}>
             Contact Us
           </div>
         </section>

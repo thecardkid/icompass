@@ -4,7 +4,7 @@ const setup = () => {
   browser.waitForVisible('body', 1000);
   browser.setValue('#compass-center', 'webdriverio');
   browser.setValue('#username', 'sandbox');
-  browser.click('input[type=submit]');
+  browser.click('button[type=submit]');
   browser.waitForVisible('#ic-modal', 1000);
   browser.click('#ic-modal-confirm');
   browser.waitForVisible('#compass', 1000);
@@ -17,7 +17,7 @@ const setup = () => {
 const cleanup = () => {
   browser.click('button.ic-workspace-button');
   browser.waitForVisible('div.ic-workspace-menu');
-  browser.elements('div.ic-menu-item').value[8].click();
+  browser.elements('div.ic-menu-item').value[9].click();
   browser.waitForVisible('#ic-modal', 1000);
   browser.click('#ic-modal-confirm');
   browser.waitForVisible('#ic-modal', 5000);

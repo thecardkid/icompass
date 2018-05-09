@@ -147,6 +147,10 @@ const SocketSingleton = (() => {
       this.socket.emit('metric edit link access', url);
     };
 
+    emitWorkspace = (event, ...args) => {
+      this.socket.emit(event, ...args);
+    };
+
     emitMetric = (event, ...args) => {
       this.socket.emit(`metric ${event}`, ...args);
     };

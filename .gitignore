@@ -2,6 +2,7 @@ errorShots/
 .DS_Store
 .idea/
 node_modules/
+package-lock.json
 docker/prod.yml
 
 bundle.js
@@ -9,6 +10,9 @@ bundle.js.map
 bundle.js.gz
 main.css
 main.css.map
+
+public/*.png
+public/*.jpg
 
 .ctagsignore
 tags

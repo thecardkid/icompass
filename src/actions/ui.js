@@ -1,3 +1,10 @@
+export const setBookmark = (show) => {
+  return {
+    type: 'setBookmark',
+    show,
+  };
+};
+
 export const showNewNote = (event) => {
   return {
     type: 'showNewNote',
@@ -50,6 +57,13 @@ export const switchToDoodle = () => {
 export const switchToText = () => {
   return {
     type: 'switchToText',
+  };
+};
+
+export const changeFormColor = (color) => {
+  return {
+    type: 'changeFormColor',
+    color,
   };
 };
 

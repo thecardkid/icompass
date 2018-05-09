@@ -7,17 +7,41 @@
 @import "stickynote";
 @import "bookmarklist";
 @import "modal";
+@import "zIndex";
 
 @dosis: 'Dosis', sans-serif;
 @notosans: 'Noto Sans', sans-serif;
 @inconsolata: 'Inconsolata', monospace;
 @stickySize: 120px;
 @dark: #343434;
-@light: #EDEDED;
-@blue: #288AFF;
-@yellow: #EDFF4C;
-@twitterBlue: #55ACEE;
-@red: #C21A03;
+@light: #ededed;
+@blue: #288aff;
+@yellow: #beba10;
+@red: #c21a03;
+
+:root {
+  --structure-bg: @dark;
+  --bg: @light;
+  --standout: @dark;
+  --app-background: none;
+  --quadrant-text: #cacaca;
+  --shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);
+
+  --modal-bg: @light;
+  --backdrop: rgba(0, 0, 0, .7);
+}
+
+.dark-theme {
+  --structure-bg: #686868;
+  --bg: @dark;
+  --standout: @light;
+  --app-background: #232323;
+  --quadrant-text: #555;
+  --shadow: 3px 3px 7px rgba(10, 10, 10, 1);
+
+  --modal-bg: #DDD;
+  --backdrop: rgba(0, 0, 0, .4);
+}
 
 .wordwrap {
   white-space: pre-wrap; // CSS3
@@ -37,6 +61,27 @@
   -o-transition: @s all ease-in-out;
   -webkit-transition: @s all ease-in-out;
   transition: @s all ease-in-out;
+}
+
+.border-radius (@px) {
+  -webkit-border-radius: @px;
+  -moz-border-radius: @px;
+  border-radius: @px;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.border-box {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .hidden {
@@ -85,20 +130,13 @@ textarea:focus {
   outline: none;
 }
 
-button.ic-button {
-  width: 130px;
-  margin: 10px 5px;
-  height: 30px;
-  font-size: 14px;
-  color: @light;
-  background: @dark;
-  .hasTransition(0.5s);
-  border: 1px solid @dark;
-}
-
-button.ic-button:hover {
-  color: @dark;
-  background: @light;
+div#select-area-container {
+  div#select-area {
+    background: rgba(28, 138, 255, 0.2);
+    z-index: @selectAreaZIndex;
+    border: 1px solid @blue;
+    position: absolute;
+  }
 }
 
 button.ic-close-window {
@@ -110,30 +148,6 @@ button.ic-close-window {
   font-size: 25px;
   cursor: pointer;
   color: @light;
-}
-
-div.ic-modal {
-  position: absolute;
-  z-index: 2;
-  background: @light;
-  text-align: center;
-  border-radius: 4px;
-
-  div.ic-modal-contents {
-    margin: 10px;
-
-    div.ic-modal-header {
-      height: 30px;
-
-      h1.ic-modal-title {
-        width: 50%;
-        height: 30px;
-        line-height: 30px;
-        text-align: left;
-        float: left;
-      }
-    }
-  }
 }
 
 div#ic-404 {
@@ -154,19 +168,19 @@ div#container {
 }
 
 div#ic-toast {
+  height: 0;
   position: absolute;
-  border-radius: 4px;
-  height: 17px;
+  .border-radius(4px);
   width: 100%;
   text-align: center;
   top: 20px;
-  z-index: 11; // must be higher than #ic-modal-container
+  z-index: @toastZIndex;
 
   span {
-    border-radius: 4px;
     padding: 3px 12px;
     font-size: 15px;
     cursor: pointer;
+    .border-radius(4px);
   }
 
   @opacity: 0.8;

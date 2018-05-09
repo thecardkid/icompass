@@ -1,12 +1,10 @@
-@higherThanIcToast: 12;
-
 div#ic-help {
   button.ic-help-button {
     font-size: 20px;
     font-weight: 300;
     bottom: 10px;
     right: 10px;
-    z-index: @higherThanIcToast;
+    z-index: @floatingButtonZIndex;
   }
 
   div.__react_component_tooltip {
@@ -21,12 +19,10 @@ button.floating-button {
   color: white;
   width: @r;
   height: @r;
-  -webkit-border-radius: 100%;
-  -moz-border-radius: 100%;
-  border-radius: 100%;
   text-align: center;
   line-height: @r;
   cursor: pointer;
+  .border-radius(100%);
 }
 
 button.ic-workspace-button {
@@ -34,7 +30,7 @@ button.ic-workspace-button {
   left: 10px;
   font-size: 20px;
   font-weight: 300;
-  z-index: @higherThanIcToast;
+  z-index: @floatingButtonZIndex;
 
   i {
     margin-top: 6px;
@@ -45,13 +41,13 @@ button.ic-workspace-button {
 div.ic-help-menu {
   bottom: 50px;
   right: 10px;
-  z-index: @higherThanIcToast;
+  z-index: @floatingButtonZIndex
 }
 
 div.ic-workspace-menu {
   top: 50px;
   left: 10px;
-  z-index: @higherThanIcToast;
+  z-index: @floatingButtonZIndex;
 }
 
 div.ic-menu {
@@ -59,12 +55,8 @@ div.ic-menu {
   position: fixed;
   width: 150px;
   background: @dark;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  .border-box;
+  .border-radius(3px);
 
   section {
     padding: 5px 0;
@@ -76,19 +68,19 @@ div.ic-menu {
 }
 
 div.ic-notes-submenu {
-  top: 161px;
+  top: 197px;
   left: 158px;
   width: 200px;
 }
 
 div.ic-modes-submenu {
-  top: 186px;
+  top: 222px;
   left: 158px;
   width: 200px;
 }
 
 div.ic-users-submenu {
-  top: 211px;
+  top: 247px;
   left: 158px;
 
   span.user-color {
@@ -108,9 +100,7 @@ div.ic-menu-item {
   color: @light;
   background: none;
   font-family: @notosans;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  .border-box;
 
   a {
     color: inherit;
@@ -121,6 +111,59 @@ div.ic-menu-item {
     float: right;
     font-size: 16px;
     font-family: @dosis;
+  }
+
+  .switch {
+    position: relative;
+    float: right;
+    display: inline-block;
+    width: 25px;
+    height: 11px;
+    margin-top: 8px;
+
+    input[type=checkbox] {
+      display: none;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(18px);
+      -ms-transform: translateX(18px);
+      transform: translateX(18px);
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+      .border-radius(34px);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 15px;
+      width: 15px;
+      left: -4px;
+      bottom: -2px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+      .border-radius(50%);
+    }
   }
 
   span.ic-shortcut {

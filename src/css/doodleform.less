@@ -1,25 +1,26 @@
 div#ic-doodle-form {
   width: 450px;
 
-  div.ic-modal-header {
+  div.header {
     margin-bottom: 5px;
 
-    h1 {
-      text-align: left;
-    }
+    div#ic-doodle-controls {
+      button {
+        float: right;
+        margin-left: 5px;
+        font-size: 14px;
+        padding: 5px;
+        height: 27px;
+        .border-radius(3px);
 
-    button[name=clear] {
-      float: right;
-      font-size: 14px;
-      padding: 5px;
-      min-width: 60px;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
+        i {
+          font-size: 17px;
+        }
+      }
     }
   }
 
-  canvas {
+  canvas#ic-doodle {
     width: 100%;
   }
 

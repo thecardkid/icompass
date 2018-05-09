@@ -4,10 +4,12 @@
     float: left;
     cursor: pointer;
     position: absolute;
-    z-index: 0;
+    z-index: @stickiesZIndex;
+    .unselectable;
+    min-width: 50px;
 
     button.ic-close-window {
-      z-index: 1;
+      z-index: @stickiesCloseWindowZIndex;
     }
 
     div.contents {
@@ -16,12 +18,14 @@
       display: block;
       max-width: 160px;
       letter-spacing: 0;
-      .boxshadow(3px, 7px, rgba(33, 33, 33, 0.7));
+      -webkit-box-shadow: var(--shadow);
+      -moz-box-shadow: var(--shadow);
+      box-shadow: var(--shadow);
       .wordwrap;
 
       p.text {
         padding: 8px;
-        font-family: "Dosis", arial, sans-serif;
+        font-family: @dosis;
         font-size: 15px;
       }
 
@@ -36,16 +40,31 @@
       position: absolute;
       color: @dark;
       background: @light;
-      top: -6px;
-      left: -5px;
+      top: -12px;
+      left: 0;
       font-size: 10px;
       padding: 1px;
+    }
+
+    p.ic-upvote {
+      position: absolute;
+      color: @dark;
+      background: @light;
+      bottom: -14px;
+      right: 0;
+      font-size: 12px;
+      padding: 1px 4px;
+
+      &.on-hover-only {
+        display: none;
+      }
     }
 
     button.ic-tooltip {
       display: block;
       letter-spacing: 0;
-      left: -14px;
+      top: -14px;
+      left: 0;
     }
 
     button.submit {
@@ -61,6 +80,10 @@
   }
 
   div.ic-sticky-note:hover button.ic-close-window {
+    display: block;
+  }
+
+  div.ic-sticky-note:hover p.on-hover-only {
     display: block;
   }
 }

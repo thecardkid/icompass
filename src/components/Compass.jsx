@@ -9,10 +9,13 @@ import * as uiX from '../actions/ui';
 
 import NoteManager from '../components/NoteManager.jsx';
 import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
+import SelectArea from './SelectArea';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
+import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
+
 import { PROMPTS, EDITING_MODE } from '../../lib/constants';
 
 const QUADRANTS = [
@@ -26,6 +29,8 @@ class Compass extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { select: false };
+
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
     this.socket = Socket.getInstance();
@@ -34,13 +39,16 @@ class Compass extends Component {
     });
 
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
+    props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
 
-    if (this.props.compass.center.length === 0) {
+    if (props.compass.center.length === 0) {
       this.setPeopleInvolved();
     }
   }
 
   doubleClickCreate = (ev) => {
+    this.setState({ select: false });
+
     if (this.props.visualMode) {
       return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
     }
@@ -70,14 +78,34 @@ class Compass extends Component {
     clearTimeout(this.longPress);
   };
 
+  onMouseDown = (ev) => {
+    if (ev.target.className !== 'interactable') return;
+    this.setState({ select: {x: ev.clientX, y: ev.clientY} });
+  };
+
+  onMouseUp = () => {
+    this.setState({ select: false });
+  };
+
+  onClick = (ev) => {
+    if (ev.target.className !== 'interactable') return;
+    if (this.props.visualMode) {
+      this.props.uiX.normalMode();
+    }
+  };
+
   renderQuadrant = (q) => {
     return (
-      <div onDoubleClick={this.doubleClickCreate}
-           onTouchStart={this.onTouchStart}
-           onTouchEnd={this.onTouchRelease}
-           className="ic-quadrant"
+      <div className="ic-quadrant"
            key={`quadrant-${q.id}`}
            id={q.id}>
+        <div className={'interactable'}
+             onDoubleClick={this.doubleClickCreate}
+             onClick={this.onClick}
+             onTouchStart={this.onTouchStart}
+             onTouchEnd={this.onTouchRelease}
+             onMouseDown={this.onMouseDown}
+             onMouseUp={this.onMouseUp} />
         <div>
           <h1>{q.id.toUpperCase()}</h1>
           <h2>{q.prompt}</h2>
@@ -101,7 +129,10 @@ class Compass extends Component {
   }
 
   setCompassCenter = (center) => {
-    this.animateQuadrants = true;
+    if (this.props.compass.center.length === 0) {
+      // animate only if setting center for a new workspace
+      this.animateQuadrants = true;
+    }
     this.props.compassX.setCenter(center);
   };
 
@@ -153,6 +184,16 @@ class Compass extends Component {
     });
   };
 
+  editPeopleInvolved = () => {
+    this.modal.editCenter(this.props.compass.center, (edited) => {
+      if (!edited) {
+        return;
+      }
+
+      this.socket.emitSetCenter(this.props.compass._id, edited);
+    });
+  };
+
   renderPromptFirstQuestion() {
     const style = Object.assign(this.getCenterCss(100, 100), {zIndex: 5});
     return (
@@ -175,13 +216,15 @@ class Compass extends Component {
       css = this.getCenterTextCss(11, length = 100);
     } else if (center.length <= 70) {
       css = this.getCenterTextCss(14, length = 120);
-    } else {
+    } else { // center text at most 100
       css = this.getCenterTextCss(16, length = 140);
     }
 
     return (
       <div>
-        <div id="center" style={this.getCenterCss(length, length)}>
+        <div id="center"
+             style={this.getCenterCss(length, length)}
+             onDoubleClick={this.editPeopleInvolved} >
           <p className="wordwrap" style={css}>{center}</p>
         </div>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
@@ -212,6 +255,8 @@ class Compass extends Component {
 
     return (
       <div id="compass">
+        {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
+        {!this.props.viewOnly && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
         {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>

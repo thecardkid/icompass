@@ -1,3 +1,10 @@
+export const ensureSelectNote = (idx) => {
+  return {
+    type: 'ensureSelectNote',
+    idx,
+  };
+};
+
 export const selectNote = (idx) => {
   return {
     type: 'selectNote',
@@ -48,6 +55,13 @@ export const editDraft = (updated, idx) => {
   return {
     type: 'editDraft',
     updated, idx,
+  };
+};
+
+export const setEditCode = (editCode) => {
+  return {
+    type: 'setEditCode',
+    editCode,
   };
 };
 

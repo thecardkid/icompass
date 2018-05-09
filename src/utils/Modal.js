@@ -1,5 +1,8 @@
 import $ from 'jquery';
 import { browserHistory } from 'react-router';
+import _ from 'underscore';
+
+import { TWEET } from '../../lib/constants';
 
 const ModalSingleton = (() => {
   class Modal {
@@ -79,11 +82,11 @@ const ModalSingleton = (() => {
       );
     }
 
-    alert(text, cb = () => {}) {
+    alert(text, cb = _.noop) {
       this.renderModal(this.generateAlert(text));
       this.onEvent({
         onConfirm: cb,
-        onCancel: () => {},
+        onCancel: _.noop,
         onBackdrop: cb,
       });
     }
@@ -100,25 +103,27 @@ const ModalSingleton = (() => {
           Compass link with care, and ask any collaborator to do the same.
          </p>
       `;
-      this.alert(text, () => {});
+      this.alert(text, _.noop);
     };
 
-    alertFeedback = () => {
+    alertFeedback = (code) => {
       const text = `
         <h3>We'd love to hear from you!</h3>
         <p>
-          Please feel free reach out to Ela or me (under credits) with your experiences
-          and questions about using the Innovators' Compass - they are a huge help!
+          It's a huge help to us if you reach out with your experiences and questions! Please email
+          <a href="mailto:hieumaster95@gmail.com"><u>Hieu</u></a> (app creator) or 
+          <a href="mailto:ela@innovatorscompass.org"><u>Ela</u></a> (Compass creator).
+          Or <a href="${TWEET + code}"><u>tweet</u></a>!
           <br/><br/>
-          If you would like to report a bug or request a feature, go
+          To report a bug or request a feature, please go
           <a href="https://github.com/thecardkid/innovators-compass/issues" target="_blank"
-          rel="noopener noreferrer">here</a> and click New issue.
+          rel="noopener noreferrer"><u>here</u></a> and click New issue.
           <br/><br/>
           If you are reporting a bug, please list the steps to reproduce or include screenshots.
           If requesting a new feature, please be specific!
         </p>
       `;
-      this.alert(text, () => {});
+      this.alert(text, _.noop);
     };
 
     alertCompassPrompt = () => {
@@ -145,7 +150,7 @@ const ModalSingleton = (() => {
         </p>
         <p>For more information, visit <a href="http://innovatorscompass.org" target="_blank">innovatorscompass.org</a>.</p>
       `;
-      this.alert(text, () => {});
+      this.alert(text, _.noop);
     };
 
     alertExplainModes = () => {
@@ -156,7 +161,23 @@ const ModalSingleton = (() => {
         <p><b>Bulk Edit</b> mode allows you to edit notes in bulk! Hold down Shift and click on any note to enter this mode.</p>
       `;
 
-      this.alert(text, () => {});
+      this.alert(text, _.noop);
+    };
+
+    alertAboutUs = () => {
+      const text = `
+        <h3>Hi!</h3>
+        <p>
+          Ela Ben-Ur's mission is making powerful ways forward accessible for any person and moment. She distilled Innovators' Compass from Design Thinking and other practices over a 20-year journey through IDEO, MIT and Olin - and continues to evolve it in collaboration with people around the world, from parents to educators to organizational leaders. More tools and many examples are at <a href="innovatorscompass.org"><u>innovatorscompass.org</u></a>.
+        </p>
+        <p>My name is Hieu Nguyen, and I am the creator of this app. I am an Olin graduate, class of 2018. Having worked with this design framework from classes with Ela, I saw the potential in an online collaborative Compass and made it a reality.</p>
+        <p>We offer this app for free so you can move forward with it in challenges big or small. So please:</p>
+        <p>1. Use it, and<br/>2. Invite others to do the same!</p>
+        <p>To changing the world for free,</p>
+        <p>Hieu and Ela</p>
+      `;
+
+      this.alert(text, _.noop);
     };
 
     generatePrompt(html) {
@@ -169,7 +190,7 @@ const ModalSingleton = (() => {
 
     promptForEmail(cb) {
       let html = `
-        <h3>Email Yourself a Link to this Workspace</h3>
+        <h3>Receive a Link to this Workspace</h3>
         <p>
           You'll need the link to the compass to access it again. To email yourself the link now,
           enter your email address below.
@@ -189,7 +210,7 @@ const ModalSingleton = (() => {
 
     saveViaEmail(cb) {
       let html = `
-        <h3>Email Yourself a Link to this Workspace</h3>
+        <h3>Receive a Link to this Workspace</h3>
         <p>
           You'll need the link to the compass to access it again. To email yourself the link now,
           enter your email address below.
@@ -225,6 +246,35 @@ const ModalSingleton = (() => {
       });
       $('#ic-modal-cancel').on('click', () => warn('You need to complete this action'));
       $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
+    }
+
+    editCenter(currentVal, cb) {
+      const html = this.getModalHtml(
+        `<h3>1. Who\'s involved, including you?</h3>
+         <input id="ic-modal-input"/>
+         <p>For and with everyone involved, explore...</p>`,
+        '<button id="ic-modal-confirm">Submit</button>',
+        '<button id="ic-modal-cancel">Cancel</button>',
+      );
+
+      $('#ic-modal-container').empty().append(html);
+      $('#ic-modal-input').val(currentVal).select();
+      this.addBackdropIfNecessary();
+      this.show = true;
+
+      $('#ic-modal-confirm').on('click', () => {
+        const value = $('#ic-modal-input').val();
+        cb(value);
+        this.close();
+      });
+      $('#ic-modal-cancel').on('click', () => {
+        this.close();
+        cb(null);
+      });
+      $('#ic-backdrop').on('click', () => {
+        this.close();
+        cb(null);
+      });
     }
 
     promptForUsername(warn, cb) {

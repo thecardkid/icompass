@@ -74,6 +74,20 @@ describe('collaboration', () => {
       b.switchTab(tabs.webdriverio);
       expect('#note0').to.have.text(/edit/);
     });
+
+    it('webdriverio +1 the note', () => {
+      b.switchTab(tabs.webdriverio);
+      b.moveToObject('#note0', 20, 20);
+      expect('.ic-upvote').to.be.visible();
+      expect('.ic-upvote').to.have.text(/\+1/);
+      b.click('.ic-upvote');
+      b.click('.ic-upvote');
+      expect('.ic-upvote').to.have.text(/\+2/);
+
+      b.switchTab(tabs.friendo);
+      expect('.ic-upvote').to.have.count(1);
+      expect('.ic-upvote').to.have.text(/\+2/);
+    });
   });
 
   describe('logouts', () => {

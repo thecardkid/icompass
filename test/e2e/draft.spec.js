@@ -43,7 +43,7 @@ describe('draft mode', () => {
       b.moveToObject('#note0', 10, 10);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      expect('h1.ic-modal-title').to.have.text(/Edit this draft/);
+      expect('h1.title').to.have.text(/Edit this draft/);
       expect('.ic-form-palette').to.not.be.visible();
     });
 
@@ -74,7 +74,7 @@ describe('draft mode', () => {
         b.moveToObject('#note1', 10, 10);
         b.doDoubleClick();
         b.waitForVisible('#ic-note-form');
-        expect('h1.ic-modal-title').to.have.text(/Edit this note/);
+        expect('h1.title').to.have.text(/Edit this note/);
         expect('button[name=draft]').to.not.be.visible();
       });
 
@@ -122,7 +122,7 @@ describe('draft mode', () => {
       b.moveToObject('div.ic-img', 20, 20);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
-      expect('h1.ic-modal-title').to.have.text(/Edit photo draft/);
+      expect('h1.title').to.have.text(/Edit photo draft/);
       expect('.ic-form-palette').to.not.be.visible();
       expect('#ic-form-text').to.have.text(DOG_PHOTO_LINK);
       expect('button[name=draft]').to.not.be.visible();
@@ -182,8 +182,15 @@ describe('draft mode', () => {
     });
   });
 
+  it('drafts are saved in local storage', () => {
+    b.refresh().pause(5000);
+    b.waitForVisible('.ic-sticky-note');
+    expect('.ic-sticky-note').to.have.count(5);
+    expect('.draft').to.have.count(3);
+  });
+
   describe('submit drafts', () => {
-    it('submit #note0', () => {
+    it('submit text note', () => {
       b.click('#note0 div.contents button.submit');
       b.pause(100);
       expect('.ic-sticky-note').to.have.count(5);
@@ -191,8 +198,8 @@ describe('draft mode', () => {
       expect('.ic-img').to.have.count(2);
     });
 
-    it('submit #note1', () => {
-      b.click('#note1 div.contents button.submit');
+    it('submit image note', () => {
+      b.click('#note0 div.contents button.submit');
       b.pause(100);
       expect('.ic-sticky-note').to.have.count(5);
       expect('.draft').to.have.count(1);
