@@ -13,7 +13,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         HOST: JSON.stringify(process.env.HOST || 'https://icompass.me'),
-        S3_URL: JSON.stringify('https://s3.us-east-2.amazonaws.com/innovatorscompassprod'),
+        S3_URL: JSON.stringify(`https://s3.us-east-2.amazonaws.com/${process.env.S3_BUCKET || 'innovatorscompass'}`),
       }
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
