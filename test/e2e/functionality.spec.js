@@ -121,4 +121,37 @@ describe('basic functionality', () => {
       });
     });
   });
+
+  describe('changing compass center', () => {
+    beforeEach(() => {
+      b.moveToObject('#center', 10, 10);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-modal');
+    });
+
+    it('clearing value and submitting does nothing', () => {
+      b.clearElement('#ic-modal-input');
+      b.click('#ic-modal-confirm');
+      b.pause(200);
+      expect('#center').to.have.text(/topic/);
+    });
+
+    it('empty submit does nothing', () => {
+      b.click('#ic-modal-confirm');
+      b.pause(200);
+      expect('#center').to.have.text(/topic/);
+    });
+
+    it('can change compass center', () => {
+      // This is set in the beforeAll(setup) call
+      expect(b.getValue('#ic-modal-input')).to.equal('topic');
+      expect('#ic-modal-cancel').to.be.visible();
+
+      b.setValue('#ic-modal-input', 'topic2');
+      b.click('#ic-modal-confirm');
+
+      b.pause(200);
+      expect('#center').to.have.text(/topic2/);
+    });
+  });
 });
