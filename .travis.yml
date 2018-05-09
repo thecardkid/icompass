@@ -47,7 +47,7 @@ jobs:
     - sudo dpkg -i google-chrome*.deb
     - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
     install:
-    - docker-compose -f docker/compose.yml up
+    - docker-compose -f docker/compose.yml up --detach
     - npm install --depth 0
     script:
     - npm run wdio
