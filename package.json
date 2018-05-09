@@ -6,8 +6,10 @@
   "main": "index.js",
   "scripts": {
     "watch": "webpack -d --watch --config ./config/webpack/development.js",
-    "build": "webpack --optimize-minimize --config ./config/webpack/production.js",
+    "build": "webpack -p --config ./config/webpack/production.js",
+    "vendor": "webpack -p --config ./config/webpack/vendor.js",
     "start": "nodemon icompass.js",
+    "start-server": "npm run build && node icompass.js",
     "lint": "./node_modules/.bin/eslint --config config/.eslintrc.js src/*/* test/*/* lib/* models/* --ignore-pattern=*.less --quiet",
     "mocha": "mocha --compilers js:babel-core/register test/server",
     "api": "mocha --compilers js:babel-core/register test/api",

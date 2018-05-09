@@ -8,7 +8,7 @@ import FormPalette from './FormPalette';
 
 import * as uiX from '../../actions/ui';
 
-import { REGEX, HOST } from '../../../lib/constants';
+import { REGEX, HOST, S3_URL } from '../../../lib/constants';
 import SocketSingleton from '../../utils/Socket';
 import ToastSingleton from '../../utils/Toast';
 
@@ -183,7 +183,7 @@ class ImageForm extends Component {
             <DropzoneS3Uploader onFinish={this.onImageUpload}
                                 onProgress={this.onProgress}
                                 onDropRejected={this.onRejected}
-                                s3Url={'https://s3.us-east-2.amazonaws.com/innovatorscompass'}
+                                s3Url={S3_URL}
                                 upload={{server: HOST}}
                                 maxSize={OneMB}
                                 accept={'image/*'}
