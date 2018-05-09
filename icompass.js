@@ -31,7 +31,7 @@ app.use(logger.api);
 app.use('/api/v1', routes);
 
 app.use('/s3', s3Router({
-  bucket: 'innovatorscompass',
+  bucket: process.env.S3_BUCKET || 'innovatorscompass',
   region: 'us-east-2',
   headers: {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'},
   ACL: 'public-read',
