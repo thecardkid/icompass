@@ -10,6 +10,12 @@ module.exports = {
     filename: 'bundle.js',
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        HOST: JSON.stringify(process.env.HOST || 'https://icompass.me'),
+        S3_URL: JSON.stringify('https://s3.us-east-2.amazonaws.com/innovatorscompassprod'),
+      }
+    }),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.DllReferencePlugin({
       context: __dirname,
