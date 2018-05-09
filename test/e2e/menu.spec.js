@@ -241,10 +241,10 @@ describe('workspace menu', () => {
           b.waitForVisible('#ic-modal');
           expect('#ic-modal-body').to.have.text(/Already bookmarked/);
           b.click('#ic-modal-confirm');
+          b.back();
         });
 
         it('can edit bookmark', () => {
-          b.back();
           b.click('div.ic-saved #arrow');
           b.pause(500);
           b.click('button.edit');
@@ -261,6 +261,57 @@ describe('workspace menu', () => {
           expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
           b.click('#ic-modal-confirm');
           expect('div.ic-saved').to.not.be.there();
+        });
+
+
+
+        describe('import bookmarks', () => {
+          it('notifies if empty file', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/empty.json');
+            b.pause(200);
+            expect('#ic-toast').to.be.visible();
+            expect('#ic-toast').to.have.text(/Nothing happened/);
+          });
+
+          it('errors if not json', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
+            b.pause(200);
+            expect('#ic-toast').to.be.visible();
+            expect('#ic-toast').to.have.text(/Invalid file type/);
+          });
+
+          it('aborts if attribute is missing', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
+            b.pause(200);
+            expect('#ic-modal').to.be.visible();
+            expect('#ic-modal-body').to.have.text(/correct format/);
+            b.click('#ic-modal-confirm');
+          });
+
+          it('aborts if href is invalid', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
+            b.pause(200);
+            expect('#ic-modal').to.be.visible();
+            expect('#ic-modal-body').to.have.text(/correct format/);
+            b.click('#ic-modal-confirm');
+          });
+
+          it('aborts if username is invalid', () => {
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
+            b.pause(200);
+            expect('#ic-modal').to.be.visible();
+            expect('#ic-modal-body').to.have.text(/correct format/);
+            b.click('#ic-modal-confirm');
+          });
+
+          it('succeeds and adds to existing bookmarks, without checking for duplicates', () => {
+            expect('.ic-saved').to.have.count(0);
+            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/valid.json');
+            b.pause(200);
+            expect('#ic-toast').to.be.visible();
+            expect('#ic-toast').to.have.text(/Bookmarks imported/);
+            expect('.ic-saved').to.have.count(1);
+          });
         });
 
         it('can hide bookmarks', () => {

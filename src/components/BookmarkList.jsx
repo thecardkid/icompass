@@ -94,9 +94,16 @@ export default class BookmarkList extends Component {
   };
 
   importBookmarks = (e) => {
+    const file = e.target.files[0];
+
+    if (file.type !== 'application/json') {
+      return this.toast.error('Invalid file type - must be .json file');
+    }
+
     const reader = new FileReader();
     reader.onload = this.onReaderLoad;
-    reader.readAsText(e.target.files[0]);
+    reader.readAsText(file);
+    e.target.value = null;
   };
 
   isValidBookmark({ center, href, name }) {
@@ -104,7 +111,7 @@ export default class BookmarkList extends Component {
       return false;
     }
 
-    const hrefRegex = /^\/compass\/edit\/[a-z0-9]{8}\/[a-zA-Z]{1,15}$/;
+    const hrefRegex = /^\/compass\/edit\/[a-zA-Z0-9]{8}\/[a-zA-Z]{1,15}$/;
     if (!hrefRegex.test(href)) return false;
 
     const usernameRegex = /^[a-zA-Z]{1,15}$/;
@@ -188,7 +195,6 @@ export default class BookmarkList extends Component {
           <a className={'hidden'} ref={'exporter'} />
           <input className={'hidden'}
                  type={'file'}
-                 id={'importer'}
                  ref={'importer'}
                  multiple={false}
                  onChange={this.importBookmarks}/>
