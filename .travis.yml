@@ -78,4 +78,4 @@ jobs:
     - export REPO=$DOCKER_USER/icompass
     - docker images
     - docker tag $DOCKER_TAG $REPO:$TRAVIS_TAG
-    - docker push $REPO:l$TRAVIS_TAG
+    - docker push $REPO:$TRAVIS_TAG
