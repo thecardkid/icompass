@@ -202,10 +202,8 @@ class NoteManager extends Component {
 
   render() {
     return (
-      <div>
-        <div id="note-manager">
-          {_.map(this.notes, this.renderNote)}
-        </div>
+      <div id="note-manager">
+        {_.map(this.notes, this.renderNote)}
       </div>
     );
   }
