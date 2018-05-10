@@ -153,6 +153,10 @@ export default class BookmarkList extends Component {
   };
 
   exportBookmarks = () => {
+    if (_.isEmpty(this.state.bookmarks)) {
+      return this.toast.warn('You have no bookmarks to export to file');
+    }
+
     this.modal.prompt(
       '<h3>Export bookmarks</h3><p>Enter a name for the file:</p>',
       (accepted, filename) => {
