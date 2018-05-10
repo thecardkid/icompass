@@ -8,7 +8,7 @@ import ShortcutManager from '../ShortcutManager';
 
 import * as uiX from '../../actions/ui';
 
-import { MODALS, PROMPTS, REGEX } from '../../../lib/constants';
+import { PROMPTS } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
 
@@ -66,26 +66,16 @@ class TextForm extends Component {
     this.setState({ charCount: this.refs.text.value.length });
   };
 
-  getText(cb) {
-    let text = this.refs.text.value;
-    if (!text) cb({});
+  submit = (isDraft) => () => {
+    const text = this.refs.text.value;
 
-    if (REGEX.URL.test(text)) {
-      return this.modal.confirm(MODALS.IMPORT_IMAGE, (isImage) => cb({ text, isImage }));
-    }
+    if (text.length === 0) return;
 
     if (text.length > 300) {
-      this.toast.error(PROMPTS.POST_IT_TOO_LONG);
-      return cb({});
+      return this.toast.error(PROMPTS.POST_IT_TOO_LONG);
     }
 
-    cb({ text, isImage: false });
-  }
-
-  submit = (isDraft) => () => {
-    this.getText(({ text, isImage }) => {
-      this.props.submit(text, isImage, this.state, isDraft);
-    });
+    this.props.submit(text, false, this.state, isDraft);
   };
 
   renderStyleToolbar() {

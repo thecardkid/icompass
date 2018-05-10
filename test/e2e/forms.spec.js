@@ -85,42 +85,16 @@ describe('forms', () => {
     });
   });
 
-  describe('text into image', () => {
-    it('entering link in note form should ask if the link is an image', () => {
+  describe('link', () => {
+    it('create', () => {
       b.moveToObject('body', 100, 300);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
       b.setValue('#ic-form-text', imageUrl);
       b.click('button[name=ship]');
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/Is this an image/);
-    });
-
-    it('rejecting the prompt should embed the link', () => {
-      b.click('#ic-modal-cancel');
       b.pause(100);
       expect('div.ic-img').to.have.count(0);
       expect('#note1 div.contents p a').to.be.there(); // expect embedded link
-    });
-
-    it('accepting image prompt should render image', () => {
-      b.moveToObject('#note1', 10, 1);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-note-form');
-      b.click('button[name=ship]');
-      b.waitForVisible('#ic-modal');
-
-      b.click('#ic-modal-confirm');
-      b.pause(100);
-      expect('div.ic-img').to.have.count(1);
-    });
-
-    it('editing an image made from the note-form will show an image-form', () => {
-      b.moveToObject('#note1', 10, 10);
-      b.doDoubleClick();
-      b.pause(100);
-      expect('#ic-image-form').to.be.visible();
-      b.click('button[name=nvm]');
     });
   });
 
@@ -147,9 +121,7 @@ describe('forms', () => {
     });
 
     it('create', () => {
-      b.click('#toggle-alt');
       b.setValue('#ic-form-text', imageUrl);
-      b.setValue('#ic-image-alt-text', 'alternative text');
       b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
@@ -160,30 +132,30 @@ describe('forms', () => {
       expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
-    it('alt tag is there', () => {
-      expect(b.getAttribute('#note2 div.contents img', 'alt')).to.equal('alternative text');
+    it('editing an image without alt text does not show alt text field', () => {
+      b.moveToObject('#note2', 10, 1);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-image-form');
+      expect('#ic-image-alt-text').to.not.be.visible();
+      b.click('button[name=nvm]');
     });
 
     it('edit', () => {
       b.moveToObject('#note2', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
-      expect('#ic-image-alt-text').to.be.visible();
       expect('.ic-form-palette').to.be.visible();
       expect('.ic-palette-color').to.have.count(6);
       expect('#ic-form-text').to.have.text(imageUrl);
-      expect('#ic-image-alt-text').to.have.text('alternative text');
       b.click('.ic-color-FFCCFF'); // change color
+      b.click('#toggle-alt');
+      b.setValue('#ic-image-alt-text', 'alternative text');
       b.click('button[name=ship]');
       expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
-    it('editing an image without alt text does not show alt text field', () => {
-      b.moveToObject('#note1', 10, 1);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-image-form');
-      expect('#ic-image-alt-text').to.not.be.visible();
-      b.click('button[name=nvm]');
+    it('alt tag is there', () => {
+      expect(b.getAttribute('#note2 div.contents img', 'alt')).to.equal('alternative text');
     });
 
     it('converts drive link to thumbnail', () => {

@@ -178,6 +178,7 @@ class ImageForm extends Component {
             <textarea id="ic-form-text"
                       autoFocus
                       value={this.state.imgSource}
+                      placeholder={'Paste image link here, or drag and drop below'}
                       onChange={this.updateImgSource}
                       style={{ background: this.state.color }} />
             <DropzoneS3Uploader onFinish={this.onImageUpload}
