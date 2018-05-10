@@ -263,9 +263,14 @@ describe('workspace menu', () => {
           expect('div.ic-saved').to.not.be.there();
         });
 
+        describe('import/export bookmarks', () => {
+          it('warns if exporting empty bookmarks', () => {
+            b.click('button#export');
+            b.pause(200);
+            expect('#ic-toast').to.be.visible();
+            expect('#ic-toast').to.have.text(/no bookmarks/);
+          });
 
-
-        describe('import bookmarks', () => {
           it('notifies if empty file', () => {
             b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/empty.json');
             b.pause(200);
