@@ -189,6 +189,7 @@ export default class BookmarkList extends Component {
         if (!REGEX.EMAIL.test(email)) {
           this.toast.error(`"${email}" is not a valid email address`);
           this.emailBookmarks(email);
+          return;
         }
 
         this.socket.emitWorkspace('send mail bookmarks', {
