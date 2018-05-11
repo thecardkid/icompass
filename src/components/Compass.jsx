@@ -255,10 +255,10 @@ class Compass extends Component {
 
     return (
       <div id="compass">
+        {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         {!this.props.viewOnly && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
-        {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
       </div>
     );
   }
