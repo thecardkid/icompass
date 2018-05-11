@@ -38,6 +38,7 @@ class Compass extends Component {
       'center set': this.setCompassCenter,
     });
 
+    this.hasEditingRights = !this.props.compass.viewOnly;
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
     props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
 
@@ -223,8 +224,11 @@ class Compass extends Component {
     return (
       <div>
         <div id="center"
-             style={this.getCenterCss(length, length)}
-             onDoubleClick={this.editPeopleInvolved} >
+             style={{
+               ...this.getCenterCss(length, length),
+               cursor: this.hasEditingRights ? 'pointer' : 'auto',
+             }}
+             onDoubleClick={this.hasEditingRights ? this.editPeopleInvolved : _.noop} >
           <p className="wordwrap" style={css}>{center}</p>
         </div>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
