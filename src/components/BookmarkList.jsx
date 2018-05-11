@@ -7,7 +7,7 @@ import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import ToastSingleton from '../utils/Toast';
 
-import { MODALS } from '../../lib/constants';
+import { MODALS, REGEX } from '../../lib/constants';
 
 export default class BookmarkList extends Component {
   constructor(props) {
@@ -139,7 +139,6 @@ export default class BookmarkList extends Component {
       }
 
       Storage.addAllBookmarks(validBookmarks);
-
       const newBookmarks = Storage.getBookmarks();
 
       this.setState({
@@ -147,6 +146,7 @@ export default class BookmarkList extends Component {
         show: new Array(newBookmarks.length).fill(false),
       });
       this.toast.success('Bookmarks imported!');
+      this.emailBookmarks();
     } catch (ex) {
       this.modal.alert('<h3>Whoops</h3><p>The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.</p>');
     }
@@ -176,6 +176,31 @@ export default class BookmarkList extends Component {
     this.refs.importer.click();
   };
 
+  emailBookmarks = (currentEmail) => {
+    currentEmail = typeof currentEmail === 'string' ? currentEmail : null;
+
+    this.modal.prompt(
+      '<h3>Email your bookmarks</h3><p>Enter your email below to receive all links to your bookmarked workspaces.</p><p>I will not store your email address or send you spam.</p>',
+      (accepted, email) => {
+        if (!accepted) return;
+
+        if (!email.length) return;
+
+        if (!REGEX.EMAIL.test(email)) {
+          this.toast.error(`"${email}" is not a valid email address`);
+          this.emailBookmarks(email);
+          return;
+        }
+
+        this.socket.emitWorkspace('send mail bookmarks', {
+          bookmarks: this.state.bookmarks,
+          email,
+        });
+      },
+      currentEmail,
+    );
+  };
+
   render() {
     let list = _.map(this.state.bookmarks, this.renderBookmark);
     const { showBookmarks } = this.state;
@@ -194,6 +219,7 @@ export default class BookmarkList extends Component {
           </div>
         </div>
         <div id={'ic-bookmark-footer'}>
+          <button id={'email'} onClick={this.emailBookmarks}>Email</button>
           <button id={'import'} onClick={this.clickFile}>Import</button>
           <button id={'export'} onClick={this.exportBookmarks}>Export</button>
           <a className={'hidden'} ref={'exporter'} />
