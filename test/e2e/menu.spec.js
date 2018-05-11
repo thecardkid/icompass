@@ -317,6 +317,30 @@ describe('workspace menu', () => {
             expect('#ic-toast').to.have.text(/Bookmarks imported/);
             expect('.ic-saved').to.have.count(1);
           });
+
+          it('prompts for email', () => {
+            expect('#ic-modal').to.be.visible();
+            expect('#ic-modal').to.have.text(/Email your bookmarks/);
+            b.click('#ic-modal-cancel');
+          });
+        });
+
+        describe('emailing bookmarks', () => {
+          it('toasts error if email invalid', () => {
+            b.click('#email');
+            b.waitForVisible('#ic-modal');
+            b.setValue('#ic-modal-input', 'invalidemail@');
+            b.click('#ic-modal-confirm');
+            b.waitForVisible('#ic-toast');
+            expect('#ic-toast').to.have.text(/not a valid email/);
+          });
+
+          it('toast success if email valid', () => {
+            b.setValue('#ic-modal-input', 'fakeemail@test.com');
+            b.click('#ic-modal-confirm');
+            b.waitForVisible('#ic-toast');
+            expect('#ic-toast').to.have.text(/email/);
+          });
         });
 
         it('can hide bookmarks', () => {
