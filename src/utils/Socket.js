@@ -107,12 +107,6 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitFindCompass = (code, username) => {
-      if (this.checkConnected()) {
-        this.socket.emit('find compass', { code, username });
-      }
-    };
-
     emitSendMail = (code, username, receiverEmail) => {
       if (this.checkConnected()) {
         this.socket.emit('send mail', {
@@ -127,20 +121,12 @@ const SocketSingleton = (() => {
       this.socket.emit('find compass edit', { code, username });
     };
 
-    emitFindCompassView = ({ code, username }) => {
-      this.socket.emit('find compass view', { code, username });
-    };
-
     emitSetCenter = (id, center) => {
       this.socket.emit('set center', { id, center });
     };
 
     emitMetricLandingPage = (start, end, action) => {
       this.socket.emit('metric landing page time', start, end, action);
-    };
-
-    emitMetricDirectUrlAccess = (url) => {
-      this.socket.emit('metric direct url access', url);
     };
 
     emitMetricEditLinkAccess = (url) => {

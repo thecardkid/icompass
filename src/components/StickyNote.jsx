@@ -8,8 +8,8 @@ import { bindActionCreators } from 'redux';
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
 
-import * as uiActions from '../actions/ui';
-import * as workspaceActions from '../actions/workspace';
+import * as uiX from '../actions/ui';
+import * as workspaceX from '../actions/workspace';
 
 import { PROMPTS, COLORS, EDITING_MODE, MODALS } from '../../lib/constants';
 
@@ -18,7 +18,7 @@ class StickyNote extends Component {
     super(props);
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
-    this.hasEditingRights = !this.props.compass.viewOnly;
+    this.hasEditingRights = !this.props.viewOnly;
     this.setModes(this.props);
   }
 
@@ -51,7 +51,7 @@ class StickyNote extends Component {
     let n = this.props.note;
     if (n.draft) {
       this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
-        if (discard) this.props.workspaceActions.undraft(this.props.i);
+        if (discard) this.props.workspaceX.undraft(this.props.i);
       });
     } else {
       this.modal.confirm(MODALS.DELETE_NOTE, (deleteNote) => {
@@ -156,9 +156,9 @@ class StickyNote extends Component {
 
     if (this.hasEditingRights) {
       if (this.props.note.isImage) {
-        this.props.uiActions.editImage(this.props.i, this.props.note);
+        this.props.uiX.editImage(this.props.i, this.props.note);
       } else {
-        this.props.uiActions.showEdit(this.props.i, this.props.note);
+        this.props.uiX.showEdit(this.props.i, this.props.note);
       }
     }
   };
@@ -191,9 +191,9 @@ class StickyNote extends Component {
       }
 
       this.props.socket.emitMetric('visual mode select');
-      this.props.workspaceActions.selectNote(this.props.i);
+      this.props.workspaceX.selectNote(this.props.i);
     } else {
-      this.props.uiActions.focusOnNote(this.props.i);
+      this.props.uiX.focusOnNote(this.props.i);
     }
   };
 
@@ -249,8 +249,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    workspaceActions: bindActionCreators(workspaceActions, dispatch),
-    uiActions: bindActionCreators(uiActions, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
   };
 };
 

@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
+import request from 'superagent';
 import _ from 'underscore';
 
-import * as compassActions from '../actions/compass';
-import * as noteActions from '../actions/notes';
-import * as uiActions from '../actions/ui';
-import * as userActions from '../actions/users';
-import * as workspaceActions from '../actions/workspace';
+import * as compassX from '../actions/compass';
+import * as noteX from '../actions/notes';
+import * as uiX from '../actions/ui';
+import * as userX from '../actions/users';
+import * as workspaceX from '../actions/workspace';
 
 import Compass from '../components/Compass.jsx';
 import FormManager from '../components/forms/FormManager.jsx';
@@ -32,37 +33,48 @@ class Workspace extends Component {
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
 
-    this.socket = Socket.getInstance();
-    this.socket.subscribe({
-      'compass found': this.onCompassFound,
-      'compass deleted': this.onCompassDeleted,
-      'user joined': this.onUserJoined,
-      'user left': this.onUserLeft,
-      'disconnect': () => this.toast.error('Lost connection to server'),
-      'reconnect': () => {
-        this.toast.success('Established connection to server');
-        this.socket.onReconnect(this.props);
-      }
-    });
-
     if (this.props.route.viewOnly) {
-      this.socket.emitFindCompassView(this.props.params);
+      request.get('/api/v1/workspace/view')
+        .query({ id: this.props.params.code })
+        .end((err, res) => {
+          if (err || !res.body || res.body.compass == null) {
+            return void this.alertNotFound();
+          }
+
+          this.onCompassFound(res.body);
+        });
     } else if (this.validateRouteParams(this.props.params)) {
+      this.socket = Socket.getInstance();
+      this.socket.subscribe({
+        'compass found': this.onCompassFound,
+        'compass deleted': this.onCompassDeleted,
+        'user joined': this.onUserJoined,
+        'user left': this.onUserLeft,
+        'disconnect': () => this.toast.error('Lost connection to server'),
+        'reconnect': () => {
+          this.toast.success('Established connection to server');
+          this.socket.onReconnect(this.props);
+        }
+      });
       this.socket.emitFindCompassEdit(this.props.params);
     }
 
-    this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
+    this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
+  }
+
+  alertNotFound() {
+    this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
   }
 
   onCompassFound = (data) => {
     if (data.compass === null) {
-      return void this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
+      return void this.alertNotFound();
     }
 
-    this.props.compassActions.set(data.compass, data.viewOnly);
-    this.props.noteActions.updateAll(data.compass.notes);
-    this.props.workspaceActions.setEditCode(data.compass.editCode);
-    this.props.userActions.me(data.username);
+    this.props.compassX.set(data.compass, data.viewOnly);
+    this.props.noteX.updateAll(data.compass.notes);
+    this.props.workspaceX.setEditCode(data.compass.editCode);
+    this.props.userX.me(data.username);
   };
 
   onCompassDeleted = () => {
@@ -70,11 +82,11 @@ class Workspace extends Component {
   };
 
   onUserJoined = (data) => {
-    this.props.userActions.update(data);
+    this.props.userX.update(data);
   };
 
   onUserLeft = (data) => {
-    this.props.userActions.update(data);
+    this.props.userX.update(data);
   };
 
   validateRouteParams({ code, username }) {
@@ -85,7 +97,6 @@ class Workspace extends Component {
     if (!REGEX.CHAR_ONLY.test(username) || username.length > 15) validUsername = false;
 
     if (validCode && validUsername) {
-      this.socket.emitMetricDirectUrlAccess(this.props.router.getCurrentLocation().pathname);
       return true;
     }
 
@@ -93,7 +104,7 @@ class Workspace extends Component {
   }
 
   componentDidMount() {
-    $(window).on('resize', this.props.uiActions.resize);
+    $(window).on('resize', this.props.uiX.resize);
     this.notifyIfNewVersion();
   }
 
@@ -116,25 +127,28 @@ class Workspace extends Component {
   }
 
   componentWillUnmount() {
-    this.props.compassActions.reset();
-    this.props.noteActions.reset();
-    this.props.uiActions.reset();
-    this.props.userActions.reset();
-    $(window).off('resize', this.props.uiActions.resize);
-    this.socket.logout();
+    this.props.compassX.reset();
+    this.props.noteX.reset();
+    this.props.uiX.reset();
+    this.props.userX.reset();
+    $(window).off('resize', this.props.uiX.resize);
     this.modal.close();
     this.toast.clear();
+
+    if (this.socket) this.socket.logout();
   }
 
   render() {
     if (_.isEmpty(this.props.compass)) return <div/>;
 
-    if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
+    if (this.props.route.viewOnly) {
+      return <Compass viewOnly={true}/>;
+    }
 
     let formAttrs = {
       bg: this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
-      close: this.props.uiActions.closeForm,
+      close: this.props.uiX.closeForm,
     };
 
     return (
@@ -148,7 +162,7 @@ class Workspace extends Component {
         <VisualModeToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
         <ShareModal show={this.props.ui.showShareModal}
-                    close={this.props.uiActions.hideShareModal}
+                    close={this.props.uiX.hideShareModal}
                     compass={this.props.compass}
         />
       </div>
@@ -168,11 +182,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    noteActions: bindActionCreators(noteActions, dispatch),
-    compassActions: bindActionCreators(compassActions, dispatch),
-    userActions: bindActionCreators(userActions, dispatch),
-    uiActions: bindActionCreators(uiActions, dispatch),
-    workspaceActions: bindActionCreators(workspaceActions, dispatch),
+    noteX: bindActionCreators(noteX, dispatch),
+    compassX: bindActionCreators(compassX, dispatch),
+    userX: bindActionCreators(userX, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
 };
 
