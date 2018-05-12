@@ -5,11 +5,11 @@ import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import * as compassActions from '../actions/compass';
-import * as noteActions from '../actions/notes';
-import * as uiActions from '../actions/ui';
-import * as userActions from '../actions/users';
-import * as workspaceActions from '../actions/workspace';
+import * as compassX from '../actions/compass';
+import * as noteX from '../actions/notes';
+import * as uiX from '../actions/ui';
+import * as userX from '../actions/users';
+import * as workspaceX from '../actions/workspace';
 
 import Compass from '../components/Compass.jsx';
 import FormManager from '../components/forms/FormManager.jsx';
@@ -51,7 +51,7 @@ class Workspace extends Component {
       this.socket.emitFindCompassEdit(this.props.params);
     }
 
-    this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
+    this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
   }
 
   onCompassFound = (data) => {
@@ -59,10 +59,10 @@ class Workspace extends Component {
       return void this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
     }
 
-    this.props.compassActions.set(data.compass, data.viewOnly);
-    this.props.noteActions.updateAll(data.compass.notes);
-    this.props.workspaceActions.setEditCode(data.compass.editCode);
-    this.props.userActions.me(data.username);
+    this.props.compassX.set(data.compass, data.viewOnly);
+    this.props.noteX.updateAll(data.compass.notes);
+    this.props.workspaceX.setEditCode(data.compass.editCode);
+    this.props.userX.me(data.username);
   };
 
   onCompassDeleted = () => {
@@ -70,11 +70,11 @@ class Workspace extends Component {
   };
 
   onUserJoined = (data) => {
-    this.props.userActions.update(data);
+    this.props.userX.update(data);
   };
 
   onUserLeft = (data) => {
-    this.props.userActions.update(data);
+    this.props.userX.update(data);
   };
 
   validateRouteParams({ code, username }) {
@@ -93,7 +93,7 @@ class Workspace extends Component {
   }
 
   componentDidMount() {
-    $(window).on('resize', this.props.uiActions.resize);
+    $(window).on('resize', this.props.uiX.resize);
     this.notifyIfNewVersion();
   }
 
@@ -116,11 +116,11 @@ class Workspace extends Component {
   }
 
   componentWillUnmount() {
-    this.props.compassActions.reset();
-    this.props.noteActions.reset();
-    this.props.uiActions.reset();
-    this.props.userActions.reset();
-    $(window).off('resize', this.props.uiActions.resize);
+    this.props.compassX.reset();
+    this.props.noteX.reset();
+    this.props.uiX.reset();
+    this.props.userX.reset();
+    $(window).off('resize', this.props.uiX.resize);
     this.socket.logout();
     this.modal.close();
     this.toast.clear();
@@ -134,7 +134,7 @@ class Workspace extends Component {
     let formAttrs = {
       bg: this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
-      close: this.props.uiActions.closeForm,
+      close: this.props.uiX.closeForm,
     };
 
     return (
@@ -148,7 +148,7 @@ class Workspace extends Component {
         <VisualModeToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
         <ShareModal show={this.props.ui.showShareModal}
-                    close={this.props.uiActions.hideShareModal}
+                    close={this.props.uiX.hideShareModal}
                     compass={this.props.compass}
         />
       </div>
@@ -168,11 +168,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    noteActions: bindActionCreators(noteActions, dispatch),
-    compassActions: bindActionCreators(compassActions, dispatch),
-    userActions: bindActionCreators(userActions, dispatch),
-    uiActions: bindActionCreators(uiActions, dispatch),
-    workspaceActions: bindActionCreators(workspaceActions, dispatch),
+    noteX: bindActionCreators(noteX, dispatch),
+    compassX: bindActionCreators(compassX, dispatch),
+    userX: bindActionCreators(userX, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
 };
 
