@@ -30,6 +30,8 @@ import ShareModal from '../components/ShareModal';
 class Workspace extends Component {
   constructor(props) {
     super(props);
+    this.toast = Toast.getInstance();
+    this.modal = Modal.getInstance();
 
     if (this.props.route.viewOnly) {
       request.get('/api/v1/workspace/view')
@@ -42,8 +44,6 @@ class Workspace extends Component {
           this.onCompassFound(res.body);
         });
     } else if (this.validateRouteParams(this.props.params)) {
-      this.toast = Toast.getInstance();
-      this.modal = Modal.getInstance();
       this.socket = Socket.getInstance();
       this.socket.subscribe({
         'compass found': this.onCompassFound,
