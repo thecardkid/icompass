@@ -26,9 +26,9 @@ class App extends Component {
       <Provider store={Store()}>
         <Router history={browserHistory}>
           <Route path='/' component={LandingPage}/>
+          <Route path='/compass/view/:code(/:username)' viewOnly={true} component={Workspace}/>
           <Route path='/compass/edit/:code/:username' viewOnly={false} component={Workspace}/>
           <Route path='/compass/edit/:code' viewOnly={false} component={PromptName}/>
-          <Route path='/compass/view/:code(/:username)' viewOnly={true} component={Workspace}/>
           <Route path='*' component={NotFound}/>
         </Router>
       </Provider>

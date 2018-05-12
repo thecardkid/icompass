@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
+import request from 'superagent';
 import _ from 'underscore';
 
 import * as compassX from '../actions/compass';
@@ -32,31 +33,42 @@ class Workspace extends Component {
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
 
-    this.socket = Socket.getInstance();
-    this.socket.subscribe({
-      'compass found': this.onCompassFound,
-      'compass deleted': this.onCompassDeleted,
-      'user joined': this.onUserJoined,
-      'user left': this.onUserLeft,
-      'disconnect': () => this.toast.error('Lost connection to server'),
-      'reconnect': () => {
-        this.toast.success('Established connection to server');
-        this.socket.onReconnect(this.props);
-      }
-    });
-
     if (this.props.route.viewOnly) {
-      this.socket.emitFindCompassView(this.props.params);
+      request.get('/api/v1/workspace/view')
+        .query({ id: this.props.params.code })
+        .end((err, res) => {
+          if (err || !res.body || res.body.compass == null) {
+            return void this.alertNotFound();
+          }
+
+          this.onCompassFound(res.body);
+        });
     } else if (this.validateRouteParams(this.props.params)) {
+      this.socket = Socket.getInstance();
+      this.socket.subscribe({
+        'compass found': this.onCompassFound,
+        'compass deleted': this.onCompassDeleted,
+        'user joined': this.onUserJoined,
+        'user left': this.onUserLeft,
+        'disconnect': () => this.toast.error('Lost connection to server'),
+        'reconnect': () => {
+          this.toast.success('Established connection to server');
+          this.socket.onReconnect(this.props);
+        }
+      });
       this.socket.emitFindCompassEdit(this.props.params);
     }
 
     this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
   }
 
+  alertNotFound() {
+    this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
+  }
+
   onCompassFound = (data) => {
     if (data.compass === null) {
-      return void this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
+      return void this.alertNotFound();
     }
 
     this.props.compassX.set(data.compass, data.viewOnly);
@@ -129,7 +141,9 @@ class Workspace extends Component {
   render() {
     if (_.isEmpty(this.props.compass)) return <div/>;
 
-    if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
+    if (this.props.route.viewOnly) {
+      return <Compass viewOnly={true}/>;
+    }
 
     let formAttrs = {
       bg: this.props.users.nameToColor[this.props.users.me],
