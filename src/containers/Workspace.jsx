@@ -97,7 +97,6 @@ class Workspace extends Component {
     if (!REGEX.CHAR_ONLY.test(username) || username.length > 15) validUsername = false;
 
     if (validCode && validUsername) {
-      this.socket.emitMetricDirectUrlAccess(this.props.router.getCurrentLocation().pathname);
       return true;
     }
 
@@ -133,9 +132,10 @@ class Workspace extends Component {
     this.props.uiX.reset();
     this.props.userX.reset();
     $(window).off('resize', this.props.uiX.resize);
-    this.socket.logout();
     this.modal.close();
     this.toast.clear();
+
+    if (this.socket) this.socket.logout();
   }
 
   render() {

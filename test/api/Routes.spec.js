@@ -26,13 +26,14 @@ describe('Routes', () => {
     Compass.remove({ _id: DUT._id }, done);
   });
 
-  it('#getByEdit', (done) => {
+  it('#getByView', (done) => {
     agent
-      .get('/api/v1/edit')
-      .query({ id: DUT.editCode })
+      .get('/api/v1/workspace/view')
+      .query({ id: DUT.viewCode })
       .end((err, res) => {
         if (err) throw err;
-        expect(res.body.compass.editCode).to.equal(DUT.editCode);
+        expect(res.body.compass.editCode).to.be.undefined;
+        expect(res.body.compass.viewCode).to.equal(DUT.viewCode);
         done();
       });
   });
