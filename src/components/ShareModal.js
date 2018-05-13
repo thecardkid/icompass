@@ -47,6 +47,7 @@ export default class ShareModal extends Component {
   };
 
   exportPdf = async () => {
+    this.toast.info('Converting to PDF...');
     try {
       const pdf = new jsPDF('l', 'mm', 'a4');
       const canvas = await html2canvas(document.getElementById('compass'));
@@ -69,6 +70,7 @@ export default class ShareModal extends Component {
 
       pdf.addImage(canvas.toDataURL('image/png'), 'PNG', x, y, width, height);
 
+      this.toast.clear();
       window.open(pdf.output('bloburl'), '_blank');
     } catch (ex) {
       this.toast.error('There was a problem generating a PDF. Please take a screenshot instead.');
@@ -101,8 +103,8 @@ export default class ShareModal extends Component {
               </div>
             </div>
             <div className={'ic-twitter'}>
-              <button onClick={this.tweetThis}>Share on Twitter</button>
-              <button onClick={this.exportPdf}>PDF</button>
+              <button name={'pdf'} onClick={this.exportPdf}>Save as PDF</button>
+              <button onClick={this.tweetThis}>Tweet</button>
             </div>
           </div>
         </div>
