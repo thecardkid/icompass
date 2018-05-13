@@ -163,8 +163,7 @@ class Workspace extends Component {
         <FormManager commonAttrs={formAttrs} />
         <ShareModal show={this.props.ui.showShareModal}
                     close={this.props.uiX.hideShareModal}
-                    compass={this.props.compass}
-        />
+                    compass={this.props.compass} />
       </div>
     );
   }

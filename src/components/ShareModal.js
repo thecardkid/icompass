@@ -1,7 +1,14 @@
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import React, { Component } from 'react';
+
 import { HOST, TWEET } from '../../lib/constants';
 import ToastSingleton from '../utils/Toast';
 import SocketSingleton from '../utils/Socket';
+
+const a4Width = 297; // mm
+const a4Height = 210; // mm
+const a4Ratio = a4Width / a4Height;
 
 export default class ShareModal extends Component {
   constructor(props) {
@@ -39,6 +46,37 @@ export default class ShareModal extends Component {
     window.open(tweetURL, '_blank').focus();
   };
 
+  exportPdf = async () => {
+    this.toast.info('Converting to PDF...');
+    try {
+      const pdf = new jsPDF('l', 'mm', 'a4');
+      const canvas = await html2canvas(document.getElementById('compass'));
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const r = w / h;
+
+      let width, height;
+      let x = 0, y = 0;
+      if (r > a4Ratio) {
+        height = a4Width / r;
+        width = a4Width;
+        y = (a4Height - height) / 2;
+      } else {
+        height = a4Height;
+        width = r * a4Height;
+        x = (a4Width - width) / 2;
+      }
+
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', x, y, width, height);
+
+      this.toast.clear();
+      window.open(pdf.output('bloburl'), '_blank');
+    } catch (ex) {
+      this.toast.error('There was a problem generating a PDF. Please take a screenshot instead.');
+    }
+  };
+
   render() {
     if (!this.props.show) return null;
 
@@ -65,7 +103,8 @@ export default class ShareModal extends Component {
               </div>
             </div>
             <div className={'ic-twitter'}>
-              <button onClick={this.tweetThis}>Share on Twitter</button>
+              <button name={'pdf'} onClick={this.exportPdf}>Save as PDF</button>
+              <button onClick={this.tweetThis}>Tweet</button>
             </div>
           </div>
         </div>
