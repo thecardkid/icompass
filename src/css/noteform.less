@@ -121,30 +121,39 @@ div.ic-form-palette {
 }
 
 #ic-note-form {
+  div#ic-toolbar {
+    border: none !important;
+    font-family: inherit !important;
+    padding: 0 !important;
+    margin-bottom: 20px;
+  }
+
   div.ic-text-ibu {
     float: right;
-    width: 102px;
     height: 30px;
 
     button {
-      height: 30px;
-      width: 30px;
       margin: 0 2px;
       float: right;
-      .border-radius(3px);
-      .border-box;
-      border: 1px solid @dark;
-      color: @dark;
 
-      &.active {
-        background: @dark;
-        color: white;
+      svg {
+        height: 25px;
       }
     }
   }
 
   textarea#ic-form-text {
     height: 200px;
+  }
+
+  div.quill {
+    margin-top: 15px;
+    height: 200px;
+
+    .ql-container {
+      font-family: @dosis;
+      font-size: 18px;
+    }
   }
 }
 
