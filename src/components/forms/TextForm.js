@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
 
-import FormPalette from './FormPalette';
 import ShortcutManager from '../ShortcutManager';
 
 import * as uiX from '../../actions/ui';
@@ -31,24 +30,6 @@ class TextForm extends Component {
     this.socket = SocketSingleton.getInstance();
   }
 
-  _handleShortcuts = (e) => {
-    if (e.metaKey) {
-      switch(e.which) {
-        case 66:
-          this.toggleStyle('bold')();
-          break;
-
-        case 73:
-          this.toggleStyle('italic')();
-          break;
-
-        case 85:
-          this.toggleStyle('underline')();
-          break;
-      }
-    }
-  };
-
   toggleStyle = (style) => () => {
     this.setState({
       style: {
@@ -58,7 +39,7 @@ class TextForm extends Component {
     });
   };
 
-  setColor = (color) => () => {
+  setColor = (color) => {
     this.setState({ color });
     this.props.uiX.changeFormColor(color);
   };
@@ -83,20 +64,20 @@ class TextForm extends Component {
     return (
       <div id={'ic-toolbar'}>
         <div className="ic-text-ibu">
-          <button name="underline"
-                  className={'ql-underline'}
-                  onClick={this.toggleStyle('underline')}>
-          </button>
-          <button name="italic"
-                  className={'ql-italic'}
-                  onClick={this.toggleStyle('italic')}>
-          </button>
-          <button name="bold"
-                  className={'ql-bold'}
-                  onClick={this.toggleStyle('bold')}>
-          </button>
+          <button name="underline" className={'ql-underline'} />
+          <button name="italic" className={'ql-italic'} />
+          <button name="bold" className={'ql-bold'} />
+          {this.props.colors &&
+            <select className={'ql-background'} defaultValue={this.state.color}>
+              <option value="#FFAE27" />
+              <option value="#CCFFCC" />
+              <option value="#FFCCFF" />
+              <option value="#CCCCFF" />
+              <option value="#CCFFFF" />
+              <option value="#FFFFCC" />
+            </select>
+          }
         </div>
-        {this.props.colors && <FormPalette setColor={this.setColor}/>}
       </div>
     );
   }
@@ -164,7 +145,10 @@ class TextForm extends Component {
                         modules={{
                           toolbar: {
                             container: '#ic-toolbar',
-                          }
+                            handlers: {
+                              background: this.setColor,
+                            }
+                          },
                         }}
                         style={{
                           background: this.state.color,
