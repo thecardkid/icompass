@@ -6,7 +6,6 @@ import ReactTooltip from 'react-tooltip';
 
 import * as uiX from '../../actions/ui';
 
-import { PROMPTS } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
 
@@ -46,10 +45,6 @@ class TextForm extends Component {
 
     if (text.length === 0) return;
 
-    if (text.length > 300) {
-      return this.toast.error(PROMPTS.POST_IT_TOO_LONG);
-    }
-
     this.props.submit(text, false, this.state, isDraft);
   };
 
@@ -57,6 +52,7 @@ class TextForm extends Component {
     return (
       <div id={'ic-toolbar'}>
         <div className="ic-text-ibu">
+          <button name="strike" className={'ql-strike'} />
           <button name="underline" className={'ql-underline'} />
           <button name="italic" className={'ql-italic'} />
           <button name="bold" className={'ql-bold'} />
