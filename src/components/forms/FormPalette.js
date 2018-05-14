@@ -13,7 +13,7 @@ export default class FormPalette extends Component {
   };
 
   setColor = (color) => () => {
-    this.props.setColor(color)();
+    this.props.setColor(color);
     this.setOrToggle(false)();
   };
 

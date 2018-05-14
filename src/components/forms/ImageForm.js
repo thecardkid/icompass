@@ -46,7 +46,7 @@ class ImageForm extends Component {
     this.setState({ altText: e.target.value });
   };
 
-  setColor = (color) => () => {
+  setColor = (color) => {
     this.setState({ color });
     this.props.uiX.changeFormColor(color);
   };

@@ -8,6 +8,7 @@ import * as uiX from '../../actions/ui';
 
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
+import FormPalette from './FormPalette';
 
 class TextForm extends Component {
   constructor(props) {
@@ -58,14 +59,7 @@ class TextForm extends Component {
           <button name="bold" className={'ql-bold'} />
           <button name="link" className={'ql-link'} />
           {this.props.colors &&
-            <select className={'ql-background'} defaultValue={this.state.color}>
-              <option value="#FFAE27" />
-              <option value="#CCFFCC" />
-              <option value="#FFCCFF" />
-              <option value="#CCCCFF" />
-              <option value="#CCFFFF" />
-              <option value="#FFFFCC" />
-            </select>
+            <FormPalette color={this.state.color} setColor={this.setColor}/>
           }
         </div>
       </div>
@@ -150,9 +144,6 @@ class TextForm extends Component {
                         modules={{
                           toolbar: {
                             container: '#ic-toolbar',
-                            handlers: {
-                              background: this.setColor,
-                            }
                           },
                         }}
                         style={{ background: this.state.color }}

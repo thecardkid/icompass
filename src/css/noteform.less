@@ -184,6 +184,15 @@ div.ic-form-palette {
       background: @dark;
       border: none;
     }
+
+    div.ic-form-palette {
+      margin-top: 4px;
+      z-index: 1;
+
+      .ic-options {
+        z-index: 1; //otherwise quill's border cuts through
+      }
+    }
   }
 
   textarea#ic-form-text {
