@@ -10,7 +10,7 @@ const defaultState = {
     editImage: false,
   },
   bookmarked: false,
-  showShareModal: false,
+  showShareModal: true,
   focusedNote: -1,
   vw: 0,
   vh: 0,
