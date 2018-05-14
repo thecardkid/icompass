@@ -23,6 +23,9 @@ export default class ShareModal extends Component {
 
   componentDidUpdate() {
     if (this.state.canvas) {
+      if (this.refs.canvas.children.length > 1) {
+        this.refs.canvas.children[1].remove();
+      }
       this.refs.canvas.appendChild(this.state.canvas);
     }
   }
@@ -58,7 +61,6 @@ export default class ShareModal extends Component {
       });
 
       this.setState({ canvas });
-      // this.refs.actions.appendChild(canvas);
       this.toast.clear();
     } catch (ex) {
       this.toast.error('There was a problem generating a PDF. Please take a screenshot instead.');
