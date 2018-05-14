@@ -52,7 +52,7 @@ export default class ShareModal extends Component {
     window.open(tweetURL, '_blank').focus();
   };
 
-  exportPdf = async () => {
+  exportPng = async () => {
     this.toast.info('Converting to file...');
     try {
       const canvas = await html2canvas(document.getElementById('compass'), {
@@ -93,7 +93,7 @@ export default class ShareModal extends Component {
               </div>
             </div>
             <div className={'actions'}>
-              <button name={'pdf'} onClick={this.exportPdf}>Save as PDF</button>
+              <button name={'png'} onClick={this.exportPng}>Save as PNG</button>
               <button onClick={this.tweetThis}>Tweet</button>
               {
                 this.state.canvas &&
