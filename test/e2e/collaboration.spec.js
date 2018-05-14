@@ -37,7 +37,7 @@ describe('collaboration', () => {
       b.switchTab(tabs.friendo);
       b.keys(['n']);
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'Friendo\'s note');
+      b.setValue('#ic-form-text .ql-editor', 'Friendo\'s note');
       b.click('button[name=ship]').pause(200);
       expect('div.ic-sticky-note').to.have.count(1);
     });
@@ -67,7 +67,7 @@ describe('collaboration', () => {
       b.switchTab(tabs.friendo);
       b.doubleClick('#note0').pause(100);
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'edit');
+      b.setValue('#ic-form-text .ql-editor', 'edit');
       b.click('button[name=ship]');
       b.pause(500);
 
@@ -116,7 +116,7 @@ describe('collaboration', () => {
       b.moveToObject('body', 300, 200);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'webdriverio draft');
+      b.setValue('#ic-form-text .ql-editor', 'webdriverio draft');
       b.click('button[name=draft]').pause(200);
       expect('div.ic-sticky-note').to.have.count(2);
       expect('.draft').to.have.count(1);
@@ -131,7 +131,7 @@ describe('collaboration', () => {
       b.moveToObject('body', 300, 600);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'note while in draft');
+      b.setValue('#ic-form-text .ql-editor', 'note while in draft');
       b.click('button[name=ship]');
       b.waitForVisible('#note1');
       expect('.ic-sticky-note').to.have.count(2);
@@ -154,22 +154,14 @@ describe('collaboration', () => {
   });
 
   describe('bulk edit mode', () => {
-    it('edits while in visual mode don\'t show up', () => {
+    it('deleting a note that is being edited by a user removes it from that user\'s screen', () => {
       b.switchTab(tabs.webdriverio);
       switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
       b.click('button.bold');
       b.click('#note0');
       b.click('#note2');
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.contain('bold');
-      expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.contain('bold');
 
-      b.switchTab(tabs.friendo);
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.not.contain('bold');
-      expect(b.getAttribute('#note2 div.contents p', 'class')[0]).to.not.contain('bold');
-    });
-
-    it('deleting a note that is being edited by a user removes it from that user\'s screen', () => {
       b.switchTab(tabs.friendo);
       switchMode('#ic-bulk');
       b.waitForVisible('#ic-visual-toolbar');
@@ -186,15 +178,6 @@ describe('collaboration', () => {
       expect(b.getCssProperty('#note0', 'border-color').value).to.equal('rgb(40,138,255)');
       // #note1 is still not selected
       expect(b.getCssProperty('#note1', 'border-color').value).to.equal('rgb(0,0,0)');
-    });
-
-    it('submitting changes show up on other\'s screen', () => {
-      b.switchTab(tabs.webdriverio);
-      b.click('#ic-bulk-submit');
-      b.pause(500);
-
-      b.switchTab(tabs.friendo);
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.contain('bold');
     });
   });
 

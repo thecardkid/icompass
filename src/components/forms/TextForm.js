@@ -145,6 +145,7 @@ class TextForm extends Component {
             <ReactQuill value={this.state.text}
                         onChange={this.handleChange}
                         ref={'quill'}
+                        id={'ic-form-text'}
                         selection={{start:0, end:0}}
                         modules={{
                           toolbar: {
