@@ -30,17 +30,17 @@ export default class FormPalette extends Component {
 
     return (
       <div className={'ic-form-palette'}>
-        <span style={{background: this.props.color}}
+        <button style={{background: this.props.color}}
               className={'icon'}
               onBlur={this.setOrToggle(false)}
               onClick={this.setOrToggle()}>
           A
-        </span>
-        {this.state.show &&
-          <div className={'ic-options'}>
-            {options}
-          </div>
-        }
+          {this.state.show &&
+            <div className={'ic-options'}>
+              {options}
+            </div>
+          }
+        </button>
       </div>
     );
   }

@@ -43,8 +43,11 @@ class Compass extends Component {
       if (props.compass.center.length === 0) {
         this.setPeopleInvolved();
       }
-      props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
     }
+  }
+
+  componentDidMount() {
+    this.props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
   }
 
   doubleClickCreate = (ev) => {

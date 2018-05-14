@@ -106,18 +106,21 @@
 div.ic-form-palette {
   margin-right: 5px;
   float: right;
-  margin-top: 7px;
   font-family: @notosans;
-  font-size: 13px;
   line-height: 16px;
 
-  span.icon {
-    padding: 3px 8px;
+  button.icon {
+    font-size: 13px;
     cursor: pointer;
     font-weight: bold;
+    margin: 0 2px;
+    float: right;
+    padding: 0;
+    width: 22px;
+    height: 22px;
   }
 
-  span.icon:hover {
+  button.icon:hover {
     color: @blue;
   }
 
@@ -186,7 +189,6 @@ div.ic-form-palette {
     }
 
     div.ic-form-palette {
-      margin-top: 4px;
       z-index: 1;
 
       .ic-options {
@@ -232,6 +234,10 @@ div.ic-form-palette {
       background: @dark;
       color: white;
     }
+  }
+
+  div.ic-form-palette {
+    margin-top: 4px;
   }
 
   p#ic-alt-text-label {
