@@ -173,7 +173,7 @@ class ImageForm extends Component {
                   Alternative text is used by screen readers, search engines, or when the image cannot be loaded
                 </div>
               </ReactTooltip>
-              {this.props.colors && <FormPalette setColor={this.setColor}/>}
+              {this.props.colors && <FormPalette setColor={this.setColor} color={this.state.color}/>}
             </div>
             <textarea id="ic-form-text"
                       autoFocus

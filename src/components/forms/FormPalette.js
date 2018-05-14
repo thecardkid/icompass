@@ -4,18 +4,43 @@ import _ from 'underscore';
 import { STICKY_COLORS } from '../../../lib/constants';
 
 export default class FormPalette extends Component {
+  state = {
+    show: false,
+  };
+
+  setOrToggle = (val) => () => {
+    this.setState({ show: val || !this.state.show });
+  };
+
+  setColor = (color) => () => {
+    this.props.setColor(color)();
+    this.setOrToggle(false)();
+  };
+
   render() {
+    const options = _.map(STICKY_COLORS, color => {
+      return (
+        <span style={{background: color}}
+              key={color}
+              onClick={this.setColor(color)}
+              className={'ic-color'}
+        />
+      );
+    });
+
     return (
       <div className={'ic-form-palette'}>
-        {_.map(STICKY_COLORS, (color) => {
-          return (
-            <span className={`ic-palette-color ic-color-${color.substring(1)}`}
-                  key={`color${color}`}
-                  style={{background: color}}
-                  onClick={this.props.setColor(color)}
-            />
-          );
-        })}
+        <span style={{background: this.props.color}}
+              className={'icon'}
+              onBlur={this.setOrToggle(false)}
+              onClick={this.setOrToggle()}>
+          A
+        </span>
+        {this.state.show &&
+          <div className={'ic-options'}>
+            {options}
+          </div>
+        }
       </div>
     );
   }
