@@ -159,17 +159,20 @@ class StickyNote extends Component {
   };
 
   clickNote = (ev) => {
-    if (ev.target.parentElement &&
-      ev.target.parentElement.parentElement) {
-      if (ev.target.parentElement.parentElement.doneDrag) {
-        ev.target.parentElement.parentElement.dragging = false;
-        ev.target.parentElement.parentElement.doneDrag = false;
-        return;
-      }
+    let $el = ev.target;
 
-      if (ev.target.parentElement.parentElement.dragging) {
-        return;
-      }
+    while ($el.parentElement != null && !$el.id.startsWith('note')) {
+      $el = $el.parentElement;
+    }
+
+    if ($el.doneDrag) {
+      $el.dragging = false;
+      $el.doneDrag = false;
+      return;
+    }
+
+    if ($el.dragging) {
+      return;
     }
 
     if (!this.visualMode && ev.shiftKey) {

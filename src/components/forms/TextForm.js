@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
 
-import ShortcutManager from '../ShortcutManager';
-
 import * as uiX from '../../actions/ui';
 
 import { PROMPTS } from '../../../lib/constants';
@@ -30,19 +28,14 @@ class TextForm extends Component {
     this.socket = SocketSingleton.getInstance();
   }
 
-  toggleStyle = (style) => () => {
-    this.setState({
-      style: {
-        ...this.state.style,
-        [style]: !this.state.style[style]
-      },
-    });
-  };
-
   setColor = (color) => {
     this.setState({ color });
     this.props.uiX.changeFormColor(color);
   };
+
+  componentDidMount() {
+    this.refs.quill.focus();
+  }
 
   handleChange = (text) => {
     this.setState({ text });
@@ -130,10 +123,22 @@ class TextForm extends Component {
     );
   };
 
+  backdropMouseDown = (e) => {
+    if (e.target.id === 'ic-backdrop') {
+      this.mouseDown = true;
+    }
+  };
+
+  close = (e) => {
+    if (this.mouseDown && e.target.id === 'ic-backdrop') {
+      this.props.close();
+    }
+    this.mouseDown = false;
+  };
+
   render() {
     return (
-      <div id={'ic-backdrop'} onClick={this.props.close}>
-        <ShortcutManager handle={this._handleShortcuts} formShortcut={true}/>
+      <div id={'ic-backdrop'} onMouseDown={this.backdropMouseDown} onMouseUp={this.close}>
         <div className="ic-form" id="ic-note-form" onClick={this.dontClose}>
           <div className="contents">
             <div className="header">
@@ -142,6 +147,8 @@ class TextForm extends Component {
             </div>
             <ReactQuill value={this.state.text}
                         onChange={this.handleChange}
+                        ref={'quill'}
+                        selection={{start:0, end:0}}
                         modules={{
                           toolbar: {
                             container: '#ic-toolbar',
@@ -150,9 +157,7 @@ class TextForm extends Component {
                             }
                           },
                         }}
-                        style={{
-                          background: this.state.color,
-                        }}
+                        style={{ background: this.state.color }}
             />
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
