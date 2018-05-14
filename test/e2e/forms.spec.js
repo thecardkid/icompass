@@ -11,6 +11,13 @@ const imageUrl = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/larg
 const driveUrl = 'https://drive.google.com/file/d/12345/view?usp=sharing';
 const expectedDriveUrl = 'https://drive.google.com/thumbnail?id=12345';
 
+const selectColor = (idx) => {
+  expect('span.ql-background').to.be.visible();
+  b.click('span.ql-background');
+  expect('span.ql-picker-options').to.be.visible();
+  b.elements('span.ql-picker-item').value[idx].click();
+};
+
 describe('forms', () => {
   beforeAll(setup);
 
@@ -21,11 +28,8 @@ describe('forms', () => {
       b.moveToObject('body', 100, 200);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      expect('.ic-form-palette').to.be.visible();
-      expect('.ic-palette-color').to.have.count(6);
-
-      b.setValue('#ic-form-text', 'text note');
-      b.click('.ic-color-FFFFCC');
+      b.setValue('#ic-form-text .ql-editor', 'text note');
+      selectColor(5);
       b.click('button[name=ship]');
       b.pause(200);
       expect('div.ic-sticky-note').to.have.count(1);
@@ -40,38 +44,13 @@ describe('forms', () => {
       b.moveToObject('#note0', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      expect('#ic-form-text').to.have.text('text note');
-      expect('.ic-form-palette').to.be.visible();
-      b.click('.ic-color-FFCCFF');
-      b.setValue('#ic-form-text', 'edited note');
+      expect('#ic-form-text .ql-editor').to.have.text('text note');
+      selectColor(2);
+      b.setValue('#ic-form-text .ql-editor', 'edited note');
       b.click('button[name=ship]');
       b.pause(200);
       expect('#note0').to.have.text(/edited note/);
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
-    });
-
-    it('styling', () => {
-      b.moveToObject('#note0', 10, 1);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-note-form');
-
-      expect(b.getAttribute('#ic-form-text', 'class')).to.not.contain('bold');
-      b.click('button[name=bold]');
-      b.pause(100);
-      expect(b.getAttribute('#ic-form-text', 'class')).to.contain('bold');
-      b.click('button[name=bold]');
-      b.pause(100);
-      expect(b.getAttribute('#ic-form-text', 'class')).to.not.contain('bold');
-
-      b.click('button[name=italic]');
-      b.click('button[name=underline]');
-      b.pause(100);
-      b.click('button[name=ship]');
-      b.pause(200);
-
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.not.contain('bold');
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.contain('italic');
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.contain('underline');
     });
 
     it('drag', () => {
@@ -82,19 +61,6 @@ describe('forms', () => {
       const { x, y } = b.getLocation('#note0');
       expect(100 - x).to.equal(50);
       expect(200 - y).to.equal(50);
-    });
-  });
-
-  describe('link', () => {
-    it('create', () => {
-      b.moveToObject('body', 100, 300);
-      b.doDoubleClick();
-      b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', imageUrl);
-      b.click('button[name=ship]');
-      b.pause(100);
-      expect('div.ic-img').to.have.count(0);
-      expect('#note1 div.contents p a').to.be.there(); // expect embedded link
     });
   });
 
@@ -125,15 +91,15 @@ describe('forms', () => {
       b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
-      expect('div.ic-sticky-note').to.have.count(3);
-      const { x, y } = b.getLocation('#note2');
+      expect('div.ic-sticky-note').to.have.count(2);
+      const { x, y } = b.getLocation('#note1');
       expect(x).to.equal(xoffset);
       expect(y).to.equal(yoffset);
-      expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
+      expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('editing an image without alt text does not show alt text field', () => {
-      b.moveToObject('#note2', 10, 1);
+      b.moveToObject('#note1', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
       expect('#ic-image-alt-text').to.not.be.visible();
@@ -141,7 +107,7 @@ describe('forms', () => {
     });
 
     it('edit', () => {
-      b.moveToObject('#note2', 10, 1);
+      b.moveToObject('#note1', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
       expect('.ic-form-palette').to.be.visible();
@@ -151,15 +117,15 @@ describe('forms', () => {
       b.click('#toggle-alt');
       b.setValue('#ic-image-alt-text', 'alternative text');
       b.click('button[name=ship]');
-      expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
     it('alt tag is there', () => {
-      expect(b.getAttribute('#note2 div.contents img', 'alt')).to.equal('alternative text');
+      expect(b.getAttribute('#note1 div.contents img', 'alt')).to.equal('alternative text');
     });
 
     it('converts drive link to thumbnail', () => {
-      b.moveToObject('#note2', 10, 1);
+      b.moveToObject('#note1', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
       b.setValue('#ic-form-text', driveUrl);
@@ -169,11 +135,11 @@ describe('forms', () => {
     });
 
     it('drag', () => {
-      b.moveToObject('#note2', 10, 10);
+      b.moveToObject('#note1', 10, 10);
       b.buttonDown(0);
-      b.moveToObject('#note2', 40, 40);
+      b.moveToObject('#note1', 40, 40);
       b.buttonUp(0);
-      const { x, y } = b.getLocation('#note2');
+      const { x, y } = b.getLocation('#note1');
       expect(xoffset - x).to.equal(-30);
       expect(yoffset - y).to.equal(-30);
     });
@@ -225,16 +191,16 @@ describe('forms', () => {
       b.click('.ic-color-FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
-      expect('div.ic-sticky-note').to.have.count(4);
-      const { x, y } = b.getLocation('#note3');
+      expect('div.ic-sticky-note').to.have.count(3);
+      const { x, y } = b.getLocation('#note2');
       expect(x).to.equal(xoffset);
       expect(y).to.equal(yoffset);
-      expect(b.getAttribute('#note3 div.ic-img img', 'src')).to.contain('data:image/png;base64');
-      expect(b.getCssProperty('#note3 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
+      expect(b.getAttribute('#note2 div.ic-img img', 'src')).to.contain('data:image/png;base64');
+      expect(b.getCssProperty('#note2 div.contents', 'background-color').value).to.equal('rgba(255,255,204,1)');
     });
 
     it('edit', () => {
-      b.moveToObject('#note3', 10, 1);
+      b.moveToObject('#note2', 10, 1);
       b.doDoubleClick();
       b.waitForVisible('#ic-toast');
       expect('#ic-toast').to.have.text(/Sketches cannot be edited/);
@@ -242,11 +208,11 @@ describe('forms', () => {
     });
 
     it('drag', () => {
-      b.moveToObject('#note3', 10, 10);
+      b.moveToObject('#note2', 10, 10);
       b.buttonDown(0);
-      b.moveToObject('#note3', 10, 40);
+      b.moveToObject('#note2', 10, 40);
       b.buttonUp(0);
-      const { x, y } = b.getLocation('#note3');
+      const { x, y } = b.getLocation('#note2');
       expect(xoffset - x).to.equal(0);
       expect(yoffset - y).to.equal(-30);
     });
@@ -303,9 +269,9 @@ describe('forms', () => {
       b.setValue('#ic-form-text', imageUrl);
       b.click('button[name=ship]');
       b.pause(200);
-      expect('div.ic-sticky-note').to.have.count(5);
+      expect('div.ic-sticky-note').to.have.count(4);
 
-      const { x, y } = b.getLocation('#note4');
+      const { x, y } = b.getLocation('#note3');
       expect(x).to.equal(500);
       expect(y).to.equal(500);
     });
@@ -314,7 +280,7 @@ describe('forms', () => {
       b.moveToObject('body', 600, 600);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      b.click('span.ic-color-FFCCFF');
+      selectColor(2);
       expect(b.getCssProperty('#ic-form-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
 
       b.click('.switch-doodle');
@@ -329,12 +295,12 @@ describe('forms', () => {
       b.setValue('#ic-form-text', imageUrl);
       b.click('button[name=ship]');
       b.pause(200);
-      expect('div.ic-sticky-note').to.have.count(6);
-      expect(b.getCssProperty('#note5 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
+      expect('div.ic-sticky-note').to.have.count(5);
+      expect(b.getCssProperty('#note4 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
     it('editing image does not allow switching', () => {
-      b.moveToObject('#note4', 10, 10);
+      b.moveToObject('#note3', 10, 10);
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
       expect('.switch-form').to.have.count(0);

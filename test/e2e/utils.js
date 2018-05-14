@@ -1,3 +1,9 @@
+const chai = require('chai');
+const chaiWebdriver = require('chai-webdriverio').default;
+chai.use(chaiWebdriver(browser));
+
+const { expect } = chai;
+
 const setup = () => {
   browser.setViewportSize({ width: 2000, height: 2000 });
   browser.url('http://localhost:8080');
@@ -32,4 +38,27 @@ const switchMode = (modeId) => {
   browser.click(modeId);
 };
 
-module.exports = { setup, cleanup, switchMode };
+const expectCompassStructure = () => {
+  expect('#observations').to.be.visible();
+  expect('#observations h1').to.have.text(/OBSERVATIONS/);
+  expect('#observations h2').to.have.text(/What's happening\? Why\?/);
+
+  expect('#principles').to.be.visible();
+  expect('#principles h1').to.have.text(/PRINCIPLES/);
+  expect('#principles h2').to.have.text(/What matters most\?/);
+
+  expect('#ideas').to.be.visible();
+  expect('#ideas h1').to.have.text(/IDEAS/);
+  expect('#ideas h2').to.have.text(/What ways are there\?/);
+
+  expect('#experiments').to.be.visible();
+  expect('#experiments h1').to.have.text(/EXPERIMENTS/);
+  expect('#experiments h2').to.have.text(/What's a step to try\?/);
+};
+
+module.exports = {
+  setup,
+  cleanup,
+  switchMode,
+  expectCompassStructure,
+};
