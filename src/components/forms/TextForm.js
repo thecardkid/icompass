@@ -60,6 +60,7 @@ class TextForm extends Component {
           <button name="underline" className={'ql-underline'} />
           <button name="italic" className={'ql-italic'} />
           <button name="bold" className={'ql-bold'} />
+          <button name="link" className={'ql-link'} />
           {this.props.colors &&
             <select className={'ql-background'} defaultValue={this.state.color}>
               <option value="#FFAE27" />
