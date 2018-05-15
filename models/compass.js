@@ -24,11 +24,6 @@ let compassSchema = mongoose.Schema({
     user: String,
     color: String,
     text: String,
-    style: {
-      bold: Boolean,
-      italic: Boolean,
-      underline: Boolean,
-    },
     doodle: String,
     isImage: Boolean,
     x: Number,
@@ -118,15 +113,10 @@ compassSchema.statics.plusOneNote = function(id, noteId, cb) {
 compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb) {
   this.findOne({ _id: id }, function(err, c) {
     if (err) logger.error('Could not find compass to update note', id, noteIds, err);
-    let s = transformation.style;
 
     c.notes = _.map(c.notes, function(note) {
       if (_.contains(noteIds, note._id.toString())) {
-        if (!note.doodle) {
-          if (s.bold !== null) note.style.bold = s.bold;
-          if (s.italic !== null) note.style.italic = s.italic;
-          if (s.underline !== null) note.style.underline = s.underline;
-        }
+        // TODO check that color is approved
         if (transformation.color) note.color = transformation.color;
       }
       return note;

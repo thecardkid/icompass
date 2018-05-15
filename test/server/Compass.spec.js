@@ -9,7 +9,6 @@ const NOTE = {
   user: 'mocha',
   color: '#FFCCCC',
   text: 'hello, world',
-  style: { bold: false, italic: false, underline: false },
   doodle: null,
   isImage: false,
   x: 0.5,
@@ -17,7 +16,7 @@ const NOTE = {
 };
 
 function clearDB(cb) {
-  for (var i in mongoose.connection.collections)
+  for (let i in mongoose.connection.collections)
     mongoose.connection.collections[i].remove(function() {
     });
   cb();
@@ -143,15 +142,12 @@ describe('Compass: models', () => {
     Compass.addNote(DUT._id, NOTE, (c) => {
       let noteIds = _.map(c.notes, note => note._id.toString());
       DUT = c;
+      const color = '#FFAE27';
 
-      let transformation = {
-        style: { bold: true, italic: false, underline: true },
-      };
+      let transformation = { color };
       Compass.bulkUpdateNotes(DUT._id, noteIds, transformation, (c) => {
         _.map(c.notes, (note) => {
-          expect(note.style.bold).to.be.true;
-          expect(note.style.italic).to.be.false;
-          expect(note.style.underline).to.be.true;
+          expect(note.color).to.equal(color);
         });
         done();
       });
