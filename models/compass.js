@@ -169,22 +169,6 @@ compassSchema.statics.findByViewCode = function(code, cb) {
   });
 };
 
-compassSchema.statics.findCode = function(code, cb) {
-  let schema = this;
-  schema.findByEditCode(code, function(compassEdit) {
-    if (compassEdit === null) {
-      schema.findByViewCode(code, function(compassView) {
-        if (compassView === null)
-          return cb(null, null);
-
-        cb(compassView, true);
-      });
-    } else {
-      cb(compassEdit, false);
-    }
-  });
-};
-
 compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
   this.deleteNotes(compassId, [noteId], cb);
 };

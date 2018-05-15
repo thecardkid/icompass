@@ -98,24 +98,6 @@ describe('Compass: models', () => {
     });
   });
 
-  it('#findCode', (done) => {
-    let found = false;
-
-    Compass.findCode(DUT.editCode, (c, viewOnly) => {
-      expect(c).to.not.be.null;
-      expect(viewOnly).to.equal(false);
-      if (found) done();
-      else found = true;
-    });
-
-    Compass.findCode(DUT.viewCode, (c, viewOnly) => {
-      expect(c).to.not.be.null;
-      expect(viewOnly).to.equal(true);
-      if (found) done();
-      else found = true;
-    });
-  });
-
   it('#addNote', (done) => {
     Compass.addNote(DUT._id, NOTE, (c) => {
       DUT = c;
