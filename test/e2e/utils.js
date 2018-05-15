@@ -2,7 +2,10 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
+const _ = require('underscore');
+
 const { expect } = chai;
+const { STICKY_COLORS } = require('../../lib/constants');
 
 const setup = () => {
   browser.setViewportSize({ width: 2000, height: 2000 });
@@ -56,9 +59,15 @@ const expectCompassStructure = () => {
   expect('#experiments h2').to.have.text(/What's a step to try\?/);
 };
 
+const selectColor = (color) => {
+  browser.click('.ic-form-palette .icon');
+  browser.elements('.ic-color').value[_.indexOf(STICKY_COLORS, color)].click();
+};
+
 module.exports = {
   setup,
   cleanup,
   switchMode,
   expectCompassStructure,
+  selectColor,
 };

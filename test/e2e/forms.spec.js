@@ -6,17 +6,10 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const { setup, cleanup } = require('./utils');
+const { setup, cleanup, selectColor } = require('./utils');
 const imageUrl = 'https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/Common-dog-behaviors-explained.jpg?itok=FSzwbBoi';
 const driveUrl = 'https://drive.google.com/file/d/12345/view?usp=sharing';
 const expectedDriveUrl = 'https://drive.google.com/thumbnail?id=12345';
-
-const selectColor = (idx) => {
-  expect('span.ql-background').to.be.visible();
-  b.click('span.ql-background');
-  expect('span.ql-picker-options').to.be.visible();
-  b.elements('span.ql-picker-item').value[idx].click();
-};
 
 describe('forms', () => {
   beforeAll(setup);
@@ -29,7 +22,7 @@ describe('forms', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
       b.setValue('#ic-form-text .ql-editor', 'text note');
-      selectColor(5);
+      selectColor('#FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
       expect('div.ic-sticky-note').to.have.count(1);
@@ -45,7 +38,7 @@ describe('forms', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
       expect('#ic-form-text .ql-editor').to.have.text('text note');
-      selectColor(2);
+      selectColor('#FFCCFF');
       b.setValue('#ic-form-text .ql-editor', 'edited note');
       b.click('button[name=ship]');
       b.pause(200);
@@ -62,6 +55,8 @@ describe('forms', () => {
       expect(100 - x).to.equal(50);
       expect(200 - y).to.equal(50);
     });
+
+    // TODO styling
   });
 
   describe('image', () => {
@@ -75,7 +70,6 @@ describe('forms', () => {
       b.keys('Shift');
       b.waitForVisible('#ic-image-form');
       expect('.ic-form-palette').to.be.visible();
-      expect('.ic-palette-color').to.have.count(6);
     });
 
     it('can toggle alt text', () => {
@@ -88,7 +82,7 @@ describe('forms', () => {
 
     it('create', () => {
       b.setValue('#ic-form-text', imageUrl);
-      b.click('.ic-color-FFFFCC');
+      selectColor('#FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
       expect('div.ic-sticky-note').to.have.count(2);
@@ -111,9 +105,8 @@ describe('forms', () => {
       b.doDoubleClick();
       b.waitForVisible('#ic-image-form');
       expect('.ic-form-palette').to.be.visible();
-      expect('.ic-palette-color').to.have.count(6);
       expect('#ic-form-text').to.have.text(imageUrl);
-      b.click('.ic-color-FFCCFF'); // change color
+      selectColor('#FFCCFF');
       b.click('#toggle-alt');
       b.setValue('#ic-image-alt-text', 'alternative text');
       b.click('button[name=ship]');
@@ -179,7 +172,6 @@ describe('forms', () => {
       b.keys('Alt');
       b.waitForVisible('#ic-doodle-form');
       expect('.ic-form-palette').to.be.visible();
-      expect('.ic-palette-color').to.have.count(6);
 
       // draw doodle
       b.moveToObject('#ic-doodle', 155, 75);
@@ -188,7 +180,7 @@ describe('forms', () => {
       b.buttonUp(0);
       b.pause(200);
 
-      b.click('.ic-color-FFFFCC');
+      selectColor('#FFFFCC');
       b.click('button[name=ship]');
       b.pause(200);
       expect('div.ic-sticky-note').to.have.count(3);
@@ -280,7 +272,7 @@ describe('forms', () => {
       b.moveToObject('body', 600, 600);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      selectColor(2);
+      selectColor('#FFCCFF');
       expect(b.getCssProperty('#ic-form-text', 'background-color').value).to.equal('rgba(255,204,255,1)');
 
       b.click('.switch-doodle');

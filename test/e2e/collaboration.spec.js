@@ -154,6 +154,7 @@ describe('collaboration', () => {
   });
 
   describe('bulk edit mode', () => {
+    // TODO tests for bulk styling
     it('deleting a note that is being edited by a user removes it from that user\'s screen', () => {
       b.switchTab(tabs.webdriverio);
       switchMode('#ic-bulk');
