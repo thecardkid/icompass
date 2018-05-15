@@ -6,8 +6,8 @@ import _ from 'underscore';
 
 import Modal from '../utils/Modal';
 
-import * as uiActions from '../actions/ui';
-import * as workspaceActions from '../actions/workspace';
+import * as uiX from '../actions/ui';
+import * as workspaceX from '../actions/workspace';
 
 import { MODALS } from '../../lib/constants';
 import Socket from '../utils/Socket';
@@ -28,8 +28,8 @@ class VisualModeToolbar extends Component {
     return selected;
   };
 
-  bulkDelete = () => {
-    this.socket.emitMetric('visual mode bulk delete');
+  bulkDelete = (ev) => {
+    ev.stopPropagation();
     this.modal.confirm(MODALS.BULK_DELETE_NOTES, (deleteNotes) => {
       if (deleteNotes) {
         this.socket.emitBulkDeleteNotes(this.getSelectedNotes());
@@ -39,11 +39,11 @@ class VisualModeToolbar extends Component {
   };
 
   cancel = () => {
-    this.socket.emitMetric('enter normal mode');
-    this.props.uiActions.normalMode();
+    this.props.uiX.normalMode();
   };
 
-  submit = () => {
+  submit = (ev) => {
+    ev.stopPropagation();
     let { bold, italic, underline, color } = this.props.workspace;
     let transformation = { style: { bold, italic, underline }, color };
     this.socket.emitMetric('visual mode submit');
@@ -51,26 +51,12 @@ class VisualModeToolbar extends Component {
     this.cancel();
   };
 
-  bulkColor = (color) => () => {
-    this.props.workspaceActions.colorAll(color);
-  };
-
-  toggleBold = () => {
-    this.props.workspaceActions.toggleBold();
-  };
-
-  toggleItalic = () => {
-    this.props.workspaceActions.toggleItalic();
-  };
-
-  toggleUnderline = () => {
-    this.props.workspaceActions.toggleUnderline();
+  bulkColor = (color) => {
+    this.props.workspaceX.colorAll(color);
   };
 
   render() {
     if (!this.props.show) return null;
-
-    const { bold, italic, underline } = this.props.workspace;
 
     return (
       <Draggable>
@@ -79,19 +65,7 @@ class VisualModeToolbar extends Component {
             <button id="ic-bulk-submit" onClick={this.submit}>
               <i className={'material-icons'}>check</i>
             </button>
-            <button className={`underline ${underline ? 'active' : ''}`}
-                    onClick={this.toggleUnderline}>
-              <u>U</u>
-            </button>
-            <button className={`italic ${italic ? 'active' : ''}`}
-                    onClick={this.toggleItalic}>
-              <i>I</i>
-            </button>
-            <button className={`bold ${bold ? 'active': ''}`}
-                    onClick={this.toggleBold}>
-              <b>B</b>
-            </button>
-            <FormPalette setColor={this.bulkColor} />
+            <FormPalette setColor={this.bulkColor} color={this.props.workspace.color}/>
             <button id="ic-bulk-delete" onClick={this.bulkDelete}>
               <i className={'material-icons'}>delete</i>
             </button>
@@ -112,8 +86,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    uiActions: bindActionCreators(uiActions, dispatch),
-    workspaceActions: bindActionCreators(workspaceActions, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
 };
 
