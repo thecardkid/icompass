@@ -132,18 +132,18 @@ const ModalSingleton = (() => {
         <p>Starting something or feeling stuck? Use five questions, asked by all kinds of innovators, to make things better.</p>
         <p>Explore anything you're doing, alone or with others. You'll see challenges in new ways.</p>
         <p>
-          <span class="bold">1. PEOPLE: Who could be involved?</span> ...including you? For and with everyone involved, explore...</p>
+          <b>1. PEOPLE: Who could be involved?</b> ...including you? For and with everyone involved, explore...</p>
         <p>
-          <span class="bold">2. OBSERVATIONS: What's happening? Why?</span> What are people doing? Saying? Thinking? Feeling? Why? See all sides, ups and downs.
+          <b>2. OBSERVATIONS: What's happening? Why?</b> What are people doing? Saying? Thinking? Feeling? Why? See all sides, ups and downs.
         </p>
         <p>
-          <span class="bold">3. PRINCIPLES: What matters most</span> for everyone involved? Principles often compete - inspiring us to get creative!
+          <b>3. PRINCIPLES: What matters most</b> for everyone involved? Principles often compete - inspiring us to get creative!
         </p>
         <p>
-          <span class="bold">4. IDEAS: What ways are there?</span> Anyone and anything can help. Look around for ideas! Play with who/what/when/where/how.
+          <b>4. IDEAS: What ways are there?</b> Anyone and anything can help. Look around for ideas! Play with who/what/when/where/how.
         </p>
         <p>
-          <span class="bold">5. EXPERIMENTS: What's a step to try?</span> With little time/risk/cost? Do it! What happens for all involved (#1 & 2)?
+          <b>5. EXPERIMENTS: What's a step to try?</b> With little time/risk/cost? Do it! What happens for all involved (#1 & 2)?
         </p>
         <p>
           Really explore. Look, listen, feel; use words, draw, move, make. In this order (P.O.P.I.E.) or any way that moves you forward.

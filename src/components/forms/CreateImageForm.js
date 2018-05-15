@@ -19,11 +19,6 @@ export default class CreateImageForm extends Component {
       isImage: true,
       doodle: null,
       user: this.props.user,
-      style: {
-        bold: false,
-        italic: false,
-        underline: false,
-      },
     };
 
     this.socket.emitMetric('note image');

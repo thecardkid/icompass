@@ -15,9 +15,6 @@ class TextForm extends Component {
     super(props);
     this.state = {
       style: {
-        bold: false,
-        italic: false,
-        underline: false,
         ...props.defaultStyle,
       },
       color: props.bg,

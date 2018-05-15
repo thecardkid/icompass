@@ -44,9 +44,8 @@ class VisualModeToolbar extends Component {
 
   submit = (ev) => {
     ev.stopPropagation();
-    let { bold, italic, underline, color } = this.props.workspace;
-    let transformation = { style: { bold, italic, underline }, color };
-    this.socket.emitMetric('visual mode submit');
+    let { color } = this.props.workspace;
+    let transformation = { color };
     this.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
     this.cancel();
   };
