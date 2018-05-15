@@ -5,7 +5,7 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const { setup, cleanup, switchMode } = require('./utils');
+const { setup, cleanup, switchMode, selectColor } = require('./utils');
 const { PROMPTS, MODALS } = require('../../lib/constants');
 const TEXT = 'this is a note',
     POSITIONS = [ {x: 250, y: 200}, {x: 350, y: 200}, {x: 450, y: 200}, {x: 550, y: 200} ];
@@ -93,17 +93,17 @@ describe('visual mode', () => {
       b.click('#note1');
       b.pause(200);
 
-      b.click('.ic-color-FFCCFF');
+      selectColor('#FFCCFF');
       b.pause(200);
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
 
-      b.click('.ic-color-CCFFFF');
+      selectColor('#CCFFFF');
       b.pause(500);
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
 
-      b.click('.ic-color-CCFFFF');
+      selectColor('#CCFFFF');
       b.pause(500);
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal(background);
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal(background);
@@ -124,7 +124,7 @@ describe('visual mode', () => {
       b.click('#note0');
       b.click('#note1');
       b.pause(200);
-      b.click('.ic-color-CCFFCC');
+      selectColor('#CCFFCC');
       b.click('#ic-bulk-submit');
       b.pause(500);
 
