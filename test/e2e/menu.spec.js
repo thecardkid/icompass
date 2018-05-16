@@ -177,8 +177,6 @@ describe('workspace menu', () => {
           expect('button[name=png]').to.be.visible();
           expect('div#exported-png').to.not.be.there();
           b.click('button[name=png]');
-          b.pause(100);
-          expect('#ic-toast').to.be.visible();
         });
 
         it('shows canvas along with instructions', () => {
