@@ -1,6 +1,6 @@
 import deepEqual from 'deep-equal';
-import linkifyHtml from 'linkifyjs/html';
 import React, { Component } from 'react';
+import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
@@ -112,16 +112,11 @@ class StickyNote extends Component {
   };
 
   renderText = (n) => {
-    let style = { background: n.color };
-    let clazz = 'text';
-    if (n.style.bold) clazz += ' bold';
-    if (n.style.italic) clazz += ' italic';
-    if (n.style.underline) clazz += ' underline';
     const divClazz = this.compactMode ? 'compact contents' : 'contents';
 
     return (
-      <div style={style} className={divClazz}>
-        <p className={clazz} dangerouslySetInnerHTML={{ __html: linkifyHtml(n.text) }} />
+      <div style={{ background: n.color }} className={divClazz}>
+        <ReactQuill readonly={true} theme={null} value={n.text}/>
         {this.getTooltip(n)}
       </div>
     );
@@ -164,17 +159,20 @@ class StickyNote extends Component {
   };
 
   clickNote = (ev) => {
-    if (ev.target.parentElement &&
-      ev.target.parentElement.parentElement) {
-      if (ev.target.parentElement.parentElement.doneDrag) {
-        ev.target.parentElement.parentElement.dragging = false;
-        ev.target.parentElement.parentElement.doneDrag = false;
-        return;
-      }
+    let $el = ev.target;
 
-      if (ev.target.parentElement.parentElement.dragging) {
-        return;
-      }
+    while ($el.parentElement != null && !$el.id.startsWith('note')) {
+      $el = $el.parentElement;
+    }
+
+    if ($el.doneDrag) {
+      $el.dragging = false;
+      $el.doneDrag = false;
+      return;
+    }
+
+    if ($el.dragging) {
+      return;
     }
 
     if (!this.visualMode && ev.shiftKey) {

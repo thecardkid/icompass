@@ -5,7 +5,7 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const { setup, cleanup, switchMode } = require('./utils');
+const { setup, cleanup, switchMode, selectColor } = require('./utils');
 const { PROMPTS, MODALS } = require('../../lib/constants');
 const TEXT = 'this is a note',
     POSITIONS = [ {x: 250, y: 200}, {x: 350, y: 200}, {x: 450, y: 200}, {x: 550, y: 200} ];
@@ -23,7 +23,7 @@ describe('visual mode', () => {
       b.moveToObject('body', p.x, p.y);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', TEXT);
+      b.setValue('#ic-form-text .ql-editor', TEXT);
       b.click('button[name=ship]');
       b.pause(500);
     }
@@ -70,24 +70,6 @@ describe('visual mode', () => {
       b.waitForVisible('#ic-visual-toolbar');
     });
 
-    it('bold button', () => {
-      b.click('button.bold');
-      expect(b.getCssProperty('button.bold', 'background-color').value).to.equal('rgba(237,237,237,1)');
-      b.click('button.bold');
-    });
-
-    it('italic button', () => {
-      b.click('button.italic');
-      expect(b.getCssProperty('button.italic', 'background-color').value).to.equal('rgba(237,237,237,1)');
-      b.click('button.italic');
-    });
-
-    it('underline button', () => {
-      b.click('button.underline');
-      expect(b.getCssProperty('button.underline', 'background-color').value).to.equal('rgba(237,237,237,1)');
-      b.click('button.underline');
-    });
-
     it('bulk deleting exits visual mode', () => {
       b.click('button#ic-bulk-delete');
       b.waitForVisible('#ic-modal');
@@ -104,40 +86,6 @@ describe('visual mode', () => {
       b.waitForVisible('#ic-visual-toolbar');
     });
 
-    it('font styling', () => {
-      b.click('#note0');
-      expect(b.getCssProperty('#note0', 'border-color').value).to.equal('rgb(40,138,255)');
-
-      b.click('button.bold');
-      b.click('button.italic');
-      b.click('button.underline');
-      b.pause(200);
-
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.include('bold')
-        .and.to.include('italic')
-        .and.to.include('underline');
-      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.not.include('bold')
-        .and.to.not.include('italic')
-        .and.to.not.include('underline');
-
-      b.click('#note1');
-      b.pause(200);
-      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.include('bold')
-        .and.to.include('italic')
-        .and.to.include('underline');
-
-      b.click('#note1');
-      b.pause(200);
-      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.not.include('bold')
-        .and.to.not.include('italic')
-        .and.to.not.include('underline');
-
-      b.click('#note0');
-      b.click('button.bold');
-      b.click('button.italic');
-      b.click('button.underline');
-    });
-
     it('sticky note coloring', () => {
       const background = b.getCssProperty('#note0 div.contents', 'background-color').value;
 
@@ -145,17 +93,17 @@ describe('visual mode', () => {
       b.click('#note1');
       b.pause(200);
 
-      b.click('.ic-color-FFCCFF');
+      selectColor('#FFCCFF');
       b.pause(200);
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
 
-      b.click('.ic-color-CCFFFF');
+      selectColor('#CCFFFF');
       b.pause(500);
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(204,255,255,1)');
 
-      b.click('.ic-color-CCFFFF');
+      selectColor('#CCFFFF');
       b.pause(500);
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal(background);
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal(background);
@@ -176,14 +124,10 @@ describe('visual mode', () => {
       b.click('#note0');
       b.click('#note1');
       b.pause(200);
-      b.click('button.bold');
-      b.click('button.italic');
-      b.click('.ic-color-CCFFCC');
+      selectColor('#CCFFCC');
       b.click('#ic-bulk-submit');
       b.pause(500);
 
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
     });
@@ -194,8 +138,6 @@ describe('visual mode', () => {
       b.click('#note1');
       b.click('#ic-bulk-submit');
       b.pause(1000);
-      expect(b.getAttribute('#note0 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
-      expect(b.getAttribute('#note1 div.contents p', 'class')[0]).to.include('bold').and.include('italic');
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
       expect(b.getCssProperty('#note1 div.contents', 'background-color').value).to.equal('rgba(204,255,204,1)');
     });

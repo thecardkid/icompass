@@ -1,106 +1,64 @@
 import React, { Component } from 'react';
+import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
 
-import FormPalette from './FormPalette';
-import ShortcutManager from '../ShortcutManager';
-
 import * as uiX from '../../actions/ui';
 
-import { PROMPTS } from '../../../lib/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
+import FormPalette from './FormPalette';
 
 class TextForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       style: {
-        bold: false,
-        italic: false,
-        underline: false,
         ...props.defaultStyle,
       },
       color: props.bg,
-      charCount: (props.defaultText || '').length,
+      text: props.defaultText || '',
     };
 
     this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }
 
-  _handleShortcuts = (e) => {
-    if (e.metaKey) {
-      switch(e.which) {
-        case 66:
-          this.toggleStyle('bold')();
-          break;
-
-        case 73:
-          this.toggleStyle('italic')();
-          break;
-
-        case 85:
-          this.toggleStyle('underline')();
-          break;
-      }
-    }
-  };
-
-  toggleStyle = (style) => () => {
-    this.setState({
-      style: {
-        ...this.state.style,
-        [style]: !this.state.style[style]
-      },
-    });
-  };
-
-  setColor = (color) => () => {
+  setColor = (color) => {
     this.setState({ color });
     this.props.uiX.changeFormColor(color);
   };
 
-  handleChange = () => {
-    this.setState({ charCount: this.refs.text.value.length });
+  componentDidMount() {
+    this.refs.quill.focus();
+  }
+
+  handleChange = (text) => {
+    this.setState({ text });
   };
 
   submit = (isDraft) => () => {
-    const text = this.refs.text.value;
+    const { text } = this.state;
 
     if (text.length === 0) return;
-
-    if (text.length > 300) {
-      return this.toast.error(PROMPTS.POST_IT_TOO_LONG);
-    }
 
     this.props.submit(text, false, this.state, isDraft);
   };
 
   renderStyleToolbar() {
-    const { bold, italic, underline } = this.state.style;
-
     return (
-      <div>
+      <div id={'ic-toolbar'}>
         <div className="ic-text-ibu">
-          <button name="underline"
-                  className={underline ? 'active' : ''}
-                  onClick={this.toggleStyle('underline')}>
-            <u>U</u>
-          </button>
-          <button name="italic"
-                  className={italic ? 'active' : ''}
-                  onClick={this.toggleStyle('italic')}>
-            <i>I</i>
-          </button>
-          <button name="bold"
-                  className={bold ? 'active' : ''}
-                  onClick={this.toggleStyle('bold')}>
-            <b>B</b>
-          </button>
+          <button name="strike" className={'ql-strike'} />
+          <button name="underline" className={'ql-underline'} />
+          <button name="italic" className={'ql-italic'} />
+          <button name="bold" className={'ql-bold'} />
+          <button name="link" className={'ql-link'} />
+          {this.props.colors &&
+            <FormPalette color={this.state.color} setColor={this.setColor}/>
+          }
         </div>
-        {this.props.colors && <FormPalette setColor={this.setColor}/>}
       </div>
     );
   }
@@ -153,33 +111,40 @@ class TextForm extends Component {
     );
   };
 
+  backdropMouseDown = (e) => {
+    if (e.target.id === 'ic-backdrop') {
+      this.mouseDown = true;
+    }
+  };
+
+  close = (e) => {
+    if (this.mouseDown && e.target.id === 'ic-backdrop') {
+      this.props.close();
+    }
+    this.mouseDown = false;
+  };
+
   render() {
-    const spanStyle = { color: this.state.charCount > 300 ? 'red' : 'black' };
-
-    let textStyle = '';
-    if (this.state.style.bold) textStyle += 'bold ';
-    if (this.state.style.italic) textStyle += 'italic ';
-    if (this.state.style.underline) textStyle += 'underline';
-
     return (
-      <div id={'ic-backdrop'} onClick={this.props.close}>
-        <ShortcutManager handle={this._handleShortcuts} formShortcut={true}/>
+      <div id={'ic-backdrop'} onMouseDown={this.backdropMouseDown} onMouseUp={this.close}>
         <div className="ic-form" id="ic-note-form" onClick={this.dontClose}>
           <div className="contents">
             <div className="header">
-              <h1 className={'title'}>
-                {this.props.title}
-                <span style={spanStyle}> {this.state.charCount}/300</span>
-              </h1>
+              <h1 className={'title'}>{this.props.title}</h1>
               {this.renderStyleToolbar()}
             </div>
-            <textarea id="ic-form-text"
-                      className={textStyle}
-                      ref={'text'}
-                      autoFocus
-                      defaultValue={this.props.defaultText || ''}
-                      onChange={this.handleChange}
-                      style={{ background: this.state.color }}/>
+            <ReactQuill value={this.state.text}
+                        onChange={this.handleChange}
+                        ref={'quill'}
+                        id={'ic-form-text'}
+                        selection={{start:0, end:0}}
+                        modules={{
+                          toolbar: {
+                            container: '#ic-toolbar',
+                          },
+                        }}
+                        style={{ background: this.state.color }}
+            />
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
               <button name="ship" onClick={this.submit(false)}>{this.props.switch ? 'Publish' : 'Edit'}</button>

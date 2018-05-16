@@ -104,10 +104,48 @@
 }
 
 div.ic-form-palette {
-  width: 55px;
-  height: 30px;
+  margin-right: 5px;
   float: right;
-  margin-right: 2px;
+  font-family: @notosans;
+  line-height: 16px;
+
+  button.icon {
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 2px;
+    float: right;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+  }
+
+  button.icon:hover {
+    color: @blue;
+  }
+
+  div.ic-options {
+    position: absolute;
+    padding: 3px 5px;
+    width: 130px;
+    height: 26px;
+    background: @dark;
+    .border-box;
+
+    span.ic-color {
+      margin: 2px;
+      border: none;
+      float: left;
+      height: 16px;
+      width: 16px;
+      cursor: pointer;
+      .border-box;
+    }
+
+    span.ic-color:hover {
+      border: 1px solid @dark;
+    }
+  }
 
   span.ic-palette-color {
     width: 11px;
@@ -121,30 +159,56 @@ div.ic-form-palette {
 }
 
 #ic-note-form {
+  div#ic-toolbar {
+    border: none !important;
+    font-family: inherit !important;
+    padding: 0 !important;
+    margin-bottom: 20px;
+  }
+
   div.ic-text-ibu {
     float: right;
-    width: 102px;
     height: 30px;
+    margin-top: 3px;
 
     button {
-      height: 30px;
-      width: 30px;
       margin: 0 2px;
       float: right;
-      .border-radius(3px);
-      .border-box;
-      border: 1px solid @dark;
-      color: @dark;
+      padding: 0;
+      width: 22px;
+    }
 
-      &.active {
-        background: @dark;
-        color: white;
+    svg {
+      height: 18px;
+    }
+
+    .ql-picker-options {
+      width: 132px;
+      background: @dark;
+      border: none;
+    }
+
+    div.ic-form-palette {
+      z-index: 1;
+
+      .ic-options {
+        z-index: 1; //otherwise quill's border cuts through
       }
     }
   }
 
   textarea#ic-form-text {
     height: 200px;
+  }
+
+  div.quill {
+    margin-top: 5px;
+    height: 200px;
+
+    .ql-container {
+      font-family: @dosis;
+      font-size: 18px;
+    }
   }
 }
 
@@ -170,6 +234,10 @@ div.ic-form-palette {
       background: @dark;
       color: white;
     }
+  }
+
+  div.ic-form-palette {
+    margin-top: 4px;
   }
 
   p#ic-alt-text-label {

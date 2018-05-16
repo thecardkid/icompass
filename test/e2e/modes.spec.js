@@ -2,8 +2,7 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
-const { expectCompassStructure } = require('./functionality.spec');
-const { setup, cleanup } = require('./utils');
+const { setup, cleanup, expectCompassStructure } = require('./utils');
 
 const expect = chai.expect;
 const b = browser;
@@ -20,7 +19,7 @@ describe('view modes', () => {
     b.moveToObject('body', 100, 100);
     b.doDoubleClick();
     b.waitForVisible('#ic-note-form');
-    b.setValue('#ic-form-text', 'this is a note');
+    b.setValue('#ic-form-text .ql-editor', 'this is a note');
     b.click('button[name=ship]');
     b.pause(200);
     expect('div.ic-sticky-note').to.have.count(1);
@@ -28,7 +27,7 @@ describe('view modes', () => {
     b.moveToObject('body', 300, 100);
     b.doDoubleClick();
     b.waitForVisible('#ic-note-form');
-    b.setValue('#ic-form-text', 'this is a note');
+    b.setValue('#ic-form-text .ql-editor', 'this is a note');
     b.click('button[name=draft]');
     b.pause(200);
     expect('div.ic-sticky-note').to.have.count(2);

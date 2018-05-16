@@ -12,24 +12,6 @@ export const selectNote = (idx) => {
   };
 };
 
-export const toggleBold = () => {
-  return {
-    type: 'toggleBold',
-  };
-};
-
-export const toggleItalic = () => {
-  return {
-    type: 'toggleItalic',
-  };
-};
-
-export const toggleUnderline = () => {
-  return {
-    type: 'toggleUnderline',
-  };
-};
-
 export const colorAll = (color) => {
   return {
     type: 'colorAll',
