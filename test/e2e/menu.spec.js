@@ -172,6 +172,26 @@ describe('workspace menu', () => {
         expect('#ic-toast').to.have.text(/View-only link has been copied/);
       });
 
+      describe('export as png', () => {
+        it('has feedback when user clicks button', () => {
+          expect('button[name=png]').to.be.visible();
+          expect('div#exported-png').to.not.be.there();
+          b.click('button[name=png]');
+        });
+
+        it('shows canvas along with instructions', () => {
+          b.waitForVisible('div#exported-png');
+          expect('div#exported-png canvas').to.be.visible();
+          expect('div#exported-png p').to.have.text(/Right click/);
+        });
+
+        it('only one canvas is shown', () => {
+          b.click('button[name=png]');
+          b.pause(1500);
+          expect('div#exported-png canvas').to.have.count(1);
+        });
+      });
+
       it('can x out', () => {
         b.click('button.ic-close-window');
         expect('.ic-share').to.not.be.visible();

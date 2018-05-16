@@ -26,9 +26,7 @@ app.use(helmet({
   },
 }));
 
-app.use(logger.api);
-
-app.use('/api/v1', apiRoutes);
+app.use('/api/v1', logger.api, apiRoutes);
 
 app.use('/s3', s3Router({
   bucket: process.env.S3_BUCKET || 'innovatorscompass',
@@ -37,6 +35,7 @@ app.use('/s3', s3Router({
   ACL: 'public-read',
   uniquePrefix: true,
 }));
+
 
 app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, 'public', 'index.html'));

@@ -145,8 +145,8 @@ div.ic-share {
     }
   }
 
-  div.ic-twitter {
-    margin-top: 40px;
+  div.actions {
+    margin-top: 30px;
     text-align: left;
     display: block !important;
 
@@ -161,6 +161,21 @@ div.ic-share {
 
     button[name=pdf] {
       background: @dark;
+    }
+
+    div#exported-png {
+      margin-top: 15px;
+      width: 100%;
+
+      p {
+        font-size: 12px;
+      }
+
+      canvas {
+        margin-top: 10px;
+        max-width: 100%;
+        height: auto !important;
+      }
     }
   }
 }
