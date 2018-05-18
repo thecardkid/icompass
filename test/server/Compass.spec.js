@@ -7,7 +7,7 @@ import Compass from '../../models/compass';
 const TOPIC = 'test suite';
 const NOTE = {
   user: 'mocha',
-  color: '#FFCCCC',
+  color: '#FFCCFF',
   text: 'hello, world',
   doodle: null,
   isImage: false,
@@ -95,24 +95,6 @@ describe('Compass: models', () => {
     Compass.setCenter(DUT._id, 'center', (c) => {
       expect(c.center).to.equal('center');
       done();
-    });
-  });
-
-  it('#findCode', (done) => {
-    let found = false;
-
-    Compass.findCode(DUT.editCode, (c, viewOnly) => {
-      expect(c).to.not.be.null;
-      expect(viewOnly).to.equal(false);
-      if (found) done();
-      else found = true;
-    });
-
-    Compass.findCode(DUT.viewCode, (c, viewOnly) => {
-      expect(c).to.not.be.null;
-      expect(viewOnly).to.equal(true);
-      if (found) done();
-      else found = true;
     });
   });
 
