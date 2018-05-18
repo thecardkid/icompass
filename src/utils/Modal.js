@@ -82,8 +82,16 @@ const ModalSingleton = (() => {
       );
     }
 
-    alert(text, cb = _.noop) {
-      this.renderModal(this.generateAlert(text));
+    alert({ heading, body = '', paragraphs = [], cb = _.noop }) {
+      let html = `<h3>${heading}</h3>`;
+
+      if (paragraphs.length === 0) {
+        html += `<p>${body}</p>`;
+      } else {
+        _.each(paragraphs, p => html += `<p>${p}</p>`);
+      }
+
+      this.renderModal(this.generateAlert(html));
       this.onEvent({
         onConfirm: cb,
         onCancel: _.noop,
@@ -92,93 +100,87 @@ const ModalSingleton = (() => {
     }
 
     alertPrivacyStatement = () => {
-      const text = `
-        <h3>Privacy Statement</h3>
-        <p>
-          iCompass will not share your Compass, code, data, or any personal
-          information included in your compass with any third party.
-          <br/><br/>
-          Anyone who has your Compass' edit code with will be able to modify,
-          add, or delete any and all data in your Compass. Save and share your
-          Compass link with care, and ask any collaborator to do the same.
-         </p>
-      `;
-      this.alert(text, _.noop);
+      this.alert({
+        heading: 'Privacy Statement',
+        paragraphs: [
+          'iCompass will not share your Compass, code, data, or any personal information included in your compass with any third party.',
+          'Anyone who has your workspace\'s edit code with will be able to modify, add, or delete any and all data in your Compass. Save and share your Compass link with care, and ask any collaborator to do the same.'
+        ],
+      });
     };
 
     alertFeedback = (code) => {
-      const text = `
-        <h3>We'd love to hear from you!</h3>
-        <p>
-          It's a huge help to us if you reach out with your experiences and questions! Please email
+      this.alert({
+        heading: 'We\'d love to hear from you!',
+        paragraphs: [
+          `It's a huge help to us if you reach out with your experiences and questions! Please email
           <a href="mailto:hieumaster95@gmail.com"><u>Hieu</u></a> (app creator) or 
           <a href="mailto:ela@innovatorscompass.org"><u>Ela</u></a> (Compass creator).
-          Or <a href="${TWEET + code}"><u>tweet</u></a>!
-          <br/><br/>
-          To report a bug or request a feature, please go
-          <a href="https://github.com/thecardkid/innovators-compass/issues" target="_blank"
-          rel="noopener noreferrer"><u>here</u></a> and click New issue.
-          <br/><br/>
-          If you are reporting a bug, please list the steps to reproduce or include screenshots.
-          If requesting a new feature, please be specific!
-        </p>
-      `;
-      this.alert(text, _.noop);
+          Or <a href="${TWEET + code}"><u>tweet</u></a>!`,
+          `To report a bug or request a feature, please go
+          <a href="https://github.com/thecardkid/innovators-compass/issues" target="_blank" rel="noopener noreferrer"><u>here</u></a>
+          and click New issue.`,
+          `If you are reporting a bug, please list the steps to reproduce or include screenshots.
+          If requesting a new feature, please be specific!`,
+        ],
+      });
     };
 
     alertCompassPrompt = () => {
-      const text = `
-        <h3>The Innovator's Compass</h3>
-        <p>Starting something or feeling stuck? Use five questions, asked by all kinds of innovators, to make things better.</p>
-        <p>Explore anything you're doing, alone or with others. You'll see challenges in new ways.</p>
-        <p>
-          <b>1. PEOPLE: Who could be involved?</b> ...including you? For and with everyone involved, explore...</p>
-        <p>
-          <b>2. OBSERVATIONS: What's happening? Why?</b> What are people doing? Saying? Thinking? Feeling? Why? See all sides, ups and downs.
-        </p>
-        <p>
-          <b>3. PRINCIPLES: What matters most</b> for everyone involved? Principles often compete - inspiring us to get creative!
-        </p>
-        <p>
-          <b>4. IDEAS: What ways are there?</b> Anyone and anything can help. Look around for ideas! Play with who/what/when/where/how.
-        </p>
-        <p>
-          <b>5. EXPERIMENTS: What's a step to try?</b> With little time/risk/cost? Do it! What happens for all involved (#1 & 2)?
-        </p>
-        <p>
-          Really explore. Look, listen, feel; use words, draw, move, make. In this order (P.O.P.I.E.) or any way that moves you forward.
-        </p>
-        <p>For more information, visit <a href="http://innovatorscompass.org" target="_blank">innovatorscompass.org</a>.</p>
-      `;
-      this.alert(text, _.noop);
+      this.alert({
+        heading: 'The Innovator\'s Compass',
+        paragraphs: [
+          'Starting something or feeling stuck? Use five questions, asked by all kinds of innovators, to make things better.',
+          'Explore anything you\'re doing, alone or with others. You\'ll see challenges in new ways.',
+          '<b>1. PEOPLE: Who could be involved?</b> ...including you? For and with everyone involved, explore...',
+          '<b>2. OBSERVATIONS: What\'s happening? Why?</b> What are people doing? Saying? Thinking? Feeling? Why? See all sides, ups and downs.',
+          '<b>3. PRINCIPLES: What matters most</b> for everyone involved? Principles often compete - inspiring us to get creative!',
+          '<b>4. IDEAS: What ways are there?</b> Anyone and anything can help. Look around for ideas! Play with who/what/when/where/how.',
+          '<b>5. EXPERIMENTS: What\'s a step to try?</b> With little time/risk/cost? Do it! What happens for all involved (#1 & 2)?',
+          'Really explore. Look, listen, feel; use words, draw, move, make. In this order (P.O.P.I.E.) or any way that moves you forward.',
+          'For more information, visit <a href="http://innovatorscompass.org" target="_blank"><u>innovatorscompass.org</u></a>.',
+        ],
+      });
     };
 
     alertExplainModes = () => {
-      const text = `
-        <h3>What are these modes?</h3>
-        <p><b>Standard mode</b> is what you are in by default</p>
-        <p><b>Compact mode</b> make notes take up much less space - it is meant for smaller devices.</p>
-        <p><b>Bulk Edit</b> mode allows you to edit notes in bulk! Hold down Shift and click on any note to enter this mode.</p>
-      `;
-
-      this.alert(text, _.noop);
+      this.alert({
+        heading: 'What are these modes?',
+        paragraphs: [
+          '<b>Standard mode</b> is what you are in by default',
+          '<b>Compact mode</b> make notes take up much less space - it is meant for smaller devices.',
+          '<b>Bulk Edit</b> mode allows you to edit notes in bulk! Hold down Shift and click on any note to enter this mode.',
+        ],
+      });
     };
 
     alertAboutUs = () => {
-      const text = `
-        <h3>Hi!</h3>
-        <p>
-          Ela Ben-Ur's mission is making powerful ways forward accessible for any person and moment. She distilled Innovators' Compass from Design Thinking and other practices over a 20-year journey through IDEO, MIT and Olin - and continues to evolve it in collaboration with people around the world, from parents to educators to organizational leaders. More tools and many examples are at <a href="innovatorscompass.org"><u>innovatorscompass.org</u></a>.
-        </p>
-        <p>My name is Hieu Nguyen, and I am the creator of this app. I am an Olin graduate, class of 2018. Having worked with this design framework from classes with Ela, I saw the potential in an online collaborative Compass and made it a reality.</p>
-        <p>We offer this app for free so you can move forward with it in challenges big or small. So please:</p>
-        <p>1. Use it, and<br/>2. Invite others to do the same!</p>
-        <p>To changing the world for free,</p>
-        <p>Hieu and Ela</p>
-      `;
-
-      this.alert(text, _.noop);
+      this.alert({
+        heading: 'Hi!',
+        paragraphs: [
+          'Ela Ben-Ur\'s mission is making powerful ways forward accessible for any person and moment. She distilled Innovators\' Compass from Design Thinking and other practices over a 20-year journey through IDEO, MIT and Olin - and continues to evolve it in collaboration with people around the world, from parents to educators to organizational leaders. More tools and many examples are at <a href="innovatorscompass.org"><u>innovatorscompass.org</u></a>.',
+          'My name is Hieu Nguyen, and I am the creator of this app. I am an Olin graduate, class of 2018. Having worked with this design framework from classes with Ela, I saw the potential in an online collaborative Compass and made it a reality.',
+          'We offer this app for free so you can move forward with it in challenges big or small. So please:',
+          '1. Use it, and<br/>2. Invite others to do the same!',
+          'To changing the world for free,',
+          'Hieu & Ela',
+        ],
+      });
     };
+
+    alertRouteErrors(validCode, validUsername) {
+      const options = {
+        heading: 'There was a problem with your login info',
+        paragraphs: [],
+        cb: () => browserHistory.push('/'),
+      };
+
+      if (!validCode) options.paragraphs.push('Your code is not valid');
+      if (!validUsername) options.paragraphs.push('Username can only contain letters, and must not be longer than 15 characters');
+      options.paragraphs.push('You will now be directed to the login page');
+
+      this.alert(options);
+    }
 
     generatePrompt(html) {
       return this.getModalHtml(
@@ -323,16 +325,6 @@ const ModalSingleton = (() => {
         this.close();
         cb(false, response);
       });
-    }
-
-    alertRouteErrors(validCode, validUsername) {
-      let err = '<h3>There was a problem with your login info</h3>';
-
-      if (!validCode) err += '<p>Your code is not valid</p>';
-      if (!validUsername) err += '<p>Username can only contain letters, and must not be longer than 15 characters</p>';
-
-      err += '<p>You will now be directed to the login page</p>';
-      this.alert(err, () => browserHistory.push('/'));
     }
 
     close() {

@@ -39,8 +39,11 @@ class LandingPage extends Component {
   }
 
   onCompassReady = (data) => {
-    if (!data.success) {
-      return this.modal.alert('Something went wrong. Please contact hieumaster95@gmail.com');
+    if (data.success) {
+      return this.modal.alert({
+        heading: 'Whoops...',
+        body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let Hieu know.</u></a>',
+      });
     }
 
     this.promptForEmail();

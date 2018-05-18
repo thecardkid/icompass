@@ -128,7 +128,10 @@ export default class BookmarkList extends Component {
       this.toast.success('Bookmarks imported!');
       this.emailBookmarks();
     } catch (ex) {
-      this.modal.alert('<h3>Whoops</h3><p>The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.</p>');
+      this.modal.alert({
+        heading: 'Whoops...',
+        body: 'The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.',
+      });
     }
   };
 

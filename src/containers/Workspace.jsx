@@ -22,7 +22,7 @@ import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import { PROMPTS, EDITING_MODE, REGEX } from '../../lib/constants';
+import { EDITING_MODE, REGEX } from '../../lib/constants';
 import { browserHistory } from 'react-router';
 import WorkspaceMenu from '../components/WorkspaceMenu';
 import ShareModal from '../components/ShareModal';
@@ -63,7 +63,14 @@ class Workspace extends Component {
   }
 
   alertNotFound() {
-    this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
+    this.modal.alert({
+      heading: 'Workspace not found',
+      paragraphs: [
+        'Please check the code you provided. The permissions (edit/view) and the code might not match.',
+        'You will now be directed to the login page',
+      ],
+      cb: () => browserHistory.push('/'),
+    });
   }
 
   onCompassFound = (data) => {
@@ -78,7 +85,11 @@ class Workspace extends Component {
   };
 
   onCompassDeleted = () => {
-    this.modal.alert(PROMPTS.COMPASS_DELETED, () => browserHistory.push('/'));
+    this.modal.alert({
+      heading: 'Workspace deleted',
+      body: 'You will now be redirected to the home page.',
+      cb: () => browserHistory.push('/'),
+    });
   };
 
   onUserJoined = (data) => {
