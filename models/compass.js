@@ -78,7 +78,7 @@ compassSchema.statics.setCenter = function(id, center, cb) {
   );
 };
 
-compassSchema.statics.addNote = (id, newNote, cb) => {
+compassSchema.statics.addNote = function(id, newNote, cb) {
   if (!isValidNote(newNote)) {
     return;
   }
@@ -94,7 +94,7 @@ compassSchema.statics.addNote = (id, newNote, cb) => {
   );
 };
 
-compassSchema.statics.updateNote = (id, updatedNote, cb) => {
+compassSchema.statics.updateNote = function(id, updatedNote, cb) {
   if (!isValidNote(updatedNote)) {
     return;
   }

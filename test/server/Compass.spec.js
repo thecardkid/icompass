@@ -7,7 +7,7 @@ import Compass from '../../models/compass';
 const TOPIC = 'test suite';
 const NOTE = {
   user: 'mocha',
-  color: '#FFCCCC',
+  color: '#FFCCFF',
   text: 'hello, world',
   doodle: null,
   isImage: false,
