@@ -240,14 +240,14 @@ describe('workspace menu', () => {
         });
 
         it('bookmark has correct info', () => {
-          b.click('div.ic-saved #arrow');
+          b.click('.ic-saved #arrow');
           b.pause(100);
-          expect('div.ic-saved a').to.have.text('My bookmark');
-          expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
+          expect('.ic-saved a').to.have.text('My bookmark');
+          expect('.ic-saved .ic-saved-info p').to.have.text('as "sandbox"');
         });
 
         it('bookmark leads to correct workspace', () => {
-          b.click('div.ic-saved a');
+          b.click('.ic-saved a');
           b.waitForVisible('#compass');
           expect(b.getUrl()).to.contain('http://localhost:8080/compass/edit');
         });
@@ -265,14 +265,14 @@ describe('workspace menu', () => {
         });
 
         it('can edit bookmark', () => {
-          b.click('div.ic-saved #arrow');
+          b.click('.ic-saved #arrow');
           b.pause(500);
           b.click('button.edit');
           b.waitForVisible('#ic-modal');
           expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
           b.setValue('#ic-modal-input', 'Changed name');
           b.click('#ic-modal-confirm');
-          expect('div.ic-saved a').to.have.text('Changed name');
+          expect('.ic-saved a').to.have.text('Changed name');
         });
 
         it('can remove bookmark', () => {
@@ -280,7 +280,7 @@ describe('workspace menu', () => {
           b.waitForVisible('#ic-modal');
           expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
           b.click('#ic-modal-confirm');
-          expect('div.ic-saved').to.not.be.there();
+          expect('.ic-saved').to.not.be.there();
         });
 
         describe('import/export bookmarks', () => {

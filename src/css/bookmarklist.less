@@ -27,7 +27,13 @@ div#ic-bookmarks {
 
   div#contents {
     margin: 20px;
+    height: 90%;
     font-family: @notosans;
+
+    ul {
+      height: 100%;
+      overflow-y: scroll;
+    }
 
     h1 {
       font-size: 30px;
@@ -35,8 +41,8 @@ div#ic-bookmarks {
       color: @light;
     }
 
-    div.ic-saved {
-      margin: 10px 0;
+    li.ic-saved {
+      margin: 2px 0;
       width: 140px;
       padding: 10px;
       background: #222;
@@ -82,6 +88,9 @@ div#ic-bookmarks {
       }
     }
 
+    li.ic-saved:last-child {
+      margin-bottom: 100px;
+    }
   }
 
   div#ic-bookmark-footer {

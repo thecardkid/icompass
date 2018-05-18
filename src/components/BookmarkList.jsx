@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import Modal from '../utils/Modal';
@@ -8,6 +7,7 @@ import Storage from '../utils/Storage';
 import ToastSingleton from '../utils/Toast';
 
 import { MODALS, REGEX } from '../../lib/constants';
+import Bookmark from './Bookmark';
 
 export default class BookmarkList extends Component {
   constructor(props) {
@@ -22,14 +22,9 @@ export default class BookmarkList extends Component {
       show: new Array(b.length).fill(false),
       showBookmarks: Storage.getShowBookmarks(),
     };
-
-    this.renderBookmark = this.renderBookmark.bind(this);
-    this.edit = this.edit.bind(this);
-    this.remove = this.remove.bind(this);
-    this.expand = this.expand.bind(this);
   }
 
-  edit(e, idx) {
+  edit = (idx) => (e) => {
     e.stopPropagation();
     this.modal.prompt(MODALS.EDIT_BOOKMARK, (updated, newName) => {
       if (updated && newName) {
@@ -37,9 +32,9 @@ export default class BookmarkList extends Component {
         this.setState({ bookmarks });
       }
     }, this.state.bookmarks[idx].center);
-  }
+  };
 
-  remove(e, idx) {
+  remove = (idx) => (e) => {
     e.stopPropagation();
     this.modal.confirm(MODALS.DELETE_BOOKMARK, (deleteBookmark) => {
       if (deleteBookmark) {
@@ -49,44 +44,28 @@ export default class BookmarkList extends Component {
         this.setState({ bookmarks, show });
       }
     });
-  }
+  };
 
-  expand(idx) {
+  expand = (idx) => () => {
     let show = this.state.show;
     show[idx] = !show[idx];
     this.setState({ show });
-  }
-
-  navigateTo = (href) => () => {
-    this.socket.emitMetricLandingPage(this.props.start, Date.now(), 'navigate with bookmark');
-    browserHistory.push(href);
   };
 
-  renderBookmark(w, idx) {
-    let style = {
-      height: this.state.show[idx] ? '20px' : '0px',
-      marginTop: this.state.show[idx] ? '15px' : '0px',
-    };
-    let info = (
-      <div className="ic-saved-info" style={style}>
-        <p>as &quot;{w.name}&quot;</p>
-        <button className="remove" onClick={(e) => this.remove(e, idx)}>remove</button>
-        <button className="edit" onClick={(e) => this.edit(e, idx)}>edit</button>
-      </div>
-    );
-
-    let arrow = this.state.show[idx] ?
-      <span id="arrow">&#9664;</span> :
-      <span id="arrow">&#9660;</span>;
-
+  renderBookmark = (w, idx) => {
     return (
-      <div className="ic-saved" key={`saved${idx}`} onClick={() => this.expand(idx)}>
-        <a onClick={this.navigateTo(w.href)}>{w.center}</a>
-        {arrow}
-        {info}
-      </div>
+      <Bookmark expand={this.expand(idx)}
+                remove={this.remove(idx)}
+                onSortItems={this.onSort}
+                items={this.state.bookmarks}
+                sortId={idx}
+                edit={this.edit(idx)}
+                w={w}
+                key={idx}
+                show={this.state.show[idx]}
+      />
     );
-  }
+  };
 
   toggleBookmarks = () => {
     const showBookmarks = Storage.setShowBookmarks(!this.state.showBookmarks);
@@ -201,6 +180,11 @@ export default class BookmarkList extends Component {
     );
   };
 
+  onSort = (bookmarks) => {
+    Storage.setBookmarks(bookmarks);
+    this.setState({ bookmarks });
+  };
+
   render() {
     let list = _.map(this.state.bookmarks, this.renderBookmark);
     const { showBookmarks } = this.state;
@@ -214,9 +198,7 @@ export default class BookmarkList extends Component {
         </div>
         <div id="contents">
           <h1>Bookmarks</h1>
-          <div id="ic-bookmark-list">
-            {list}
-          </div>
+          <ul className={'sortable-list'}>{list}</ul>
         </div>
         <div id={'ic-bookmark-footer'}>
           <button id={'email'} onClick={this.emailBookmarks}>Email</button>
