@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
 import Modal from '../utils/Modal';
@@ -8,6 +7,7 @@ import Storage from '../utils/Storage';
 import ToastSingleton from '../utils/Toast';
 
 import { MODALS, REGEX } from '../../lib/constants';
+import Bookmark from './Bookmark';
 
 export default class BookmarkList extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ export default class BookmarkList extends Component {
     this.expand = this.expand.bind(this);
   }
 
-  edit(e, idx) {
+  edit = (idx) => (e) => {
     e.stopPropagation();
     this.modal.prompt(MODALS.EDIT_BOOKMARK, (updated, newName) => {
       if (updated && newName) {
@@ -37,9 +37,9 @@ export default class BookmarkList extends Component {
         this.setState({ bookmarks });
       }
     }, this.state.bookmarks[idx].center);
-  }
+  };
 
-  remove(e, idx) {
+  remove = (idx) => (e) => {
     e.stopPropagation();
     this.modal.confirm(MODALS.DELETE_BOOKMARK, (deleteBookmark) => {
       if (deleteBookmark) {
@@ -49,42 +49,23 @@ export default class BookmarkList extends Component {
         this.setState({ bookmarks, show });
       }
     });
-  }
+  };
 
-  expand(idx) {
+  expand = (idx) => () => {
     let show = this.state.show;
     show[idx] = !show[idx];
     this.setState({ show });
-  }
-
-  navigateTo = (href) => () => {
-    this.socket.emitMetricLandingPage(this.props.start, Date.now(), 'navigate with bookmark');
-    browserHistory.push(href);
   };
 
   renderBookmark(w, idx) {
-    let style = {
-      height: this.state.show[idx] ? '20px' : '0px',
-      marginTop: this.state.show[idx] ? '15px' : '0px',
-    };
-    let info = (
-      <div className="ic-saved-info" style={style}>
-        <p>as &quot;{w.name}&quot;</p>
-        <button className="remove" onClick={(e) => this.remove(e, idx)}>remove</button>
-        <button className="edit" onClick={(e) => this.edit(e, idx)}>edit</button>
-      </div>
-    );
-
-    let arrow = this.state.show[idx] ?
-      <span id="arrow">&#9664;</span> :
-      <span id="arrow">&#9660;</span>;
-
     return (
-      <div className="ic-saved" key={`saved${idx}`} onClick={() => this.expand(idx)}>
-        <a onClick={this.navigateTo(w.href)}>{w.center}</a>
-        {arrow}
-        {info}
-      </div>
+      <Bookmark expand={this.expand(idx)}
+                remove={this.remove(idx)}
+                edit={this.edit(idx)}
+                w={w}
+                key={idx}
+                show={this.state.show[idx]}
+      />
     );
   }
 
