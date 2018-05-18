@@ -308,21 +308,21 @@ describe('workspace menu', () => {
           });
 
           it('notifies if empty file', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/empty.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/empty.json');
             b.pause(200);
             expect('#ic-toast').to.be.visible();
             expect('#ic-toast').to.have.text(/Nothing happened/);
           });
 
           it('errors if not json', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
             b.pause(200);
             expect('#ic-toast').to.be.visible();
             expect('#ic-toast').to.have.text(/Invalid file type/);
           });
 
           it('aborts if attribute is missing', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
             b.pause(200);
             expect('#ic-modal').to.be.visible();
             expect('#ic-modal-body').to.have.text(/correct format/);
@@ -330,7 +330,7 @@ describe('workspace menu', () => {
           });
 
           it('aborts if href is invalid', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
             b.pause(200);
             expect('#ic-modal').to.be.visible();
             expect('#ic-modal-body').to.have.text(/correct format/);
@@ -338,7 +338,7 @@ describe('workspace menu', () => {
           });
 
           it('aborts if username is invalid', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
             b.pause(200);
             expect('#ic-modal').to.be.visible();
             expect('#ic-modal-body').to.have.text(/correct format/);
@@ -347,7 +347,7 @@ describe('workspace menu', () => {
 
           it('succeeds and adds to existing bookmarks, without checking for duplicates', () => {
             expect('.ic-saved').to.have.count(0);
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/valid.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/valid.json');
             b.pause(200);
             expect('#ic-toast').to.be.visible();
             expect('#ic-toast').to.have.text(/Bookmarks imported/);
