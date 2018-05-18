@@ -24,7 +24,7 @@ cache:
   - node_modules
 jobs:
   include:
-  - stage: tests
+  - stage: Tests
     before_install:
     - docker-compose --version
     - sudo rm /usr/local/bin/docker-compose
@@ -40,13 +40,13 @@ jobs:
     - sudo dpkg -i google-chrome*.deb
     - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
     install:
-    - docker-compose -f docker/compose.yml up --detach
-    - sleep 15s # Wait for docker-compose to start app
     - npm install --depth 0
     script:
     - npm run lint
-    - npm run mocha
     - npm run api
+    - docker-compose -f docker/compose.yml up --detach
+    - sleep 15s # Wait for docker-compose to start app
+    - npm run mocha
     - npm run wdio
   - stage: deploy master
     if: branch = master
