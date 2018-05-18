@@ -3,6 +3,7 @@ let _ = require('underscore');
 
 let logger = require('../lib/logger');
 let DefaultCompass = require('./defaultCompass');
+const { STICKY_COLORS } = require('../lib/constants');
 
 function generateUUID() {
   let d = new Date().getTime();
@@ -33,6 +34,25 @@ let compassSchema = mongoose.Schema({
   }],
 });
 
+const isValidColor = (color) => {
+  return _.contains(STICKY_COLORS, color);
+};
+
+const isValidNote = (note) => {
+  if (!isValidColor(note.color)) {
+    return false;
+  }
+
+  if (
+    (note.doodle != null && note.isImage) ||
+    (note.doodle != null && note.text)
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
 compassSchema.statics.makeCompass = function(topic, cb) {
   let newCompass = Object.assign({}, DefaultCompass, {
     editCode: generateUUID(),
@@ -58,25 +78,32 @@ compassSchema.statics.setCenter = function(id, center, cb) {
   );
 };
 
-compassSchema.statics.addNote = function(id, newNote, cb) {
+compassSchema.statics.addNote = (id, newNote, cb) => {
+  if (!isValidNote(newNote)) {
+    return;
+  }
+
   this.findByIdAndUpdate(
     id,
     { $push: { notes: newNote } },
     { $safe: true, upsert: false, new: true },
-    function(err, compass) {
+    (err, compass) => {
       if (err) logger.error('Could not add note to compass', id, newNote, err);
       cb(compass);
     }
   );
 };
 
-compassSchema.statics.updateNote = function(id, updatedNote, cb) {
-  this.findOne({ _id: id }, function(err, c) {
+compassSchema.statics.updateNote = (id, updatedNote, cb) => {
+  if (!isValidNote(updatedNote)) {
+    return;
+  }
+
+  this.findOne({ _id: id }, (err, c) => {
     if (err) logger.error('Could not find compass to update note', id, updatedNote, err);
 
-    let note;
     for (let i = 0; i < c.notes.length; i++) {
-      note = c.notes[i];
+      const note = c.notes[i];
       if (note._id.toString() === updatedNote._id) {
         Object.assign(note, updatedNote);
         note.x = Math.min(0.98, Math.max(0, note.x));
@@ -84,7 +111,7 @@ compassSchema.statics.updateNote = function(id, updatedNote, cb) {
       }
     }
 
-    c.save(function(err, updatedCompass) {
+    c.save((err, updatedCompass) => {
       if (err) logger.error('Could not update note in compass', id, updatedNote, err);
       cb(updatedCompass);
     });
@@ -111,12 +138,13 @@ compassSchema.statics.plusOneNote = function(id, noteId, cb) {
 };
 
 compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb) {
+  if (!isValidColor(transformation.color)) return;
+
   this.findOne({ _id: id }, function(err, c) {
     if (err) logger.error('Could not find compass to update note', id, noteIds, err);
 
     c.notes = _.map(c.notes, function(note) {
       if (_.contains(noteIds, note._id.toString())) {
-        // TODO check that color is approved
         if (transformation.color) note.color = transformation.color;
       }
       return note;
