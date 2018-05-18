@@ -86,7 +86,7 @@ class Workspace extends Component {
 
   onCompassDeleted = () => {
     this.modal.alert({
-      heading: 'Workspace deleted',
+      heading: 'Workspace Deleted',
       body: 'You will now be redirected to the home page.',
       cb: () => browserHistory.push('/'),
     });

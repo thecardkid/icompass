@@ -16,7 +16,7 @@ import ToastSingleton from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-import { EDITING_MODE, PROMPTS, REGEX, COLORS } from '../../lib/constants';
+import { EDITING_MODE, REGEX, COLORS } from '../../lib/constants';
 
 class WorkspaceMenu extends Component {
   constructor(props) {
@@ -148,7 +148,7 @@ class WorkspaceMenu extends Component {
           if (submit) {
             let username = this.props.users.me.replace(/\d+/g, '');
             Storage.addBookmark(bookmarkName, editCode, username);
-            this.toast.success(PROMPTS.SAVE_SUCCESS);
+            this.toast.success('Bookmarked this workspace!');
             this.props.uiX.setBookmark(true);
           }
         },

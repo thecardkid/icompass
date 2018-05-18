@@ -11,7 +11,9 @@ import Toast from '../utils/Toast';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { PROMPTS, COLORS, EDITING_MODE } from '../../lib/constants';
+import { COLORS, EDITING_MODE } from '../../lib/constants';
+
+const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while in BULK EDIT mode';
 
 class StickyNote extends Component {
   constructor(props) {
@@ -46,7 +48,7 @@ class StickyNote extends Component {
   confirmDelete = (ev) => {
     ev.stopPropagation();
 
-    if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+    if (this.visualMode) return this.toast.warn(VISUAL_MODE_NO_CHANGE);
 
     let n = this.props.note;
     if (n.draft) {
@@ -154,11 +156,11 @@ class StickyNote extends Component {
     if (ev.target.className === 'ic-upvote') return;
 
     if (this.props.note.doodle) {
-      return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
+      return this.toast.warn('Sketches cannot be edited.');
     }
 
     if (this.visualMode) {
-      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+      return this.toast.warn(VISUAL_MODE_NO_CHANGE);
     }
 
     if (this.hasEditingRights) {

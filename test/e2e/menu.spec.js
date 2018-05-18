@@ -6,7 +6,6 @@ const expect = chai.expect;
 const b = browser;
 
 const { setup, cleanup } = require('./utils');
-const PROMPTS = require('../../lib/constants').PROMPTS;
 
 const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
 const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
@@ -210,7 +209,7 @@ describe('workspace menu', () => {
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast span');
         expect(b.getAttribute('#ic-toast span', 'class')).to.equal('success');
-        expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.SAVE_SUCCESS, 'i'));
+        expect('#ic-toast span').to.have.text(/Bookmarked/);
         b.click('#ic-toast span');
       });
 

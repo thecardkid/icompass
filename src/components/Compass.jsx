@@ -16,7 +16,7 @@ import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import { PROMPTS, EDITING_MODE } from '../../lib/constants';
+import { EDITING_MODE } from '../../lib/constants';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -52,10 +52,6 @@ class Compass extends Component {
 
   doubleClickCreate = (ev) => {
     this.setState({ select: false });
-
-    if (this.props.visualMode) {
-      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
-    }
 
     if (ev.shiftKey) {
       this.socket.emitMetric('double click image');
