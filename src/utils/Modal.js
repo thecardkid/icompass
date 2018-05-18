@@ -57,17 +57,30 @@ const ModalSingleton = (() => {
       });
     }
 
-    generateConfirm(modal) {
-      const clazz = modal.danger ? 'danger' : 'confirm';
-      return this.getModalHtml(
-        modal.text,
-        `<button id="ic-modal-confirm" class="${clazz}">${modal.confirm}</button>`,
-        `<button id="ic-modal-cancel">${modal.cancel}</button>`,
-      );
-    }
+    confirm({
+      heading = 'Are you sure?',
+      body = '',
+      confirmText = 'OK',
+      cancelText = 'Cancel',
+      isDangerous = true,
+      cb = _.noop,
+    }) {
+      let bodyHtml = `<h3>${heading}</h3>`;
 
-    confirm(modal, cb) {
-      this.renderModal(this.generateConfirm(modal));
+      if (typeof body === 'string') {
+        bodyHtml += `<p>${body}</p>`;
+      } else if (body.length > 0) {
+        _.each(body, p => bodyHtml += `<p>${p}</p>`);
+      }
+
+      const html = this.getModalHtml(
+        bodyHtml,
+        `<button id="ic-modal-confirm" class="${isDangerous ? 'danger': 'confirm'}">${confirmText}</button>`,
+        `<button id="ic-modal-cancel">${cancelText}</button>`,
+      );
+
+      this.renderModal(html);
+
       this.onEvent({
         onConfirm: () => cb(true),
         onCancel: () => cb(false),

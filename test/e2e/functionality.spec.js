@@ -6,7 +6,6 @@ const expect = chai.expect;
 const b = browser;
 
 const { setup, cleanup, switchMode, expectCompassStructure } = require('./utils');
-const MODALS = require('../../lib/constants.js').MODALS;
 
 describe('basic functionality', () => {
   beforeAll(setup);
@@ -85,7 +84,7 @@ describe('basic functionality', () => {
         b.moveToObject('#note0', 74, 2);
         b.leftClick();
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_NOTE.text, 'i'));
+        expect('#ic-modal-body').to.have.text(/Are you sure/);
         b.click('#ic-modal-cancel');
         expect('div.ic-sticky-note').to.have.count(1);
       });

@@ -6,7 +6,7 @@ const expect = chai.expect;
 const b = browser;
 
 const { setup, cleanup, switchMode, selectColor } = require('./utils');
-const { PROMPTS, MODALS } = require('../../lib/constants');
+const { PROMPTS } = require('../../lib/constants');
 const TEXT = 'this is a note',
     POSITIONS = [ {x: 250, y: 200}, {x: 350, y: 200}, {x: 450, y: 200}, {x: 550, y: 200} ];
 
@@ -73,7 +73,7 @@ describe('visual mode', () => {
     it('bulk deleting exits visual mode', () => {
       b.click('button#ic-bulk-delete');
       b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(new RegExp(MODALS.BULK_DELETE_NOTES.text, 'i'));
+      expect('#ic-modal-body').to.have.text(/Are you sure/);
       b.click('#ic-modal-confirm');
       expect('#ic-visual-toolbar').to.not.be.visible();
     });
@@ -264,7 +264,7 @@ describe('visual mode', () => {
     b.click('#note3');
     b.click('button#ic-bulk-delete');
     b.waitForVisible('#ic-modal');
-    expect('#ic-modal-body').to.have.text(new RegExp(MODALS.BULK_DELETE_NOTES.text, 'i'));
+    expect('#ic-modal-body').to.have.text(/Are you sure/);
     b.click('#ic-modal-confirm');
     b.pause(1000);
 

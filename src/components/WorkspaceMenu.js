@@ -146,12 +146,15 @@ class WorkspaceMenu extends Component {
   };
 
   confirmDelete = () => {
-    this.socket.emitMetric('menu delete workspace');
-    this.modal.confirm(MODALS.DELETE_COMPASS, (deleteCompass) => {
-      if (deleteCompass) {
-        Storage.removeBookmarkByCenter(this.props.compass.center);
-        this.socket.emitDeleteCompass(this.props.compass._id);
-      }
+    this.modal.confirm({
+      body: 'You are about to delete this workspace. This action cannot be undone',
+      confirmText: 'Delete',
+      cb: (confirmed) => {
+        if (confirmed) {
+          Storage.removeBookmarkByCenter(this.props.compass.topic);
+          this.socket.emitDeleteCompass(this.props.compass._id);
+        }
+      },
     });
     this.hideMenu();
   };

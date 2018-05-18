@@ -9,7 +9,6 @@ import Modal from '../utils/Modal';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { MODALS } from '../../lib/constants';
 import Socket from '../utils/Socket';
 import FormPalette from './forms/FormPalette';
 
@@ -30,11 +29,15 @@ class VisualModeToolbar extends Component {
 
   bulkDelete = (ev) => {
     ev.stopPropagation();
-    this.modal.confirm(MODALS.BULK_DELETE_NOTES, (deleteNotes) => {
-      if (deleteNotes) {
-        this.socket.emitBulkDeleteNotes(this.getSelectedNotes());
-        this.cancel();
-      }
+    this.modal.confirm({
+      body: 'You are about to delete all selected notes. This action cannot be undone.',
+      confirmText: 'Delete',
+      cb: (confirmed) => {
+        if (confirmed) {
+          this.socket.emitBulkDeleteNotes(this.getSelectedNotes());
+          this.cancel();
+        }
+      },
     });
   };
 

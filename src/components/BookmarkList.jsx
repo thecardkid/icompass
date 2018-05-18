@@ -37,13 +37,17 @@ export default class BookmarkList extends Component {
 
   remove = (idx) => (e) => {
     e.stopPropagation();
-    this.modal.confirm(MODALS.DELETE_BOOKMARK, (deleteBookmark) => {
-      if (deleteBookmark) {
-        let bookmarks = Storage.removeBookmark(idx);
-        let show = this.state.show;
-        show.splice(idx, 1);
-        this.setState({ bookmarks, show });
-      }
+    this.modal.confirm({
+      body: 'You are about to delete this bookmark. This action cannot be undone.',
+      confirmText: 'Delete',
+      cb: (confirmed) => {
+        if (confirmed) {
+          let bookmarks = Storage.removeBookmark(idx);
+          let show = this.state.show;
+          show.splice(idx, 1);
+          this.setState({ bookmarks, show });
+        }
+      },
     });
   };
 

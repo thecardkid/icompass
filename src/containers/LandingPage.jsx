@@ -39,7 +39,7 @@ class LandingPage extends Component {
   }
 
   onCompassReady = (data) => {
-    if (data.success) {
+    if (!data.success) {
       return this.modal.alert({
         heading: 'Whoops...',
         body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let Hieu know.</u></a>',

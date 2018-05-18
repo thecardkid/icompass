@@ -11,7 +11,7 @@ import Toast from '../utils/Toast';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { PROMPTS, COLORS, EDITING_MODE, MODALS } from '../../lib/constants';
+import { PROMPTS, COLORS, EDITING_MODE } from '../../lib/constants';
 
 class StickyNote extends Component {
   constructor(props) {
@@ -50,12 +50,24 @@ class StickyNote extends Component {
 
     let n = this.props.note;
     if (n.draft) {
-      this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
-        if (discard) this.props.workspaceX.undraft(this.props.i);
+      this.modal.confirm({
+        body: 'You are about to discard this draft. This action cannot be undone.',
+        confirmText: 'Discard',
+        cb: (confirmed) => {
+          if (confirmed) {
+            this.props.workspaceX.undraft(this.props.i);
+          }
+        },
       });
     } else {
-      this.modal.confirm(MODALS.DELETE_NOTE, (deleteNote) => {
-        if (deleteNote) this.props.destroy(n._id);
+      this.modal.confirm({
+        body: 'You are about to delete this note. This action cannot be undone.',
+        confirmText: 'Delete',
+        cb: (confirmed) => {
+          if (confirmed) {
+            this.props.destroy(n._id);
+          }
+        },
       });
     }
   };
