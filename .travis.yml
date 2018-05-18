@@ -24,14 +24,7 @@ cache:
   - node_modules
 jobs:
   include:
-  - stage: unit tests
-    install:
-    - npm install --depth 0
-    script:
-    - npm run lint
-    - npm run mocha
-    - npm run api
-  - stage: end to end tests
+  - stage: tests
     before_install:
     - docker-compose --version
     - sudo rm /usr/local/bin/docker-compose
@@ -51,6 +44,9 @@ jobs:
     - sleep 15s # Wait for docker-compose to start app
     - npm install --depth 0
     script:
+    - npm run lint
+    - npm run mocha
+    - npm run api
     - npm run wdio
   - stage: deploy master
     if: branch = master

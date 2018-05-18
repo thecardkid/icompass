@@ -15,10 +15,12 @@ const NOTE = {
   y: 0.5,
 };
 
+function noOp() {}
+
 function clearDB(cb) {
-  for (let i in mongoose.connection.collections)
-    mongoose.connection.collections[i].remove(function() {
-    });
+  for (let i in mongoose.connection.collections) {
+    mongoose.connection.collections[i].remove(noOp);
+  }
   cb();
 }
 
@@ -42,10 +44,7 @@ describe('Compass: models', () => {
       done();
     };
     if (mongoose.connection.readyState === 0) {
-      if (process.env.NODE_ENV === 'test')
-        mongoose.connect('mongodb://icompass:compass78@ds133311.mlab.com:33311/innovatorscompasshieu', cb);
-      else
-        mongoose.connect('mongodb://localhost/test', cb);
+      mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/compass', cb);
     }
   });
 
