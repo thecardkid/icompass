@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
 import _ from 'underscore';
 
 import Modal from '../utils/Modal';
@@ -185,6 +186,59 @@ export default class BookmarkList extends Component {
     this.setState({ bookmarks });
   };
 
+  filter = (e) => {
+    const search = e.target.value.toLowerCase();
+    const storageBookmarks = Storage.getBookmarks();
+
+    let bookmarks;
+    if (search) {
+      bookmarks = _.filter(storageBookmarks, bookmark => {
+        const name = bookmark.center.toLowerCase();
+        return name.includes(search);
+      });
+    } else {
+      bookmarks = storageBookmarks;
+    }
+    this.setState({ bookmarks });
+  };
+
+  renderActions = () => {
+    return (
+      <div className={'actions'}>
+        <button id={'email'} onClick={this.emailBookmarks} data-tip data-for="email-tooltip">
+          <i className={'material-icons'}>email</i>
+        </button>
+        <ReactTooltip id={'email-tooltip'} place={'right'} effect={'solid'}>
+          <div className={'bookmark-tooltip'}>
+            Receive an email with a list of all your bookmarks
+          </div>
+        </ReactTooltip>
+        <button id={'export'} onClick={this.exportBookmarks} data-tip data-for="export-tooltip">
+          <i className={'material-icons'}>cloud_download</i>
+        </button>
+        <ReactTooltip id={'export-tooltip'} place={'right'} effect={'solid'}>
+          <div className={'bookmark-tooltip'}>
+            Download your bookmarks as a .json file that you can upload to the app. Useful when you are changing devices, or if you are about to clear your cache data.
+          </div>
+        </ReactTooltip>
+        <button id={'import'} onClick={this.clickFile} data-tip data-for="import-tooltip">
+          <i className={'material-icons'}>cloud_upload</i>
+        </button>
+        <ReactTooltip id={'import-tooltip'} place={'right'} effect={'solid'}>
+          <div className={'bookmark-tooltip'}>
+            Upload the .json file you downloaded from another device to restore those bookmarks.
+          </div>
+        </ReactTooltip>
+        <a className={'hidden'} ref={'exporter'} />
+        <input className={'hidden'}
+               type={'file'}
+               ref={'importer'}
+               multiple={false}
+               onChange={this.importBookmarks}/>
+      </div>
+    );
+  };
+
   render() {
     let list = _.map(this.state.bookmarks, this.renderBookmark);
     const { showBookmarks } = this.state;
@@ -198,18 +252,11 @@ export default class BookmarkList extends Component {
         </div>
         <div id="contents">
           <h1>Bookmarks</h1>
+          <input placeholder={'Search'}
+                 id={'bookmark-search'}
+                 onChange={this.filter} />
+          {this.renderActions()}
           <ul className={'sortable-list'}>{list}</ul>
-        </div>
-        <div id={'ic-bookmark-footer'}>
-          <button id={'email'} onClick={this.emailBookmarks}>Email</button>
-          <button id={'import'} onClick={this.clickFile}>Import</button>
-          <button id={'export'} onClick={this.exportBookmarks}>Export</button>
-          <a className={'hidden'} ref={'exporter'} />
-          <input className={'hidden'}
-                 type={'file'}
-                 ref={'importer'}
-                 multiple={false}
-                 onChange={this.importBookmarks}/>
         </div>
       </div>
     );
