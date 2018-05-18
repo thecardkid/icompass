@@ -185,6 +185,22 @@ export default class BookmarkList extends Component {
     this.setState({ bookmarks });
   };
 
+  filter = (e) => {
+    const search = e.target.value.toLowerCase();
+    const storageBookmarks = Storage.getBookmarks();
+
+    let bookmarks;
+    if (search) {
+      bookmarks = _.filter(storageBookmarks, bookmark => {
+        const name = bookmark.center.toLowerCase();
+        return name.includes(search);
+      });
+    } else {
+      bookmarks = storageBookmarks;
+    }
+    this.setState({ bookmarks });
+  };
+
   render() {
     let list = _.map(this.state.bookmarks, this.renderBookmark);
     const { showBookmarks } = this.state;
@@ -198,6 +214,9 @@ export default class BookmarkList extends Component {
         </div>
         <div id="contents">
           <h1>Bookmarks</h1>
+          <input placeholder={'Search'}
+                 id={'bookmark-search'}
+                 onChange={this.filter} />
           <ul className={'sortable-list'}>{list}</ul>
         </div>
         <div id={'ic-bookmark-footer'}>

@@ -246,6 +246,22 @@ describe('workspace menu', () => {
           expect('.ic-saved .ic-saved-info p').to.have.text('as "sandbox"');
         });
 
+        describe('search', () => {
+          it('shows nothing if search does not match', () => {
+            expect('.ic-saved').to.have.count(1);
+            b.setValue('#bookmark-search', 'does not match');
+            b.pause(100);
+            expect('.ic-saved').to.have.count(0);
+          });
+
+          it('shows match if search matches', () => {
+            b.setValue('#bookmark-search', 'bookmark');
+            b.pause(100);
+            expect('.ic-saved').to.have.count(1);
+            b.clearElement('#bookmark-search');
+          });
+        });
+
         it('bookmark leads to correct workspace', () => {
           b.click('.ic-saved a');
           b.waitForVisible('#compass');
