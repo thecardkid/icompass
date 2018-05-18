@@ -92,7 +92,12 @@ const ModalSingleton = (() => {
       );
     }
 
-    alert({ heading, body = '', paragraphs = [], cb = _.noop }) {
+    alert({
+      heading,
+      body = '',
+      paragraphs = [],
+      cb = _.noop,
+    }) {
       let html = `<h3>${heading}</h3>`;
 
       if (paragraphs.length === 0) {
