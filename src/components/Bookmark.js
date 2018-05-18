@@ -26,7 +26,7 @@ class Bookmark extends Component {
       <span id="arrow">&#9660;</span>;
 
     return (
-      <li className="ic-saved" {...this.props}>
+      <li className="ic-saved" {...this.props} onClick={this.props.expand}>
         <a onClick={this.navigateTo(w.href)}>{w.center}</a>
         {arrow}
         {info}
