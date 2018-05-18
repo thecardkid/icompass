@@ -105,7 +105,7 @@ class WorkspaceMenu extends Component {
   };
 
   emailReminder = (email) => {
-    email = typeof email === 'string' ? email : '',
+    email = typeof email === 'string' ? email : '';
 
     this.modal.prompt({
       heading: 'Receive a Link to this Workspace',
