@@ -22,11 +22,6 @@ export default class BookmarkList extends Component {
       show: new Array(b.length).fill(false),
       showBookmarks: Storage.getShowBookmarks(),
     };
-
-    this.renderBookmark = this.renderBookmark.bind(this);
-    this.edit = this.edit.bind(this);
-    this.remove = this.remove.bind(this);
-    this.expand = this.expand.bind(this);
   }
 
   edit = (idx) => (e) => {
@@ -57,17 +52,20 @@ export default class BookmarkList extends Component {
     this.setState({ show });
   };
 
-  renderBookmark(w, idx) {
+  renderBookmark = (w, idx) => {
     return (
       <Bookmark expand={this.expand(idx)}
                 remove={this.remove(idx)}
+                onSortItems={this.onSort}
+                items={this.state.bookmarks}
+                sortId={idx}
                 edit={this.edit(idx)}
                 w={w}
                 key={idx}
                 show={this.state.show[idx]}
       />
     );
-  }
+  };
 
   toggleBookmarks = () => {
     const showBookmarks = Storage.setShowBookmarks(!this.state.showBookmarks);
@@ -182,6 +180,11 @@ export default class BookmarkList extends Component {
     );
   };
 
+  onSort = (bookmarks) => {
+    Storage.setBookmarks(bookmarks);
+    this.setState({ bookmarks });
+  };
+
   render() {
     let list = _.map(this.state.bookmarks, this.renderBookmark);
     const { showBookmarks } = this.state;
@@ -195,9 +198,7 @@ export default class BookmarkList extends Component {
         </div>
         <div id="contents">
           <h1>Bookmarks</h1>
-          <div id="ic-bookmark-list">
-            {list}
-          </div>
+          <ul className={'sortable-list'}>{list}</ul>
         </div>
         <div id={'ic-bookmark-footer'}>
           <button id={'email'} onClick={this.emailBookmarks}>Email</button>

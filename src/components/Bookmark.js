@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
+import { sortable } from 'react-sortable';
 
-export default class Bookmark extends Component {
+class Bookmark extends Component {
   navigateTo = (href) => () => {
     browserHistory.push(href);
   };
@@ -25,11 +26,13 @@ export default class Bookmark extends Component {
       <span id="arrow">&#9660;</span>;
 
     return (
-      <div className="ic-saved" onClick={this.props.expand}>
+      <li className="ic-saved" {...this.props}>
         <a onClick={this.navigateTo(w.href)}>{w.center}</a>
         {arrow}
         {info}
-      </div>
+      </li>
     );
   }
 }
+
+export default sortable(Bookmark);
