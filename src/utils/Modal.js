@@ -38,20 +38,17 @@ const ModalSingleton = (() => {
     }
 
     onEvent({ onConfirm, onCancel, onBackdrop }) {
-      const $confirm = $('#ic-modal-confirm');
-      const $cancel = $('#ic-modal-cancel');
-      const $backdrop = $('#ic-backdrop');
       this.show = true;
 
-      $confirm.on('click', () => {
+      $('#ic-modal-confirm').on('click', () => {
         this.close();
         onConfirm();
       });
-      $cancel.on('click', () => {
+      $('#ic-modal-cancel').on('click', () => {
         this.close();
         onCancel();
       });
-      $backdrop.on('click', () => {
+      $('#ic-backdrop').on('click', () => {
         this.close();
         onBackdrop();
       });
@@ -223,20 +220,6 @@ const ModalSingleton = (() => {
       return this._prompt(html, cb);
     }
 
-    saveViaEmail(cb) {
-      let html = `
-        <h3>Receive a Link to this Workspace</h3>
-        <p>
-          You'll need the link to the compass to access it again. To email yourself the link now,
-          enter your email address below.
-          <br/><br/>
-          I will not store your email address or send you spam.
-        </p>
-      `;
-
-      return this.prompt(html, cb);
-    }
-
     promptForCenter(warn, cb) {
       const html = this.getModalHtml(
         `<h3>1. Who\'s involved, including you?</h3>
@@ -313,10 +296,6 @@ const ModalSingleton = (() => {
       $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
     }
 
-    prompt(text, cb, value = '') {
-      this._prompt(this.generatePrompt(text), cb, value);
-    }
-
     _prompt(html, cb, value = '') {
       $('#ic-modal-container').empty().append(html);
       $('#ic-modal-input').val(value).select();
@@ -338,6 +317,31 @@ const ModalSingleton = (() => {
         this.close();
         cb(false, response);
       });
+    }
+
+    prompt({
+      heading = '',
+      body = '',
+      defaultValue = '',
+      cb = _.noop,
+    }) {
+      let bodyHtml = `<h3>${heading}</h3>`;
+
+      if (typeof body === 'string') {
+        bodyHtml += `<p>${body}</p>`;
+      } else if (body.length > 0) {
+        _.each(body, p => bodyHtml += `<p>${p}</p>`);
+      }
+
+      bodyHtml += '<input id="ic-modal-input"/>';
+
+      const html = this.getModalHtml(
+        bodyHtml,
+        '<button id="ic-modal-confirm">Submit</button>',
+        '<button id="ic-modal-cancel">Cancel</button>',
+      );
+
+      this._prompt(html, cb, defaultValue);
     }
 
     close() {

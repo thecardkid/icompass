@@ -7,7 +7,6 @@ const b = browser;
 
 const { setup, cleanup } = require('./utils');
 const PROMPTS = require('../../lib/constants').PROMPTS;
-const MODALS = require('../../lib/constants').MODALS;
 
 const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
 const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
@@ -285,7 +284,7 @@ describe('workspace menu', () => {
           b.pause(500);
           b.click('button.edit');
           b.waitForVisible('#ic-modal');
-          expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
+          expect('#ic-modal-body').to.contain.text(/Enter a new name/);
           b.setValue('#ic-modal-input', 'Changed name');
           b.click('#ic-modal-confirm');
           expect('.ic-saved a').to.have.text('Changed name');
@@ -294,7 +293,7 @@ describe('workspace menu', () => {
         it('can remove bookmark', () => {
           b.click('button.remove');
           b.waitForVisible('#ic-modal');
-          expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
+          expect('#ic-modal-body').to.have.text(/Are you sure/);
           b.click('#ic-modal-confirm');
           expect('.ic-saved').to.not.be.there();
         });
