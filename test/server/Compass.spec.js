@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import mongoose from 'mongoose';
+import { Mockgoose } from 'mockgoose';
 import _ from 'underscore';
 
 import Compass from '../../models/compass';
 
+const mockgoose = new Mockgoose(mongoose);
 const TOPIC = 'test suite';
 const NOTE = {
   user: 'mocha',
@@ -14,15 +16,6 @@ const NOTE = {
   x: 0.5,
   y: 0.5,
 };
-
-function noOp() {}
-
-function clearDB(cb) {
-  for (let i in mongoose.connection.collections) {
-    mongoose.connection.collections[i].remove(noOp);
-  }
-  cb();
-}
 
 function addNotes(DUT, n, cb) {
   let i = 0;
@@ -38,19 +31,12 @@ function addNotes(DUT, n, cb) {
 describe('Compass: models', () => {
   let DUT;
 
-  before(done => {
-    let cb = (err) => {
-      if (err) throw err;
-      done();
-    };
-    if (mongoose.connection.readyState === 0) {
-      mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/compass-test', cb);
-    }
-  });
-
-  after(done => {
-    clearDB(done);
-    mongoose.disconnect();
+  before((done) => {
+    mockgoose.prepareStorage().then(() => {
+      mongoose.connect('mongodb://test.com/icompass-test', (err) => {
+        done(err);
+      });
+    });
   });
 
   beforeEach(done => {
