@@ -1,4 +1,4 @@
-import deepEqual from 'deep-equal';
+import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -17,22 +17,12 @@ const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while
 class StickyNote extends Component {
   constructor(props) {
     super(props);
+    this.state = { contextMenu: null };
+
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
     this.hasEditingRights = !this.props.viewOnly;
     this.setModes(this.props);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return (
-      !deepEqual(this.props.note, nextProps.note) ||
-      this.props.ui.vw !== nextProps.ui.vw ||
-      this.props.ui.vh !== nextProps.ui.vh ||
-      this.props.i !== nextProps.i ||
-      this.props.ui.focusedNote !== nextProps.ui.focusedNote ||
-      this.props.ui.editingMode === EDITING_MODE.VISUAL ||
-      this.props.ui.editingMode !== nextProps.ui.editingMode
-    );
   }
 
   componentWillUpdate(nextProps) {
@@ -217,6 +207,64 @@ class StickyNote extends Component {
     clearTimeout(this.longPress);
   };
 
+  showContextMenu = (ev) => {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    const contextMenu = {
+      top: ev.clientY,
+      left: ev.clientX,
+    };
+
+    let $parent = ev.target.parentElement;
+    while (!$parent.className.includes('draggable')) {
+      $parent = $parent.parentElement;
+    }
+
+    if ($parent.style.transform || $parent.style.webkitTransform) {
+      contextMenu.top -= this.props.note.y * this.props.ui.vh;
+      contextMenu.left -= this.props.note.x * this.props.ui.vw;
+    }
+
+    this.setState({ contextMenu });
+    $(window).on('mousedown', this.hideContextMenuIfNotAction);
+  };
+
+  hideContextMenuIfNotAction = (ev) => {
+    if (!ev.target.className.includes('ic-menu-item')) {
+      this.hideContextMenu();
+    }
+  };
+
+  hideContextMenu = () => {
+    this.setState({ contextMenu: null });
+    $(window).off('mousedown', this.hideContextMenu);
+  };
+
+  executeThenHide = (fn) => (ev) => {
+    ev.persist();
+    fn(ev);
+    this.hideContextMenu();
+  };
+
+  renderContextMenu = () => {
+    return (
+      <div className={'ic-menu'} style={this.state.contextMenu}>
+        <section>
+          <div className={'ic-menu-item'} onClick={this.executeThenHide(this.edit)}>
+            Edit Note
+          </div>
+          <div className={'ic-menu-item'} onClick={this.executeThenHide(this.upvote)}>
+            Upvote
+          </div>
+          <div className={'ic-menu-item dangerous'} onClick={this.executeThenHide(this.confirmDelete)}>
+            Delete
+          </div>
+        </section>
+      </div>
+    );
+  };
+
   render() {
     let n = this.props.note,
       i = this.props.i,
@@ -241,10 +289,12 @@ class StickyNote extends Component {
            onDoubleClick={this.edit}
            onTouchStart={this.onTouchStart}
            onTouchEnd={this.onTouchRelease}
+           onContextMenu={this.showContextMenu}
            id={`note${i}`}
            height={n.doodle ? '100px' : null}>
         {this.getX()}
         {this.getContents()}
+        {this.state.contextMenu && this.renderContextMenu()}
       </div>
     );
   }

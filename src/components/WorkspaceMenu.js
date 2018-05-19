@@ -259,7 +259,7 @@ class WorkspaceMenu extends Component {
           <div className={'ic-menu-item'} onClick={this.logout}>
             Log Out
           </div>
-          <div className={'ic-menu-item'} onClick={this.confirmDelete}>
+          <div className={'ic-menu-item dangerous'} onClick={this.confirmDelete}>
             Delete Workspace
           </div>
         </section>
