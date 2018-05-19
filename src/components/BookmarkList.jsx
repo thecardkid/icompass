@@ -7,7 +7,7 @@ import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import ToastSingleton from '../utils/Toast';
 
-import { MODALS, REGEX } from '../../lib/constants';
+import { REGEX } from '../../lib/constants';
 import Bookmark from './Bookmark';
 
 export default class BookmarkList extends Component {
@@ -27,23 +27,32 @@ export default class BookmarkList extends Component {
 
   edit = (idx) => (e) => {
     e.stopPropagation();
-    this.modal.prompt(MODALS.EDIT_BOOKMARK, (updated, newName) => {
-      if (updated && newName) {
-        let bookmarks = Storage.updateName(idx, newName);
-        this.setState({ bookmarks });
-      }
-    }, this.state.bookmarks[idx].center);
+    this.modal.prompt({
+      heading: 'Edit bookmark',
+      body: 'Enter a new name for your bookmark:',
+      defaultValue: this.state.bookmarks[idx].center,
+      cb: (updated, newName) => {
+        if (updated && newName) {
+          let bookmarks = Storage.updateName(idx, newName);
+          this.setState({ bookmarks });
+        }
+      },
+    });
   };
 
   remove = (idx) => (e) => {
     e.stopPropagation();
-    this.modal.confirm(MODALS.DELETE_BOOKMARK, (deleteBookmark) => {
-      if (deleteBookmark) {
-        let bookmarks = Storage.removeBookmark(idx);
-        let show = this.state.show;
-        show.splice(idx, 1);
-        this.setState({ bookmarks, show });
-      }
+    this.modal.confirm({
+      body: 'You are about to delete this bookmark. This action cannot be undone.',
+      confirmText: 'Delete',
+      cb: (confirmed) => {
+        if (confirmed) {
+          let bookmarks = Storage.removeBookmark(idx);
+          let show = this.state.show;
+          show.splice(idx, 1);
+          this.setState({ bookmarks, show });
+        }
+      },
     });
   };
 
@@ -128,7 +137,10 @@ export default class BookmarkList extends Component {
       this.toast.success('Bookmarks imported!');
       this.emailBookmarks();
     } catch (ex) {
-      this.modal.alert('<h3>Whoops</h3><p>The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.</p>');
+      this.modal.alert({
+        heading: 'Whoops...',
+        body: 'The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.',
+      });
     }
   };
 
@@ -137,9 +149,11 @@ export default class BookmarkList extends Component {
       return this.toast.warn('You have no bookmarks to export to file');
     }
 
-    this.modal.prompt(
-      '<h3>Export bookmarks</h3><p>Enter a name for the file:</p>',
-      (accepted, filename) => {
+    this.modal.prompt({
+      heading: 'Export bookmarks',
+      body: 'Enter a name for the file:',
+      defaultValue: 'icompass-bookmarks',
+      cb: (accepted, filename) => {
         if (!accepted || !filename) return;
 
         const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(Storage.getBookmarks()));
@@ -148,8 +162,7 @@ export default class BookmarkList extends Component {
         anchor.setAttribute('download', `${filename}.json`);
         anchor.click();
       },
-      'icompass-bookmarks',
-    );
+    });
   };
 
   clickFile = () => {
@@ -157,11 +170,16 @@ export default class BookmarkList extends Component {
   };
 
   emailBookmarks = (currentEmail) => {
-    currentEmail = typeof currentEmail === 'string' ? currentEmail : null;
+    currentEmail = typeof currentEmail === 'string' ? currentEmail : '';
 
-    this.modal.prompt(
-      '<h3>Email your bookmarks</h3><p>Enter your email below to receive all links to your bookmarked workspaces.</p><p>I will not store your email address or send you spam.</p>',
-      (accepted, email) => {
+    this.modal.prompt({
+      heading: 'Email your bookmarks',
+      body: [
+        'Enter your email below to receive all links to your bookmarked workspaces.',
+        'I will not store your email address or send you spam.',
+      ],
+      defaultValue: currentEmail,
+      cb: (accepted, email) => {
         if (!accepted) return;
 
         if (!email.length) return;
@@ -177,8 +195,7 @@ export default class BookmarkList extends Component {
           email,
         });
       },
-      currentEmail,
-    );
+    });
   };
 
   onSort = (bookmarks) => {

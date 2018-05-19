@@ -6,7 +6,6 @@ const expect = chai.expect;
 const b = browser;
 
 const { setup, cleanup, switchMode } = require('./utils');
-const PROMPTS = require('../../lib/constants').PROMPTS;
 
 const expectNumUsers = (expected) => {
   b.click('button.ic-workspace-button');
@@ -191,7 +190,7 @@ describe('collaboration', () => {
     it('any other user in that deleted workspace also gets redirected to home page', () => {
       b.switchTab(tabs.friendo);
       expect('#ic-modal').to.be.visible();
-      expect('#ic-modal').to.have.text(new RegExp(PROMPTS.COMPASS_DELETED, 'i'));
+      expect('#ic-modal').to.have.text(/redirected/);
       b.click('#ic-modal-confirm');
       b.pause(500);
       expect(b.getUrl()).to.equal('http://localhost:8080/');

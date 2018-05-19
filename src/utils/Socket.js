@@ -4,8 +4,6 @@ import _ from 'underscore';
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
 
-import { PROMPTS } from '../../lib/constants';
-
 const SocketSingleton = (() => {
   class Socket {
     constructor() {
@@ -38,9 +36,12 @@ const SocketSingleton = (() => {
       this.sessionId = this.sessionId || sessionId;
     };
 
-    onMailStatus = (status) => {
-      if (status) Toast.getInstance().success(PROMPTS.EMAIL_SENT);
-      else Toast.getInstance().error(PROMPTS.EMAIL_NOT_SENT);
+    onMailStatus = (success) => {
+      if (success) {
+        Toast.getInstance().success('An email has been sent to you. Expect it in 5-10 minutes');
+      } else {
+        Toast.getInstance().error('I ran into an issue sending you the email. Please note down your codes manually somewhere.');
+      }
     };
 
     onReconnect = ({ compass, users }) => {

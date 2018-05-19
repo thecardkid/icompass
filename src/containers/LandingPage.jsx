@@ -13,7 +13,7 @@ import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
 import Toast from '../utils/Toast';
 
-import { ERROR_MSG, REGEX } from '../../lib/constants';
+import { REGEX } from '../../lib/constants';
 
 class LandingPage extends Component {
   constructor(props) {
@@ -40,7 +40,10 @@ class LandingPage extends Component {
 
   onCompassReady = (data) => {
     if (!data.success) {
-      return this.modal.alert('Something went wrong. Please contact hieumaster95@gmail.com');
+      return this.modal.alert({
+        heading: 'Whoops...',
+        body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let Hieu know.</u></a>',
+      });
     }
 
     this.promptForEmail();
@@ -54,7 +57,7 @@ class LandingPage extends Component {
     const username = this.refs.username.value;
 
     if (!REGEX.CHAR_ONLY.test(username)) {
-      return this.toast.error(ERROR_MSG.UNAME_HAS_NON_CHAR);
+      return this.toast.error('Username cannot contain spaces or numbers, only letters.');
     }
 
     this.setState({ username });

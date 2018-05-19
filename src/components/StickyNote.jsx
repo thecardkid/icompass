@@ -1,6 +1,5 @@
 import deepEqual from 'deep-equal';
 import React, { Component } from 'react';
-import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
@@ -11,7 +10,9 @@ import Toast from '../utils/Toast';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { PROMPTS, COLORS, EDITING_MODE, MODALS } from '../../lib/constants';
+import { COLORS, EDITING_MODE } from '../../lib/constants';
+
+const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while in BULK EDIT mode';
 
 class StickyNote extends Component {
   constructor(props) {
@@ -46,16 +47,28 @@ class StickyNote extends Component {
   confirmDelete = (ev) => {
     ev.stopPropagation();
 
-    if (this.visualMode) return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+    if (this.visualMode) return this.toast.warn(VISUAL_MODE_NO_CHANGE);
 
     let n = this.props.note;
     if (n.draft) {
-      this.modal.confirm(MODALS.DISCARD_DRAFT, (discard) => {
-        if (discard) this.props.workspaceX.undraft(this.props.i);
+      this.modal.confirm({
+        body: 'You are about to discard this draft. This action cannot be undone.',
+        confirmText: 'Discard',
+        cb: (confirmed) => {
+          if (confirmed) {
+            this.props.workspaceX.undraft(this.props.i);
+          }
+        },
       });
     } else {
-      this.modal.confirm(MODALS.DELETE_NOTE, (deleteNote) => {
-        if (deleteNote) this.props.destroy(n._id);
+      this.modal.confirm({
+        body: 'You are about to delete this note. This action cannot be undone.',
+        confirmText: 'Delete',
+        cb: (confirmed) => {
+          if (confirmed) {
+            this.props.destroy(n._id);
+          }
+        },
       });
     }
   };
@@ -116,7 +129,7 @@ class StickyNote extends Component {
 
     return (
       <div style={{ background: n.color }} className={divClazz}>
-        <ReactQuill readonly={true} theme={null} value={n.text}/>
+        <p className={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
         {this.getTooltip(n)}
       </div>
     );
@@ -142,11 +155,11 @@ class StickyNote extends Component {
     if (ev.target.className === 'ic-upvote') return;
 
     if (this.props.note.doodle) {
-      return this.toast.warn(PROMPTS.CANNOT_EDIT_DOODLE);
+      return this.toast.warn('Sketches cannot be edited.');
     }
 
     if (this.visualMode) {
-      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CHANGE);
+      return this.toast.warn(VISUAL_MODE_NO_CHANGE);
     }
 
     if (this.hasEditingRights) {

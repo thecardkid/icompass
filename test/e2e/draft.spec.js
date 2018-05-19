@@ -237,7 +237,7 @@ describe('draft mode', () => {
       b.moveToObject('#note0', 164, 2); // delete the doodle
       b.leftClick();
       b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/Discard this draft/);
+      expect('#ic-modal-body').to.have.text(/discard this draft/);
     });
 
     it('can discard draft', () => {
