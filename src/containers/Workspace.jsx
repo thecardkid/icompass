@@ -65,7 +65,7 @@ class Workspace extends Component {
   alertNotFound() {
     this.modal.alert({
       heading: 'Workspace not found',
-      paragraphs: [
+      body: [
         'Please check the code you provided. The permissions (edit/view) and the code might not match.',
         'You will now be directed to the login page',
       ],
@@ -120,20 +120,17 @@ class Workspace extends Component {
   }
 
   notifyIfNewVersion() {
-    if (_.has(window, 'Notification')) {
-      const appVersion = 'v2.1.0';
-      if (Storage.getVersion() !== appVersion) {
-        Storage.setVersion(appVersion);
-        const title = 'A new version of iCompass has been released!';
-        const options = {
-          body: `Click to see what\'s new in ${appVersion}`,
-          icon: 'https://s3.us-east-2.amazonaws.com/innovatorscompass/favicon.png',
-        };
+    const appVersion = 'v2.1.0';
+    if (Storage.getVersion() !== appVersion) {
+      Storage.setVersion(appVersion);
 
-        const n = new Notification(title, options);
-
-        n.onclick = () => window.open('https://github.com/thecardkid/icompass/releases');
-      }
+      this.modal.alert({
+        heading: `${appVersion} Release`,
+        body: [
+          'New features:',
+          'Check out the full list <a href="https://github.com/thecardkid/icompass/releases" target="_blank"><u>here</u></a>.',
+        ],
+      });
     }
   }
 

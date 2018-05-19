@@ -44,7 +44,7 @@ describe('Compass: models', () => {
       done();
     };
     if (mongoose.connection.readyState === 0) {
-      mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/compass', cb);
+      mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/compass-test', cb);
     }
   });
 
