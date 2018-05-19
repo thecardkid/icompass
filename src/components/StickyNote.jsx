@@ -72,7 +72,9 @@ class StickyNote extends Component {
 
   upvote = (ev) => {
     ev.stopPropagation();
-    this.props.socket.emitWorkspace('+1 note', this.props.note._id);
+    if (!this.props.note.draft) {
+      this.props.socket.emitWorkspace('+1 note', this.props.note._id);
+    }
   };
 
   getTooltip(n) {
@@ -261,7 +263,8 @@ class StickyNote extends Component {
   };
 
   renderContextMenu = () => {
-    const { draft } = this.props.note;
+    const disableIfDraft = this.props.note.draft ? 'disabled' : '';
+
     return (
       <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
         <section className={'border-bottom'}>
@@ -269,7 +272,11 @@ class StickyNote extends Component {
                onClick={this.executeThenHide(this.edit)}>
             Edit
           </div>
-          <div className={'ic-menu-item'}
+          <div className={`ic-menu-item ${disableIfDraft}`}
+               onClick={this.executeThenHide(this.edit)}>
+            Change color
+          </div>
+          <div className={`ic-menu-item ${disableIfDraft}`}
                onClick={this.executeThenHide(this.upvote)}>
             Upvote
           </div>
@@ -279,7 +286,7 @@ class StickyNote extends Component {
                onClick={this.executeThenHide(this.focus)}>
             Bring to Front
           </div>
-          <div className={`ic-menu-item ${draft ? 'disabled' : ''}`}
+          <div className={`ic-menu-item ${disableIfDraft}`}
                onClick={this.executeThenHide(
                  this.visualMode ? this.selectInVisual : this.selectAndEnterVisual
                )}>
@@ -289,7 +296,7 @@ class StickyNote extends Component {
         <section>
           <div className={'ic-menu-item dangerous'}
                onClick={this.executeThenHide(this.confirmDelete)}>
-            {draft ? 'Discard' : 'Delete'}
+            {this.props.note.draft ? 'Discard' : 'Delete'}
           </div>
         </section>
       </div>
