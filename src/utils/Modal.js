@@ -310,18 +310,29 @@ const ModalSingleton = (() => {
       let response;
       $('#ic-modal-confirm').on('click', () => {
         response = $('#ic-modal-input').val();
+        $(window).off('keydown', this.enterAsSubmit);
         this.close();
         cb(true, response);
       });
       $('#ic-modal-cancel').on('click', () => {
         this.close();
+        $(window).off('keydown', this.enterAsSubmit);
         cb(false);
       });
       $('#ic-backdrop').on('click', () => {
         response = $('#ic-modal-input').val();
+        $(window).off('keydown', this.enterAsSubmit);
         this.close();
         cb(false, response);
       });
+
+      $(window).on('keydown', this.enterAsSubmit);
+    }
+
+    enterAsSubmit(ev) {
+      if (ev.which === 13) { //Enter
+        $('#ic-modal-confirm').click();
+      }
     }
 
     prompt({
