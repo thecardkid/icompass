@@ -179,23 +179,34 @@ class StickyNote extends Component {
     }
 
     if (!this.visualMode && ev.shiftKey) {
-      if (this.props.note.draft) {
-        return this.toast.warn('Cannot enter bulk mode by selecting a draft');
-      }
-
-      this.props.enterVisualMode(this.props.i);
+      this.selectAndEnterVisual();
     }
 
     if (this.visualMode) {
-      if (this.props.note.draft) {
-        return this.toast.warn('Cannot select drafts in bulk edit mode');
-      }
-
-      this.props.socket.emitMetric('visual mode select');
-      this.props.workspaceX.selectNote(this.props.i);
+      this.selectInVisual();
     } else {
-      this.props.uiX.focusOnNote(this.props.i);
+      this.focus();
     }
+  };
+
+  selectAndEnterVisual = () => {
+    if (this.props.note.draft) {
+      this.toast.warn('Cannot enter bulk edit mode by selecting a draft');
+    } else {
+      this.props.enterVisualMode(this.props.i);
+    }
+  };
+
+  selectInVisual = () => {
+    if (this.props.note.draft) {
+      this.toast.warn('Cannot select drafts in bulk edit mode');
+    } else {
+      this.props.workspaceX.selectNote(this.props.i);
+    }
+  };
+
+  focus = () => {
+    this.props.uiX.focusOnNote(this.props.i);
   };
 
   onTouchStart = (ev) => {
@@ -242,23 +253,43 @@ class StickyNote extends Component {
   };
 
   executeThenHide = (fn) => (ev) => {
+    ev.stopPropagation();
+
     ev.persist();
     fn(ev);
     this.hideContextMenu();
   };
 
   renderContextMenu = () => {
+    const { draft } = this.props.note;
     return (
-      <div className={'ic-menu'} style={this.state.contextMenu}>
-        <section>
-          <div className={'ic-menu-item'} onClick={this.executeThenHide(this.edit)}>
-            Edit Note
+      <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
+        <section className={'border-bottom'}>
+          <div className={'ic-menu-item'}
+               onClick={this.executeThenHide(this.edit)}>
+            Edit
           </div>
-          <div className={'ic-menu-item'} onClick={this.executeThenHide(this.upvote)}>
+          <div className={'ic-menu-item'}
+               onClick={this.executeThenHide(this.upvote)}>
             Upvote
           </div>
-          <div className={'ic-menu-item dangerous'} onClick={this.executeThenHide(this.confirmDelete)}>
-            Delete
+        </section>
+        <section className={'border-bottom'}>
+          <div className={'ic-menu-item'}
+               onClick={this.executeThenHide(this.focus)}>
+            Bring to Front
+          </div>
+          <div className={`ic-menu-item ${draft ? 'disabled' : ''}`}
+               onClick={this.executeThenHide(
+                 this.visualMode ? this.selectInVisual : this.selectAndEnterVisual
+               )}>
+            Select
+          </div>
+        </section>
+        <section>
+          <div className={'ic-menu-item dangerous'}
+               onClick={this.executeThenHide(this.confirmDelete)}>
+            {draft ? 'Discard' : 'Delete'}
           </div>
         </section>
       </div>
