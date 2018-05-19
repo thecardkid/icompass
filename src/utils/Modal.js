@@ -93,17 +93,16 @@ const ModalSingleton = (() => {
     }
 
     alert({
-      heading,
+      heading = '',
       body = '',
-      paragraphs = [],
       cb = _.noop,
     }) {
       let html = `<h3>${heading}</h3>`;
 
-      if (paragraphs.length === 0) {
+      if (typeof body === 'string') {
         html += `<p>${body}</p>`;
-      } else {
-        _.each(paragraphs, p => html += `<p>${p}</p>`);
+      } else if (body.length > 0) {
+        _.each(body, p => html += `<p>${p}</p>`);
       }
 
       this.renderModal(this.generateAlert(html));
@@ -117,7 +116,7 @@ const ModalSingleton = (() => {
     alertPrivacyStatement = () => {
       this.alert({
         heading: 'Privacy Statement',
-        paragraphs: [
+        body: [
           'iCompass will not share your Compass, code, data, or any personal information included in your compass with any third party.',
           'Anyone who has your workspace\'s edit code with will be able to modify, add, or delete any and all data in your Compass. Save and share your Compass link with care, and ask any collaborator to do the same.'
         ],
@@ -127,7 +126,7 @@ const ModalSingleton = (() => {
     alertFeedback = (code) => {
       this.alert({
         heading: 'We\'d love to hear from you!',
-        paragraphs: [
+        body: [
           `It's a huge help to us if you reach out with your experiences and questions! Please email
           <a href="mailto:hieumaster95@gmail.com"><u>Hieu</u></a> (app creator) or 
           <a href="mailto:ela@innovatorscompass.org"><u>Ela</u></a> (Compass creator).
@@ -144,7 +143,7 @@ const ModalSingleton = (() => {
     alertCompassPrompt = () => {
       this.alert({
         heading: 'The Innovator\'s Compass',
-        paragraphs: [
+        body: [
           'Starting something or feeling stuck? Use five questions, asked by all kinds of innovators, to make things better.',
           'Explore anything you\'re doing, alone or with others. You\'ll see challenges in new ways.',
           '<b>1. PEOPLE: Who could be involved?</b> ...including you? For and with everyone involved, explore...',
@@ -161,7 +160,7 @@ const ModalSingleton = (() => {
     alertExplainModes = () => {
       this.alert({
         heading: 'What are these modes?',
-        paragraphs: [
+        body: [
           '<b>Standard mode</b> is what you are in by default',
           '<b>Compact mode</b> make notes take up much less space - it is meant for smaller devices.',
           '<b>Bulk Edit</b> mode allows you to edit notes in bulk! Hold down Shift and click on any note to enter this mode.',
@@ -172,7 +171,7 @@ const ModalSingleton = (() => {
     alertAboutUs = () => {
       this.alert({
         heading: 'Hi!',
-        paragraphs: [
+        body: [
           'Ela Ben-Ur\'s mission is making powerful ways forward accessible for any person and moment. She distilled Innovators\' Compass from Design Thinking and other practices over a 20-year journey through IDEO, MIT and Olin - and continues to evolve it in collaboration with people around the world, from parents to educators to organizational leaders. More tools and many examples are at <a href="innovatorscompass.org"><u>innovatorscompass.org</u></a>.',
           'My name is Hieu Nguyen, and I am the creator of this app. I am an Olin graduate, class of 2018. Having worked with this design framework from classes with Ela, I saw the potential in an online collaborative Compass and made it a reality.',
           'We offer this app for free so you can move forward with it in challenges big or small. So please:',
@@ -186,13 +185,13 @@ const ModalSingleton = (() => {
     alertRouteErrors(validCode, validUsername) {
       const options = {
         heading: 'There was a problem with your login info',
-        paragraphs: [],
+        body: [],
         cb: () => browserHistory.push('/'),
       };
 
-      if (!validCode) options.paragraphs.push('Your code is not valid');
-      if (!validUsername) options.paragraphs.push('Username can only contain letters, and must not be longer than 15 characters');
-      options.paragraphs.push('You will now be directed to the login page');
+      if (!validCode) options.body.push('Your code is not valid');
+      if (!validUsername) options.body.push('Username can only contain letters, and must not be longer than 15 characters');
+      options.body.push('You will now be directed to the login page');
 
       this.alert(options);
     }
@@ -310,18 +309,29 @@ const ModalSingleton = (() => {
       let response;
       $('#ic-modal-confirm').on('click', () => {
         response = $('#ic-modal-input').val();
+        $(window).off('keydown', this.enterAsSubmit);
         this.close();
         cb(true, response);
       });
       $('#ic-modal-cancel').on('click', () => {
         this.close();
+        $(window).off('keydown', this.enterAsSubmit);
         cb(false);
       });
       $('#ic-backdrop').on('click', () => {
         response = $('#ic-modal-input').val();
+        $(window).off('keydown', this.enterAsSubmit);
         this.close();
         cb(false, response);
       });
+
+      $(window).on('keydown', this.enterAsSubmit);
+    }
+
+    enterAsSubmit(ev) {
+      if (ev.which === 13) { //Enter
+        $('#ic-modal-confirm').click();
+      }
     }
 
     prompt({
