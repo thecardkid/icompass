@@ -1,7 +1,6 @@
 let mongoose = require('mongoose');
 let _ = require('underscore');
 
-let logger = require('../lib/logger');
 let DefaultCompass = require('./defaultCompass');
 const { STICKY_COLORS } = require('../lib/constants');
 
@@ -53,174 +52,246 @@ const isValidNote = (note) => {
   return true;
 };
 
-compassSchema.statics.makeCompass = function(topic, cb) {
-  let newCompass = Object.assign({}, DefaultCompass, {
-    editCode: generateUUID(),
-    viewCode: generateUUID(),
-    topic: topic,
-  });
-  this.create(newCompass, function(err, compass) {
-    if (err) return logger.error('Could not create compass with topic', topic, err);
-
-    cb(compass);
-  });
-};
-
-compassSchema.statics.setCenter = function(id, center, cb) {
-  this.findByIdAndUpdate(
-    id,
-    { $set: { center: center } },
-    { $safe: true, upsert: false, new: true },
-    function(err, compass) {
-      if (err) logger.error(`Could not set center to ${center} for compass ${id}`);
-      cb(compass);
-    }
-  );
-};
-
-compassSchema.statics.addNote = function(id, newNote, cb) {
-  if (!isValidNote(newNote)) {
-    return;
-  }
-
-  this.findByIdAndUpdate(
-    id,
-    { $push: { notes: newNote } },
-    { $safe: true, upsert: false, new: true },
-    (err, compass) => {
-      if (err) logger.error('Could not add note to compass', id, newNote, err);
-      cb(compass);
-    }
-  );
-};
-
-compassSchema.statics.updateNote = function(id, updatedNote, cb) {
-  if (!isValidNote(updatedNote)) {
-    return;
-  }
-
-  this.findOne({ _id: id }, (err, c) => {
-    if (err) logger.error('Could not find compass to update note', id, updatedNote, err);
-
-    for (let i = 0; i < c.notes.length; i++) {
-      const note = c.notes[i];
-      if (note._id.toString() === updatedNote._id) {
-        Object.assign(note, updatedNote);
-        note.x = Math.min(0.98, Math.max(0, note.x));
-        note.y = Math.min(0.98, Math.max(0, note.y));
+compassSchema.statics.makeCompass = function(topic) {
+  return new Promise((resolve, reject) => {
+    const newCompass = Object.assign({}, DefaultCompass, {
+      editCode: generateUUID(),
+      viewCode: generateUUID(),
+      topic: topic,
+    });
+    this.create(newCompass, function(err, compass) {
+      if (err) {
+        reject('Failed to create compass');
       }
-    }
 
-    c.save((err, updatedCompass) => {
-      if (err) logger.error('Could not update note in compass', id, updatedNote, err);
-      cb(updatedCompass);
+      resolve(compass);
     });
   });
 };
 
-compassSchema.statics.plusOneNote = function(id, noteId, cb) {
-  this.findOne({ _id: id }, function(err, c) {
-    if (err) logger.error('Could not find compass to update note', id, noteId, err);
-
-    let note;
-    for (let i = 0; i < c.notes.length; i++) {
-      note = c.notes[i];
-      if (note._id.toString() === noteId) {
-        note.upvotes = (note.upvotes || 0) + 1;
+compassSchema.statics.findByEditCode = function(code) {
+  return new Promise((resolve, reject) => {
+    this.findOne({ editCode: code }, function(err, c) {
+      if (err) {
+        reject('Could not find compass for editing', code, err);
       }
+
+      resolve(c);
+    });
+  });
+};
+
+compassSchema.statics.findByViewCode = function(code) {
+  return new Promise((resolve, reject) => {
+    this.findOne({ viewCode: code }, function(err, c) {
+      if (err) {
+        reject('Could not find compass for viewing', code, err);
+      }
+
+      if (c === null) {
+        return resolve(null);
+      }
+
+      const clone = JSON.parse(JSON.stringify(c));
+      delete clone.editCode;
+      resolve(clone);
+    });
+  });
+};
+
+compassSchema.methods.setCenter = function(center) {
+  return new Promise((resolve, reject) => {
+    const { _id } = this;
+    this.model('Compass').findByIdAndUpdate(
+      _id,
+      { $set: { center: center } },
+      { $safe: true, upsert: false, new: true },
+      function(err, compass) {
+        if (err) {
+          reject(`Could not set center to ${center} for compass ${_id}`);
+        }
+
+        resolve(compass);
+      }
+    );
+  });
+};
+
+compassSchema.methods.addNote = function(newNote) {
+  return new Promise((resolve, reject) => {
+    if (!isValidNote(newNote)) {
+      reject('Invalid data');
     }
 
-    c.save(function(err, updatedCompass) {
-      if (err) logger.error('Could not update note in compass', id, noteId, err);
-      cb(updatedCompass);
-    });
-  });
-};
+    const { _id } = this;
+    this.model('Compass').findByIdAndUpdate(
+      _id,
+      { $push: { notes: newNote } },
+      { $safe: true, upsert: false, new: true },
+      (err, compass) => {
+        if (err) {
+          reject('Could not add note to compass', _id, newNote, err);
+        }
 
-compassSchema.statics.bulkUpdateNotes = function(id, noteIds, transformation, cb) {
-  if (!isValidColor(transformation.color)) return;
-
-  this.findOne({ _id: id }, function(err, c) {
-    if (err) logger.error('Could not find compass to update note', id, noteIds, err);
-
-    c.notes = _.map(c.notes, function(note) {
-      if (_.contains(noteIds, note._id.toString())) {
-        if (transformation.color) note.color = transformation.color;
+        resolve(compass);
       }
-      return note;
-    });
-
-    c.save(function(err, updatedCompass) {
-      if (err) logger.error('Could not update notes in compass', id, noteIds, err);
-      cb(updatedCompass);
-    });
+    );
   });
 };
 
-compassSchema.statics.bulkDragNotes = function(id, noteIds, { dx, dy }, cb) {
-  this.findOne({ _id: id }, function(err, c) {
-    if (err) return logger.error('Could not find compass to update note', id, noteIds, err);
+compassSchema.methods.updateNote = function(updatedNote) {
+  return new Promise((resolve, reject) => {
+    if (!isValidNote(updatedNote)) {
+      reject('Invalid data');
+    }
 
-    c.notes = _.map(c.notes, function(note) {
-      if (_.contains(noteIds, note._id.toString())) {
-        note.x += dx;
-        note.y += dy;
-
-        note.x = Math.min(0.98, Math.max(0, note.x));
-        note.y = Math.min(0.98, Math.max(0, note.y));
-      }
-      return note;
-    });
-
-    c.save(function(err, updatedCompass) {
-      if (err) logger.error('Could not update notes in compass', id, noteIds, err);
-      cb(updatedCompass);
-    });
-  });
-};
-
-compassSchema.statics.findByEditCode = function(code, cb) {
-  this.findOne({ editCode: code }, function(err, c) {
-    if (err) logger.error('Could not find compass for editing', code, err);
-    cb(c);
-  });
-};
-
-compassSchema.statics.findByViewCode = function(code, cb) {
-  this.findOne({ viewCode: code }, function(err, c) {
-    if (err) logger.error('Could not find compass for viewing', code, err);
-    if (c === null) return cb(null);
-
-    let copy = JSON.parse(JSON.stringify(c));
-    delete copy.editCode;
-    cb(copy);
-  });
-};
-
-compassSchema.statics.deleteNote = function(compassId, noteId, cb) {
-  this.deleteNotes(compassId, [noteId], cb);
-};
-
-compassSchema.statics.deleteNotes = function(compassId, noteIds, cb) {
-  this.findOne({ _id: compassId }, function(err, c) {
-    if (err) logger.error('Could not find compass to delete notes', compassId, noteIds, err);
-
-    let deletedIdx = [];
-    c.notes = _.filter(c.notes, function(e, idx) {
-      if (_.contains(noteIds, e._id.toString())) {
-        deletedIdx.push(idx);
-        return false;
+    const { _id } = this;
+    this.model('Compass').findOne({ _id }, function(err, c) {
+      if (err) {
+        reject('Could not find compass to update note', _id, updatedNote, err);
       }
 
-      return true;
-    });
+      for (let i = 0; i < c.notes.length; i++) {
+        const note = c.notes[i];
+        if (note._id.toString() === updatedNote._id) {
+          Object.assign(note, updatedNote);
+          note.x = Math.min(0.98, Math.max(0, note.x));
+          note.y = Math.min(0.98, Math.max(0, note.y));
+        }
+      }
 
-    c.save(function(err, updatedCompass) {
-      if (err) logger.error('Could not delete notes', compassId, noteIds, err);
-      cb(updatedCompass.notes, deletedIdx);
+      c.save(function (err, updatedCompass) {
+        if (err) {
+          reject('Could not update note in compass', _id, updatedNote, err);
+        }
+
+        resolve(updatedCompass);
+      });
+    });
+  });
+};
+
+compassSchema.methods.plusOneNote = function(noteId) {
+  return new Promise((resolve, reject) => {
+    const { _id } = this;
+    this.model('Compass').findOne({ _id }, function(err, c) {
+      if (err) {
+        reject('Could not find compass to update note', _id, noteId, err);
+      }
+
+      let note;
+      for (let i = 0; i < c.notes.length; i++) {
+        note = c.notes[i];
+        if (note._id.toString() === noteId) {
+          note.upvotes = (note.upvotes || 0) + 1;
+        }
+      }
+
+      c.save(function(err, updatedCompass) {
+        if (err) {
+          reject('Could not update note in compass', _id, noteId, err);
+        }
+
+        resolve(updatedCompass);
+      });
+    });
+  });
+};
+
+compassSchema.methods.bulkUpdateNotes = function(noteIds, transformation) {
+  return new Promise((resolve, reject) => {
+    if (!isValidColor(transformation.color)) {
+      reject('Invalid data');
+    }
+
+    const { _id } = this;
+    this.model('Compass').findOne({ _id }, function(err, c) {
+      if (err) {
+        reject('Could not find compass to update note', _id, noteIds, err);
+      }
+
+      c.notes = _.map(c.notes, function(note) {
+        if (_.contains(noteIds, note._id.toString())) {
+          if (transformation.color) note.color = transformation.color;
+        }
+        return note;
+      });
+
+      c.save(function(err, updatedCompass) {
+        if (err) {
+          reject('Could not update notes in compass', _id, noteIds, err);
+        }
+
+        resolve(updatedCompass);
+      });
+    });
+  });
+};
+
+compassSchema.methods.bulkDragNotes = function(noteIds, { dx, dy }) {
+  return new Promise((resolve, reject) => {
+    const { _id } = this;
+    this.model('Compass').findOne({ _id }, function(err, c) {
+      if (err) {
+        reject('Could not find compass to update note', _id, noteIds, err);
+      }
+
+      c.notes = _.map(c.notes, function(note) {
+        if (_.contains(noteIds, note._id.toString())) {
+          note.x += dx;
+          note.y += dy;
+
+          note.x = Math.min(0.98, Math.max(0, note.x));
+          note.y = Math.min(0.98, Math.max(0, note.y));
+        }
+        return note;
+      });
+
+      c.save(function(err, updatedCompass) {
+        if (err) {
+          reject('Could not update notes in compass', _id, noteIds, err);
+        }
+
+        resolve(updatedCompass);
+      });
+    });
+  });
+};
+
+compassSchema.methods.deleteNote = function(noteId) {
+  return this.deleteNotes([noteId]);
+};
+
+compassSchema.methods.deleteNotes = function(noteIds) {
+  return new Promise((resolve, reject) => {
+    const { _id } = this;
+    this.model('Compass').findOne({ _id }, function(err, c) {
+      if (err) {
+        reject('Could not find compass to delete notes', _id, noteIds, err);
+      }
+
+      const deletedIdx = [];
+      c.notes = _.filter(c.notes, function(e, idx) {
+        if (_.contains(noteIds, e._id.toString())) {
+          deletedIdx.push(idx);
+          return false;
+        }
+
+        return true;
+      });
+
+      c.save(function(err, updatedCompass) {
+        if (err) {
+          reject('Could not delete notes', _id, noteIds, err);
+        }
+
+        resolve({
+          notes: updatedCompass.notes,
+          deletedIdx,
+        });
+      });
     });
   });
 };
 
 module.exports = mongoose.model('Compass', compassSchema);
-

@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 import { Mockgoose } from 'mockgoose';
@@ -6,8 +7,8 @@ import _ from 'underscore';
 import Compass from '../../models/compass';
 
 const mockgoose = new Mockgoose(mongoose);
-const TOPIC = 'test suite';
-const NOTE = {
+const topic = 'test suite';
+const note = {
   user: 'mocha',
   color: '#FFCCFF',
   text: 'hello, world',
@@ -15,137 +16,141 @@ const NOTE = {
   isImage: false,
   x: 0.5,
   y: 0.5,
+  upvotes: 0,
 };
 
-function addNotes(DUT, n, cb) {
-  let i = 0;
-  let incr = (compass) => {
-    i += 1;
-    if (i === n) cb(compass);
-  };
+const addNotes = async (workspace, n) => {
+  for (let i = 0; i < n - 1; i++) {
+    await workspace.addNote(note);
+  }
 
-  for (let j = 0; j < n; j++)
-    Compass.addNote(DUT._id, NOTE, incr);
-}
+  return await workspace.addNote(note);
+};
 
 describe('Compass: models', () => {
-  let DUT;
+  let workspace;
 
-  before((done) => {
-    mockgoose.prepareStorage().then(() => {
-      mongoose.connect('mongodb://test.com/icompass-test', (err) => {
-        done(err);
-      });
-    });
+  before(async () => {
+    await mockgoose.prepareStorage();
+    mongoose.connect('mongodb://test.com/icompass-test');
   });
 
-  beforeEach(done => {
-    Compass.makeCompass(TOPIC, c => {
-      DUT = c;
+  beforeEach(async () => {
+    workspace = await Compass.makeCompass(topic);
+  });
+
+  describe('statics', () => {
+    it('#makeCompass', (done) => {
+      expect(workspace.editCode).to.have.lengthOf(8);
+      expect(workspace.viewCode).to.have.lengthOf(8);
+      expect(workspace.topic).to.equal(topic);
+      expect(workspace.notes).to.be.empty;
       done();
     });
-  });
 
-  afterEach(done => {
-    Compass.remove({ _id: DUT._id }, done);
-  });
-
-  it('#makeCompass', (done) => {
-    expect(DUT.editCode).to.have.lengthOf(8);
-    expect(DUT.viewCode).to.have.lengthOf(8);
-    expect(DUT.topic).to.equal(TOPIC);
-    expect(DUT.notes).to.be.empty;
-    done();
-  });
-
-  it('#findByEditCode', (done) => {
-    Compass.findByEditCode(DUT.editCode, (c) => {
-      expect(c.editCode).to.not.be.undefined;
-      expect(c.viewCode).to.not.be.undefined;
-      expect(c.topic).to.equal(TOPIC);
-      done();
+    it('#findByEditCode', async () => {
+      const c = await Compass.findByEditCode(workspace.editCode);
+      expect(c.editCode).to.equal(workspace.editCode);
+      expect(c.viewCode).to.equal(workspace.viewCode);
+      expect(c.topic).to.equal(topic);
     });
-  });
 
-  it('#findByViewCode', (done) => {
-    Compass.findByViewCode(DUT.viewCode, (c) => {
+    it('#findByViewCode', async () => {
+      const c = await Compass.findByViewCode(workspace.viewCode);
       expect(c.editCode).to.be.undefined;
-      expect(c.viewCode).to.not.be.undefined;
-      expect(c.topic).to.equal(TOPIC);
-      done();
+      expect(c.viewCode).to.equal(workspace.viewCode);
+      expect(c.topic).to.equal(topic);
     });
   });
 
-  it('#setCenter', (done) => {
-    Compass.setCenter(DUT._id, 'center', (c) => {
+  describe('methods', () => {
+    it('#setCenter', async () => {
+      const c = await workspace.setCenter('center');
       expect(c.center).to.equal('center');
-      done();
     });
-  });
 
-  it('#addNote', (done) => {
-    Compass.addNote(DUT._id, NOTE, (c) => {
-      DUT = c;
+    it('#addNote', async () => {
+      const c = await workspace.addNote(note);
       expect(c.notes).to.have.lengthOf(1);
-      done();
     });
-  });
 
-  it('#updateNote', (done) => {
-    addNotes(DUT, 3, compass => {
-      let updated = Object.assign({}, compass.notes[1]._doc);
-      updated.text = 'Updated';
+    it('#updateNote', async () => {
+      let c = await addNotes(workspace, 3);
+
       // emulate client side request
+      const updated = Object.assign({}, c.notes[1]._doc);
+      updated.text = 'Updated';
       updated._id = updated._id.toString();
-      Compass.updateNote(compass._id, updated, (c) => {
-        expect(c.notes).to.have.lengthOf(3);
-        expect(c.notes[1].text).to.equal('Updated');
-        done();
-      });
-    });
-  });
 
-  it('#bulkUpdateNotes', (done) => {
-    Compass.addNote(DUT._id, NOTE, (c) => {
-      let noteIds = _.map(c.notes, note => note._id.toString());
-      DUT = c;
+      c = await workspace.updateNote(updated);
+      expect(c.notes).to.have.lengthOf(3);
+      expect(c.notes[1].text).to.equal('Updated');
+    });
+
+    it('#plusOneNote', async () => {
+      workspace = await workspace.addNote(note);
+      expect(workspace.notes).to.have.length(1);
+      expect(workspace.notes[0].upvotes).to.equal(0);
+
+      workspace = await workspace.plusOneNote(workspace.notes[0]._id.toString());
+      expect(workspace.notes).to.have.length(1);
+      expect(workspace.notes[0].upvotes).to.equal(1);
+    });
+
+    it('#bulkUpdateNotes', async () => {
+      let c = await addNotes(workspace, 2);
+
+      const noteIds = _.map(c.notes, note => note._id.toString());
       const color = '#FFAE27';
+      const transformation = { color };
 
-      let transformation = { color };
-      Compass.bulkUpdateNotes(DUT._id, noteIds, transformation, (c) => {
-        _.map(c.notes, (note) => {
-          expect(note.color).to.equal(color);
-        });
-        done();
-      });
+      c = await workspace.bulkUpdateNotes(noteIds, transformation);
+      expect(c.notes).to.have.length(2);
+      _.each(c.notes, note => expect(note.color).to.equal(color));
     });
-  });
 
-  it('#deleteNote', (done) => {
-    addNotes(DUT, 2, compass => {
-      Compass.deleteNote(compass._id, compass.notes[1]._id.toString(), (notes, deletedIdx) => {
-        expect(notes).to.have.lengthOf(1);
-        expect(deletedIdx).to.have.lengthOf(1);
-        expect(deletedIdx[0]).to.equal(1);
-        done();
-      });
+    it('#bulkDragNotes', async () => {
+      const note1 = Object.assign({}, note, { x: 0.9, y: 0.9 });
+      const note2 = Object.assign({}, note, { x: 0.1, y: 0.1 });
+
+      await workspace.addNote(note1);
+      workspace = await workspace.addNote(note2);
+
+      const noteIds = _.map(workspace.notes, n => n._id.toString());
+
+      workspace = await workspace.bulkDragNotes(noteIds, { dx: 0.3, dy: 0.3 });
+      expect(workspace.notes).to.have.length(2);
+      expect(workspace.notes[0]).to.have.property('x', 0.98);
+      expect(workspace.notes[0]).to.have.property('y', 0.98);
+      expect(workspace.notes[1]).to.have.property('x', 0.4);
+      expect(workspace.notes[1]).to.have.property('y', 0.4);
+
+      workspace = await workspace.bulkDragNotes(noteIds, { dx: -0.5, dy: -0.5 });
+      expect(workspace.notes).to.have.length(2);
+      expect(workspace.notes[0]).to.have.property('x', 0.48);
+      expect(workspace.notes[0]).to.have.property('y', 0.48);
+      expect(workspace.notes[1]).to.have.property('x', 0);
+      expect(workspace.notes[1]).to.have.property('y', 0);
     });
-  });
 
-  it('#deleteNotes', (done) => {
-    addNotes(DUT, 4, compass => {
-      let noteIds = _.map(compass.notes, note => note._id.toString());
+    it('#deleteNote', async () => {
+      const c = await addNotes(workspace, 2);
+      const { notes, deletedIdx } = await workspace.deleteNote(c.notes[1]._id.toString());
+      expect(notes).to.have.lengthOf(1);
+      expect(deletedIdx).to.have.lengthOf(1);
+      expect(deletedIdx[0]).to.equal(1);
+    });
+
+    it('#deleteNotes', async () => {
+      const c = await addNotes(workspace, 4);
+      const noteIds = _.map(c.notes, note => note._id.toString());
       noteIds.splice(1, 1);
       expect(noteIds).to.have.lengthOf(3);
 
-      Compass.deleteNotes(DUT._id, noteIds, (notes, deletedIdx) => {
-        expect(notes).to.have.lengthOf(1);
-        expect(deletedIdx).to.have.lengthOf(3);
-        expect(deletedIdx[0]).to.equal(0);
-        expect(deletedIdx[1]).to.equal(2);
-        expect(deletedIdx[2]).to.equal(3);
-        done();
-      });
+      const { notes, deletedIdx } = await workspace.deleteNotes(noteIds);
+      expect(notes).to.have.lengthOf(1);
+      expect(deletedIdx).to.have.lengthOf(3);
+      expect(deletedIdx).to.have.members([0, 2, 3]);
     });
   });
 });
