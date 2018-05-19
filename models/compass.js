@@ -286,7 +286,7 @@ compassSchema.methods.deleteNotes = function(noteIds) {
         }
 
         resolve({
-          notes: updatedCompass.notes,
+          compass: updatedCompass,
           deletedIdx,
         });
       });

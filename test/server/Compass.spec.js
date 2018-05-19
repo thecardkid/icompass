@@ -135,8 +135,8 @@ describe('Compass: models', () => {
 
     it('#deleteNote', async () => {
       const c = await addNotes(workspace, 2);
-      const { notes, deletedIdx } = await workspace.deleteNote(c.notes[1]._id.toString());
-      expect(notes).to.have.lengthOf(1);
+      const { compass, deletedIdx } = await workspace.deleteNote(c.notes[1]._id.toString());
+      expect(compass.notes).to.have.lengthOf(1);
       expect(deletedIdx).to.have.lengthOf(1);
       expect(deletedIdx[0]).to.equal(1);
     });
@@ -147,8 +147,8 @@ describe('Compass: models', () => {
       noteIds.splice(1, 1);
       expect(noteIds).to.have.lengthOf(3);
 
-      const { notes, deletedIdx } = await workspace.deleteNotes(noteIds);
-      expect(notes).to.have.lengthOf(1);
+      const { compass, deletedIdx } = await workspace.deleteNotes(noteIds);
+      expect(compass.notes).to.have.lengthOf(1);
       expect(deletedIdx).to.have.lengthOf(3);
       expect(deletedIdx).to.have.members([0, 2, 3]);
     });
