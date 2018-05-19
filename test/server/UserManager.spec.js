@@ -1,6 +1,8 @@
 import { expect } from 'chai';
+import _ from 'underscore';
 
 import UserManager from '../../lib/UserManager';
+import { STICKY_COLORS } from '../../lib/constants';
 
 const code = '1a2b3c4d';
 const username = 'bruce willis';
@@ -30,7 +32,7 @@ describe('user manager', () => {
   });
 
   it('add user with an assigned color to a room', () => {
-    const color = manager.possibleColors[2];
+    const color = STICKY_COLORS[2];
 
     const o = manager.addUser(code, username, color);
     expect(o.manager.usernameToColor).to.have.keys(username);
@@ -60,6 +62,19 @@ describe('user manager', () => {
     manager.addUser(code, username);
     const m = manager.removeUser(code, username);
     expect(m).to.be.null;
+  });
+
+  it('replenishes colors if > 6 users join', () => {
+    for (let i = 0; i < 6; i++) {
+      manager.addUser(code, `${username}i`);
+    }
+
+    const update = manager.addUser(code, `${username}6`);
+    expect(update.manager.colors).to.have.length(5);
+
+    _.each(update.manager.usernameToColor, (color) => {
+      expect(color).to.be.oneOf(STICKY_COLORS);
+    });
   });
 });
 
