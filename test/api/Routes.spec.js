@@ -10,16 +10,12 @@ describe('Routes', () => {
   let DUT;
   let agent;
   
-  before(done => {
+  before(() => {
     agent = request.agent(app);
-    done();
   });
 
-  beforeEach(done => {
-    Compass.makeCompass(TOPIC, c => {
-      DUT = c;
-      done();
-    });
+  beforeEach(async () => {
+    DUT = await Compass.makeCompass(TOPIC);
   });
 
   afterEach(done => {
