@@ -1,6 +1,5 @@
 import deepEqual from 'deep-equal';
 import React, { Component } from 'react';
-import ReactQuill from 'react-quill';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
@@ -130,7 +129,7 @@ class StickyNote extends Component {
 
     return (
       <div style={{ background: n.color }} className={divClazz}>
-        <ReactQuill readonly={true} theme={null} value={n.text}/>
+        <p className={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
         {this.getTooltip(n)}
       </div>
     );
