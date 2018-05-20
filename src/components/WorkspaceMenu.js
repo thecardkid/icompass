@@ -220,9 +220,11 @@ class WorkspaceMenu extends Component {
       <div className={'ic-menu ic-workspace-menu'}>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.openNewWorkspace}>
+            <i className={'material-icons'}>create_new_folder</i>
             New Workspace
           </div>
           <div className={'ic-menu-item'}>
+            <i className={'material-icons'}>brightness_2</i>
             Dark Theme
             <label className={'switch'}>
               <input type={'checkbox'} onChange={this.toggleDarkTheme} checked={this.state.darkTheme}/>
@@ -232,12 +234,15 @@ class WorkspaceMenu extends Component {
         </section>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.triggerEmailModal}>
+            <i className={'material-icons'}>email</i>
             Save via Email
           </div>
           <div className={'ic-menu-item'} onClick={this.bookmark}>
+            <i className={'material-icons'}>bookmark</i>
             Save as Bookmark
           </div>
           <div className={'ic-menu-item'} onClick={this.showShareModal}>
+            <i className={'material-icons'}>share</i>
             Share Workspace
           </div>
         </section>
@@ -257,9 +262,11 @@ class WorkspaceMenu extends Component {
         </section>
         <section onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.logout}>
+            <i className={'material-icons'}>lock</i>
             Log Out
           </div>
-          <div className={'ic-menu-item'} onClick={this.confirmDelete}>
+          <div className={'ic-menu-item dangerous'} onClick={this.confirmDelete}>
+            <i className={'material-icons'}>delete</i>
             Delete Workspace
           </div>
         </section>

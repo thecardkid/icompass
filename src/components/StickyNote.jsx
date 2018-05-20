@@ -1,4 +1,4 @@
-import deepEqual from 'deep-equal';
+import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -17,22 +17,12 @@ const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while
 class StickyNote extends Component {
   constructor(props) {
     super(props);
+    this.state = { contextMenu: null };
+
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
     this.hasEditingRights = !this.props.viewOnly;
     this.setModes(this.props);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return (
-      !deepEqual(this.props.note, nextProps.note) ||
-      this.props.ui.vw !== nextProps.ui.vw ||
-      this.props.ui.vh !== nextProps.ui.vh ||
-      this.props.i !== nextProps.i ||
-      this.props.ui.focusedNote !== nextProps.ui.focusedNote ||
-      this.props.ui.editingMode === EDITING_MODE.VISUAL ||
-      this.props.ui.editingMode !== nextProps.ui.editingMode
-    );
   }
 
   componentWillUpdate(nextProps) {
@@ -82,7 +72,9 @@ class StickyNote extends Component {
 
   upvote = (ev) => {
     ev.stopPropagation();
-    this.props.socket.emitWorkspace('+1 note', this.props.note._id);
+    if (!this.props.note.draft) {
+      this.props.socket.emitWorkspace('+1 note', this.props.note._id);
+    }
   };
 
   getTooltip(n) {
@@ -129,7 +121,7 @@ class StickyNote extends Component {
 
     return (
       <div style={{ background: n.color }} className={divClazz}>
-        <p className={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
+        <p className={'text'} ref={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
         {this.getTooltip(n)}
       </div>
     );
@@ -189,23 +181,34 @@ class StickyNote extends Component {
     }
 
     if (!this.visualMode && ev.shiftKey) {
-      if (this.props.note.draft) {
-        return this.toast.warn('Cannot enter bulk mode by selecting a draft');
-      }
-
-      this.props.enterVisualMode(this.props.i);
+      this.selectAndEnterVisual();
     }
 
     if (this.visualMode) {
-      if (this.props.note.draft) {
-        return this.toast.warn('Cannot select drafts in bulk edit mode');
-      }
-
-      this.props.socket.emitMetric('visual mode select');
-      this.props.workspaceX.selectNote(this.props.i);
+      this.selectInVisual();
     } else {
-      this.props.uiX.focusOnNote(this.props.i);
+      this.focus();
     }
+  };
+
+  selectAndEnterVisual = () => {
+    if (this.props.note.draft) {
+      this.toast.warn('Cannot enter bulk edit mode by selecting a draft');
+    } else {
+      this.props.enterVisualMode(this.props.i);
+    }
+  };
+
+  selectInVisual = () => {
+    if (this.props.note.draft) {
+      this.toast.warn('Cannot select drafts in bulk edit mode');
+    } else {
+      this.props.workspaceX.selectNote(this.props.i);
+    }
+  };
+
+  focus = () => {
+    this.props.uiX.focusOnNote(this.props.i);
   };
 
   onTouchStart = (ev) => {
@@ -215,6 +218,151 @@ class StickyNote extends Component {
 
   onTouchRelease = () => {
     clearTimeout(this.longPress);
+  };
+
+  showContextMenu = (ev) => {
+    ev.stopPropagation();
+    ev.preventDefault();
+
+    const contextMenu = {
+      top: ev.clientY,
+      left: ev.clientX,
+    };
+
+    let $parent = ev.target.parentElement;
+    while (!$parent.className.includes('draggable')) {
+      $parent = $parent.parentElement;
+    }
+
+    if ($parent.style.transform || $parent.style.webkitTransform) {
+      contextMenu.top -= this.props.note.y * this.props.ui.vh;
+      contextMenu.left -= this.props.note.x * this.props.ui.vw;
+    }
+
+    this.setState({ contextMenu });
+    $(window).on('mousedown', this.hideContextMenuIfNotAction);
+  };
+
+  hideContextMenuIfNotAction = (ev) => {
+    if (!ev.target.className.includes('ic-menu-item')) {
+      this.hideContextMenu();
+    }
+  };
+
+  hideContextMenu = () => {
+    this.setState({ contextMenu: null });
+    $(window).off('mousedown', this.hideContextMenu);
+  };
+
+  executeThenHide = (fn) => (ev) => {
+    ev.stopPropagation();
+
+    ev.persist();
+    fn(ev);
+    this.hideContextMenu();
+  };
+
+  showImage = () => {
+    if (this.props.note.isImage) {
+      this.modal.image({
+        src: this.props.note.text,
+      });
+    } else if (this.props.note.doodle) {
+      this.modal.image({
+        src: this.props.note.doodle,
+        background: this.props.note.color,
+      });
+    }
+  };
+
+  textToSpeech = () => {
+    const { note } = this.props;
+
+    if (note.doodle) {
+      return;
+    }
+
+    let msg;
+    let type;
+    const { x, y } = note;
+
+    if (x < 0.5) {
+      if (y < 0.5) type = 'Principle';
+      else type = 'Observation';
+    } else {
+      if (y < 0.5) type = 'Idea';
+      else type = 'Experiment';
+    }
+
+    if (note.isImage) {
+      msg = note.altText || 'Alternative text not available for this image';
+    } else {
+      msg = this.refs.text.textContent;
+    }
+
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(type));
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(msg));
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(`by ${note.user}`));
+
+    if (note.upvotes) {
+      const times = note.upvotes === 1 ? 'time' : 'times';
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance(`upvoted ${note.upvotes} ${times}`));
+    }
+  };
+
+  renderContextMenu = () => {
+    const { note } = this.props;
+    const disableIfDraft = note.draft ? 'disabled' : '';
+    const disableIfText = (note.isImage || note.doodle) ? '' : 'disabled';
+    const disableIfDoodle = note.doodle ? 'disabled' : '';
+
+    return (
+      <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
+        <section className={'border-bottom'}>
+          <div className={'ic-menu-item'}
+               onClick={this.executeThenHide(this.edit)}>
+            <i className={'material-icons'}>edit</i>
+            Edit
+          </div>
+          <div className={`ic-menu-item ${disableIfDraft}`}
+               onClick={this.executeThenHide(this.upvote)}>
+            <i className={'material-icons'}>exposure_plus_1</i>
+            Upvote
+          </div>
+        </section>
+        <section className={'border-bottom'}>
+          <div className={`ic-menu-item ${disableIfDoodle}`}
+               onClick={this.executeThenHide(this.textToSpeech)}>
+            <i className={'material-icons'}>volume_up</i>
+            Text to Speech
+          </div>
+          <div className={`ic-menu-item ${disableIfText}`}
+               onClick={this.executeThenHide(this.showImage)}>
+            <i className={'material-icons'}>crop_free</i>
+            View Image
+          </div>
+          <div className={'ic-menu-item'}
+               onClick={this.executeThenHide(this.focus)}>
+            <i className={'material-icons'}>flip_to_front</i>
+            Bring to Front
+          </div>
+          <div className={`ic-menu-item ${disableIfDraft}`}
+               onClick={this.executeThenHide(
+                 this.visualMode ? this.selectInVisual : this.selectAndEnterVisual
+               )}>
+            <i className={'material-icons'}>photo_size_select_small</i>
+            Select
+          </div>
+        </section>
+        <section>
+          <div className={'ic-menu-item dangerous'}
+               onClick={this.executeThenHide(this.confirmDelete)}>
+            <i className={'material-icons'}>delete</i>
+            {note.draft ? 'Discard' : 'Delete'}
+          </div>
+        </section>
+      </div>
+    );
   };
 
   render() {
@@ -241,10 +389,12 @@ class StickyNote extends Component {
            onDoubleClick={this.edit}
            onTouchStart={this.onTouchStart}
            onTouchEnd={this.onTouchRelease}
+           onContextMenu={this.showContextMenu}
            id={`note${i}`}
            height={n.doodle ? '100px' : null}>
         {this.getX()}
         {this.getContents()}
+        {this.state.contextMenu && this.renderContextMenu()}
       </div>
     );
   }

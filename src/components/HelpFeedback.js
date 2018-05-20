@@ -53,27 +53,33 @@ export default class HelpFeedback extends Component {
       <div className={'ic-menu ic-help-menu'}>
         <section className={'border-bottom'}>
           <div className={'ic-menu-item'} onClick={this.openPrompt}>
+            <i className={'material-icons'}>play_arrow</i>
             Get Started
           </div>
           <Link to={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.hideMenu}>
             <div className={'ic-menu-item'}>
+              <i className={'material-icons'}>ondemand_video</i>
               iCompass Guide
             </div>
           </Link>
         </section>
         <section>
           <div className={'ic-menu-item'} onClick={this.showAboutUs}>
+            <i className={'material-icons'}>person</i>
             About Us
           </div>
           <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
+            <i className={'material-icons'}>lock</i>
             Privacy Statement
           </div>
           <Link to={'https://github.com/thecardkid/icompass/releases'} target={'_blank'} onClick={this.openReleaseNotes}>
             <div className={'ic-menu-item'}>
+              <i className={'material-icons'}>new_releases</i>
               What's new?
             </div>
           </Link>
           <div className={'ic-menu-item'} onClick={this.showFeedback}>
+            <i className={'material-icons'}>alternate_email</i>
             Contact Us
           </div>
         </section>
