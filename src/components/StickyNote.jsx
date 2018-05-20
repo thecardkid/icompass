@@ -288,9 +288,9 @@ class StickyNote extends Component {
 
     if (x < 0.5) {
       if (y < 0.5) type = 'Principle';
-      else type = 'Idea';
+      else type = 'Observation';
     } else {
-      if (y < 0.5) type = 'Observation';
+      if (y < 0.5) type = 'Idea';
       else type = 'Experiment';
     }
 
