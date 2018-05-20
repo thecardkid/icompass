@@ -121,7 +121,7 @@ class StickyNote extends Component {
 
     return (
       <div style={{ background: n.color }} className={divClazz}>
-        <p className={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
+        <p className={'text'} ref={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
         {this.getTooltip(n)}
       </div>
     );
@@ -275,10 +275,46 @@ class StickyNote extends Component {
     }
   };
 
+  textToSpeech = () => {
+    const { note } = this.props;
+
+    if (note.doodle) {
+      return;
+    }
+
+    let msg;
+    let type;
+    const { x, y } = note;
+
+    if (x < 0.5) {
+      if (y < 0.5) type = 'Principle';
+      else type = 'Idea';
+    } else {
+      if (y < 0.5) type = 'Observation';
+      else type = 'Experiment';
+    }
+
+    if (note.isImage) {
+      msg = note.altText || 'Alternative text not available for this image';
+    } else {
+      msg = this.refs.text.textContent;
+    }
+
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(type));
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(msg));
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(`by ${note.user}`));
+
+    if (note.upvotes) {
+      const times = note.upvotes === 1 ? 'time' : 'times';
+      window.speechSynthesis.speak(new SpeechSynthesisUtterance(`upvoted ${note.upvotes} ${times}`));
+    }
+  };
+
   renderContextMenu = () => {
     const { note } = this.props;
     const disableIfDraft = note.draft ? 'disabled' : '';
     const disableIfText = (note.isImage || note.doodle) ? '' : 'disabled';
+    const disableIfDoodle = note.doodle ? 'disabled' : '';
 
     return (
       <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
@@ -295,6 +331,11 @@ class StickyNote extends Component {
           </div>
         </section>
         <section className={'border-bottom'}>
+          <div className={`ic-menu-item ${disableIfDoodle}`}
+               onClick={this.executeThenHide(this.textToSpeech)}>
+            <i className={'material-icons'}>volume_up</i>
+            Text to Speech
+          </div>
           <div className={`ic-menu-item ${disableIfText}`}
                onClick={this.executeThenHide(this.showImage)}>
             <i className={'material-icons'}>crop_free</i>
