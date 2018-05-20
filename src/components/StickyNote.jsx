@@ -262,8 +262,23 @@ class StickyNote extends Component {
     this.hideContextMenu();
   };
 
+  showImage = () => {
+    if (this.props.note.isImage) {
+      this.modal.image({
+        src: this.props.note.text,
+      });
+    } else if (this.props.note.doodle) {
+      this.modal.image({
+        src: this.props.note.doodle,
+        background: this.props.note.color,
+      });
+    }
+  };
+
   renderContextMenu = () => {
-    const disableIfDraft = this.props.note.draft ? 'disabled' : '';
+    const { note } = this.props;
+    const disableIfDraft = note.draft ? 'disabled' : '';
+    const disableIfText = (note.isImage || note.doodle) ? '' : 'disabled';
 
     return (
       <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
@@ -273,15 +288,15 @@ class StickyNote extends Component {
             Edit
           </div>
           <div className={`ic-menu-item ${disableIfDraft}`}
-               onClick={this.executeThenHide(this.edit)}>
-            Change color
-          </div>
-          <div className={`ic-menu-item ${disableIfDraft}`}
                onClick={this.executeThenHide(this.upvote)}>
             Upvote
           </div>
         </section>
         <section className={'border-bottom'}>
+          <div className={`ic-menu-item ${disableIfText}`}
+               onClick={this.executeThenHide(this.showImage)}>
+            View Image
+          </div>
           <div className={'ic-menu-item'}
                onClick={this.executeThenHide(this.focus)}>
             Bring to Front
@@ -296,7 +311,7 @@ class StickyNote extends Component {
         <section>
           <div className={'ic-menu-item dangerous'}
                onClick={this.executeThenHide(this.confirmDelete)}>
-            {this.props.note.draft ? 'Discard' : 'Delete'}
+            {note.draft ? 'Discard' : 'Delete'}
           </div>
         </section>
       </div>

@@ -16,6 +16,22 @@ const ModalSingleton = (() => {
       }
     }
 
+    image({ src, background }) {
+      let style = '';
+      if (background) {
+        style += `style="background:${background}"`;
+      }
+
+      const html = `
+        <div id="ic-modal-image" ${style}>
+          <img src="${src}" />
+        </div>
+      `;
+
+      this.renderModal(html);
+      this.onEvent({});
+    }
+
     getModalHtml(body, confirm, cancel = '') {
       return (`
         <div id="ic-modal">
@@ -37,7 +53,11 @@ const ModalSingleton = (() => {
       }
     }
 
-    onEvent({ onConfirm, onCancel, onBackdrop }) {
+    onEvent({
+      onConfirm = _.noop,
+      onCancel =_.noop,
+      onBackdrop = _.noop,
+    }) {
       this.show = true;
 
       $('#ic-modal-confirm').on('click', () => {
