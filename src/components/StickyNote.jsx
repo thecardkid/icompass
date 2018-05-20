@@ -285,32 +285,38 @@ class StickyNote extends Component {
         <section className={'border-bottom'}>
           <div className={'ic-menu-item'}
                onClick={this.executeThenHide(this.edit)}>
+            <i className={'material-icons'}>edit</i>
             Edit
           </div>
           <div className={`ic-menu-item ${disableIfDraft}`}
                onClick={this.executeThenHide(this.upvote)}>
+            <i className={'material-icons'}>exposure_plus_1</i>
             Upvote
           </div>
         </section>
         <section className={'border-bottom'}>
           <div className={`ic-menu-item ${disableIfText}`}
                onClick={this.executeThenHide(this.showImage)}>
+            <i className={'material-icons'}>crop_free</i>
             View Image
           </div>
           <div className={'ic-menu-item'}
                onClick={this.executeThenHide(this.focus)}>
+            <i className={'material-icons'}>flip_to_front</i>
             Bring to Front
           </div>
           <div className={`ic-menu-item ${disableIfDraft}`}
                onClick={this.executeThenHide(
                  this.visualMode ? this.selectInVisual : this.selectAndEnterVisual
                )}>
+            <i className={'material-icons'}>photo_size_select_small</i>
             Select
           </div>
         </section>
         <section>
           <div className={'ic-menu-item dangerous'}
                onClick={this.executeThenHide(this.confirmDelete)}>
+            <i className={'material-icons'}>delete</i>
             {note.draft ? 'Discard' : 'Delete'}
           </div>
         </section>
