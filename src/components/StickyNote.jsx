@@ -12,7 +12,7 @@ import * as workspaceX from '../actions/workspace';
 
 import { COLORS, EDITING_MODE } from '../../lib/constants';
 
-const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while in BULK EDIT mode';
+const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while in bulk edit mode';
 
 class StickyNote extends Component {
   constructor(props) {
@@ -72,6 +72,10 @@ class StickyNote extends Component {
 
   upvote = (ev) => {
     ev.stopPropagation();
+    if (this.visualMode) {
+      return this.toast.warn(VISUAL_MODE_NO_CHANGE);
+    }
+
     if (!this.props.note.draft) {
       this.props.socket.emitWorkspace('+1 note', this.props.note._id);
     }
@@ -313,16 +317,17 @@ class StickyNote extends Component {
     const disableIfDraft = note.draft ? 'disabled' : '';
     const disableIfText = (note.isImage || note.doodle) ? '' : 'disabled';
     const disableIfDoodle = note.doodle ? 'disabled' : '';
+    const disableIfBulk = this.visualMode ? 'disabled' : '';
 
     return (
       <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
         <section className={'border-bottom'}>
-          <div className={`ic-menu-item ${disableIfDoodle}`}
+          <div className={`ic-menu-item ${disableIfDoodle} ${disableIfBulk}`}
                onClick={this.executeThenHide(this.edit)}>
             <i className={'material-icons'}>edit</i>
             Edit
           </div>
-          <div className={`ic-menu-item ${disableIfDraft}`}
+          <div className={`ic-menu-item ${disableIfDraft} ${disableIfBulk}`}
                onClick={this.executeThenHide(this.upvote)}>
             <i className={'material-icons'}>exposure_plus_1</i>
             Upvote
@@ -353,7 +358,7 @@ class StickyNote extends Component {
           </div>
         </section>
         <section>
-          <div className={'ic-menu-item dangerous'}
+          <div className={`ic-menu-item dangerous ${disableIfBulk}`}
                onClick={this.executeThenHide(this.confirmDelete)}>
             <i className={'material-icons'}>delete</i>
             {note.draft ? 'Discard' : 'Delete'}
