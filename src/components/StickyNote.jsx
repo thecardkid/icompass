@@ -287,11 +287,9 @@ class StickyNote extends Component {
     const { x, y } = note;
 
     if (x < 0.5) {
-      if (y < 0.5) type = 'Principle';
-      else type = 'Observation';
+      type = y < 0.5 ? 'Principle' : 'Observation';
     } else {
-      if (y < 0.5) type = 'Idea';
-      else type = 'Experiment';
+      type = y < 0.5 ? 'Idea' : 'Experiment';
     }
 
     if (note.isImage) {
@@ -319,7 +317,7 @@ class StickyNote extends Component {
     return (
       <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
         <section className={'border-bottom'}>
-          <div className={'ic-menu-item'}
+          <div className={`ic-menu-item ${disableIfDoodle}`}
                onClick={this.executeThenHide(this.edit)}>
             <i className={'material-icons'}>edit</i>
             Edit
@@ -339,7 +337,7 @@ class StickyNote extends Component {
           <div className={`ic-menu-item ${disableIfText}`}
                onClick={this.executeThenHide(this.showImage)}>
             <i className={'material-icons'}>crop_free</i>
-            View Image
+            View {note.doodle ? 'Sketch' : 'Image'}
           </div>
           <div className={'ic-menu-item'}
                onClick={this.executeThenHide(this.focus)}>
