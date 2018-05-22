@@ -243,6 +243,7 @@ class StickyNote extends Component {
       contextMenu.left -= this.props.note.x * this.props.ui.vw;
     }
 
+    this.focus();
     this.setState({ contextMenu });
     $(window).on('mousedown', this.hideContextMenuIfNotAction);
   };
