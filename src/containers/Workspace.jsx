@@ -120,15 +120,22 @@ class Workspace extends Component {
   }
 
   notifyIfNewVersion() {
-    const appVersion = 'v2.1.0';
+    const appVersion = 'v2.2.0';
     if (Storage.getVersion() !== appVersion) {
       Storage.setVersion(appVersion);
 
       this.modal.alert({
-        heading: `${appVersion} Release`,
+        heading: `${appVersion} Release!!`,
         body: [
           'New features:',
-          'Check out the full list <a href="https://github.com/thecardkid/icompass/releases" target="_blank"><u>here</u></a>.',
+          [
+            '● Right click on any note to see the new context menu',
+            '● New formatting toolbar for text notes',
+            '● Bookmark searching',
+            '● Reorganize bookmarks by dragging up and down',
+            '● Integrated Text-to-Speech for individual notes',
+          ].join('<br/>'),
+          'See the full list <a href="https://github.com/thecardkid/icompass/releases" target="_blank"><u>here</u></a>.',
         ],
       });
     }
