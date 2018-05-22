@@ -23,85 +23,85 @@ div.context-menu {
 }
 
 div.ic-sticky-note {
-                 list-style: none;
-                 float: left;
-                 cursor: pointer;
-                 position: absolute;
-                 z-index: @stickiesZIndex;
-                 .unselectable;
-                 min-width: 50px;
+  list-style: none;
+  float: left;
+  cursor: pointer;
+  position: absolute;
+  z-index: @stickiesZIndex;
+  .unselectable;
+  min-width: 50px;
 
-                 button.ic-close-window {
-                 z-index: @stickiesCloseWindowZIndex;
-                 }
+  button.ic-close-window {
+    z-index: @stickiesCloseWindowZIndex;
+  }
 
-                 div.contents {
-                 text-decoration: none;
-                 color: black;
-                 display: block;
-                 max-width: 160px;
-                 letter-spacing: 0;
-                 -webkit-box-shadow: var(--shadow);
-                 -moz-box-shadow: var(--shadow);
-                 box-shadow: var(--shadow);
-                 .wordwrap;
+  div.contents {
+    text-decoration: none;
+    color: black;
+    display: block;
+    max-width: 160px;
+    letter-spacing: 0;
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    box-shadow: var(--shadow);
+    .wordwrap;
 
-                 p.text {
-                 padding: 6px 8px;
-                 cursor: pointer;
-                 font-size: 15px;
-                 line-height: 15px;
-                 }
+    p.text {
+      padding: 6px 8px;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 15px;
+    }
 
-                 &.compact {
-                 letter-spacing: -1px;
-                 max-height: 70px;
-                 overflow: auto;
-                 }
-                 }
+    &.compact {
+      letter-spacing: -1px;
+      max-height: 70px;
+      overflow: auto;
+    }
+  }
 
-                 .ic-tooltip {
-                 position: absolute;
-                 color: @dark;
-                 background: @light;
-                 top: -12px;
-                 left: 0;
-                 font-size: 10px;
-                 padding: 1px;
-                 }
+  .ic-tooltip {
+    position: absolute;
+    color: @dark;
+    background: @light;
+    top: -12px;
+    left: 0;
+    font-size: 10px;
+    padding: 1px;
+  }
 
-                 p.ic-upvote {
-                 position: absolute;
-                 color: @dark;
-                 background: @light;
-                 bottom: -14px;
-                 right: 0;
-                 font-size: 12px;
-                 padding: 1px 4px;
+  p.ic-upvote {
+    position: absolute;
+    color: @dark;
+    background: @light;
+    bottom: -14px;
+    right: 0;
+    font-size: 12px;
+    padding: 1px 4px;
 
-                 &.on-hover-only {
-                 display: none;
-                 }
-                 }
+    &.on-hover-only {
+      display: none;
+    }
+  }
 
-                 button.ic-tooltip {
-                 display: block;
-                 letter-spacing: 0;
-                 top: -14px;
-                 left: 0;
-                 }
+  button.ic-tooltip {
+    display: block;
+    letter-spacing: 0;
+    top: -14px;
+    left: 0;
+  }
 
-                 button.submit {
-                 background: lightgreen;
-                 }
+  button.submit {
+    background: lightgreen;
+  }
 
-                 button {
-                 display: none;
-                 font-size: 15px;
-                 letter-spacing: 5px;
-                 color: @red;
-                 }
-                 }
+  button {
+    display: none;
+    font-size: 15px;
+    letter-spacing: 5px;
+    color: @red;
+  }
+}
 
 div.ic-sticky-note:hover button.ic-close-window {
   display: block;

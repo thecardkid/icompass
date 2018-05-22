@@ -55,8 +55,6 @@ describe('forms', () => {
       expect(100 - x).to.equal(50);
       expect(200 - y).to.equal(50);
     });
-
-    // TODO styling
   });
 
   describe('image', () => {
