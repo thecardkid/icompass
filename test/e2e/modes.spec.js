@@ -2,8 +2,7 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
-const { expectCompassStructure } = require('./functionality.spec');
-const { setup, cleanup } = require('./utils');
+const { setup, cleanup, expectCompassStructure } = require('./utils');
 
 const expect = chai.expect;
 const b = browser;
@@ -16,6 +15,23 @@ describe('view modes', () => {
 
   beforeAll(() => {
     setup();
+
+    b.moveToObject('body', 100, 100);
+    b.doDoubleClick();
+    b.waitForVisible('#ic-note-form');
+    b.setValue('#ic-form-text .ql-editor', 'this is a note');
+    b.click('button[name=ship]');
+    b.pause(200);
+    expect('div.ic-sticky-note').to.have.count(1);
+
+    b.moveToObject('body', 300, 100);
+    b.doDoubleClick();
+    b.waitForVisible('#ic-note-form');
+    b.setValue('#ic-form-text .ql-editor', 'this is a note');
+    b.click('button[name=draft]');
+    b.pause(200);
+    expect('div.ic-sticky-note').to.have.count(2);
+
     editCode = b.getUrl().substring(35, 43);
     editURL = `http://localhost:8080/compass/edit/${editCode}`;
     expect(b.getUrl()).to.equal(`${editURL}/sandbox`);
@@ -30,16 +46,74 @@ describe('view modes', () => {
 
   afterAll(cleanup);
 
-  it('view-only mode from link', () => {
-    b.url(viewURL);
-    b.waitForVisible('#compass');
-    expect('#center').to.be.visible();
-    expect('#vline').to.be.visible();
-    expect('#hline').to.be.visible();
-    expect('.ic-workspace-button').to.not.be.there();
-    expect('.ic-help-button').to.not.be.there();
+  describe('view-only mode', () => {
+    it('view-only mode from link', () => {
+      b.url(viewURL);
+      b.waitForVisible('#compass');
+      expect('#center').to.be.visible();
+      expect('#vline').to.be.visible();
+      expect('#hline').to.be.visible();
+      expect('.ic-workspace-button').to.not.be.there();
+      expect('.ic-help-button').to.not.be.there();
 
-    expectCompassStructure();
+      expectCompassStructure();
+    });
+
+    it('cant see drafts', () => {
+      expect('.ic-sticky-note').to.have.count(1);
+      expect('.draft').to.have.count(0);
+    });
+
+    it('cant create notes', () => {
+      b.moveToObject('body', 200, 200);
+      b.doDoubleClick();
+      b.pause(200);
+      expect('.ic-form').to.not.be.visible();
+    });
+
+    it('cant drag notes', () => {
+      const oldPos = b.getLocation('#note0');
+
+      b.moveToObject('#note0', 10, 10);
+      b.buttonDown(0);
+      b.moveToObject('#note0', 110, 110);
+      b.buttonUp(0);
+      const newPos = b.getLocation('#note0');
+
+      expect(oldPos.x).to.equal(newPos.x);
+      expect(oldPos.y).to.equal(newPos.y);
+    });
+
+    it('cant edit notes', () => {
+      b.moveToObject('#note0', 10, 10);
+      b.doDoubleClick();
+      b.pause(200);
+      expect('.ic-form').to.not.be.visible();
+    });
+
+    it('cant delete notes', () => {
+      expect('div.ic-sticky-note button.ic-close-window').to.not.be.there();
+    });
+
+    it('cant upvote notes', () => {
+      expect('p.ic-upvote').to.not.be.there();
+    });
+
+    it('cant edit center', () => {
+      b.moveToObject('#center', 10, 10);
+      b.doDoubleClick();
+      b.pause(200);
+      expect('#ic-modal').to.not.be.visible();
+    });
+
+    it('cant drag select', () => {
+      b.moveToObject('body', 300, 300);
+      b.buttonDown(0);
+      b.moveToObject('body', 400, 400);
+
+      expect('div#select-area').to.not.be.there();
+      b.buttonUp(0);
+    });
   });
 
   describe('edit mode', () => {

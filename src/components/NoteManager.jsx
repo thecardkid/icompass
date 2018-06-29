@@ -64,13 +64,8 @@ class NoteManager extends Component {
       const visualNotes = _.map(notes, (note, i) => {
         let copy = Object.assign({}, note);
         copy.style = Object.assign({}, note.style);
-        if (workspace.selected[i]) {
-          if (!copy.doodle) {
-            if (workspace.bold !== null) copy.style.bold = workspace.bold;
-            if (workspace.italic !== null) copy.style.italic = workspace.italic;
-            if (workspace.underline !== null) copy.style.underline = workspace.underline;
-          }
-          if (workspace.color !== null) copy.color = workspace.color;
+        if (workspace.selected[i] && workspace.color !== null) {
+          copy.color = workspace.color;
         }
 
         return copy;

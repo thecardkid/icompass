@@ -6,8 +6,6 @@ const expect = chai.expect;
 const b = browser;
 
 const { setup, cleanup } = require('./utils');
-const PROMPTS = require('../../lib/constants').PROMPTS;
-const MODALS = require('../../lib/constants').MODALS;
 
 const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
 const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
@@ -172,6 +170,26 @@ describe('workspace menu', () => {
         expect('#ic-toast').to.have.text(/View-only link has been copied/);
       });
 
+      describe('export as png', () => {
+        it('has feedback when user clicks button', () => {
+          expect('button[name=png]').to.be.visible();
+          expect('div#exported-png').to.not.be.there();
+          b.click('button[name=png]');
+        });
+
+        it('shows canvas along with instructions', () => {
+          b.waitForVisible('div#exported-png');
+          expect('div#exported-png canvas').to.be.visible();
+          expect('div#exported-png p').to.have.text(/Right click/);
+        });
+
+        it('only one canvas is shown', () => {
+          b.click('button[name=png]');
+          b.pause(1500);
+          expect('div#exported-png canvas').to.have.count(1);
+        });
+      });
+
       it('can x out', () => {
         b.click('button.ic-close-window');
         expect('.ic-share').to.not.be.visible();
@@ -191,7 +209,7 @@ describe('workspace menu', () => {
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast span');
         expect(b.getAttribute('#ic-toast span', 'class')).to.equal('success');
-        expect('#ic-toast span').to.have.text(new RegExp(PROMPTS.SAVE_SUCCESS, 'i'));
+        expect('#ic-toast span').to.have.text(/Bookmarked/);
         b.click('#ic-toast span');
       });
 
@@ -220,14 +238,30 @@ describe('workspace menu', () => {
         });
 
         it('bookmark has correct info', () => {
-          b.click('div.ic-saved #arrow');
+          b.click('.ic-saved #arrow');
           b.pause(100);
-          expect('div.ic-saved a').to.have.text('My bookmark');
-          expect('div.ic-saved div.ic-saved-info p').to.have.text('as "sandbox"');
+          expect('.ic-saved a').to.have.text('My bookmark');
+          expect('.ic-saved .ic-saved-info p').to.have.text('as "sandbox"');
+        });
+
+        describe('search', () => {
+          it('shows nothing if search does not match', () => {
+            expect('.ic-saved').to.have.count(1);
+            b.setValue('#bookmark-search', 'does not match');
+            b.pause(100);
+            expect('.ic-saved').to.have.count(0);
+          });
+
+          it('shows match if search matches', () => {
+            b.setValue('#bookmark-search', 'bookmark');
+            b.pause(100);
+            expect('.ic-saved').to.have.count(1);
+            b.clearElement('#bookmark-search');
+          });
         });
 
         it('bookmark leads to correct workspace', () => {
-          b.click('div.ic-saved a');
+          b.click('.ic-saved a');
           b.waitForVisible('#compass');
           expect(b.getUrl()).to.contain('http://localhost:8080/compass/edit');
         });
@@ -245,22 +279,22 @@ describe('workspace menu', () => {
         });
 
         it('can edit bookmark', () => {
-          b.click('div.ic-saved #arrow');
+          b.click('.ic-saved #arrow');
           b.pause(500);
           b.click('button.edit');
           b.waitForVisible('#ic-modal');
-          expect('#ic-modal-body').to.contain.text(new RegExp(MODALS.EDIT_BOOKMARK, 'i'));
+          expect('#ic-modal-body').to.contain.text(/Enter a new name/);
           b.setValue('#ic-modal-input', 'Changed name');
           b.click('#ic-modal-confirm');
-          expect('div.ic-saved a').to.have.text('Changed name');
+          expect('.ic-saved a').to.have.text('Changed name');
         });
 
         it('can remove bookmark', () => {
           b.click('button.remove');
           b.waitForVisible('#ic-modal');
-          expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_BOOKMARK.text, 'i'));
+          expect('#ic-modal-body').to.have.text(/Are you sure/);
           b.click('#ic-modal-confirm');
-          expect('div.ic-saved').to.not.be.there();
+          expect('.ic-saved').to.not.be.there();
         });
 
         describe('import/export bookmarks', () => {
@@ -272,21 +306,21 @@ describe('workspace menu', () => {
           });
 
           it('notifies if empty file', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/empty.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/empty.json');
             b.pause(200);
             expect('#ic-toast').to.be.visible();
             expect('#ic-toast').to.have.text(/Nothing happened/);
           });
 
           it('errors if not json', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
             b.pause(200);
             expect('#ic-toast').to.be.visible();
             expect('#ic-toast').to.have.text(/Invalid file type/);
           });
 
           it('aborts if attribute is missing', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
             b.pause(200);
             expect('#ic-modal').to.be.visible();
             expect('#ic-modal-body').to.have.text(/correct format/);
@@ -294,7 +328,7 @@ describe('workspace menu', () => {
           });
 
           it('aborts if href is invalid', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
             b.pause(200);
             expect('#ic-modal').to.be.visible();
             expect('#ic-modal-body').to.have.text(/correct format/);
@@ -302,7 +336,7 @@ describe('workspace menu', () => {
           });
 
           it('aborts if username is invalid', () => {
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
             b.pause(200);
             expect('#ic-modal').to.be.visible();
             expect('#ic-modal-body').to.have.text(/correct format/);
@@ -311,7 +345,7 @@ describe('workspace menu', () => {
 
           it('succeeds and adds to existing bookmarks, without checking for duplicates', () => {
             expect('.ic-saved').to.have.count(0);
-            b.chooseFile('#ic-bookmarks #ic-bookmark-footer input[type=file]', './test/e2e/files/bookmarks/valid.json');
+            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/valid.json');
             b.pause(200);
             expect('#ic-toast').to.be.visible();
             expect('#ic-toast').to.have.text(/Bookmarks imported/);

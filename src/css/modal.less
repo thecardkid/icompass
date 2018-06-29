@@ -10,6 +10,18 @@ div#ic-modal-container {
     z-index: -1;
   }
 
+  div#ic-modal-image {
+    text-align: center;
+    margin: 100px auto 0;
+    width: fit-content;
+
+    img {
+      min-width: 200px;
+      max-width: 80vw;
+      max-height: 80vh;
+    }
+  }
+
   div#ic-modal {
     width: 350px;
     padding: 10px 20px;
@@ -139,18 +151,19 @@ div.ic-share {
         background: @dark;
         color: @light;
         width: 50px;
-        height: 26px;
+        height: 29px;
         font-family: inherit;
       }
     }
   }
 
-  div.ic-twitter {
-    margin-top: 22px;
+  div.actions {
+    margin-top: 30px;
     text-align: left;
     display: block !important;
 
     button {
+      margin-right: 5px;
       background: #1a97f1;
       color: @light;
       padding: 5px 10px;
@@ -158,10 +171,23 @@ div.ic-share {
       font-family: inherit;
     }
 
-    button.exit {
-      float: right;
-      background: @light;
-      color: @dark;
+    button[name=png] {
+      background: @dark;
+    }
+
+    div#exported-png {
+      margin-top: 15px;
+      width: 100%;
+
+      p {
+        font-size: 12px;
+      }
+
+      canvas {
+        margin-top: 10px;
+        max-width: 100%;
+        height: auto !important;
+      }
     }
   }
 }

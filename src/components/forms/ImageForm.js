@@ -46,7 +46,7 @@ class ImageForm extends Component {
     this.setState({ altText: e.target.value });
   };
 
-  setColor = (color) => () => {
+  setColor = (color) => {
     this.setState({ color });
     this.props.uiX.changeFormColor(color);
   };
@@ -173,12 +173,12 @@ class ImageForm extends Component {
                   Alternative text is used by screen readers, search engines, or when the image cannot be loaded
                 </div>
               </ReactTooltip>
-              {this.props.colors && <FormPalette setColor={this.setColor}/>}
+              {this.props.colors && <FormPalette setColor={this.setColor} color={this.state.color}/>}
             </div>
             <textarea id="ic-form-text"
                       autoFocus
                       value={this.state.imgSource}
-                      placeholder={'Paste image link here, or drag and drop below'}
+                      placeholder={'Paste image link here, or drag and drop file below'}
                       onChange={this.updateImgSource}
                       style={{ background: this.state.color }} />
             <DropzoneS3Uploader onFinish={this.onImageUpload}
@@ -206,7 +206,7 @@ class ImageForm extends Component {
             {this.renderPreview()}
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit(false)}>{this.props.switch ? 'Publish' : 'Edit'}</button>
+              <button name="ship" onClick={this.submit(false)}>Publish</button>
               {this.props.switch && this.renderDraftButton()}
               <button name="nvm" onClick={this.props.close}>Cancel</button>
             </div>

@@ -16,7 +16,7 @@ import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import { PROMPTS, EDITING_MODE } from '../../lib/constants';
+import { EDITING_MODE } from '../../lib/constants';
 
 const QUADRANTS = [
   { id: 'observations', prompt: '2. What\'s happening? Why?' },
@@ -29,30 +29,29 @@ class Compass extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { select: false };
-
-    this.toast = Toast.getInstance();
-    this.modal = Modal.getInstance();
-    this.socket = Socket.getInstance();
-    this.socket.subscribe({
-      'center set': this.setCompassCenter,
-    });
-
-    this.hasEditingRights = !this.props.compass.viewOnly;
+    this.hasEditingRights = !this.props.viewOnly;
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
-    props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
 
-    if (props.compass.center.length === 0) {
-      this.setPeopleInvolved();
+    if (this.hasEditingRights) {
+      this.state = { select: false };
+      this.toast = Toast.getInstance();
+      this.modal = Modal.getInstance();
+      this.socket = Socket.getInstance();
+      this.socket.subscribe({
+        'center set': this.setCompassCenter,
+      });
+      if (props.compass.center.length === 0) {
+        this.setPeopleInvolved();
+      }
     }
+  }
+
+  componentDidMount() {
+    this.props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
   }
 
   doubleClickCreate = (ev) => {
     this.setState({ select: false });
-
-    if (this.props.visualMode) {
-      return this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
-    }
 
     if (ev.shiftKey) {
       this.socket.emitMetric('double click image');
@@ -240,6 +239,16 @@ class Compass extends Component {
   };
 
   render() {
+    if (this.props.viewOnly) {
+      this.fadeInQuadrants(0);
+      return (
+        <div id={'compass'}>
+          <NoteManagerViewOnly/>
+          {this.renderCompassStructure()}
+        </div>
+      );
+    }
+
     let compass;
     if (this.props.compass.center.length === 0) {
       compass = this.renderPromptFirstQuestion();
@@ -259,9 +268,9 @@ class Compass extends Component {
 
     return (
       <div id="compass">
-        {this.props.viewOnly ? <NoteManagerViewOnly/> : <NoteManager/>}
+        <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
-        {!this.props.viewOnly && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
+        <SelectArea show={this.state.select} done={this.onMouseUp}/>
         {compass}
       </div>
     );

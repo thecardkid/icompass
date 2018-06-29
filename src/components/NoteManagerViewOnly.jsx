@@ -6,7 +6,7 @@ import StickyNote from './StickyNote.jsx';
 
 class NoteManagerViewOnly extends Component {
   renderNote = (note, i) => {
-    return <StickyNote key={`note${i}`} note={note} i={i} />;
+    return <StickyNote key={`note${i}`} note={note} i={i} viewOnly={true} />;
   };
 
   render() {

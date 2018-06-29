@@ -6,7 +6,7 @@ const defaultState = {
   selected: [],
   drafts: [],
   editCode: null,
-  color: null, bold: null, italic: null, underline: null,
+  color: null,
 };
 
 const colorAll = (state, action) => {
@@ -132,15 +132,6 @@ export default (state = defaultState, action) => {
 
     case 'ensureSelectNote':
       return select(state, action);
-
-    case 'toggleBold':
-      return { ...state, bold: !state.bold };
-
-    case 'toggleItalic':
-      return { ...state, italic: !state.italic };
-
-    case 'toggleUnderline':
-      return { ...state, underline: !state.underline };
 
     case 'colorAll':
       return colorAll(state, action);

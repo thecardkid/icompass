@@ -7,7 +7,7 @@ import * as uiX from '../actions/ui';
 
 import SocketSingleton from '../utils/Socket';
 
-import { KEYCODES, EDITING_MODE } from '../../lib/constants';
+import { EDITING_MODE } from '../../lib/constants';
 import ModalSingleton from '../utils/Modal';
 
 class ShortcutManager extends Component {
@@ -26,7 +26,7 @@ class ShortcutManager extends Component {
   }
 
   keydown = (e) => {
-    const isEscapeKey = e.which === KEYCODES.ESC;
+    const isEscapeKey = e.which === 27;
 
     if (this.modal.show && isEscapeKey) {
       return this.modal.close();

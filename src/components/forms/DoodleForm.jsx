@@ -23,7 +23,7 @@ class DoodleForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  setColor = (color) => () => {
+  setColor = (color) => {
     this.setState({ color });
     this.props.uiX.changeFormColor(color);
   };
@@ -183,7 +183,7 @@ class DoodleForm extends Component {
                   <i className="material-icons">undo</i>
                 </button>
               </div>
-              <FormPalette setColor={this.setColor} />
+              <FormPalette setColor={this.setColor} color={this.state.color}/>
             </div>
             <canvas id="ic-doodle"
                     ref="canvas"

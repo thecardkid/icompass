@@ -16,7 +16,7 @@ import ToastSingleton from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-import { EDITING_MODE, MODALS, PROMPTS, REGEX, COLORS } from '../../lib/constants';
+import { EDITING_MODE, REGEX, COLORS } from '../../lib/constants';
 
 class WorkspaceMenu extends Component {
   constructor(props) {
@@ -104,16 +104,26 @@ class WorkspaceMenu extends Component {
     this.hideMenu();
   };
 
-  emailReminder = () => {
-    this.modal.saveViaEmail((status, email) => {
-      if (!status) return;
+  emailReminder = (email) => {
+    email = typeof email === 'string' ? email : '';
 
-      if (REGEX.EMAIL.test(email)) {
-        return this.socket.emitSendMail(this.props.compass.editCode, this.props.users.me, email);
-      } else {
-        this.toast.error(`"${email}" is not a valid email address`);
-        this.emailReminder();
-      }
+    this.modal.prompt({
+      heading: 'Receive a Link to this Workspace',
+      body: [
+        ' You\'ll need the link to the compass to access it again. To email yourself the link now, enter your email address below.',
+        'I will not store your email address or send you spam.',
+      ],
+      defaultValue: email,
+      cb: (status, email) => {
+        if (!status) return;
+
+        if (REGEX.EMAIL.test(email)) {
+          return this.socket.emitSendMail(this.props.compass.editCode, this.props.users.me, email);
+        } else {
+          this.toast.error(`"${email}" is not a valid email address`);
+          this.emailReminder(email);
+        }
+      },
     });
   };
 
@@ -121,17 +131,28 @@ class WorkspaceMenu extends Component {
     const { topic, editCode } = this.props.compass;
 
     if (Storage.hasBookmark(editCode)) {
-      this.modal.alert('<h3>Already bookmarked!</h3><p>Check for the yellow bookmark icon at the top right.</p>');
+      this.modal.alert({
+        heading: 'Already bookmarked!',
+        body: 'Check for the yellow bookmark icon at the top right.',
+      });
     } else {
       this.socket.emitMetric('menu bookmark');
-      this.modal.prompt(MODALS.SAVE_BOOKMARK, (submit, bookmarkName) => {
-        if (submit) {
-          let username = this.props.users.me.replace(/\d+/g, '');
-          Storage.addBookmark(bookmarkName, editCode, username);
-          this.toast.success(PROMPTS.SAVE_SUCCESS);
-          this.props.uiX.setBookmark(true);
-        }
-      }, topic);
+      this.modal.prompt({
+        heading: 'Bookmark',
+        body: [
+          'Bookmarks give you quick access to workspaces from the app\'s home page - but can be lost if your browser cache is erased.',
+          'To never lose access to your compass, email yourself a link, or copy and paste it somewhere secure.'
+        ],
+        defaultValue: topic,
+        cb: (submit, bookmarkName) => {
+          if (submit) {
+            let username = this.props.users.me.replace(/\d+/g, '');
+            Storage.addBookmark(bookmarkName, editCode, username);
+            this.toast.success('Bookmarked this workspace!');
+            this.props.uiX.setBookmark(true);
+          }
+        },
+      });
     }
 
     this.hideMenu();
@@ -143,12 +164,15 @@ class WorkspaceMenu extends Component {
   };
 
   confirmDelete = () => {
-    this.socket.emitMetric('menu delete workspace');
-    this.modal.confirm(MODALS.DELETE_COMPASS, (deleteCompass) => {
-      if (deleteCompass) {
-        Storage.removeBookmarkByCenter(this.props.compass.center);
-        this.socket.emitDeleteCompass(this.props.compass._id);
-      }
+    this.modal.confirm({
+      body: 'You are about to delete this workspace. This action cannot be undone',
+      confirmText: 'Delete',
+      cb: (confirmed) => {
+        if (confirmed) {
+          Storage.removeBookmarkByCenter(this.props.compass.topic);
+          this.socket.emitDeleteCompass(this.props.compass._id);
+        }
+      },
     });
     this.hideMenu();
   };
@@ -196,9 +220,11 @@ class WorkspaceMenu extends Component {
       <div className={'ic-menu ic-workspace-menu'}>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.openNewWorkspace}>
+            <i className={'material-icons'}>create_new_folder</i>
             New Workspace
           </div>
           <div className={'ic-menu-item'}>
+            <i className={'material-icons'}>brightness_2</i>
             Dark Theme
             <label className={'switch'}>
               <input type={'checkbox'} onChange={this.toggleDarkTheme} checked={this.state.darkTheme}/>
@@ -208,12 +234,15 @@ class WorkspaceMenu extends Component {
         </section>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.triggerEmailModal}>
+            <i className={'material-icons'}>email</i>
             Save via Email
           </div>
           <div className={'ic-menu-item'} onClick={this.bookmark}>
+            <i className={'material-icons'}>bookmark</i>
             Save as Bookmark
           </div>
           <div className={'ic-menu-item'} onClick={this.showShareModal}>
+            <i className={'material-icons'}>share</i>
             Share Workspace
           </div>
         </section>
@@ -233,9 +262,11 @@ class WorkspaceMenu extends Component {
         </section>
         <section onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.logout}>
+            <i className={'material-icons'}>lock</i>
             Log Out
           </div>
-          <div className={'ic-menu-item'} onClick={this.confirmDelete}>
+          <div className={'ic-menu-item dangerous'} onClick={this.confirmDelete}>
+            <i className={'material-icons'}>delete</i>
             Delete Workspace
           </div>
         </section>

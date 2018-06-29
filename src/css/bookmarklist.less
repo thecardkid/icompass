@@ -27,7 +27,13 @@ div#ic-bookmarks {
 
   div#contents {
     margin: 20px;
+    height: 90%;
     font-family: @notosans;
+
+    ul {
+      height: 100%;
+      overflow-y: scroll;
+    }
 
     h1 {
       font-size: 30px;
@@ -35,8 +41,47 @@ div#ic-bookmarks {
       color: @light;
     }
 
-    div.ic-saved {
-      margin: 10px 0;
+    input#bookmark-search {
+      width: 100%;
+      background: none;
+      border-bottom: 1px solid grey;
+      font-family: @notosans;
+      margin-bottom: 5px;
+      font-size: 12px;
+      color: grey;
+      padding: 4px;
+      cursor: text;
+    }
+
+    div.actions {
+      width: 100%;
+      margin-bottom: 5px;
+      height: 20px;
+
+      .bookmark-tooltip {
+        text-align: left;
+        max-width: 100px;
+        font-size: 11px;
+      }
+
+      button {
+        background: none;
+        color: @light;
+        margin-right: 3px;
+        float: right;
+
+        i {
+          font-size: 20px;
+        }
+      }
+
+      button#email {
+        float: left;
+      }
+    }
+
+    li.ic-saved {
+      margin: 5px 0;
       width: 140px;
       padding: 10px;
       background: #222;
@@ -82,6 +127,9 @@ div#ic-bookmarks {
       }
     }
 
+    li.ic-saved:last-child {
+      margin-bottom: 100px;
+    }
   }
 
   div#ic-bookmark-footer {

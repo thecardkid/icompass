@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import ReactTooltip from 'react-tooltip';
 import _ from 'underscore';
 
 import Modal from '../utils/Modal';
@@ -7,7 +7,8 @@ import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import ToastSingleton from '../utils/Toast';
 
-import { MODALS, REGEX } from '../../lib/constants';
+import { REGEX } from '../../lib/constants';
+import Bookmark from './Bookmark';
 
 export default class BookmarkList extends Component {
   constructor(props) {
@@ -22,71 +23,59 @@ export default class BookmarkList extends Component {
       show: new Array(b.length).fill(false),
       showBookmarks: Storage.getShowBookmarks(),
     };
-
-    this.renderBookmark = this.renderBookmark.bind(this);
-    this.edit = this.edit.bind(this);
-    this.remove = this.remove.bind(this);
-    this.expand = this.expand.bind(this);
   }
 
-  edit(e, idx) {
+  edit = (idx) => (e) => {
     e.stopPropagation();
-    this.modal.prompt(MODALS.EDIT_BOOKMARK, (updated, newName) => {
-      if (updated && newName) {
-        let bookmarks = Storage.updateName(idx, newName);
-        this.setState({ bookmarks });
-      }
-    }, this.state.bookmarks[idx].center);
-  }
-
-  remove(e, idx) {
-    e.stopPropagation();
-    this.modal.confirm(MODALS.DELETE_BOOKMARK, (deleteBookmark) => {
-      if (deleteBookmark) {
-        let bookmarks = Storage.removeBookmark(idx);
-        let show = this.state.show;
-        show.splice(idx, 1);
-        this.setState({ bookmarks, show });
-      }
+    this.modal.prompt({
+      heading: 'Edit bookmark',
+      body: 'Enter a new name for your bookmark:',
+      defaultValue: this.state.bookmarks[idx].center,
+      cb: (updated, newName) => {
+        if (updated && newName) {
+          let bookmarks = Storage.updateName(idx, newName);
+          this.setState({ bookmarks });
+        }
+      },
     });
-  }
+  };
 
-  expand(idx) {
+  remove = (idx) => (e) => {
+    e.stopPropagation();
+    this.modal.confirm({
+      body: 'You are about to delete this bookmark. This action cannot be undone.',
+      confirmText: 'Delete',
+      cb: (confirmed) => {
+        if (confirmed) {
+          let bookmarks = Storage.removeBookmark(idx);
+          let show = this.state.show;
+          show.splice(idx, 1);
+          this.setState({ bookmarks, show });
+        }
+      },
+    });
+  };
+
+  expand = (idx) => () => {
     let show = this.state.show;
     show[idx] = !show[idx];
     this.setState({ show });
-  }
-
-  navigateTo = (href) => () => {
-    this.socket.emitMetricLandingPage(this.props.start, Date.now(), 'navigate with bookmark');
-    browserHistory.push(href);
   };
 
-  renderBookmark(w, idx) {
-    let style = {
-      height: this.state.show[idx] ? '20px' : '0px',
-      marginTop: this.state.show[idx] ? '15px' : '0px',
-    };
-    let info = (
-      <div className="ic-saved-info" style={style}>
-        <p>as &quot;{w.name}&quot;</p>
-        <button className="remove" onClick={(e) => this.remove(e, idx)}>remove</button>
-        <button className="edit" onClick={(e) => this.edit(e, idx)}>edit</button>
-      </div>
-    );
-
-    let arrow = this.state.show[idx] ?
-      <span id="arrow">&#9664;</span> :
-      <span id="arrow">&#9660;</span>;
-
+  renderBookmark = (w, idx) => {
     return (
-      <div className="ic-saved" key={`saved${idx}`} onClick={() => this.expand(idx)}>
-        <a onClick={this.navigateTo(w.href)}>{w.center}</a>
-        {arrow}
-        {info}
-      </div>
+      <Bookmark expand={this.expand(idx)}
+                remove={this.remove(idx)}
+                onSortItems={this.onSort}
+                items={this.state.bookmarks}
+                sortId={idx}
+                edit={this.edit(idx)}
+                w={w}
+                key={idx}
+                show={this.state.show[idx]}
+      />
     );
-  }
+  };
 
   toggleBookmarks = () => {
     const showBookmarks = Storage.setShowBookmarks(!this.state.showBookmarks);
@@ -148,7 +137,10 @@ export default class BookmarkList extends Component {
       this.toast.success('Bookmarks imported!');
       this.emailBookmarks();
     } catch (ex) {
-      this.modal.alert('<h3>Whoops</h3><p>The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.</p>');
+      this.modal.alert({
+        heading: 'Whoops...',
+        body: 'The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.',
+      });
     }
   };
 
@@ -157,9 +149,11 @@ export default class BookmarkList extends Component {
       return this.toast.warn('You have no bookmarks to export to file');
     }
 
-    this.modal.prompt(
-      '<h3>Export bookmarks</h3><p>Enter a name for the file:</p>',
-      (accepted, filename) => {
+    this.modal.prompt({
+      heading: 'Export bookmarks',
+      body: 'Enter a name for the file:',
+      defaultValue: 'icompass-bookmarks',
+      cb: (accepted, filename) => {
         if (!accepted || !filename) return;
 
         const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(Storage.getBookmarks()));
@@ -168,8 +162,7 @@ export default class BookmarkList extends Component {
         anchor.setAttribute('download', `${filename}.json`);
         anchor.click();
       },
-      'icompass-bookmarks',
-    );
+    });
   };
 
   clickFile = () => {
@@ -177,11 +170,16 @@ export default class BookmarkList extends Component {
   };
 
   emailBookmarks = (currentEmail) => {
-    currentEmail = typeof currentEmail === 'string' ? currentEmail : null;
+    currentEmail = typeof currentEmail === 'string' ? currentEmail : '';
 
-    this.modal.prompt(
-      '<h3>Email your bookmarks</h3><p>Enter your email below to receive all links to your bookmarked workspaces.</p><p>I will not store your email address or send you spam.</p>',
-      (accepted, email) => {
+    this.modal.prompt({
+      heading: 'Email your bookmarks',
+      body: [
+        'Enter your email below to receive all links to your bookmarked workspaces.',
+        'I will not store your email address or send you spam.',
+      ],
+      defaultValue: currentEmail,
+      cb: (accepted, email) => {
         if (!accepted) return;
 
         if (!email.length) return;
@@ -197,7 +195,64 @@ export default class BookmarkList extends Component {
           email,
         });
       },
-      currentEmail,
+    });
+  };
+
+  onSort = (bookmarks) => {
+    Storage.setBookmarks(bookmarks);
+    this.setState({ bookmarks });
+  };
+
+  filter = (e) => {
+    const search = e.target.value.toLowerCase();
+    const storageBookmarks = Storage.getBookmarks();
+
+    let bookmarks;
+    if (search) {
+      bookmarks = _.filter(storageBookmarks, bookmark => {
+        const name = bookmark.center.toLowerCase();
+        return name.includes(search);
+      });
+    } else {
+      bookmarks = storageBookmarks;
+    }
+    this.setState({ bookmarks });
+  };
+
+  renderActions = () => {
+    return (
+      <div className={'actions'}>
+        <button id={'email'} onClick={this.emailBookmarks} data-tip data-for="email-tooltip">
+          <i className={'material-icons'}>email</i>
+        </button>
+        <ReactTooltip id={'email-tooltip'} place={'right'} effect={'solid'}>
+          <div className={'bookmark-tooltip'}>
+            Receive an email with a list of all your bookmarks
+          </div>
+        </ReactTooltip>
+        <button id={'export'} onClick={this.exportBookmarks} data-tip data-for="export-tooltip">
+          <i className={'material-icons'}>cloud_download</i>
+        </button>
+        <ReactTooltip id={'export-tooltip'} place={'right'} effect={'solid'}>
+          <div className={'bookmark-tooltip'}>
+            Download your bookmarks as a .json file that you can upload to the app. Useful when you are changing devices, or if you are about to clear your cache data.
+          </div>
+        </ReactTooltip>
+        <button id={'import'} onClick={this.clickFile} data-tip data-for="import-tooltip">
+          <i className={'material-icons'}>cloud_upload</i>
+        </button>
+        <ReactTooltip id={'import-tooltip'} place={'right'} effect={'solid'}>
+          <div className={'bookmark-tooltip'}>
+            Upload the .json file you downloaded from another device to restore those bookmarks.
+          </div>
+        </ReactTooltip>
+        <a className={'hidden'} ref={'exporter'} />
+        <input className={'hidden'}
+               type={'file'}
+               ref={'importer'}
+               multiple={false}
+               onChange={this.importBookmarks}/>
+      </div>
     );
   };
 
@@ -214,20 +269,11 @@ export default class BookmarkList extends Component {
         </div>
         <div id="contents">
           <h1>Bookmarks</h1>
-          <div id="ic-bookmark-list">
-            {list}
-          </div>
-        </div>
-        <div id={'ic-bookmark-footer'}>
-          <button id={'email'} onClick={this.emailBookmarks}>Email</button>
-          <button id={'import'} onClick={this.clickFile}>Import</button>
-          <button id={'export'} onClick={this.exportBookmarks}>Export</button>
-          <a className={'hidden'} ref={'exporter'} />
-          <input className={'hidden'}
-                 type={'file'}
-                 ref={'importer'}
-                 multiple={false}
-                 onChange={this.importBookmarks}/>
+          <input placeholder={'Search'}
+                 id={'bookmark-search'}
+                 onChange={this.filter} />
+          {this.renderActions()}
+          <ul className={'sortable-list'}>{list}</ul>
         </div>
       </div>
     );

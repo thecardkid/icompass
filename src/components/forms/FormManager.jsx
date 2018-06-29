@@ -91,35 +91,22 @@ class FormManager extends Component {
     );
   };
 
-  renderFormIfNotVisual = (formRenderer) => {
-    if (this.props.visualMode) {
-      this.toast.warn(PROMPTS.VISUAL_MODE_NO_CREATE);
-      this.props.uiX.closeForm(); // so form does not open when user leaves visual mode
-      return null;
-    }
-
-    return formRenderer();
-  };
-
   render() {
     const { forms } = this.props;
-    let renderer;
 
     if (forms.newText) {
-      renderer = this.createTextForm;
+      return this.createTextForm();
     } else if (forms.editText) {
-      renderer = this.editTextForm;
+      return this.editTextForm();
     } else if (forms.newImage) {
-      renderer = this.createImageForm;
+      return this.createImageForm();
     } else if (forms.editImage) {
-      renderer = this.editImageForm;
+      return this.editImageForm();
     } else if (forms.newDoodle) {
-      renderer = this.renderDoodleForm;
+      return this.renderDoodleForm();
     } else {
       return null;
     }
-
-    return this.renderFormIfNotVisual(renderer);
   };
 }
 

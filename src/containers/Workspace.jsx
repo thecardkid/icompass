@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
+import request from 'superagent';
 import _ from 'underscore';
 
-import * as compassActions from '../actions/compass';
-import * as noteActions from '../actions/notes';
-import * as uiActions from '../actions/ui';
-import * as userActions from '../actions/users';
-import * as workspaceActions from '../actions/workspace';
+import * as compassX from '../actions/compass';
+import * as noteX from '../actions/notes';
+import * as uiX from '../actions/ui';
+import * as userX from '../actions/users';
+import * as workspaceX from '../actions/workspace';
 
 import Compass from '../components/Compass.jsx';
 import FormManager from '../components/forms/FormManager.jsx';
@@ -21,7 +22,7 @@ import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import { PROMPTS, EDITING_MODE, REGEX } from '../../lib/constants';
+import { EDITING_MODE, REGEX } from '../../lib/constants';
 import { browserHistory } from 'react-router';
 import WorkspaceMenu from '../components/WorkspaceMenu';
 import ShareModal from '../components/ShareModal';
@@ -32,49 +33,71 @@ class Workspace extends Component {
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
 
-    this.socket = Socket.getInstance();
-    this.socket.subscribe({
-      'compass found': this.onCompassFound,
-      'compass deleted': this.onCompassDeleted,
-      'user joined': this.onUserJoined,
-      'user left': this.onUserLeft,
-      'disconnect': () => this.toast.error('Lost connection to server'),
-      'reconnect': () => {
-        this.toast.success('Established connection to server');
-        this.socket.onReconnect(this.props);
-      }
-    });
-
     if (this.props.route.viewOnly) {
-      this.socket.emitFindCompassView(this.props.params);
+      request.get('/api/v1/workspace/view')
+        .query({ id: this.props.params.code })
+        .end((err, res) => {
+          if (err || !res.body || res.body.compass == null) {
+            return void this.alertNotFound();
+          }
+
+          this.onCompassFound(res.body);
+        });
     } else if (this.validateRouteParams(this.props.params)) {
+      this.socket = Socket.getInstance();
+      this.socket.subscribe({
+        'compass found': this.onCompassFound,
+        'compass deleted': this.onCompassDeleted,
+        'user joined': this.onUserJoined,
+        'user left': this.onUserLeft,
+        'disconnect': () => this.toast.error('Lost connection to server'),
+        'reconnect': () => {
+          this.toast.success('Established connection to server');
+          this.socket.onReconnect(this.props);
+        }
+      });
       this.socket.emitFindCompassEdit(this.props.params);
     }
 
-    this.props.uiActions.setScreenSize(window.innerWidth, window.innerHeight);
+    this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
+  }
+
+  alertNotFound() {
+    this.modal.alert({
+      heading: 'Workspace not found',
+      body: [
+        'Please check the code you provided. The permissions (edit/view) and the code might not match.',
+        'You will now be directed to the login page',
+      ],
+      cb: () => browserHistory.push('/'),
+    });
   }
 
   onCompassFound = (data) => {
     if (data.compass === null) {
-      return void this.modal.alert(PROMPTS.COMPASS_NOT_FOUND, () => browserHistory.push('/'));
+      return void this.alertNotFound();
     }
 
-    this.props.compassActions.set(data.compass, data.viewOnly);
-    this.props.noteActions.updateAll(data.compass.notes);
-    this.props.workspaceActions.setEditCode(data.compass.editCode);
-    this.props.userActions.me(data.username);
+    this.props.compassX.set(data.compass, data.viewOnly);
+    this.props.noteX.updateAll(data.compass.notes);
+    this.props.workspaceX.setEditCode(data.compass.editCode);
+    this.props.userX.me(data.username);
   };
 
   onCompassDeleted = () => {
-    this.modal.alert(PROMPTS.COMPASS_DELETED, () => browserHistory.push('/'));
+    this.modal.alert({
+      heading: 'Workspace Deleted',
+      body: 'You will now be redirected to the home page.',
+      cb: () => browserHistory.push('/'),
+    });
   };
 
   onUserJoined = (data) => {
-    this.props.userActions.update(data);
+    this.props.userX.update(data);
   };
 
   onUserLeft = (data) => {
-    this.props.userActions.update(data);
+    this.props.userX.update(data);
   };
 
   validateRouteParams({ code, username }) {
@@ -85,7 +108,6 @@ class Workspace extends Component {
     if (!REGEX.CHAR_ONLY.test(username) || username.length > 15) validUsername = false;
 
     if (validCode && validUsername) {
-      this.socket.emitMetricDirectUrlAccess(this.props.router.getCurrentLocation().pathname);
       return true;
     }
 
@@ -93,48 +115,55 @@ class Workspace extends Component {
   }
 
   componentDidMount() {
-    $(window).on('resize', this.props.uiActions.resize);
+    $(window).on('resize', this.props.uiX.resize);
     this.notifyIfNewVersion();
   }
 
   notifyIfNewVersion() {
-    if (_.has(window, 'Notification')) {
-      const appVersion = 'v2.1.0';
-      if (Storage.getVersion() !== appVersion) {
-        Storage.setVersion(appVersion);
-        const title = 'A new version of iCompass has been released!';
-        const options = {
-          body: `Click to see what\'s new in ${appVersion}`,
-          icon: 'https://s3.us-east-2.amazonaws.com/innovatorscompass/favicon.png',
-        };
+    const appVersion = 'v2.2.0';
+    if (Storage.getVersion() !== appVersion) {
+      Storage.setVersion(appVersion);
 
-        const n = new Notification(title, options);
-
-        n.onclick = () => window.open('https://github.com/thecardkid/icompass/releases');
-      }
+      this.modal.alert({
+        heading: `${appVersion} Release!!`,
+        body: [
+          'New features:',
+          [
+            '● Right click on any note to see the new context menu',
+            '● New formatting toolbar for text notes',
+            '● Bookmark searching',
+            '● Reorganize bookmarks by dragging up and down',
+            '● Integrated Text-to-Speech for individual notes',
+          ].join('<br/>'),
+          'See the full list <a href="https://github.com/thecardkid/icompass/releases" target="_blank"><u>here</u></a>.',
+        ],
+      });
     }
   }
 
   componentWillUnmount() {
-    this.props.compassActions.reset();
-    this.props.noteActions.reset();
-    this.props.uiActions.reset();
-    this.props.userActions.reset();
-    $(window).off('resize', this.props.uiActions.resize);
-    this.socket.logout();
+    this.props.compassX.reset();
+    this.props.noteX.reset();
+    this.props.uiX.reset();
+    this.props.userX.reset();
+    $(window).off('resize', this.props.uiX.resize);
     this.modal.close();
     this.toast.clear();
+
+    if (this.socket) this.socket.logout();
   }
 
   render() {
     if (_.isEmpty(this.props.compass)) return <div/>;
 
-    if (this.props.route.viewOnly) return <Compass viewOnly={true}/>;
+    if (this.props.route.viewOnly) {
+      return <Compass viewOnly={true}/>;
+    }
 
     let formAttrs = {
       bg: this.props.users.nameToColor[this.props.users.me],
       user: this.props.users.me,
-      close: this.props.uiActions.closeForm,
+      close: this.props.uiX.closeForm,
     };
 
     return (
@@ -148,9 +177,8 @@ class Workspace extends Component {
         <VisualModeToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
         <ShareModal show={this.props.ui.showShareModal}
-                    close={this.props.uiActions.hideShareModal}
-                    compass={this.props.compass}
-        />
+                    close={this.props.uiX.hideShareModal}
+                    compass={this.props.compass} />
       </div>
     );
   }
@@ -168,11 +196,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    noteActions: bindActionCreators(noteActions, dispatch),
-    compassActions: bindActionCreators(compassActions, dispatch),
-    userActions: bindActionCreators(userActions, dispatch),
-    uiActions: bindActionCreators(uiActions, dispatch),
-    workspaceActions: bindActionCreators(workspaceActions, dispatch),
+    noteX: bindActionCreators(noteX, dispatch),
+    compassX: bindActionCreators(compassX, dispatch),
+    userX: bindActionCreators(userX, dispatch),
+    uiX: bindActionCreators(uiX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
 };
 

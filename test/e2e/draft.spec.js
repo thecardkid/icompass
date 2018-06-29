@@ -18,7 +18,7 @@ describe('draft mode', () => {
       b.moveToObject('body', p.x, p.y);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'This is a note');
+      b.setValue('#ic-form-text .ql-editor', 'This is a note');
       b.click('button[name=ship]');
       b.pause(500);
     }
@@ -31,7 +31,7 @@ describe('draft mode', () => {
       b.moveToObject('body', 200, 500);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'draft 0');
+      b.setValue('#ic-form-text .ql-editor', 'draft 0');
       b.click('button[name=draft]');
       b.pause(200);
       expect('.ic-sticky-note').to.have.count(3);
@@ -48,13 +48,10 @@ describe('draft mode', () => {
     });
 
     it('can edit draft', () => {
-      b.setValue('#ic-form-text', 'Edited draft');
-      b.click('button[name=bold]').click('button[name=underline]');
+      b.setValue('#ic-form-text .ql-editor', 'Edited draft');
       b.click('button[name=ship]');
       b.pause(200);
       expect('#note0').to.have.text(/Edited draft/);
-      expect(b.getAttribute('#note0 div.contents p', 'class')).to.contain('bold');
-      expect(b.getAttribute('#note0 div.contents p', 'class')).to.contain('underline');
     });
 
     it('can drag draft', () => {
@@ -79,7 +76,7 @@ describe('draft mode', () => {
       });
 
       it('can make edit', () => {
-        b.setValue('#ic-form-text', 'Edited note');
+        b.setValue('#ic-form-text .ql-editor', 'Edited note');
         b.click('button[name=ship]');
         expect('#note1').to.have.text(/Edited note/);
       });
@@ -240,7 +237,7 @@ describe('draft mode', () => {
       b.moveToObject('#note0', 164, 2); // delete the doodle
       b.leftClick();
       b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/Discard this draft/);
+      expect('#ic-modal-body').to.have.text(/discard this draft/);
     });
 
     it('can discard draft', () => {

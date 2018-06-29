@@ -1,89 +1,112 @@
-#compass {
-  div.ic-sticky-note {
-    list-style: none;
-    float: left;
-    cursor: pointer;
-    position: absolute;
-    z-index: @stickiesZIndex;
-    .unselectable;
-    min-width: 50px;
+div.context-menu {
+  width: 140px;
 
-    button.ic-close-window {
-      z-index: @stickiesCloseWindowZIndex;
+  .ic-menu-item {
+    height: 20px;
+    line-height: 20px;
+    padding: 0 15px;
+    cursor: default;
+
+    &.disabled {
+      opacity: 0.3;
     }
 
-    div.contents {
-      text-decoration: none;
-      color: black;
-      display: block;
-      max-width: 160px;
-      letter-spacing: 0;
-      -webkit-box-shadow: var(--shadow);
-      -moz-box-shadow: var(--shadow);
-      box-shadow: var(--shadow);
-      .wordwrap;
-
-      p.text {
-        padding: 8px;
-        font-family: @dosis;
-        font-size: 15px;
-      }
-
-      &.compact {
-        letter-spacing: -1px;
-        max-height: 70px;
-        overflow: auto;
-      }
+    &.disabled:hover {
+      background: none;
     }
 
-    .ic-tooltip {
-      position: absolute;
-      color: @dark;
-      background: @light;
-      top: -12px;
-      left: 0;
-      font-size: 10px;
-      padding: 1px;
+    i {
+      line-height: 20px;
+      margin-left: -7px;
     }
+  }
+}
 
-    p.ic-upvote {
-      position: absolute;
-      color: @dark;
-      background: @light;
-      bottom: -14px;
-      right: 0;
-      font-size: 12px;
-      padding: 1px 4px;
+div.ic-sticky-note {
+  list-style: none;
+  float: left;
+  cursor: pointer;
+  position: absolute;
+  z-index: @stickiesZIndex;
+  .unselectable;
+  min-width: 50px;
 
-      &.on-hover-only {
-        display: none;
-      }
-    }
+  button.ic-close-window {
+    z-index: @stickiesCloseWindowZIndex;
+  }
 
-    button.ic-tooltip {
-      display: block;
-      letter-spacing: 0;
-      top: -14px;
-      left: 0;
-    }
+  div.contents {
+    text-decoration: none;
+    color: black;
+    display: block;
+    max-width: 160px;
+    letter-spacing: 0;
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    box-shadow: var(--shadow);
+    .wordwrap;
 
-    button.submit {
-      background: lightgreen;
-    }
-
-    button {
-      display: none;
+    p.text {
+      padding: 6px 8px;
+      cursor: pointer;
       font-size: 15px;
-      letter-spacing: 5px;
-      color: @red;
+      line-height: 15px;
+    }
+
+    &.compact {
+      letter-spacing: -1px;
+      max-height: 70px;
+      overflow: auto;
     }
   }
 
-  div.ic-sticky-note:hover button.ic-close-window {
-    display: block;
+  .ic-tooltip {
+    position: absolute;
+    color: @dark;
+    background: @light;
+    top: -12px;
+    left: 0;
+    font-size: 10px;
+    padding: 1px;
   }
 
-  div.ic-sticky-note:hover p.on-hover-only {
-    display: block;
+  p.ic-upvote {
+    position: absolute;
+    color: @dark;
+    background: @light;
+    bottom: -14px;
+    right: 0;
+    font-size: 12px;
+    padding: 1px 4px;
+
+    &.on-hover-only {
+      display: none;
+    }
   }
+
+  button.ic-tooltip {
+    display: block;
+    letter-spacing: 0;
+    top: -14px;
+    left: 0;
+  }
+
+  button.submit {
+    background: lightgreen;
+  }
+
+  button {
+    display: none;
+    font-size: 15px;
+    letter-spacing: 5px;
+    color: @red;
+  }
+}
+
+div.ic-sticky-note:hover button.ic-close-window {
+  display: block;
+}
+
+div.ic-sticky-note:hover p.on-hover-only {
+  display: block;
 }

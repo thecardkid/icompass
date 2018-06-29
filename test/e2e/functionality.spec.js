@@ -1,5 +1,3 @@
-const { setup, cleanup, switchMode } = require('./utils');
-
 const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
@@ -7,27 +5,7 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const MODALS = require('../../lib/constants.js').MODALS;
-
-const expectCompassStructure = () => {
-  expect('#observations').to.be.visible();
-  expect('#observations h1').to.have.text(/OBSERVATIONS/);
-  expect('#observations h2').to.have.text(/What's happening\? Why\?/);
-
-  expect('#principles').to.be.visible();
-  expect('#principles h1').to.have.text(/PRINCIPLES/);
-  expect('#principles h2').to.have.text(/What matters most\?/);
-
-  expect('#ideas').to.be.visible();
-  expect('#ideas h1').to.have.text(/IDEAS/);
-  expect('#ideas h2').to.have.text(/What ways are there\?/);
-
-  expect('#experiments').to.be.visible();
-  expect('#experiments h1').to.have.text(/EXPERIMENTS/);
-  expect('#experiments h2').to.have.text(/What's a step to try\?/);
-};
-
-module.exports = { expectCompassStructure };
+const { setup, cleanup, switchMode, expectCompassStructure } = require('./utils');
 
 describe('basic functionality', () => {
   beforeAll(setup);
@@ -65,7 +43,7 @@ describe('basic functionality', () => {
     it('create', () => {
       expect('.ic-sticky-note').to.have.count(0);
       b.keys('n');
-      b.setValue('#ic-form-text', 'An observation');
+      b.setValue('#ic-form-text .ql-editor', 'An observation');
       b.click('button[name=ship]').pause(200);
       expect('.ic-sticky-note').to.have.count(1);
       expect('.ic-sticky-note').to.have.text(/An observation/);
@@ -75,7 +53,7 @@ describe('basic functionality', () => {
       b.moveToObject('.ic-sticky-note', 5, 5);
       b.doDoubleClick();
       b.waitForVisible('#ic-note-form');
-      b.setValue('#ic-form-text', 'A principle');
+      b.setValue('#ic-form-text .ql-editor', 'A principle');
       b.click('button[name=ship]');
       b.pause(200);
       expect('.ic-sticky-note').to.have.text(/A principle/);
@@ -106,7 +84,7 @@ describe('basic functionality', () => {
         b.moveToObject('#note0', 74, 2);
         b.leftClick();
         b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(new RegExp(MODALS.DELETE_NOTE.text, 'i'));
+        expect('#ic-modal-body').to.have.text(/Are you sure/);
         b.click('#ic-modal-cancel');
         expect('div.ic-sticky-note').to.have.count(1);
       });
