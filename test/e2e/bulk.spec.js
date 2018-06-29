@@ -255,19 +255,6 @@ describe('visual mode', () => {
     });
   });
 
-  it('context menu has correct options disabled', () => {
-    b.moveToObject('#note0', 10, 10);
-    b.keys('Shift');
-    b.leftClick();
-    b.keys('Shift');
-
-    b.moveToObject('#note0', 10, 10);
-    b.rightClick();
-    b.waitForVisible('.context-menu');
-    expect('.ic-menu-item').to.have.count(7);
-    expect('.ic-menu-item.disabled').to.have.count(4);
-  });
-
   it('bulk delete', () => {
     switchMode('#ic-bulk');
     b.click('#note0');

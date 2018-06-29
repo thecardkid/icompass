@@ -228,6 +228,10 @@ class StickyNote extends Component {
     ev.stopPropagation();
     ev.preventDefault();
 
+    if (this.visualMode) {
+      return;
+    }
+
     const contextMenu = {
       top: ev.clientY,
       left: ev.clientX,
