@@ -9,7 +9,7 @@ export default class FormPalette extends Component {
   };
 
   setOrToggle = (val) => () => {
-    this.setState({ show: val || !this.state.show });
+    this.setState({ show: val == null ? !this.state.show: val });
   };
 
   setColor = (color) => () => {
