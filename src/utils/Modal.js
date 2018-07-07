@@ -195,7 +195,7 @@ const ModalSingleton = (() => {
           'Ela Ben-Ur\'s mission is making powerful ways forward accessible for any person and moment. She distilled Innovators\' Compass from Design Thinking and other practices over a 20-year journey through IDEO, MIT and Olin - and continues to evolve it in collaboration with people around the world, from parents to educators to organizational leaders. More tools and many examples are at <a href="innovatorscompass.org"><u>innovatorscompass.org</u></a>.',
           'My name is Hieu Nguyen, and I am the creator of this app. I am an Olin graduate, class of 2018. Having worked with this design framework from classes with Ela, I saw the potential in an online collaborative Compass and made it a reality.',
           'We offer this app for free so you can move forward with it in challenges big or small. So please:',
-          '1. Use it, and<br/>2. Invite others to do the same!',
+          `1. Use and share this!<br/>2. Share back experiences by <a href="mailto:ela@innovatorscompass.org"><u>email</u></a> or <a href="${TWEET}" target="_blank"><u>tweet</u></a>.`,
           'To changing the world for free,',
           'Hieu & Ela',
         ],
