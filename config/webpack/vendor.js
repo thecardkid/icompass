@@ -22,6 +22,7 @@ module.exports = {
       'react-tooltip',
       'redux',
       'socket.io-client',
+      'superagent',
       'underscore',
     ],
   },
