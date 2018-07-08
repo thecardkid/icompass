@@ -8,9 +8,9 @@ module.exports = {
     'vendor': [
       'attr-accept',
       'deep-equal',
+      'html2canvas',
       'interactjs',
       'jquery',
-      'linkifyjs',
       'react',
       'react-dom',
       'react-draggable',
