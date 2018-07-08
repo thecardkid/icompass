@@ -7,16 +7,17 @@ module.exports = {
   entry: {
     'vendor': [
       'attr-accept',
-      'deep-equal',
       'html2canvas',
       'interactjs',
       'jquery',
+      'jspdf',
       'react',
       'react-dom',
       'react-draggable',
       'react-dropzone-s3-uploader',
       'react-redux',
       'react-router',
+      'react-sortable',
       'react-swipeable',
       'react-tappable',
       'react-tooltip',
