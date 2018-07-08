@@ -60,6 +60,8 @@ module.exports = {
           plugins: [
             'transform-class-properties',
             'transform-object-rest-spread',
+            'transform-runtime',
+            'transform-async-to-generator',
           ],
         },
       },
