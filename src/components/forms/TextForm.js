@@ -143,6 +143,14 @@ class TextForm extends Component {
                             container: '#ic-toolbar',
                           },
                         }}
+                        formats={[
+                            'background',
+                            'bold',
+                            'italic',
+                            'underline',
+                            'strike',
+                            'link',
+                        ]}
                         style={{ background: this.state.color }}
             />
             <div className="note-form-footer">
