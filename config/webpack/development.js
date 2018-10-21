@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const WebpackBar = require('webpackbar');
 
 module.exports = {
   devtool: 'eval',
@@ -9,6 +10,7 @@ module.exports = {
     filename: 'bundle.js',
   },
   plugins: [
+    new WebpackBar(),
     new webpack.DefinePlugin({
       'process.env': {
         HOST: JSON.stringify('http://localhost:8080'),
