@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
@@ -43,6 +44,7 @@ class Workspace extends Component {
 
           this.onCompassFound(res.body);
         });
+      ReactGA.pageview('/compass/view/');
     } else if (this.validateRouteParams(this.props.params)) {
       this.socket = Socket.getInstance();
       this.socket.subscribe({
@@ -57,6 +59,7 @@ class Workspace extends Component {
         }
       });
       this.socket.emitFindCompassEdit(this.props.params);
+      ReactGA.pageview('/compass/edit/');
     }
 
     this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);

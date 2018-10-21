@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -26,6 +27,7 @@ class LandingPage extends Component {
       'compass ready': this.onCompassReady,
     });
 
+    ReactGA.pageview('/');
     this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
   }
 
