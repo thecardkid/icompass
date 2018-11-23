@@ -22,18 +22,20 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
+    'babel',
     'react',
-    'webdriverio',
     'jasmine',
+    'webdriverio',
   ],
   rules: {
-    'react/prop-types': 0,
     'indent': 0,
     'linebreak-style': [
       'error',
       'unix',
     ],
+    'no-case-declarations': 0,
     'no-extra-boolean-cast': 0,
+    'no-useless-escape': 0,
     'quotes': [
       'error',
       'single',
@@ -42,10 +44,9 @@ module.exports = {
       'error',
       'always',
     ],
-    'react/no-string-refs': 0,
     'react/jsx-indent': 0,
-    'no-useless-escape': 0,
+    'react/no-string-refs': 0,
     'react/no-unescaped-entities': 0,
-    'no-case-declarations': 0,
+    'react/prop-types': 0,
   },
 };
