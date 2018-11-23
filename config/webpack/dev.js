@@ -9,6 +9,7 @@ const devConfig = () => merge(
   {
     watch: true,
     devtool: 'eval',
+    mode: 'development',
     plugins: [
       new WebpackBar(),
       new webpack.DefinePlugin({

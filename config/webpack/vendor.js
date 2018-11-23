@@ -1,9 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const { root } = require('./parts');
+const { root, uglifyJsPlugin } = require('./parts');
 
 module.exports = {
+  mode: 'production',
   entry: {
     'vendor': [
       'attr-accept',
@@ -38,22 +39,10 @@ module.exports = {
       name: 'vendor_lib',
       context: __dirname,
     }),
-    // must use webpack's Uglify here because of some weird error
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      mangle: true,
-
-      compress: {
-        warnings: false,
-        screw_ie8: true,
-      },
-
-      output: {
-        comments: false,
-        beautify: false,
-      },
-
-      exclude: [/\.min\.js$/gi] // skip pre-minified libs
-    }),
   ],
+  optimization: {
+    minimizer: [
+      uglifyJsPlugin(),
+    ],
+  },
 };

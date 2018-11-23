@@ -7,6 +7,7 @@ const { compressionPlugin, uglifyJsPlugin } = require('./parts');
 const prodConfig = () => merge(
   commonConfig(),
   {
+    mode: 'production',
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
@@ -19,9 +20,13 @@ const prodConfig = () => merge(
         context: __dirname,
         manifest: require('./vendor-manifest.json'),
       }),
-      uglifyJsPlugin(),
-      compressionPlugin(),
     ],
+    optimization: {
+      minimizer: [
+        uglifyJsPlugin(),
+        compressionPlugin(),
+      ],
+    },
     stats: {
       warnings: false,
     },
