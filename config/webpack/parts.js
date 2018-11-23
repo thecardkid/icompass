@@ -10,14 +10,14 @@ const jsxLoader = () => ({
   loader: 'babel-loader',
   query: {
     presets: [
-      'env',
-      'react',
+      '@babel/preset-env',
+      '@babel/preset-react',
     ],
     plugins: [
-      'transform-class-properties',
-      'transform-object-rest-spread',
-      'transform-runtime',
-      'transform-async-to-generator',
+      '@babel/plugin-proposal-async-generator-functions',
+      '@babel/plugin-proposal-class-properties',
+      '@babel/plugin-proposal-object-rest-spread',
+      '@babel/plugin-transform-runtime',
     ],
   },
 });
