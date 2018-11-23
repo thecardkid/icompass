@@ -1,7 +1,7 @@
-let path = require('path');
-let webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 
-let PUBLIC = path.resolve(__dirname, '../../public/');
+const { root } = require('./parts');
 
 module.exports = {
   entry: {
@@ -28,7 +28,7 @@ module.exports = {
     ],
   },
   output: {
-    path: PUBLIC,
+    path: path.resolve(root, 'public'),
     filename: 'vendor.dll.js',
     library: 'vendor_lib',
   },
@@ -38,6 +38,7 @@ module.exports = {
       name: 'vendor_lib',
       context: __dirname,
     }),
+    // must use webpack's Uglify here because of some weird error
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       mangle: true,
