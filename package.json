@@ -65,7 +65,7 @@
     "emailjs": "1.0.8",
     "express": "4.14.0",
     "file-loader": "1.1.11",
-    "helmet": "3.8.1",
+    "helmet": "3.15.0",
     "html2canvas": "1.0.0-alpha.12",
     "interactjs": "1.2.9",
     "jquery": "3.2.1",
