@@ -11,8 +11,8 @@
     "start": "nodemon icompass.js",
     "start-server": "npm run build && node icompass.js",
     "lint": "./node_modules/.bin/eslint --config config/.eslintrc.js src/ test/ lib/ models/ --ignore-pattern=*.less --quiet",
-    "mocha": "mocha --compilers js:babel-core/register --timeout 120000 test/server",
-    "api": "mocha --compilers js:babel-core/register test/api",
+    "mocha": "mocha --compilers js:@babel/register --timeout 120000 test/server",
+    "api": "mocha --compilers js:@babel/register test/api",
     "selenium": "java -jar bin/selenium.jar",
     "test": "export NODE_ENV=test && npm run test:mocha && node test/e2e",
     "wdio": "./node_modules/.bin/wdio config/wdio.conf.js"
@@ -27,6 +27,7 @@
     "@babel/plugin-transform-runtime": "7.1.0",
     "@babel/preset-env": "7.1.6",
     "@babel/preset-react": "7.0.0",
+    "@babel/register": "7.0.0",
     "babel-eslint": "10.0.1",
     "babel-loader": "8.0.4",
     "chai": "3.5.0",
