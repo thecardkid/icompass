@@ -12,7 +12,7 @@ import * as workspaceX from '../actions/workspace';
 import Socket from '../utils/Socket';
 import FormPalette from './forms/FormPalette';
 
-class VisualModeToolbar extends Component {
+class BulkEditToolbar extends Component {
   constructor(props) {
     super(props);
     this.modal = Modal.getInstance();
@@ -93,4 +93,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(VisualModeToolbar);
+export default connect(mapStateToProps, mapDispatchToProps)(BulkEditToolbar);
