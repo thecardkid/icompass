@@ -216,7 +216,8 @@ class Compass extends Component {
       css = this.getCenterTextCss(11, length = 100);
     } else if (center.length <= 70) {
       css = this.getCenterTextCss(14, length = 120);
-    } else { // center text at most 100
+    } else {
+      // center text at most 100
       css = this.getCenterTextCss(16, length = 140);
     }
 
