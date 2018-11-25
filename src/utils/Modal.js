@@ -224,26 +224,6 @@ const ModalSingleton = (() => {
       );
     }
 
-    promptForEmail(cb) {
-      let html = `
-        <h3>Receive a Link to this Workspace</h3>
-        <p>
-          You'll need the link to the compass to access it again. To email yourself the link now,
-          enter your email address below.
-          <br/><br/>
-          I will not store your email address or send you spam.
-        </p>
-        <input id="ic-modal-input" placeholder="enter email or leave blank">
-      `;
-
-      html = this.getModalHtml(
-        html,
-        '<button id="ic-modal-confirm">Submit</button>',
-      );
-
-      return this._prompt(html, cb);
-    }
-
     promptForCenter(warn, cb) {
       const html = this.getModalHtml(
         `<h3>1. Who\'s involved, including you?</h3>
@@ -358,6 +338,8 @@ const ModalSingleton = (() => {
       heading = '',
       body = '',
       defaultValue = '',
+      confirmText = 'Submit',
+      cancelText = 'Cancel',
       cb = _.noop,
     }) {
       let bodyHtml = `<h3>${heading}</h3>`;
@@ -372,8 +354,8 @@ const ModalSingleton = (() => {
 
       const html = this.getModalHtml(
         bodyHtml,
-        '<button id="ic-modal-confirm">Submit</button>',
-        '<button id="ic-modal-cancel">Cancel</button>',
+        `<button id="ic-modal-confirm">${confirmText}</button>`,
+        `<button id="ic-modal-cancel">${cancelText}</button>`,
       );
 
       this._prompt(html, cb, defaultValue);

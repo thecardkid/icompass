@@ -98,35 +98,6 @@ class WorkspaceMenu extends Component {
     this.hideMenu();
   };
 
-  triggerEmailModal = () => {
-    this.socket.emitMetric('menu email');
-    this.emailReminder();
-    this.hideMenu();
-  };
-
-  emailReminder = (email) => {
-    email = typeof email === 'string' ? email : '';
-
-    this.modal.prompt({
-      heading: 'Receive a Link to this Workspace',
-      body: [
-        ' You\'ll need the link to the compass to access it again. To email yourself the link now, enter your email address below.',
-        'I will not store your email address or send you spam.',
-      ],
-      defaultValue: email,
-      cb: (status, email) => {
-        if (!status) return;
-
-        if (REGEX.EMAIL.test(email)) {
-          return this.socket.emitSendMail(this.props.compass.editCode, this.props.users.me, email);
-        } else {
-          this.toast.error(`"${email}" is not a valid email address`);
-          this.emailReminder(email);
-        }
-      },
-    });
-  };
-
   bookmark = () => {
     const { topic, editCode } = this.props.compass;
 
@@ -141,7 +112,7 @@ class WorkspaceMenu extends Component {
         heading: 'Bookmark',
         body: [
           'Bookmarks give you quick access to workspaces from the app\'s home page - but can be lost if your browser cache is erased.',
-          'To never lose access to your compass, email yourself a link, or copy and paste it somewhere secure.'
+          'To never lose access to your compass, copy and paste the URL somewhere you can come back to.'
         ],
         defaultValue: topic,
         cb: (submit, bookmarkName) => {
@@ -233,10 +204,6 @@ class WorkspaceMenu extends Component {
           </div>
         </section>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
-          <div className={'ic-menu-item'} onClick={this.triggerEmailModal}>
-            <i className={'material-icons'}>email</i>
-            Save via Email
-          </div>
           <div className={'ic-menu-item'} onClick={this.bookmark}>
             <i className={'material-icons'}>bookmark</i>
             Save as Bookmark

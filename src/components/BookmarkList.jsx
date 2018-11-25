@@ -135,7 +135,6 @@ export default class BookmarkList extends Component {
         show: new Array(newBookmarks.length).fill(false),
       });
       this.toast.success('Bookmarks imported!');
-      this.emailBookmarks();
     } catch (ex) {
       this.modal.alert({
         heading: 'Whoops...',
@@ -169,35 +168,6 @@ export default class BookmarkList extends Component {
     this.refs.importer.click();
   };
 
-  emailBookmarks = (currentEmail) => {
-    currentEmail = typeof currentEmail === 'string' ? currentEmail : '';
-
-    this.modal.prompt({
-      heading: 'Email your bookmarks',
-      body: [
-        'Enter your email below to receive all links to your bookmarked workspaces.',
-        'I will not store your email address or send you spam.',
-      ],
-      defaultValue: currentEmail,
-      cb: (accepted, email) => {
-        if (!accepted) return;
-
-        if (!email.length) return;
-
-        if (!REGEX.EMAIL.test(email)) {
-          this.toast.error(`"${email}" is not a valid email address`);
-          this.emailBookmarks(email);
-          return;
-        }
-
-        this.socket.emitWorkspace('send mail bookmarks', {
-          bookmarks: this.state.bookmarks,
-          email,
-        });
-      },
-    });
-  };
-
   onSort = (bookmarks) => {
     Storage.setBookmarks(bookmarks);
     this.setState({ bookmarks });
@@ -222,14 +192,6 @@ export default class BookmarkList extends Component {
   renderActions = () => {
     return (
       <div className={'actions'}>
-        <button id={'email'} onClick={this.emailBookmarks} data-tip data-for="email-tooltip">
-          <i className={'material-icons'}>email</i>
-        </button>
-        <ReactTooltip id={'email-tooltip'} place={'right'} effect={'solid'}>
-          <div className={'bookmark-tooltip'}>
-            Receive an email with a list of all your bookmarks
-          </div>
-        </ReactTooltip>
         <button id={'export'} onClick={this.exportBookmarks} data-tip data-for="export-tooltip">
           <i className={'material-icons'}>cloud_download</i>
         </button>

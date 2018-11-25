@@ -10,8 +10,6 @@ The app does not ask you to create an account: this makes it faster to get start
 
 When you join a workspace with editing rights, you are assigned a color for your sticky notes. Your color changes when you refresh the page, or log in from somewhere else.
 
-When creating a compass, you can have me email you the codes. The email will come from innovatorscompass@yahoo.com. Yes, **yahoo.com**.
-
 # Getting started
 
 Go to [https://icompass.hieuqn.com](https://icompass.hieuqn.com).
