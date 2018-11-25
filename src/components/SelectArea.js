@@ -84,7 +84,8 @@ class SelectArea extends Component {
     });
   }
 
-  onMouseUp = () => {
+  onMouseUp = (ev) => {
+    ev.preventDefault();
     if (this.highlighted.size > 0) {
       if (!this.originallyVisualMode) {
         this.ignoreUpdate = true;
