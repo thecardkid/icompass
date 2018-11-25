@@ -58,42 +58,34 @@ describe('landing page', () => {
   });
 
   describe('valid input', () => {
-    it('can create compass and is prompted for email', () => {
+    it('can create compass and is prompted to bookmark', () => {
       b.setValue('#compass-center', 'topic');
       b.setValue('#username', 'sandbox');
       b.click('button[type=submit]');
       b.waitForVisible('#ic-modal');
 
-      expect('#ic-modal-body').to.have.text(/Receive a Link/);
-      expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.equal('enter email or leave blank');
-      expect('#ic-modal-cancel').to.not.be.visible();
+      expect('#ic-modal-body').to.have.text(/To access this workspace/);
+      expect(b.getValue('#ic-modal-input')).to.equal('topic');
+      expect('#ic-modal-cancel').to.be.visible();
       expect('#ic-modal-input').to.be.visible();
     });
 
-    it('wrong email format reprompts for email', () => {
-      b.setValue('#ic-modal-input', 'fakeemail');
-      b.click('#ic-modal-confirm');
-      b.waitForVisible('#ic-toast');
-      expect('#ic-toast').to.have.text(/not a valid email address/);
-    });
-
-    it('empty email skips sending reminder', () => {
-      b.clearElement('#ic-modal-input');
-      b.click('#ic-modal-confirm');
+    it('hitting "cancel" does not bookmark', () => {
+      b.click('#ic-modal-cancel');
       b.waitForVisible('#compass');
+      expect('#ic-bookmark-indicator').to.not.be.visible();
     });
 
-    it('valid email shows toast', () => {
+    it('hitting "submit" does bookmark', () => {
       b.back();
       b.waitForVisible('#ic-landing-container');
       b.setValue('#compass-center', 'topic');
       b.setValue('#username', 'valid');
       b.click('button[type=submit]');
       b.waitForVisible('#ic-modal');
-      b.setValue('#ic-modal-input', 'fakeemail@test.com');
+      // default bookmark name "topic"
       b.click('#ic-modal-confirm');
-      b.waitForVisible('#ic-toast span');
-      expect('#ic-toast span').to.have.text(/email/);
+      expect('#ic-bookmark-indicator').to.be.visible();
     });
   });
 });

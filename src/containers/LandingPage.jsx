@@ -68,13 +68,14 @@ class LandingPage extends Component {
     this.socket.emitMetricLandingPage(this.start, Date.now(), 'create');
   };
 
-  remindBookmark = ({ code }) => {
+  remindBookmark = ({ topic, code }) => {
     this.modal.prompt({
       heading: 'To access this workspace again..',
       body: [
         'Please bookmark this workspace (or you can note down the URL somewhere). You can give it an easy-to-remember name',
         'If you select "Nah", you can always find the bookmark action under the "Menu" icon in the top left corner.',
       ],
+      defaultValue: topic,
       confirmText: 'Bookmark',
       cancelText: 'Nah, I\'ll remember',
       cb: (submit, bookmarkName) => {

@@ -15,9 +15,11 @@ const setup = () => {
   browser.setValue('#username', 'sandbox');
   browser.click('button[type=submit]');
   browser.waitForVisible('#ic-modal', 1000);
-  browser.click('#ic-modal-confirm');
+  // do not bookmark
+  browser.click('#ic-modal-cancel');
   browser.waitForVisible('#compass', 1000);
   browser.waitForVisible('#ic-modal');
+  // set topic
   browser.setValue('#ic-modal-input', 'topic');
   browser.click('#ic-modal-confirm');
   browser.pause(2000);
@@ -26,9 +28,11 @@ const setup = () => {
 const cleanup = () => {
   browser.click('button.ic-workspace-button');
   browser.waitForVisible('div.ic-workspace-menu');
-  browser.elements('div.ic-menu-item').value[9].click();
+  browser.elements('div.ic-menu-item').value[8].click();
+  // confirm delete
   browser.waitForVisible('#ic-modal', 1000);
   browser.click('#ic-modal-confirm');
+  // confirm thank-you-note
   browser.waitForVisible('#ic-modal', 5000);
   browser.click('#ic-modal-confirm');
 };

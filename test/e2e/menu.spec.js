@@ -13,11 +13,10 @@ const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
 const actions = {
   newWorkspace: 0,
   darkTheme: 1,
-  email: 2,
-  bookmark: 3,
-  share: 4,
-  logout: 8,
-  deleteWorkspace: 9,
+  bookmark: 2,
+  share: 3,
+  logout: 7,
+  deleteWorkspace: 8,
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
@@ -121,27 +120,6 @@ describe('workspace menu', () => {
         b.refresh();
         b.waitForVisible('#compass');
         expect('.dark-theme').to.have.count(0);
-      });
-    });
-
-    describe('email reminder', () => {
-      it('wrong email format displays error message', () => {
-        selectMenuOption(actions.email);
-        b.waitForVisible('#ic-modal');
-        expect('#ic-modal-body').to.have.text(/Receive a Link/);
-        expect('#ic-modal-cancel').to.be.visible();
-        expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.be.empty;
-        b.setValue('#ic-modal-input', 'fakeemail');
-        b.click('#ic-modal-confirm');
-        b.waitForVisible('#ic-toast');
-        expect('#ic-toast').to.have.text(/not a valid email/);
-      });
-
-      it('valid email shows toast', () => {
-        b.setValue('#ic-modal-input', 'fakeemail@valid.com');
-        b.click('#ic-modal-confirm');
-        b.waitForVisible('#ic-toast span');
-        expect('#ic-toast span').to.have.text(/email/);
       });
     });
 
@@ -350,30 +328,6 @@ describe('workspace menu', () => {
             expect('#ic-toast').to.be.visible();
             expect('#ic-toast').to.have.text(/Bookmarks imported/);
             expect('.ic-saved').to.have.count(1);
-          });
-
-          it('prompts for email', () => {
-            expect('#ic-modal').to.be.visible();
-            expect('#ic-modal').to.have.text(/Email your bookmarks/);
-            b.click('#ic-modal-cancel');
-          });
-        });
-
-        describe('emailing bookmarks', () => {
-          it('toasts error if email invalid', () => {
-            b.click('#email');
-            b.waitForVisible('#ic-modal');
-            b.setValue('#ic-modal-input', 'invalidemail@');
-            b.click('#ic-modal-confirm');
-            b.waitForVisible('#ic-toast');
-            expect('#ic-toast').to.have.text(/not a valid email/);
-          });
-
-          it('toast success if email valid', () => {
-            b.setValue('#ic-modal-input', 'fakeemail@test.com');
-            b.click('#ic-modal-confirm');
-            b.waitForVisible('#ic-toast');
-            expect('#ic-toast').to.have.text(/email/);
           });
         });
 
