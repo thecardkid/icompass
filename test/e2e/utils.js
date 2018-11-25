@@ -68,10 +68,36 @@ const selectColor = (color) => {
   browser.elements('.ic-color').value[_.indexOf(STICKY_COLORS, color)].click();
 };
 
+const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
+const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
+const menuActions = {
+  newWorkspace: 0,
+  darkTheme: 1,
+  bookmark: 2,
+  share: 3,
+  logout: 7,
+  deleteWorkspace: 8,
+  textNote: Object.assign({}, notesSubmenu, { position: 0 }),
+  imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
+  doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
+  standardMode: Object.assign({}, modesSubmenu, { position: 0 }),
+  compactMode: Object.assign({}, modesSubmenu, { position: 1 }),
+  bulkMode: Object.assign({}, modesSubmenu, { position: 2 }),
+  explainModes: Object.assign({}, modesSubmenu, { position: 3 }),
+};
+
+const selectMenuOption = (count) => {
+  browser.click('button.ic-workspace-button');
+  browser.waitForVisible('div.ic-workspace-menu');
+  browser.elements('div.ic-menu-item').value[count].click();
+};
+
 module.exports = {
   setup,
   cleanup,
   switchMode,
   expectCompassStructure,
   selectColor,
+  menuActions,
+  selectMenuOption,
 };

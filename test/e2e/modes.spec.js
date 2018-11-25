@@ -2,7 +2,13 @@ const chai = require('chai');
 const chaiWebdriver = require('chai-webdriverio').default;
 chai.use(chaiWebdriver(browser));
 
-const { setup, cleanup, expectCompassStructure } = require('./utils');
+const {
+  setup,
+  cleanup,
+  expectCompassStructure,
+  menuActions,
+  selectMenuOption,
+} = require('./utils');
 
 const expect = chai.expect;
 const b = browser;
@@ -36,9 +42,7 @@ describe('view modes', () => {
     editURL = `http://localhost:8080/compass/edit/${editCode}`;
     expect(b.getUrl()).to.equal(`${editURL}/sandbox`);
 
-    b.click('button.ic-workspace-button');
-    b.waitForVisible('div.ic-workspace-menu');
-    b.elements('div.ic-menu-item').value[4].click();
+    selectMenuOption(menuActions.share);
     b.waitForVisible('.ic-share');
     viewCode = b.getValue('input#ic-view-link').substring(35, 43);
     viewURL = `http://localhost:8080/compass/view/${viewCode}`;
