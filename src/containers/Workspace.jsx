@@ -16,7 +16,7 @@ import * as workspaceX from '../actions/workspace';
 import Compass from '../components/Compass.jsx';
 import FormManager from '../components/forms/FormManager.jsx';
 import HelpFeedback from '../components/HelpFeedback';
-import VisualModeToolbar from '../components/VisualModeToolbar.jsx';
+import BulkEditToolbar from '../components/BulkEditToolbar.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
@@ -177,7 +177,7 @@ class Workspace extends Component {
         <HelpFeedback editCode={this.props.compass.editCode}/>
         <WorkspaceMenu />
         <Compass />
-        <VisualModeToolbar show={this.props.visualMode} />
+        <BulkEditToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
         <ShareModal show={this.props.ui.showShareModal}
                     close={this.props.uiX.hideShareModal}
