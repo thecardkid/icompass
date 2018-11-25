@@ -92,6 +92,14 @@ const selectMenuOption = (count) => {
   browser.elements('div.ic-menu-item').value[count].click();
 };
 
+const selectSubmenuOption = ({ submenu, submenuPosition, position }) => {
+  browser.click('button.ic-workspace-button');
+  browser.waitForVisible('div.ic-workspace-menu');
+  browser.moveTo(browser.elements('div.has-more').value[submenuPosition].ELEMENT, 10, 10);
+  browser.waitForVisible(submenu);
+  browser.elements(`${submenu} div.ic-menu-item`).value[position].click();
+};
+
 module.exports = {
   setup,
   cleanup,
@@ -100,4 +108,5 @@ module.exports = {
   selectColor,
   menuActions,
   selectMenuOption,
+  selectSubmenuOption,
 };

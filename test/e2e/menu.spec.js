@@ -5,40 +5,7 @@ chai.use(chaiWebdriver(browser));
 const expect = chai.expect;
 const b = browser;
 
-const { setup, cleanup } = require('./utils');
-
-const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
-const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
-
-const actions = {
-  newWorkspace: 0,
-  darkTheme: 1,
-  bookmark: 2,
-  share: 3,
-  logout: 7,
-  deleteWorkspace: 8,
-  textNote: Object.assign({}, notesSubmenu, { position: 0 }),
-  imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
-  doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
-  standardMode: Object.assign({}, modesSubmenu, { position: 0 }),
-  compactMode: Object.assign({}, modesSubmenu, { position: 1 }),
-  bulkMode: Object.assign({}, modesSubmenu, { position: 2 }),
-  explainModes: Object.assign({}, modesSubmenu, { position: 3 }),
-};
-
-const selectMenuOption = (count) => {
-  b.click('button.ic-workspace-button');
-  b.waitForVisible('div.ic-workspace-menu');
-  b.elements('div.ic-menu-item').value[count].click();
-};
-
-const selectSubmenuOption = ({ submenu, submenuPosition, position }) => {
-  b.click('button.ic-workspace-button');
-  b.waitForVisible('div.ic-workspace-menu');
-  browser.moveTo(browser.elements('div.has-more').value[submenuPosition].ELEMENT, 10, 10);
-  browser.waitForVisible(submenu);
-  b.elements(`${submenu} div.ic-menu-item`).value[position].click();
-};
+const { setup, cleanup, menuActions, selectMenuOption, selectSubmenuOption } = require('./utils');
 
 describe('workspace menu', () => {
   beforeAll(setup);
@@ -50,19 +17,19 @@ describe('workspace menu', () => {
 
   describe('notes submenu', () => {
     it('new text note button', () => {
-      selectSubmenuOption(actions.textNote);
+      selectSubmenuOption(menuActions.textNote);
       expect('#ic-note-form').to.be.visible();
       b.click('button[name="nvm"]');
     });
 
     it('new image note button', () => {
-      selectSubmenuOption(actions.imageNote);
+      selectSubmenuOption(menuActions.imageNote);
       expect('#ic-image-form').to.be.visible();
       b.click('button[name="nvm"]');
     });
 
     it('new doodle button', () => {
-      selectSubmenuOption(actions.doodleNote);
+      selectSubmenuOption(menuActions.doodleNote);
       expect('#ic-doodle-form').to.be.visible();
       b.click('button[name="nvm"]');
     });
@@ -70,22 +37,22 @@ describe('workspace menu', () => {
 
   describe('modes submenu', () => {
     it('compact mode', () => {
-      selectSubmenuOption(actions.compactMode);
+      selectSubmenuOption(menuActions.compactMode);
       expect('#ic-toast').to.have.text(/compact/);
     });
 
     it('bulk edit mode', () => {
-      selectSubmenuOption(actions.bulkMode);
+      selectSubmenuOption(menuActions.bulkMode);
       expect('#ic-toast').to.have.text(/bulk edit/);
     });
 
     it('standard mode', () => {
-      selectSubmenuOption(actions.standardMode);
+      selectSubmenuOption(menuActions.standardMode);
       expect('#ic-toast').to.have.text(/standard/);
     });
 
     it('explain modes', () => {
-      selectSubmenuOption(actions.explainModes);
+      selectSubmenuOption(menuActions.explainModes);
       b.waitForVisible('#ic-modal');
       expect('#ic-modal-body').to.have.text(/What are these modes/);
       b.click('#ic-modal-confirm');
@@ -125,7 +92,7 @@ describe('workspace menu', () => {
 
     describe('share modal', () => {
       it('shows modal', () => {
-        selectMenuOption(actions.share);
+        selectMenuOption(menuActions.share);
         expect('.ic-share').to.be.visible();
       });
 
@@ -136,7 +103,7 @@ describe('workspace menu', () => {
       });
 
       it('copy edit link', () => {
-        selectMenuOption(actions.share);
+        selectMenuOption(menuActions.share);
         b.click('button.copy-edit');
         expect('#ic-toast').to.be.visible();
         expect('#ic-toast').to.have.text(/Edit link has been copied/);
@@ -180,7 +147,7 @@ describe('workspace menu', () => {
       });
 
       it('toast displays success status', () => {
-        selectMenuOption(actions.bookmark);
+        selectMenuOption(menuActions.bookmark);
         b.waitForVisible('#ic-modal');
         expect('#ic-modal-body').to.have.text(/Bookmarks give you quick access/);
         b.setValue('#ic-modal-input', 'My bookmark');
@@ -196,7 +163,7 @@ describe('workspace menu', () => {
       });
 
       it('logout button', () => {
-        selectMenuOption(actions.logout);
+        selectMenuOption(menuActions.logout);
         expect(b.getUrl()).to.equal('http://localhost:8080/');
       });
 
@@ -249,7 +216,7 @@ describe('workspace menu', () => {
         });
 
         it('bookmark prompt indicates workspace is already bookmarked', () => {
-          selectMenuOption(actions.bookmark);
+          selectMenuOption(menuActions.bookmark);
           b.waitForVisible('#ic-modal');
           expect('#ic-modal-body').to.have.text(/Already bookmarked/);
           b.click('#ic-modal-confirm');
