@@ -110,7 +110,7 @@ div.ic-compass-label {
 
 div#ic-visual-toolbar {
   text-align: center;
-  padding: 5px;
+  padding: 7px 10px;
   position: absolute;
   background: var(--standout);
   z-index: @bulkToolbarZIndex;
@@ -119,35 +119,47 @@ div#ic-visual-toolbar {
   right: 50px;
   .border-radius(3px);
 
-  span.ic-palette-color {
-    .border-radius(100%);
-    border: 1px solid @dark;
-  }
-
-  button {
-    width: 30px;
-    height: 30px;
-    font-size: 13px;
-    float: right;
-    background: none;
+  div#header {
+    font-family: @notosans;
+    padding: 5px 10px 0;
+    font-size: 14px;
     color: var(--bg);
-    .border-radius(3px);
+  }
 
-    &.active {
-      background: var(--bg);
-      color: var(--standout);
+  div#actions {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin-left: 5%;
+
+    span.ic-palette-color {
+      .border-radius(100%);
+      border: 1px solid @dark;
     }
-  }
 
-  button#ic-bulk-delete {
-    margin-right: 5px;
-    background: @red;
-    color: @light;
-  }
+    button {
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+      background: none;
+      color: var(--bg);
+      .border-radius(3px);
 
-  button#ic-bulk-submit {
-    background: #23C12B;
-    color: @light;
+      &.active {
+        background: var(--bg);
+        color: var(--standout);
+      }
+    }
+
+    button#ic-bulk-delete {
+      background: @red;
+      color: @light;
+    }
+
+    button#ic-bulk-submit {
+      background: #23C12B;
+      color: @light;
+    }
   }
 }
 
