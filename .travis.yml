@@ -52,6 +52,7 @@ jobs:
   - stage: deploy master
     if: branch = master
     script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -t $DOCKER_TAG .
     - export REPO=$DOCKER_USER/icompass
     - docker images
@@ -60,6 +61,7 @@ jobs:
   - stage: deploy develop
     if: branch = develop
     script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -t $DOCKER_TAG .
     - export REPO=$DOCKER_USER/icompass
     - docker images
@@ -68,6 +70,7 @@ jobs:
   - stage: deploy tag
     if: tag =~ ^v
     script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -t $DOCKER_TAG .
     - export REPO=$DOCKER_USER/icompass
     - docker images
