@@ -104,8 +104,9 @@ class TextForm extends Component {
         <button name={'draft'}
                 onClick={this.submit(true)}
                 data-tip="Drafts are invisible to others until you submit them"
-                data-for="draft-tooltip"
-        >Draft</button>
+                data-for="draft-tooltip">
+          Draft
+        </button>
         <ReactTooltip id={'draft-tooltip'} place={'bottom'} effect={'solid'} delayShow={500}/>
       </div>
     );
