@@ -13,6 +13,7 @@ const SocketSingleton = (() => {
       this.sessionId = null;
       this.subscribe({
         'session id': this.onSessionId,
+        'mail status': this.onMailStatus,
       });
     }
 
@@ -33,6 +34,14 @@ const SocketSingleton = (() => {
 
     onSessionId = (sessionId) => {
       this.sessionId = this.sessionId || sessionId;
+    };
+
+    onMailStatus = (success) => {
+      if (success) {
+        Toast.getInstance().success('An email has been sent to you. Expect it in 5-10 minutes');
+      } else {
+        Toast.getInstance().error('I ran into an issue sending you the email. Please note down your codes manually somewhere.');
+      }
     };
 
     onReconnect = ({ compass, users }) => {
@@ -96,6 +105,16 @@ const SocketSingleton = (() => {
     emitCreateCompass = (topic, username) => {
       if (this.checkConnected()) {
         this.socket.emit('create compass', { topic, username });
+      }
+    };
+
+    emitSendMail = (code, username, receiverEmail) => {
+      if (this.checkConnected()) {
+        this.socket.emit('send mail', {
+          editCode: code,
+          username: username,
+          email: receiverEmail,
+        });
       }
     };
 

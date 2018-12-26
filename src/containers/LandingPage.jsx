@@ -11,8 +11,7 @@ import * as uiX from '../actions/ui';
 import BookmarkList from '../components/BookmarkList.jsx';
 
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket';
-import Storage from '../utils/Storage';
+import Socket from '../utils/Socket.js';
 import Toast from '../utils/Toast';
 
 import { REGEX } from '../../lib/constants';
@@ -45,11 +44,11 @@ class LandingPage extends Component {
     if (!data.success) {
       return this.modal.alert({
         heading: 'Whoops...',
-        body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let me know.</u></a>',
+        body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let Hieu know.</u></a>',
       });
     }
 
-    this.remindBookmark(data);
+    this.promptForEmail();
     this.setState({ data });
   };
 
@@ -68,24 +67,26 @@ class LandingPage extends Component {
     this.socket.emitMetricLandingPage(this.start, Date.now(), 'create');
   };
 
-  remindBookmark = ({ topic, code }) => {
-    this.modal.prompt({
-      heading: 'To access this workspace again..',
-      body: [
-        'Please bookmark this workspace (or you can note down the URL somewhere). You can give it an easy-to-remember name',
-        'If you select "Nah", you can always find the bookmark action under the "Menu" icon in the top left corner.',
-      ],
-      defaultValue: topic,
-      confirmText: 'Bookmark',
-      cancelText: 'Nah, I\'ll remember',
-      cb: (submit, bookmarkName) => {
-        if (submit) {
-          Storage.addBookmark(bookmarkName, code, this.state.username);
-          this.toast.success('Bookmarked this workspace!');
-          this.props.uiX.setBookmark(true);
-        }
-        browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
-      },
+  promptForEmail = () => {
+    this.modal.promptForEmail((status, email) => {
+      if (!status) {
+        this.toast.warn('You need to complete this action');
+        return this.promptForEmail();
+      }
+
+      if (!email.length) {
+        const { code } = this.state.data;
+        return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
+      }
+
+      if (REGEX.EMAIL.test(email)) {
+        const { code } = this.state.data;
+        this.socket.emitSendMail(code, this.state.username, email);
+        return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
+      }
+
+      this.toast.error(`"${email}" is not a valid email address`);
+      this.promptForEmail();
     });
   };
 
