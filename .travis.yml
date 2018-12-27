@@ -5,6 +5,8 @@ language: node_js
 node_js:
 - '8'
 env:
+  # If the environment variable is needed when running the server, also
+  # add it to docker/compose.yml
   global:
   - NODE_ENV=test
   - DOCKER_TAG=${TRAVIS_COMMIT::8}
