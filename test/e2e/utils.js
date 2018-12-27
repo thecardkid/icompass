@@ -28,7 +28,7 @@ const setup = () => {
 const cleanup = () => {
   browser.click('button.ic-workspace-button');
   browser.waitForVisible('div.ic-workspace-menu');
-  browser.elements('div.ic-menu-item').value[8].click();
+  browser.elements('div.ic-menu-item').value[9].click();
   // confirm delete
   browser.waitForVisible('#ic-modal', 1000);
   browser.click('#ic-modal-confirm');
