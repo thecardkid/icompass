@@ -15,8 +15,8 @@ const setup = () => {
   browser.setValue('#username', 'sandbox');
   browser.click('button[type=submit]');
   browser.waitForVisible('#ic-modal', 1000);
-  // do not bookmark
-  browser.click('#ic-modal-cancel');
+  // do not email
+  browser.click('#ic-modal-confirm');
   browser.waitForVisible('#compass', 1000);
   browser.waitForVisible('#ic-modal');
   // set topic
@@ -73,10 +73,11 @@ const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
 const menuActions = {
   newWorkspace: 0,
   darkTheme: 1,
-  bookmark: 2,
-  share: 3,
-  logout: 7,
-  deleteWorkspace: 8,
+  email: 2,
+  bookmark: 3,
+  share: 4,
+  logout: 8,
+  deleteWorkspace: 9,
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
