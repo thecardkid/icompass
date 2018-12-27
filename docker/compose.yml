@@ -19,6 +19,7 @@ services:
     - MONGODB_URI=mongodb://mongo:27017
     - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
     - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     - HOST=http://localhost:8080
 volumes:
   mongo:
