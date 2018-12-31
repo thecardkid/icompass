@@ -13,6 +13,7 @@ const devConfig = () => merge(
     plugins: [
       new WebpackBar(),
       new webpack.DefinePlugin({
+        __DEV__: true,
         'process.env': {
           HOST: JSON.stringify('http://localhost:8080'),
           S3_URL: JSON.stringify('https://s3.us-east-2.amazonaws.com/innovatorscompass'),
