@@ -16,9 +16,16 @@ export default {
     return value;
   },
 
-  getDarkTheme() {
+  isDarkTheme() {
     const prefs = this.getUserPrefs();
     return prefs.darkTheme || false;
+  },
+
+  getTooltipTypeBasedOnDarkTheme() {
+    if (this.isDarkTheme()) {
+      return 'light';
+    }
+    return 'dark';
   },
 
   setShowBookmarks(value) {

@@ -24,7 +24,7 @@ class WorkspaceMenu extends Component {
     super(props);
     this.state = {
       active: false,
-      darkTheme: Storage.getDarkTheme(),
+      darkTheme: Storage.isDarkTheme(),
       submenus: {
         notes: false,
         modes: false,

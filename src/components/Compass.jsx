@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
@@ -221,9 +222,13 @@ class Compass extends Component {
       css = this.getCenterTextCss(16, length = 140);
     }
 
+    const tooltipType = Storage.getTooltipTypeBasedOnDarkTheme();
+
     return (
       <div>
         <div id="center"
+             data-tip="Double-click to edit"
+             data-for="center-tooltip"
              style={{
                ...this.getCenterCss(length, length),
                cursor: this.hasEditingRights ? 'pointer' : 'auto',
@@ -231,6 +236,11 @@ class Compass extends Component {
              onDoubleClick={this.hasEditingRights ? this.editPeopleInvolved : _.noop} >
           <p className="wordwrap" style={css}>{center}</p>
         </div>
+        <ReactTooltip id={'center-tooltip'}
+                      place={'bottom'}
+                      type={tooltipType}
+                      delayShow={200}
+                      effect={'solid'}/>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
         <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
         {this.quadrants}

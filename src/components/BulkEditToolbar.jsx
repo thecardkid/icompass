@@ -62,7 +62,7 @@ class BulkEditToolbar extends Component {
   render() {
     if (!this.props.show) return null;
 
-    const tooltipType = Storage.getDarkTheme() ? 'light' : 'dark';
+    const tooltipType = Storage.getTooltipTypeBasedOnDarkTheme();
 
     return (
       <Draggable>

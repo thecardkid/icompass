@@ -41,5 +41,11 @@ echo "committing..." >&2
 git checkout develop
 git merge --squash "$curr_branch"
 git commit -m "Merge branch \"$curr_branch\"" -m "$commit_messages"
+git branch -D "$curr_branch"
+
+remote_exists="$(git ls-remote --heads git@github.com:thecardkid/icompass.git $curr_branch)"
+if [[ ! -z "$remote_exists" ]]; then
+    git push origin --delete "$curr_branch"
+fi
 
 git status
