@@ -38,6 +38,7 @@ describe('landing page', () => {
 
     it('missing both', () => {
       b.click('button[type=submit]').pause(200);
+      // TODO instead of checking we are not on the next page, check for the error alerts
       expect('#ic-modal').to.not.be.visible();
       expect('#compass').to.not.be.visible();
     });
@@ -93,7 +94,73 @@ describe('landing page', () => {
       b.setValue('#ic-modal-input', 'fakeemail@test.com');
       b.click('#ic-modal-confirm');
       b.waitForVisible('#ic-toast span');
-      expect('#ic-toast span').to.have.text(/email/);
+      expect('#ic-toast span').to.have.text(/link to this workspace/);
+    });
+  });
+
+  describe('always email', () => {
+    beforeEach(() => {
+      b.url('http://localhost:8080/');
+      b.setValue('#compass-center', 'center');
+      b.setValue('#username', 'sandbox');
+    });
+
+    it('does not store an invalid email', () => {
+      b.click('button[type=submit]');
+      b.waitForVisible('#ic-always-email-value');
+
+      b.setValue('#ic-modal-input', 'invalidemail');
+      b.click('#ic-always-email-value');
+      b.click('#ic-modal-confirm');
+      b.waitForVisible('#ic-toast');
+      expect('#ic-toast').to.have.text(/not a valid email address/);
+
+      // to test that it's not stored, refresh the page and
+      // re-execute the form
+      b.url('http://localhost:8080/');
+      b.setValue('#compass-center', 'center');
+      b.setValue('#username', 'sandbox');
+      b.click('button[type=submit]');
+      // assert that the modal is shown again
+      b.waitForVisible('#ic-always-email-value');
+      expect(b.isSelected('#ic-always-email-value')).to.be.false;
+    });
+
+    it('does store valid email', () => {
+      b.click('button[type=submit]');
+      b.waitForVisible('#ic-always-email-value');
+
+      b.setValue('#ic-modal-input', 'fakeuser@fakedomain.com');
+      b.click('#ic-always-email-value');
+      b.click('#ic-modal-confirm');
+      b.waitForVisible('#ic-toast');
+      expect('#ic-toast').to.have.text(/link to this workspace/);
+
+      // to test that it's stored, refresh the page and
+      // re-execute the form
+      b.url('http://localhost:8080/');
+      b.setValue('#compass-center', 'center');
+      b.setValue('#username', 'sandbox');
+      b.click('button[type=submit]');
+      // assert that we are taken straight to workspace
+      b.waitForVisible('#ic-toast');
+      expect('#ic-toast').to.have.text(/automatically/);
+    });
+
+    it('unsubscription', () => {
+      b.url('http://localhost:8080/disable-auto-email');
+      b.waitForVisible('#ic-modal');
+      expect('#ic-modal-body').to.have.text(/turned off/);
+      // redirects to home page
+      b.click('#ic-modal-confirm');
+
+      b.waitForVisible('#ic-landing-container');
+      b.setValue('#compass-center', 'center');
+      b.setValue('#username', 'sandbox');
+      b.click('button[type=submit]');
+      // assert shown and unchecked
+      b.waitForVisible('#ic-always-email-value');
+      expect(b.isSelected('#ic-always-email-value')).to.be.false;
     });
   });
 });

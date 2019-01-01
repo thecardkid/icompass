@@ -11,6 +11,7 @@ import BookmarkList from '../components/BookmarkList.jsx';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket.js';
+import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
 import MaybeTappable from '../utils/MaybeTappable';
@@ -50,8 +51,14 @@ class LandingPage extends Component {
       });
     }
 
-    this.promptForEmail();
-    this.setState({ data });
+    const rememberedEmail = Storage.getAlwaysSendEmail();
+    if (typeof rememberedEmail === 'string') {
+      if (REGEX.EMAIL.test(rememberedEmail)) {
+        this.socket.emitAutoSendMail(data.code, this.state.username, rememberedEmail);
+        return browserHistory.push(`/compass/edit/${data.code}/${this.state.username}`);
+      }
+    }
+    this.setState({ data }, this.promptForEmail);
   };
 
   onAutomatedCompassReady = (data) => {
@@ -92,26 +99,36 @@ class LandingPage extends Component {
   };
 
   promptForEmail = () => {
-    this.modal.promptForEmail((status, email) => {
-      if (!status) {
-        this.toast.warn('You need to complete this action');
-        return this.promptForEmail();
-      }
+    this.modal.promptForEmail(
+      (status, email) => {
+        if (!status) {
+          this.toast.warn('You need to complete this action');
+          return this.promptForEmail();
+        }
 
-      if (!email.length) {
-        const { code } = this.state.data;
-        return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
-      }
+        const { username, data: { code } } = this.state;
+        if (!email.length) {
+          return browserHistory.push(`/compass/edit/${code}/${username}`);
+        }
 
-      if (REGEX.EMAIL.test(email)) {
-        const { code } = this.state.data;
-        this.socket.emitSendMail(code, this.state.username, email);
-        return browserHistory.push(`/compass/edit/${code}/${this.state.username}`);
-      }
+        if (!REGEX.EMAIL.test(email)) {
+          this.toast.error(`"${email}" is not a valid email address`);
+          return this.promptForEmail();
+        }
 
-      this.toast.error(`"${email}" is not a valid email address`);
-      this.promptForEmail();
-    });
+        // Specifically check for "true" to avoid setting it when
+        // an email is already stored
+        if (Storage.getAlwaysSendEmail() === true) {
+          Storage.setAlwaysSendEmail(email);
+        }
+
+        this.socket.emitSendMail(code, username, email);
+        return browserHistory.push(`/compass/edit/${code}/${username}`);
+      },
+      (alwaysSendEmail) => {
+        Storage.setAlwaysSendEmail(alwaysSendEmail);
+      },
+    );
   };
 
   sizeImage() {

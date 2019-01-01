@@ -1,5 +1,6 @@
 import _ from 'underscore';
 
+// TODO provide better structure to the prefs object
 export default {
   getUserPrefs() {
     return JSON.parse(localStorage.getItem('prefs')) || {};
@@ -26,6 +27,18 @@ export default {
       return 'light';
     }
     return 'dark';
+  },
+
+  setAlwaysSendEmail(value) {
+    const prefs = this.getUserPrefs();
+    prefs.alwaysSendEmail = value;
+    this.setUserPrefs(prefs);
+    return value;
+  },
+
+  getAlwaysSendEmail() {
+    const prefs = this.getUserPrefs();
+    return prefs.alwaysSendEmail || false;
   },
 
   setShowBookmarks(value) {

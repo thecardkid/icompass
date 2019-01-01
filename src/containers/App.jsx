@@ -7,6 +7,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 
+import DisableAutoEmail from '../containers/DisableAutoEmail';
 import LandingPage from '../containers/LandingPage.jsx';
 import NotFound from '../containers/NotFound.jsx';
 import Workspace from '../containers/Workspace.jsx';
@@ -22,11 +23,12 @@ class App extends Component {
     return (
       <Provider store={Store()}>
         <Router history={browserHistory}>
-          <Route path='/' component={LandingPage}/>
-          <Route path='/compass/view/:code(/:username)' viewOnly={true} component={Workspace}/>
-          <Route path='/compass/edit/:code/:username' viewOnly={false} component={Workspace}/>
-          <Route path='/compass/edit/:code' viewOnly={false} component={PromptName}/>
-          <Route path='*' component={NotFound}/>
+          <Route path={'/'} component={LandingPage} />
+          <Route path={'/compass/view/:code(/:username)'} viewOnly={true} component={Workspace} />
+          <Route path={'/compass/edit/:code/:username'} viewOnly={false} component={Workspace} />
+          <Route path={'/compass/edit/:code'} viewOnly={false} component={PromptName} />
+          <Route path={'/disable-auto-email'} component={DisableAutoEmail} />
+          <Route path={'*'} component={NotFound} />
         </Router>
       </Provider>
     );

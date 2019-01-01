@@ -14,6 +14,7 @@ const SocketSingleton = (() => {
       this.subscribe({
         'session id': this.onSessionId,
         'mail status': this.onMailStatus,
+        'auto mail status': this.onAutoMailStatus,
       });
     }
 
@@ -38,9 +39,17 @@ const SocketSingleton = (() => {
 
     onMailStatus = (success) => {
       if (success) {
-        Toast.getInstance().success('An email has been sent to you. Expect it in 5-10 minutes');
+        Toast.getInstance().success('A link to this workspace has been sent to you');
       } else {
-        Toast.getInstance().error('I ran into an issue sending you the email. Please note down your codes manually somewhere.');
+        Toast.getInstance().error('There was an issue sending you the email. Please note down your codes manually somewhere.');
+      }
+    };
+
+    onAutoMailStatus = (success) => {
+      if (success) {
+        Toast.getInstance().success('A link to this workspace has been automatically sent to you.');
+      } else {
+        Toast.getInstance().error('There was an issue sending you the email. Please note down your codes manually somewhere.');
       }
     };
 
@@ -114,13 +123,15 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitSendMail = (code, username, receiverEmail) => {
+    emitSendMail = (editCode, username, email) => {
       if (this.checkConnected()) {
-        this.socket.emit('send mail', {
-          editCode: code,
-          username: username,
-          email: receiverEmail,
-        });
+        this.socket.emit('send mail', { editCode, username, email });
+      }
+    };
+
+    emitAutoSendMail = (editCode, username, email) => {
+      if (this.checkConnected()) {
+        this.socket.emit('auto send mail', { editCode, username, email });
       }
     };
 

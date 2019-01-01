@@ -224,7 +224,7 @@ const ModalSingleton = (() => {
       );
     }
 
-    promptForEmail(cb) {
+    promptForEmail(confirmCb, alwaysSendEmailCb,) {
       let html = `
         <h3>Receive a Link to this Workspace</h3>
         <p>
@@ -234,6 +234,10 @@ const ModalSingleton = (() => {
           I will not store your email address or send you spam.
         </p>
         <input id="ic-modal-input" placeholder="enter email or leave blank">
+        <div class="ic-always">
+          <input type="checkbox" id="ic-always-email-value" /> 
+          <span>Always send me the link to workspaces I create</span>
+        </div>
       `;
 
       html = this.getModalHtml(
@@ -241,7 +245,11 @@ const ModalSingleton = (() => {
         '<button id="ic-modal-confirm">Submit</button>',
       );
 
-      return this._prompt(html, cb);
+      this._prompt(html, confirmCb);
+
+      $('#ic-always-email-value').on('change', (ev) => {
+        alwaysSendEmailCb(ev.target.checked);
+      });
     }
 
     promptForCenter(warnFunc, cb) {
@@ -352,7 +360,7 @@ const ModalSingleton = (() => {
     }
 
     enterAsSubmit(ev) {
-      if (ev.which === 13) { //Enter
+      if (ev.which === 13) { // Enter key
         $('#ic-modal-confirm').click();
       }
     }
