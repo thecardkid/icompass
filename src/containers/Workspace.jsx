@@ -2,7 +2,6 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
-import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 import request from 'superagent';
 import _ from 'underscore';
@@ -13,11 +12,15 @@ import * as uiX from '../actions/ui';
 import * as userX from '../actions/users';
 import * as workspaceX from '../actions/workspace';
 
-import Compass from '../components/Compass.jsx';
-import FormManager from '../components/forms/FormManager.jsx';
-import HelpFeedback from '../components/HelpFeedback';
 import BulkEditToolbar from '../components/BulkEditToolbar.jsx';
+import Compass from '../components/Compass.jsx';
+import HelpAndFeedback from '../components/HelpAndFeedback';
+import FormManager from '../components/forms/FormManager.jsx';
+import ShareModal from '../components/ShareModal';
+import WorkspaceMenu from '../components/WorkspaceMenu';
+import MaybeTappable from '../utils/MaybeTappable';
 
+import { isWebdriverIO } from '../utils/Browser';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
@@ -25,8 +28,6 @@ import Toast from '../utils/Toast';
 
 import { EDITING_MODE, REGEX } from '../../lib/constants';
 import { browserHistory } from 'react-router';
-import WorkspaceMenu from '../components/WorkspaceMenu';
-import ShareModal from '../components/ShareModal';
 
 class Workspace extends Component {
   constructor(props) {
@@ -85,6 +86,12 @@ class Workspace extends Component {
     this.props.noteX.updateAll(data.compass.notes);
     this.props.workspaceX.setEditCode(data.compass.editCode);
     this.props.userX.me(data.username);
+
+    // Skip notifying feature changes if the workspace is being
+    // created.
+    if (data.compass.center.length > 0) {
+      this.notifyIfNewVersion();
+    }
   };
 
   onCompassDeleted = () => {
@@ -119,12 +126,12 @@ class Workspace extends Component {
 
   componentDidMount() {
     $(window).on('resize', this.props.uiX.resize);
-    this.notifyIfNewVersion();
   }
 
-  notifyIfNewVersion() {
+  notifyIfNewVersion = ({ mustShow = false } = {}) => {
     const appVersion = 'v2.2.0';
-    if (Storage.getVersion() !== appVersion) {
+    // mustShow overrides automatic decision-making
+    if (mustShow || (!isWebdriverIO() && Storage.getVersion() !== appVersion)) {
       Storage.setVersion(appVersion);
 
       this.modal.alert({
@@ -142,7 +149,7 @@ class Workspace extends Component {
         ],
       });
     }
-  }
+  };
 
   componentWillUnmount() {
     this.props.compassX.reset();
@@ -171,10 +178,12 @@ class Workspace extends Component {
 
     return (
       <div>
-        <Tappable onTap={this.toast.clear}>
-          <div id="ic-toast" onClick={this.toast.clear} />
-        </Tappable>
-        <HelpFeedback editCode={this.props.compass.editCode}/>
+        <MaybeTappable handleTapOrClick={this.toast.clear}>
+          <div id={'ic-toast'} />
+        </MaybeTappable>
+        <HelpAndFeedback editCode={this.props.compass.editCode}
+                         notifyVersionChanges={this.notifyIfNewVersion}
+        />
         <WorkspaceMenu />
         <Compass />
         <BulkEditToolbar show={this.props.visualMode} />

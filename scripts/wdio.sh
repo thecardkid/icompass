@@ -20,6 +20,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$WEBPACK" -eq 1 ]]; then
+    echo "running webpack..." >&2
     "$IC_ROOT/node_modules/.bin/webpack" --config "$IC_ROOT/config/webpack/prod.js"
 fi
 

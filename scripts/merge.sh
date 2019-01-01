@@ -7,6 +7,9 @@ if [[ "$curr_branch" == "develop" ]]; then
     exit 1
 fi
 
+echo "rebasing the $curr_branch onto develop.." >&2
+git rebase develop
+
 commit_messages="$(git log --format=%B --reverse develop..${curr_branch})"
 
 cat <<EOF >&2

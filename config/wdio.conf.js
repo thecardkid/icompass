@@ -48,7 +48,11 @@ exports.config = {
     //
     browserName: 'chrome',
     chromeOptions: {
-      args: ['--headless', '--disable-gpu'],
+      args: [
+        '--user-agent=webdriverio-3x6GSoA8HKg2e4BMno9LvsjqcIjXi6',
+        '--headless',
+        '--disable-gpu',
+      ],
     },
   }],
   //

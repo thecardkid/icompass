@@ -43,8 +43,7 @@ describe('context menus', () => {
     });
 
     it('clicking away dismisses context menu', () => {
-      b.moveToObject('#note0', 5, 5);
-      b.leftClick();
+      b.click('div#ideas');
       expect('.context-menu').to.not.be.visible();
     });
 

@@ -98,7 +98,7 @@ export default class ShareModal extends Component {
               </div>
             </div>
             <div className={'actions'}>
-              <button name={'png'} onClick={this.exportPng}>Save as PNG</button>
+              <button name={'png'} onClick={this.exportPng}>Export as image</button>
               <button onClick={this.tweetThis}>Tweet</button>
               {
                 this.state.canvas &&

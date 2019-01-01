@@ -38,13 +38,19 @@ describe('view modes', () => {
     b.pause(200);
     expect('div.ic-sticky-note').to.have.count(2);
 
-    editCode = b.getUrl().substring(35, 43);
+    const editCodeRegex = /\/compass\/edit\/([0-9a-zA-Z]{8})/;
+    const editMatch = editCodeRegex.exec(b.getUrl());
+    expect(editMatch).to.have.length(2);
+    editCode = editMatch[1];
     editURL = `http://localhost:8080/compass/edit/${editCode}`;
     expect(b.getUrl()).to.equal(`${editURL}/sandbox`);
 
     selectMenuOption(menuActions.share);
     b.waitForVisible('.ic-share');
-    viewCode = b.getValue('input#ic-view-link').substring(35, 43);
+    const viewCodeRegex = /\/compass\/view\/([0-9a-zA-Z]{8})/;
+    const viewMatch = viewCodeRegex.exec(b.getValue('input#ic-view-link'));
+    expect(viewMatch).to.have.length(2);
+    viewCode = viewMatch[1];
     viewURL = `http://localhost:8080/compass/view/${viewCode}`;
   });
 

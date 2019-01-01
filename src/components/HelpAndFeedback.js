@@ -6,7 +6,7 @@ import Socket from '../utils/Socket';
 
 import { COLORS } from '../../lib/constants';
 
-export default class HelpFeedback extends Component {
+export default class HelpAndFeedback extends Component {
   constructor() {
     super();
     this.state = {
@@ -34,7 +34,8 @@ export default class HelpFeedback extends Component {
     this.hideMenu();
   };
 
-  openReleaseNotes = () => {
+  showWhatsNew = () => {
+    this.props.notifyVersionChanges({ mustShow: true });
     this.hideMenu();
   };
 
@@ -72,12 +73,10 @@ export default class HelpFeedback extends Component {
             <i className={'material-icons'}>lock</i>
             Privacy Statement
           </div>
-          <Link to={'https://github.com/thecardkid/icompass/releases'} target={'_blank'} onClick={this.openReleaseNotes}>
-            <div className={'ic-menu-item'}>
-              <i className={'material-icons'}>new_releases</i>
-              What's new?
-            </div>
-          </Link>
+          <div className={'ic-menu-item'} onClick={this.showWhatsNew}>
+            <i className={'material-icons'}>new_releases</i>
+            What's new?
+          </div>
           <div className={'ic-menu-item'} onClick={this.showFeedback}>
             <i className={'material-icons'}>alternate_email</i>
             Contact Us

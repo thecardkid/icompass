@@ -18,7 +18,7 @@ const expectNumUsers = (expected) => {
 };
 
 describe('collaboration', () => {
-  let tabs = {};
+  const tabs = {};
 
   beforeAll(() => {
     setup();
