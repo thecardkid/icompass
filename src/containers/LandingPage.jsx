@@ -152,7 +152,7 @@ class LandingPage extends Component {
   render() {
     return (
       <div id={'ic-landing'}>
-        <MaybeTappable handleTapOrClick={this.toast.clear}>
+        <MaybeTappable onTapOrClick={this.toast.clear}>
           <div id={'ic-toast'}/>
         </MaybeTappable>
         <img src={'https://s3.us-east-2.amazonaws.com/innovatorscompass/landing.jpg'} className={'ic-background'} style={this.sizeImage()}/>

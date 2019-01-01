@@ -267,7 +267,7 @@ class Compass extends Component {
         <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
         {this.quadrants}
         {this.renderLabels()}
-        <MaybeTappable handleTapOrClick={this.showOrHideFullTopic}>
+        <MaybeTappable onTapOrClick={this.showOrHideFullTopic}>
           <div id={'ic-compass-topic'}
                data-tip={this.state.showFullTopic ? 'Click to truncate' : 'Click to expand'}
                data-for="topic-tooltip">

@@ -178,7 +178,7 @@ class Workspace extends Component {
 
     return (
       <div>
-        <MaybeTappable handleTapOrClick={this.toast.clear}>
+        <MaybeTappable onTapOrClick={this.toast.clear}>
           <div id={'ic-toast'} />
         </MaybeTappable>
         <HelpAndFeedback editCode={this.props.compass.editCode}

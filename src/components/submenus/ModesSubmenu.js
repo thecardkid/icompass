@@ -28,21 +28,21 @@ class ModesSubmenu extends Component {
     return (
       <div className={'ic-menu ic-modes-submenu'}>
         <section className={'border-bottom'}>
-          <MaybeTappable handleTapOrClick={this.props.changeMode('standard')}>
+          <MaybeTappable onTapOrClick={this.props.changeMode('standard')}>
             <div id={'ic-standard'} className={'ic-menu-item'}>
               <span className={normal ? 'active' : 'inactive'} />
               Standard
               <span className={'ic-shortcut'}>shift+1</span>
             </div>
           </MaybeTappable>
-          <MaybeTappable handleTapOrClick={this.props.changeMode('compact')}>
+          <MaybeTappable onTapOrClick={this.props.changeMode('compact')}>
             <div id={'ic-compact'} className={'ic-menu-item'}>
               <span className={compact ? 'active' : 'inactive'} />
               Compact
               <span className={'ic-shortcut'}>shift+2</span>
             </div>
           </MaybeTappable>
-          <MaybeTappable handleTapOrClick={this.props.changeMode('bulk')}>
+          <MaybeTappable onTapOrClick={this.props.changeMode('bulk')}>
             <div id={'ic-bulk'} className={'ic-menu-item'}>
               <span className={bulk ? 'active' : 'inactive'} />
               Bulk Edit

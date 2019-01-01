@@ -24,14 +24,14 @@ export default class MaybeTappable extends React.Component {
     // right now it only replaces onClick with onTap
     if (isMobile) {
       return (
-        <Tappable onTap={this.props.handleTapOrClick}>
+        <Tappable onTap={this.props.onTapOrClick}>
           {this.props.children}
         </Tappable>
       );
     }
 
     return (
-      <div onClick={this.props.handleTapOrClick}>
+      <div onClick={this.props.onTapOrClick}>
         {this.props.children}
       </div>
     );

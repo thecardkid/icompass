@@ -138,6 +138,9 @@ class StickyNote extends Component {
   };
 
   getX = () => {
+    // TODO refactor this to use MaybeTappable. It will mess with the
+    // DOM hierarchy so could potentially break tests the rely on parent > child
+    // selectors. Currently, hitting "X" does call this.confirmDelete twice
     if (this.hasEditingRights) {
       return (
         <button className="ic-close-window" onClick={this.confirmDelete}>
