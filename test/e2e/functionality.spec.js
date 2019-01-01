@@ -17,6 +17,8 @@ describe('basic functionality', () => {
     expect('#hline').to.be.visible();
     expect('.ic-workspace-button').to.be.visible();
     expect('.ic-help-button').to.be.visible();
+    // From test/e2e/utils.js:setup
+    expect('#ic-compass-topic').to.have.text(/webdriverio/);
     expect('#center').to.have.text('topic');
     expectCompassStructure();
   });
@@ -130,6 +132,45 @@ describe('basic functionality', () => {
 
       b.pause(200);
       expect('#center').to.have.text(/topic2/);
+    });
+  });
+
+  // Must be run after all tests since, unfortunately,
+  // state flows over from one test to another
+  describe('really long topic name', () => {
+    beforeAll(() => {
+      // pretty much copy-pasted from test/e2e/utils:setup. Can't call
+      // setup directly because of the long topic name.
+      b.url('http://localhost:8080');
+      b.waitForVisible('body', 1000);
+      b.setValue('#compass-center', 'a really long topic name that is definitely over thirty-five characters of text');
+      b.setValue('#username', 'sandbox');
+      b.click('button[type=submit]');
+      b.waitForVisible('#ic-modal', 1000);
+      // do not email
+      b.click('#ic-modal-confirm');
+      b.waitForVisible('#compass', 1000);
+      // set center
+      b.waitForVisible('#ic-modal');
+      browser.setValue('#ic-modal-input', 'center');
+      browser.click('#ic-modal-confirm');
+      // wait for animation
+      browser.pause(2000);
+    });
+
+    it('truncates topic name by default', () => {
+      expect('#ic-compass-topic').to.be.visible();
+      expect('#ic-compass-topic').to.have.text(/\.\.\./);
+    });
+
+    it('expands topic on click', () => {
+      b.click('#ic-compass-topic');
+      expect('#ic-compass-topic').to.have.text(/a really long topic name that is definitely over thirty-five characters of text/);
+    });
+
+    it('truncates topic on click', () => {
+      b.click('#ic-compass-topic');
+      expect('#ic-compass-topic').to.have.text(/\.\.\./);
     });
   });
 });

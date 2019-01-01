@@ -63,6 +63,8 @@ describe('view modes', () => {
       expect('#center').to.be.visible();
       expect('#vline').to.be.visible();
       expect('#hline').to.be.visible();
+      // From test/e2e/utils.js:setup
+      expect('#ic-compass-topic').to.have.text(/webdriverio/);
       expect('.ic-workspace-button').to.not.be.there();
       expect('.ic-help-button').to.not.be.there();
 

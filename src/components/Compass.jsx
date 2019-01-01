@@ -8,9 +8,10 @@ import _ from 'underscore';
 import * as compassX from '../actions/compass';
 import * as uiX from '../actions/ui';
 
+import SelectArea from './SelectArea';
 import NoteManager from '../components/NoteManager.jsx';
 import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
-import SelectArea from './SelectArea';
+import MaybeTappable from '../utils/MaybeTappable';
 
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
@@ -33,8 +34,12 @@ class Compass extends Component {
     this.hasEditingRights = !this.props.viewOnly;
     this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
 
+    this.state = {
+      showFullTopic: false,
+    };
+
     if (this.hasEditingRights) {
-      this.state = { select: false };
+      this.state.select = false;
       this.toast = Toast.getInstance();
       this.modal = Modal.getInstance();
       this.socket = Socket.getInstance();
@@ -195,6 +200,10 @@ class Compass extends Component {
     });
   };
 
+  showOrHideFullTopic = () => {
+    this.setState({ showFullTopic: !this.state.showFullTopic });
+  };
+
   renderPromptFirstQuestion() {
     const style = Object.assign(this.getCenterCss(100, 100), {zIndex: 5});
     return (
@@ -210,8 +219,7 @@ class Compass extends Component {
   }
 
   renderCompassStructure = () => {
-    const { center } = this.props.compass;
-
+    const { center, topic } = this.props.compass;
     let css, length;
     if (center.length <= 40) {
       css = this.getCenterTextCss(11, length = 100);
@@ -222,7 +230,21 @@ class Compass extends Component {
       css = this.getCenterTextCss(16, length = 140);
     }
 
-    const tooltipType = Storage.getTooltipTypeBasedOnDarkTheme();
+    let displayedTopic = topic;
+    let needsTooltip = true;
+    if (!this.state.showFullTopic) {
+      const topicLengthCap = 35;
+      if (topic.length > topicLengthCap) {
+        displayedTopic = '';
+        const words = topic.split(' ');
+        while (displayedTopic.length + words[0].length < topicLengthCap) {
+          displayedTopic += words.shift() + ' ';
+        }
+        displayedTopic += '...';
+      } else {
+        needsTooltip = false;
+      }
+    }
 
     return (
       <div>
@@ -238,13 +260,26 @@ class Compass extends Component {
         </div>
         <ReactTooltip id={'center-tooltip'}
                       place={'bottom'}
-                      type={tooltipType}
+                      type={Storage.getTooltipTypeBasedOnDarkTheme()}
                       delayShow={200}
                       effect={'solid'}/>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
         <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
         {this.quadrants}
         {this.renderLabels()}
+        <MaybeTappable handleTapOrClick={this.showOrHideFullTopic}>
+          <div id={'ic-compass-topic'}
+               data-tip={this.state.showFullTopic ? 'Click to truncate' : 'Click to expand'}
+               data-for="topic-tooltip">
+            TOPIC: {displayedTopic}
+          </div>
+        </MaybeTappable>
+        {needsTooltip &&
+        <ReactTooltip id={'topic-tooltip'}
+                      place={'top'}
+                      type={Storage.getTooltipTypeBasedOnDarkTheme()}
+                      effect={'solid'} />
+        }
       </div>
     );
   };

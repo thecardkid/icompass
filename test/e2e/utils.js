@@ -11,6 +11,8 @@ const setup = () => {
   browser.setViewportSize({ width: 2000, height: 2000 });
   browser.url('http://localhost:8080');
   browser.waitForVisible('body', 1000);
+  // TODO compass-center is legacy (from before "topic" existed).
+  // Rename to compass-topic
   browser.setValue('#compass-center', 'webdriverio');
   browser.setValue('#username', 'sandbox');
   browser.click('button[type=submit]');
@@ -18,10 +20,13 @@ const setup = () => {
   // do not email
   browser.click('#ic-modal-confirm');
   browser.waitForVisible('#compass', 1000);
+  // set center
   browser.waitForVisible('#ic-modal');
-  // set topic
+  // this is confusing. The input is setting the center of the
+  // compass, not the topic
   browser.setValue('#ic-modal-input', 'topic');
   browser.click('#ic-modal-confirm');
+  // wait for animation
   browser.pause(2000);
 };
 
