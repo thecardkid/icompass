@@ -2,21 +2,40 @@
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
-WEBPACK=1
+WEBPACK=0
+SPEC_FILE=*
+HEADLESS=1
 
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --skip-webpack)
-      echo "skipping webpack." >&2
-      WEBPACK=0
-      ;;
+    case "$1" in
+        --with-webpack|-w)
+            WEBPACK=1
+            ;;
 
-    -*)
-      echo "unknown option $1." >&2
-      exit 1
-      ;;
-  esac
-  shift
+        --only|-o)
+            SPEC_FILE="$2"
+            if [[ ! -e "$IC_ROOT/test/e2e/$SPEC_FILE.spec.js" ]]; then
+                echo "The specified test file test/e2e/$SPEC_FILE.spec.js does not exist" >&2
+                exit 1
+            else
+                echo ""
+                echo "Running only: $SPEC_FILE.spec.js"
+                echo ""
+            fi
+            ;;
+
+        --headed|-h)
+            echo "Headless mode turned off"
+            HEADLESS=0
+            ;;
+
+
+        -*)
+            echo "unknown option $1." >&2
+            exit 1
+            ;;
+    esac
+    shift
 done
 
 if [[ "$WEBPACK" -eq 1 ]]; then
@@ -37,6 +56,11 @@ until $(curl --output /dev/null --silent --head --fail "http://localhost:8080");
 done
 echo "iCompass server detected"
 
+echo "clearing errorShots/folder"
+if [[ -d "$IC_ROOT/errorShots" ]]; then
+    rm -r "$IC_ROOT/errorShots/"
+fi
+
 echo ""
 echo "running webdriverio tests..."
-"$IC_ROOT/node_modules/.bin/wdio" "$IC_ROOT/config/wdio.conf.js"
+SPECS="$SPEC_FILE" HEADLESS="$HEADLESS" "$IC_ROOT/node_modules/.bin/wdio" "$IC_ROOT/config/wdio/local.js"

@@ -50,9 +50,10 @@ jobs:
     - npm run lint
     - npm run api
     - docker-compose -f docker/compose.yml up --detach
-    - sleep 15s # Wait for docker-compose to start app
+    # Wait for docker-compose to start app
+    - sleep 15s
     - npm run mocha
-    - ./scripts/wdio.sh --skip-webpack
+    - ./scripts/wdio-travis.sh
   - stage: deploy master
     if: branch = master
     script:
