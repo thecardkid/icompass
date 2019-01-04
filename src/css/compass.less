@@ -12,9 +12,13 @@
 
 div#ic-bookmark-indicator {
   position: absolute;
-  top: -5px;
-  right: 10px;
+  bottom: 5px;
+  left: 10px;
   color: @yellow;
+
+  i {
+    font-size: 30px;
+  }
 }
 
 .ic-quadrant {
@@ -115,8 +119,8 @@ div#ic-visual-toolbar {
   background: var(--standout);
   z-index: @bulkToolbarZIndex;
   cursor: move;
-  top: 50px;
-  right: 50px;
+  top: 80px;
+  left: 80px;
   .border-radius(3px);
 
   div#header {
@@ -195,13 +199,14 @@ div#ic-visual-toolbar {
 
 div#ic-compass-topic {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  top: 10px;
+  right: 10px;
   font-family: @notosans;
   background: var(--standout);
   color: var(--bg);
-  padding: 3px 5px;
+  padding: 5px 8px;
   font-size: 14px;
   max-width: 310px;
   cursor: pointer;
+  line-height: 18px;
 }
