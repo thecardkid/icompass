@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
 curr_branch="$(git branch | grep \* | cut -d ' ' -f2)"
 if [[ "$curr_branch" == "develop" ]]; then

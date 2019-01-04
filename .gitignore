@@ -5,6 +5,7 @@ icompass.iml #Windows
 node_modules/
 package-lock.json
 docker/prod.yml
+build/
 
 bundle.js
 bundle.js.map
@@ -24,4 +25,3 @@ selenium-debug.log
 screenshots/
 reports
 screenshots
-runner.sh
