@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+ensure_credentials_exist
+
+port=8080
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --port|-p)
+            port="$2"
+            ;;
+
+        -*)
+            echo "unknown option $1." >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+. "$IC_ROOT/build/credentials/runner.sh"
+PORT="$port" "$IC_ROOT/node_modules/.bin/nodemon" "$IC_ROOT/icompass.js"

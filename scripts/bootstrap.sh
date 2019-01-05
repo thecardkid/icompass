@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+ensure_brew_installed
 
 ensure_bitwarden_cli_installed() {
     set +e
@@ -81,6 +82,5 @@ setup_node_env() {
     npm install --depth 0
 }
 
-ensure_brew_installed
 setup_credentials
 setup_node_env
