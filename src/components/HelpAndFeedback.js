@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import { Link } from 'react-router';
 
 import Modal from '../utils/Modal';
@@ -35,6 +36,7 @@ export default class HelpAndFeedback extends Component {
   };
 
   showWhatsNew = () => {
+    ReactGA.modalview('modals/whats-new');
     this.props.notifyVersionChanges({ mustShow: true });
     this.hideMenu();
   };

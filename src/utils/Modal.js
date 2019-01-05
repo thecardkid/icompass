@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import ReactGA from 'react-ga';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
@@ -134,6 +135,7 @@ const ModalSingleton = (() => {
     }
 
     alertPrivacyStatement = () => {
+      ReactGA.modalview('modals/privacy-statement');
       this.alert({
         heading: 'Privacy Statement',
         body: [
@@ -144,6 +146,7 @@ const ModalSingleton = (() => {
     };
 
     alertFeedback = (code) => {
+      ReactGA.modalview('modals/feedback');
       this.alert({
         heading: 'We\'d love to hear from you!',
         body: [
@@ -161,6 +164,7 @@ const ModalSingleton = (() => {
     };
 
     alertCompassPrompt = () => {
+      ReactGA.modalview('modals/prompt');
       this.alert({
         heading: 'The Innovator\'s Compass',
         body: [
@@ -178,6 +182,7 @@ const ModalSingleton = (() => {
     };
 
     alertExplainModes = () => {
+      ReactGA.modalview('modals/explain-modes');
       this.alert({
         heading: 'What are these modes?',
         body: [
@@ -189,6 +194,7 @@ const ModalSingleton = (() => {
     };
 
     alertAboutUs = () => {
+      ReactGA.modalview('modals/about-us');
       this.alert({
         heading: 'Hi!',
         body: [
@@ -208,7 +214,6 @@ const ModalSingleton = (() => {
         body: [],
         cb: () => browserHistory.push('/'),
       };
-
       if (!validCode) options.body.push('Your code is not valid');
       if (!validUsername) options.body.push('Username can only contain letters, and must not be longer than 15 characters');
       options.body.push('You will now be directed to the login page');
@@ -282,6 +287,7 @@ const ModalSingleton = (() => {
     }
 
     editCenter(currentVal, cb) {
+      ReactGA.modalview('modals/edit-center');
       const html = this.getModalHtml(
         `<h3>1. Who\'s involved, including you?</h3>
          <input id="ic-modal-input"/>
@@ -311,6 +317,7 @@ const ModalSingleton = (() => {
     }
 
     promptForUsername(warn, cb) {
+      ReactGA.modalview('modals/prompt-username');
       const html = '<h3>Welcome to this workspace!</h3><p>Please enter your name as it would appear to others:</p>';
       $('#ic-modal-container').empty().append(this.generatePrompt(html));
       $('#ic-modal-input').focus();

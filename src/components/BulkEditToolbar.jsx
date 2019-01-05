@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import Draggable from 'react-draggable';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
@@ -31,6 +32,7 @@ class BulkEditToolbar extends Component {
 
   bulkDelete = (ev) => {
     ev.stopPropagation();
+    ReactGA.modalview('modals/bulk-delete');
     this.modal.confirm({
       body: 'You are about to delete all selected notes. This action cannot be undone.',
       confirmText: 'Delete',

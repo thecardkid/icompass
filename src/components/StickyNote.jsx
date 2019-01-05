@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import ReactGA from 'react-ga';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -41,6 +42,7 @@ class StickyNote extends Component {
 
     let n = this.props.note;
     if (n.draft) {
+      ReactGA.modalview('modals/discard-draft');
       this.modal.confirm({
         body: 'You are about to discard this draft. This action cannot be undone.',
         confirmText: 'Discard',
@@ -51,6 +53,7 @@ class StickyNote extends Component {
         },
       });
     } else {
+      ReactGA.modalview('modals/delete-note');
       this.modal.confirm({
         body: 'You are about to delete this note. This action cannot be undone.',
         confirmText: 'Delete',

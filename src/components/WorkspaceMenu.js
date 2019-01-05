@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Tappable from 'react-tappable/lib/Tappable';
@@ -85,6 +86,7 @@ class WorkspaceMenu extends Component {
   };
 
   showShareModal = () => {
+    ReactGA.modalview('modals/menu-share');
     this.props.uiX.showShareModal();
     this.hideMenu();
   };
@@ -101,7 +103,9 @@ class WorkspaceMenu extends Component {
   };
 
   triggerEmailModal = () => {
-    this.socket.emitMetric('menu email');
+    // Track here instead of in emailReminder because
+    // that function calls itself
+    ReactGA.modalview('modals/menu-email');
     this.emailReminder();
     this.hideMenu();
   };
@@ -138,7 +142,7 @@ class WorkspaceMenu extends Component {
         body: 'Check for the yellow bookmark icon at the top right.',
       });
     } else {
-      this.socket.emitMetric('menu bookmark');
+      ReactGA.modalview('modals/menu-bookmark');
       this.modal.prompt({
         heading: 'Bookmark',
         body: [
@@ -166,6 +170,7 @@ class WorkspaceMenu extends Component {
   };
 
   confirmDelete = () => {
+    ReactGA.modalview('modals/menu-delete');
     this.modal.confirm({
       body: 'You are about to delete this workspace. This action cannot be undone',
       confirmText: 'Delete',

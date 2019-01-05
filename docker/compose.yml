@@ -21,5 +21,6 @@ services:
     - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     - HOST=http://localhost:8080
+    - NODE_ENV=${NODE_ENV}
 volumes:
   mongo:

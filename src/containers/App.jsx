@@ -16,7 +16,13 @@ import PromptName from '../components/PromptName.jsx';
 
 import Store from '../store';
 
-ReactGA.initialize('UA-127849582-1');
+(function() {
+  if (!__DEV__ && process.env.NODE_ENV === 'production') {
+    ReactGA.initialize(GA_TRACKING_ID, { standardImplementation: true });
+    // eslint-disable-next-line no-console
+    console.log('Initialized Google Analytics');
+  }
+})();
 
 class App extends Component {
   render() {

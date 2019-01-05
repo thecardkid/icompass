@@ -67,6 +67,9 @@ class Workspace extends Component {
   }
 
   alertNotFound() {
+    ReactGA.exception({
+      description: 'Workspace not found',
+    });
     this.modal.alert({
       heading: 'Workspace not found',
       body: [
@@ -121,6 +124,9 @@ class Workspace extends Component {
       return true;
     }
 
+    ReactGA.exception({
+      description: `Invalid URL params {code: "${validCode}", username: "${validUsername}"}`,
+    });
     this.modal.alertRouteErrors(validCode, validUsername);
   }
 

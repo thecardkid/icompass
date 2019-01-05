@@ -20,4 +20,4 @@ while [[ $# -gt 0 ]]; do
 done
 
 . "$IC_ROOT/build/credentials/runner.sh"
-PORT="$port" "$IC_ROOT/node_modules/.bin/nodemon" "$IC_ROOT/icompass.js"
+NODE_ENV=development PORT="$port" "$IC_ROOT/node_modules/.bin/nodemon" "$IC_ROOT/icompass.js"

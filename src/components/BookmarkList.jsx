@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import ReactTooltip from 'react-tooltip';
 import _ from 'underscore';
 
@@ -27,6 +28,7 @@ export default class BookmarkList extends Component {
 
   edit = (idx) => (e) => {
     e.stopPropagation();
+    ReactGA.modalview('modals/bookmarks-edit');
     this.modal.prompt({
       heading: 'Edit bookmark',
       body: 'Enter a new name for your bookmark:',
@@ -42,8 +44,9 @@ export default class BookmarkList extends Component {
 
   remove = (idx) => (e) => {
     e.stopPropagation();
+    ReactGA.modalview('modals/bookmarks-remove');
     this.modal.confirm({
-      body: 'You are about to delete this bookmark. This action cannot be undone.',
+      body: 'You are about to remove this bookmark. This action cannot be undone.',
       confirmText: 'Delete',
       cb: (confirmed) => {
         if (confirmed) {
@@ -137,6 +140,9 @@ export default class BookmarkList extends Component {
       this.toast.success('Bookmarks imported!');
       this.emailBookmarks();
     } catch (ex) {
+      ReactGA.exception({
+        description: 'Invalid bookmarks json file format/contents',
+      });
       this.modal.alert({
         heading: 'Whoops...',
         body: 'The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.',
@@ -148,7 +154,7 @@ export default class BookmarkList extends Component {
     if (_.isEmpty(this.state.bookmarks)) {
       return this.toast.warn('You have no bookmarks to export to file');
     }
-
+    ReactGA.modalview('modals/bookmarks-export');
     this.modal.prompt({
       heading: 'Export bookmarks',
       body: 'Enter a name for the file:',
@@ -171,7 +177,7 @@ export default class BookmarkList extends Component {
 
   emailBookmarks = (currentEmail) => {
     currentEmail = typeof currentEmail === 'string' ? currentEmail : '';
-
+    ReactGA.modalview('modals/bookmarks-email');
     this.modal.prompt({
       heading: 'Email your bookmarks',
       body: [

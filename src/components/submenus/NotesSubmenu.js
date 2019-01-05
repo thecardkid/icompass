@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import Tappable from 'react-tappable/lib/Tappable';
 
 import ModalSingleton from '../../utils/Modal';
@@ -12,19 +13,19 @@ export default class NotesSubmenu extends Component {
   }
 
   showNewNote = () => {
-    this.socket.emitMetric('menu new note');
+    ReactGA.modalview('modals/menu-new-text');
     this.props.uiX.showNewNote();
     this.props.hideMenu();
   };
 
   showImage = () => {
-    this.socket.emitMetric('menu new image');
+    ReactGA.modalview('modals/menu-new-image');
     this.props.uiX.showImage();
     this.props.hideMenu();
   };
 
   showDoodle = () => {
-    this.socket.emitMetric('menu new doodle');
+    ReactGA.modalview('modals/menu-new-doodle');
     this.props.uiX.showDoodle();
     this.props.hideMenu();
   };
