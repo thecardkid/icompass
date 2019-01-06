@@ -17,7 +17,10 @@ function getNodeEnv() {
 }
 
 function getGATrackingID() {
-  return process.env.GA_TRACKING_ID || '';
+  if (getHost() === 'https://icompass.me') {
+    return process.env.GA_TRACKING_ID;
+  }
+  return '';
 }
 
 const prodConfig = () => merge(

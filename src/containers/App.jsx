@@ -17,7 +17,7 @@ import PromptName from '../components/PromptName.jsx';
 import Store from '../store';
 
 (function() {
-  if (!__DEV__ && process.env.NODE_ENV === 'production') {
+  if (GA_TRACKING_ID) {
     ReactGA.initialize(GA_TRACKING_ID, { standardImplementation: true });
     // eslint-disable-next-line no-console
     console.log('Initialized Google Analytics');
