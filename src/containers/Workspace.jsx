@@ -135,7 +135,7 @@ class Workspace extends Component {
   }
 
   notifyIfNewVersion = ({ mustShow = false } = {}) => {
-    const appVersion = 'v2.2.0';
+    const appVersion = 'v2.3.0';
     // mustShow overrides automatic decision-making
     if (mustShow || (!isWebdriverIO() && Storage.getVersion() !== appVersion)) {
       Storage.setVersion(appVersion);
@@ -145,13 +145,10 @@ class Workspace extends Component {
         body: [
           'New features:',
           [
-            '● Right click on any note to see the new context menu',
-            '● New formatting toolbar for text notes',
-            '● Bookmark searching',
-            '● Reorganize bookmarks by dragging up and down',
-            '● Integrated Text-to-Speech for individual notes',
+            '● Workspace topic is now visible in the top right corner',
+            '● Check a box when creating a new workspace to always receive an email',
           ].join('<br/>'),
-          'See the full list <a href="https://github.com/thecardkid/icompass/releases" target="_blank"><u>here</u></a>.',
+          // 'See the full list <a href="https://github.com/thecardkid/icompass/releases" target="_blank"><u>here</u></a>.',
         ],
       });
     }
