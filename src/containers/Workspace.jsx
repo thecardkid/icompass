@@ -56,7 +56,10 @@ class Workspace extends Component {
         'disconnect': () => this.toast.error('Lost connection to server'),
         'reconnect': () => {
           this.toast.success('Established connection to server');
-          this.socket.onReconnect(this.props);
+          this.socket.onReconnect({
+            editCode: this.mustGetEditCode(),
+            users: this.props.users,
+          });
         }
       });
       this.socket.emitFindCompassEdit(this.props.params);
@@ -64,6 +67,20 @@ class Workspace extends Component {
     }
 
     this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
+  }
+
+  mustGetEditCode() {
+    const editCodeRegex = /[a-zA-Z0-9]{8}/;
+    if (this.props.compass && this.props.compass.editCode && editCodeRegex.test(this.props.compass.editCode)) {
+      return this.props.compass.editCode;
+    }
+    if (this.props.params.code && editCodeRegex.test(this.props.params.code)) {
+      return this.props.params.code;
+    }
+    this.modal.alert({
+      heading: 'Sorry!',
+      body: 'There was a problem retrieving your workspace. Please copy and paste the workspace link you received and refresh the page.',
+    });
   }
 
   alertNotFound() {

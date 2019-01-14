@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router';
 import SocketIOClient from 'socket.io-client';
 import _ from 'underscore';
 
@@ -15,6 +16,7 @@ const SocketSingleton = (() => {
         'session id': this.onSessionId,
         'mail status': this.onMailStatus,
         'auto mail status': this.onAutoMailStatus,
+        'workspace not found': this.onWorkspaceNotFound,
       });
     }
 
@@ -53,10 +55,20 @@ const SocketSingleton = (() => {
       }
     };
 
-    onReconnect = ({ compass, users }) => {
+    onWorkspaceNotFound = () => {
+      this.modal.alert({
+        heading: 'Sorry!',
+        body: [
+          'There was a problem retrieving your workspace. Please contact <a href="mailto:hieu@shift.com">hieu@shift.com</a> directly.',
+          'You will now be taken to the home page.',
+        ],
+        cb: () => browserHistory.push('/'),
+      });
+    };
+
+    onReconnect = ({ editCode, users }) => {
       this.socket.emit('reconnected', {
-        code: compass.editCode,
-        compassId: compass._id,
+        code: editCode,
         username: users.me,
         color: users.nameToColor[users.me],
         sessionId: this.sessionId,
