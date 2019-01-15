@@ -108,7 +108,7 @@ class StickyNote extends Component {
 
   renderDoodle = (n) => {
     let s = {
-      background: n.color,
+      background: n.color || 'chartreuse',
       padding: n.isImage ? '3px' : '0',
     };
     const clazz = this.compactMode ? 'compact ic-img contents' : 'ic-img contents';
@@ -127,7 +127,7 @@ class StickyNote extends Component {
     const divClazz = this.compactMode ? 'compact contents' : 'contents';
 
     return (
-      <div style={{ background: n.color }} className={divClazz}>
+      <div style={{ background: n.color || 'chartreuse' }} className={divClazz}>
         <p className={'text'} ref={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
         {this.getTooltip(n)}
       </div>
@@ -285,7 +285,7 @@ class StickyNote extends Component {
     } else if (this.props.note.doodle) {
       this.modal.image({
         src: this.props.note.doodle,
-        background: this.props.note.color,
+        background: this.props.note.color || 'chartreuse',
       });
     }
   };
