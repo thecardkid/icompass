@@ -54,9 +54,9 @@ class Workspace extends Component {
         'user joined': this.onUserJoined,
         'user left': this.onUserLeft,
         'disconnect': () => this.toast.error('Lost connection to server'),
-        'reconnect': this.handleReconnect,
-        'bad username': this.handleBadUsername,
-        'username exists': this.handleUsernameExists,
+        'reconnect': this.handleReconnect.bind(this),
+        'bad username': this.handleBadUsername.bind(this),
+        'username exists': this.handleUsernameExists.bind(this),
       });
       this.socket.emitFindCompassEdit(this.props.params);
       ReactGA.pageview('/compass/edit/');
@@ -78,9 +78,9 @@ class Workspace extends Component {
       heading: 'Please fix your username',
       body: [
         'Usernames can only contain letters, and shorter than 15 characters.',
-        'Click "OK" to pick a new one.',
+        'Click "Got it" to pick a new one.',
       ],
-      cb: () => browserHistory.push(`/compass/edit/${this.props.params.editCode}`),
+      cb: () => browserHistory.push(`/compass/edit/${this.props.params.code}`),
     });
   };
 
@@ -89,9 +89,9 @@ class Workspace extends Component {
       heading: 'Whoops..',
       body: [
         'Someone already took that username',
-        'Click "OK" to pick a new one',
+        'Click "Got it" to pick a new one.',
       ],
-      cb: () => browserHistory.push(`/compass/edit/${this.props.params.editCode}`),
+      cb: () => browserHistory.push(`/compass/edit/${this.props.params.code}`),
     });
   };
 
