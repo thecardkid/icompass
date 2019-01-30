@@ -46,6 +46,18 @@ describe('forms', () => {
       expect(b.getCssProperty('#note0 div.contents', 'background-color').value).to.equal('rgba(255,204,255,1)');
     });
 
+    it('edit: can\'t submit empty note', () => {
+      b.moveToObject('#note0', 10, 1);
+      b.doDoubleClick();
+      b.waitForVisible('#ic-note-form');
+      b.setValue('#ic-form-text .ql-editor', '');
+      b.click('button[name=ship]');
+      b.pause(200);
+      expect('#ic-form-text').to.be.visible();
+      expect('#note0').to.have.text(/edited note/);
+      b.click('button[name=nvm]');
+    });
+
     it('drag', () => {
       b.moveToObject('#note0', 10, 10);
       b.buttonDown(0);
