@@ -10,7 +10,9 @@ const SocketSingleton = (() => {
     constructor() {
       this.modal = Modal.getInstance();
 
-      this.socket = new SocketIOClient();
+      this.socket = new SocketIOClient('/', {
+        transports: ['websocket'],
+      });
       this.sessionId = null;
       this.subscribe({
         'session id': this.onSessionId,
