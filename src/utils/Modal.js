@@ -208,17 +208,24 @@ const ModalSingleton = (() => {
       });
     };
 
-    alertRouteErrors(validCode, validUsername) {
-      const options = {
-        heading: 'There was a problem with your login info',
-        body: [],
-        cb: () => browserHistory.push('/'),
-      };
-      if (!validCode) options.body.push('Your code is not valid');
-      if (!validUsername) options.body.push('Username can only contain letters, and must not be longer than 15 characters');
-      options.body.push('You will now be directed to the login page');
-
-      this.alert(options);
+    alertRouteErrors(validCode, validUsername, code) {
+      if (!validCode) {
+        return this.alert({
+          heading: 'Your code is not valid',
+          body: 'You will be redirected to the login page.',
+          cb: () => browserHistory.push('/'),
+        });
+      }
+      if (!validUsername) {
+        return this.alert({
+          heading: 'Your username is invalid',
+          body: [
+            'Username can only contain letters, and must not be longer than 15 characters',
+            'Click "Got it" to pick a new username',
+          ],
+          cb: () => browserHistory.push(`/compass/edit/${code}`),
+        });
+      }
     }
 
     generatePrompt(html) {

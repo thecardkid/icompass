@@ -170,7 +170,7 @@ class Workspace extends Component {
     ReactGA.exception({
       description: `Invalid URL params {code: "${validCode}", username: "${validUsername}"}`,
     });
-    this.modal.alertRouteErrors(validCode, validUsername);
+    this.modal.alertRouteErrors(validCode, validUsername, code);
   }
 
   componentDidMount() {

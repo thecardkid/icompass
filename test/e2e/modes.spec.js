@@ -145,9 +145,8 @@ describe('view modes', () => {
       b.url('http://localhost:8080/compass/edit/12345/,,,');
       b.waitForVisible('#ic-modal');
 
-      expect('#ic-modal-body').to.have.text(/There was a problem with your login info/);
       expect('#ic-modal-body').to.have.text(/Your code is not valid/);
-      expect('#ic-modal-body').to.have.text(/Username can only contain letters/);
+      expect('#ic-modal-body').to.have.text(/You will be redirected/);
 
       b.click('#ic-modal-confirm');
       b.waitForVisible('#ic-landing');
