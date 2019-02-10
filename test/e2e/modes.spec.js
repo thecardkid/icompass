@@ -126,6 +126,13 @@ describe('view modes', () => {
       expect('div#select-area').to.not.be.there();
       b.buttonUp(0);
     });
+
+    it('cant see context menu', () => {
+      b.moveToObject('#note0', 10, 10);
+      b.rightClick();
+      b.pause(100);
+      expect('div.ic-menu.context-menu').to.not.be.visible();
+    });
   });
 
   describe('edit mode', () => {

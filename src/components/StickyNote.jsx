@@ -234,7 +234,7 @@ class StickyNote extends Component {
     ev.stopPropagation();
     ev.preventDefault();
 
-    if (this.visualMode) {
+    if (this.visualMode || !this.hasEditingRights) {
       return;
     }
 
