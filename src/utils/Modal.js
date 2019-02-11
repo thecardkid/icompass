@@ -274,7 +274,7 @@ const ModalSingleton = (() => {
       $('#ic-modal-container').empty().append(html);
       $('#ic-modal-input').focus();
       if (__DEV__) {
-        $('#ic-modal-input').val('topic-autofilled').select();
+        $('#ic-modal-input').val('involved-autofilled').select();
       }
       this.addBackdropIfNecessary();
       this.show = true;

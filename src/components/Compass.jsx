@@ -258,11 +258,13 @@ class Compass extends Component {
              onDoubleClick={this.hasEditingRights ? this.editPeopleInvolved : _.noop} >
           <p className="wordwrap" style={css}>{center}</p>
         </div>
-        <ReactTooltip id={'center-tooltip'}
-                      place={'bottom'}
-                      type={Storage.getTooltipTypeBasedOnDarkTheme()}
-                      delayShow={200}
-                      effect={'solid'}/>
+        {this.hasEditingRights &&
+          <ReactTooltip id={'center-tooltip'}
+                        place={'bottom'}
+                        type={Storage.getTooltipTypeBasedOnDarkTheme()}
+                        delayShow={200}
+                        effect={'solid'}/>
+        }
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
         <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
         {this.quadrants}

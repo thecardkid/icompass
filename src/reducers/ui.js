@@ -10,7 +10,9 @@ const defaultState = {
     editImage: false,
   },
   bookmarked: false,
+  showGDocModal: false,
   showShareModal: false,
+  showScreenshotModal: false,
   focusedNote: -1,
   vw: 0,
   vh: 0,
@@ -150,6 +152,18 @@ export default (state = defaultState, action) => {
 
     case 'hideShareModal':
       return { ...state, showShareModal: false };
+
+    case 'showGDocModal':
+      return { ...state, showGDocModal: true };
+
+    case 'hideGDocModal':
+      return { ...state, showGDocModal: false };
+
+    case 'showScreenshotModal':
+      return { ...state, showScreenshotModal: true };
+
+    case 'hideScreenshotModal':
+      return { ...state, showScreenshotModal: false };
 
     case 'resetUI':
       return defaultState;

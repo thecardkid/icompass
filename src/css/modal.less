@@ -117,7 +117,7 @@ div#ic-modal-container {
   }
 }
 
-div.ic-share {
+div.ic-dynamic-modal {
   background: var(--modal-bg);
   position: absolute;
   font-family: @notosans;
@@ -141,7 +141,9 @@ div.ic-share {
       }
     }
   }
+}
 
+div.ic-share {
   div.ic-share-link {
     text-align: left;
     margin: 22px 0 15px;
@@ -191,20 +193,67 @@ div.ic-share {
     button[name=png] {
       background: @dark;
     }
+  }
+}
 
-    div#exported-png {
-      margin-top: 15px;
-      width: 100%;
+div.ic-gdoc {
+  div.warning {
+    .border-box;
+    background: #FEF5CF;
+    border-left: 4px solid #F9C300;
+    color: black;
+    margin-top: 15px;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-size: 13px;
+  }
 
-      p {
-        font-size: 12px;
-      }
+  div.copy-to-clipboard {
+    margin-top: 20px;
 
-      canvas {
-        margin-top: 10px;
-        max-width: 100%;
-        height: auto !important;
-      }
+    button {
+      padding: 5px 10px;
+      background: #5285ec;
+      color: white;
+      font-family: inherit;
+      font-size: 14px;
+    }
+  }
+
+  div#doc-preview {
+    // Default font in GDoc
+    font-family: 'Arial', sans-serif;
+    height: 400px;
+    background: white;
+    color: black;
+    overflow: scroll;
+    font-size: 14px;
+    padding: 20px;
+    margin-top: 15px;
+    border-radius: 2px;
+
+    a {
+      // match href color in GDoc
+      color: #2958c6;
+    }
+  }
+}
+
+div.ic-screenshot {
+
+
+  div#exported-png {
+    margin-top: 15px;
+    width: 100%;
+
+    p {
+      font-size: 12px;
+    }
+
+    canvas {
+      margin-top: 10px;
+      max-width: 100%;
+      height: auto !important;
     }
   }
 }

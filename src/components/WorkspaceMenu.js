@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
+import ExportSubmenu from './submenus/ExportSubmenu';
 import ModesSubmenu from './submenus/ModesSubmenu';
 import NotesSubmenu from './submenus/NotesSubmenu';
 import ShortcutManager from './ShortcutManager';
 
+import MaybeTappable from '../utils/MaybeTappable';
 import ModalSingleton from '../utils/Modal';
 import SocketSingleton from '../utils/Socket';
 import Storage from '../utils/Storage';
@@ -27,6 +28,7 @@ class WorkspaceMenu extends Component {
       active: false,
       darkTheme: Storage.isDarkTheme(),
       submenus: {
+        exports: false,
         notes: false,
         modes: false,
         users: false,
@@ -186,6 +188,7 @@ class WorkspaceMenu extends Component {
 
   showSubmenu = (submenu) => () => {
     this.setState({ submenus: {
+      exports: false,
       notes: false,
       modes: false,
       users: false,
@@ -195,6 +198,7 @@ class WorkspaceMenu extends Component {
 
   hideSubmenus = () => {
     this.setState({ submenus: {
+      exports: false,
       notes: false,
       modes: false,
       users: false,
@@ -224,7 +228,7 @@ class WorkspaceMenu extends Component {
   };
 
   renderMenu = () => {
-    const { notes, modes, users } = this.state.submenus;
+    const { exports, notes, modes, users } = this.state.submenus;
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -257,24 +261,33 @@ class WorkspaceMenu extends Component {
           </div>
         </section>
         <section className={'border-bottom'}>
-          <Tappable onTap={this.showSubmenu('notes')}>
+          <MaybeTappable onTapOrClick={this.showSubmenu('exports')}>
+            <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('exports')}>
+              <i className={'material-icons'}>arrow_right_alt</i>
+              Export as
+              {exports && <ExportSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
+            </div>
+          </MaybeTappable>
+        </section>
+        <section className={'border-bottom'}>
+          <MaybeTappable onTapOrClick={this.showSubmenu('notes')}>
             <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
               Add Note
               {notes && <NotesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
             </div>
-          </Tappable>
-          <Tappable onTap={this.showSubmenu('modes')}>
+          </MaybeTappable>
+          <MaybeTappable onOrClickTap={this.showSubmenu('modes')}>
             <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
               Change Mode
               {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode} hideMenu={this.hideMenu}/>}
             </div>
-          </Tappable>
-          <Tappable onTap={this.showSubmenu('users')}>
+          </MaybeTappable>
+          <MaybeTappable onTapOrClick={this.showSubmenu('users')}>
             <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('users')}>
               Collaborators
               {users && this.renderUsersSubmenu()}
             </div>
-          </Tappable>
+          </MaybeTappable>
         </section>
         <section onMouseEnter={this.hideSubmenus}>
           <div className={'ic-menu-item'} onClick={this.logout}>
@@ -301,6 +314,7 @@ class WorkspaceMenu extends Component {
     this.setState({
       active: false,
       submenus: {
+        exports: false,
         notes: false,
         modes: false,
         users: false,

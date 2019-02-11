@@ -44,7 +44,7 @@ const cleanup = () => {
 const switchMode = (modeId) => {
   browser.click('button.ic-workspace-button');
   browser.waitForVisible('div.ic-workspace-menu');
-  browser.moveTo(browser.elements('div.has-more').value[1].ELEMENT, 10, 10);
+  browser.moveTo(browser.elements('div.has-more').value[2].ELEMENT, 10, 10);
   browser.waitForVisible('div.ic-modes-submenu');
   browser.click(modeId);
 };
@@ -72,16 +72,19 @@ const selectColor = (color) => {
   browser.elements('.ic-color').value[_.indexOf(STICKY_COLORS, color)].click();
 };
 
-const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 0 };
-const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 1 };
+const exportsSubmenu = { submenu: 'div.ic-exports-submenu', submenuPosition: 0 };
+const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 1 };
+const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 2 };
 const menuActions = {
   newWorkspace: 0,
   darkTheme: 1,
   email: 2,
   bookmark: 3,
   share: 4,
-  logout: 8,
-  deleteWorkspace: 9,
+  logout: 9,
+  deleteWorkspace: 10,
+  googleDocs: Object.assign({}, exportsSubmenu, { position: 0 }),
+  screenshot: Object.assign({}, exportsSubmenu, { position: 1 }),
   textNote: Object.assign({}, notesSubmenu, { position: 0 }),
   imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
   doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),

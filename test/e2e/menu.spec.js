@@ -59,6 +59,24 @@ describe('workspace menu', () => {
     });
   });
 
+  describe('exports submenu', () => {
+    it('as google doc', () => {
+      selectSubmenuOption(menuActions.googleDocs);
+      expect('div.ic-gdoc.ic-dynamic-modal').to.be.visible();
+      expect('div.ic-gdoc.ic-dynamic-modal div.copy-to-clipboard').to.be.visible();
+      expect('div.ic-gdoc.ic-dynamic-modal div.warning').to.have.text(/Doodles will not be included/);
+      b.click('button.ic-close-window');
+    });
+
+    it('as screenshot', () => {
+      selectSubmenuOption(menuActions.screenshot);
+      expect('div.ic-screenshot.ic-dynamic-modal').to.be.visible();
+      expect('div#exported-png canvas').to.be.visible();
+      expect('div#exported-png p').to.have.text(/Right click/);
+      b.click('button.ic-close-window');
+    });
+  });
+
   describe('main menu', () => {
     describe('dark theme', () => {
       it('can turn on', () => {
@@ -135,26 +153,6 @@ describe('workspace menu', () => {
         b.click('button.copy-view');
         expect('#ic-toast').to.be.visible();
         expect('#ic-toast').to.have.text(/View-only link has been copied/);
-      });
-
-      describe('export as png', () => {
-        it('has feedback when user clicks button', () => {
-          expect('button[name=png]').to.be.visible();
-          expect('div#exported-png').to.not.be.there();
-          b.click('button[name=png]');
-        });
-
-        it('shows canvas along with instructions', () => {
-          b.waitForVisible('div#exported-png');
-          expect('div#exported-png canvas').to.be.visible();
-          expect('div#exported-png p').to.have.text(/Right click/);
-        });
-
-        it('only one canvas is shown', () => {
-          b.click('button[name=png]');
-          b.pause(1500);
-          expect('div#exported-png canvas').to.have.count(1);
-        });
       });
 
       it('can x out', () => {

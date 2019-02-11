@@ -16,7 +16,9 @@ import BulkEditToolbar from '../components/BulkEditToolbar.jsx';
 import Compass from '../components/Compass.jsx';
 import HelpAndFeedback from '../components/HelpAndFeedback';
 import FormManager from '../components/forms/FormManager.jsx';
-import ShareModal from '../components/ShareModal';
+import GDocModal from '../components/modals/GDocModal';
+import ScreenshotModal from '../components/modals/ScreenshotModal';
+import ShareModal from '../components/modals/ShareModal';
 import WorkspaceMenu from '../components/WorkspaceMenu';
 import MaybeTappable from '../utils/MaybeTappable';
 
@@ -234,9 +236,18 @@ class Workspace extends Component {
         <Compass />
         <BulkEditToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={formAttrs} />
-        <ShareModal show={this.props.ui.showShareModal}
-                    close={this.props.uiX.hideShareModal}
-                    compass={this.props.compass} />
+        {this.props.ui.showShareModal &&
+          <ShareModal close={this.props.uiX.hideShareModal}
+                      compass={this.props.compass}/>
+        }
+        {this.props.ui.showGDocModal &&
+          <GDocModal close={this.props.uiX.hideGDocModal}
+                     compass={this.props.compass}
+                     notes={this.props.notes}/>
+        }
+        {this.props.ui.showScreenshotModal &&
+          <ScreenshotModal close={this.props.uiX.hideScreenshotModal}/>
+        }
       </div>
     );
   }
@@ -244,6 +255,7 @@ class Workspace extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    notes: state.notes,
     compass: state.compass,
     users: state.users,
     ui: state.ui,

@@ -127,6 +127,30 @@ export const hideShareModal = () => {
   };
 };
 
+export const showGDocModal = () => {
+  return {
+    type: 'showGDocModal',
+  };
+};
+
+export const hideGDocModal = () => {
+  return {
+    type: 'hideGDocModal',
+  };
+};
+
+export const showScreenshotModal = () => {
+  return {
+    type: 'showScreenshotModal',
+  };
+};
+
+export const hideScreenshotModal = () => {
+  return {
+    type: 'hideScreenshotModal',
+  };
+};
+
 export const reset = () => {
   return {
     type: 'resetUI',
