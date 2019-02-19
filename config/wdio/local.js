@@ -13,7 +13,7 @@ exports.config = {
     chromeOptions: {
       args: [
         `--user-agent=${userAgent}`,
-        ...(process.env.HEADLESS ? headlessArgs : []),
+        ...(process.env.HEADLESS === '1' ? headlessArgs : []),
       ],
     },
   }],

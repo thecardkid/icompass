@@ -31,7 +31,7 @@ class LandingPage extends Component {
     });
 
     ReactGA.pageview('/');
-    this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
+    this.props.uiX.resize();
   }
 
   componentDidMount() {

@@ -64,7 +64,7 @@ class Workspace extends Component {
       ReactGA.pageview('/compass/edit/');
     }
 
-    this.props.uiX.setScreenSize(window.innerWidth, window.innerHeight);
+    this.props.uiX.resize();
   }
 
   handleReconnect = () => {
