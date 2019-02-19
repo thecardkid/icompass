@@ -35,9 +35,11 @@ export default class PromptName extends Component {
 
   render() {
     return (
-      <Tappable onTap={this.toast.clear}>
-        <div id="ic-toast" onClick={this.toast.clear} />
-      </Tappable>
+      <div className={'full-screen'}>
+        <Tappable onTap={this.toast.clear}>
+          <div id="ic-toast" onClick={this.toast.clear} />
+        </Tappable>
+      </div>
     );
   }
 }

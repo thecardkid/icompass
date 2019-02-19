@@ -129,7 +129,7 @@ describe('collaboration', () => {
     it('notes submitted by others still show up while in draft mode', () => {
       b.switchTab(tabs.friendo);
       b.moveToObject('body', 300, 600);
-      b.doDoubleClick();
+      b.keys(['n']);
       b.waitForVisible('#ic-note-form');
       b.setValue('#ic-form-text .ql-editor', 'note while in draft');
       b.click('button[name=ship]');

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+import { isMobile } from 'react-device-detect';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
@@ -76,12 +77,19 @@ class Compass extends Component {
   };
 
   onTouchStart = (ev) => {
-    ev.persist();
-    this.longPress = setTimeout(() => this.doubleClickCreate(ev), 1000);
+    // ignore if pinch
+    if (isMobile && ev.touches.length === 2) {
+      return;
+    }
+    if (this.longPress) {
+      this.doubleClickCreate(ev);
+    }
   };
 
+  debouncedTouchStart = _.debounce(this.onTouchStart, 1000);
+
   onTouchRelease = () => {
-    clearTimeout(this.longPress);
+    this.longPress = false;
   };
 
   onMouseDown = (ev) => {
@@ -104,11 +112,19 @@ class Compass extends Component {
     return (
       <div className="ic-quadrant"
            key={`quadrant-${q.id}`}
+           style={{
+             width: this.props.ui.vw / 2,
+             height: this.props.ui.vh / 2,
+           }}
            id={q.id}>
         <div className={'interactable'}
              onDoubleClick={this.doubleClickCreate}
              onClick={this.onClick}
-             onTouchStart={this.onTouchStart}
+             onTouchStart={(e) => {
+               e.persist();
+               this.longPress = true;
+               this.debouncedTouchStart(e);
+             }}
              onTouchEnd={this.onTouchRelease}
              onMouseDown={this.onMouseDown}
              onMouseUp={this.onMouseUp} />
@@ -315,7 +331,12 @@ class Compass extends Component {
     }
 
     return (
-      <div id="compass">
+      <div id="compass" style={{
+        width: this.props.ui.vw,
+        maxWidth: this.props.ui.vw,
+        height: this.props.ui.vh,
+        maxHeight: this.props.ui.vh,
+      }}>
         <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         <SelectArea show={this.state.select} done={this.onMouseUp}/>

@@ -222,6 +222,16 @@ class StickyNote extends Component {
   };
 
   onTouchStart = (ev) => {
+    // Detect if dragging - this is jank, and is duplicated in
+    // this.clickNote
+    let $el = ev.target;
+    while ($el.parentElement != null && !$el.id.startsWith('note')) {
+      $el = $el.parentElement;
+    }
+    if ($el.dragging) {
+      return;
+    }
+    // Long press simulation. Canceled in this.onTouchRelease
     ev.persist();
     this.longPress = setTimeout(() => this.edit(ev), 1000);
   };

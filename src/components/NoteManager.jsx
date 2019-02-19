@@ -97,6 +97,8 @@ class NoteManager extends Component {
   }
 
   dragStart = (e) => {
+    // TODO(hieu): pinching with one finger on a note shows edit form.
+    // But I also don't really care about this problem. Can fix at later date.
     e.target.dragging = true;
   };
 

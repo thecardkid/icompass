@@ -1,3 +1,5 @@
+import verge from 'verge';
+
 export const setBookmark = (show) => {
   return {
     type: 'setBookmark',
@@ -99,19 +101,11 @@ export const visualMode = (len) => {
   };
 };
 
-export const resize = (e) => {
+export const resize = () => {
   return {
     type: 'resize',
-    screenWidth: e.target.innerWidth,
-    screenHeight: e.target.innerHeight,
-  };
-};
-
-export const setScreenSize = (vw, vh) => {
-  return {
-    type: 'resize',
-    screenWidth: vw,
-    screenHeight: vh,
+    screenHeight: verge.viewportH(),
+    screenWidth: verge.viewportW(),
   };
 };
 
