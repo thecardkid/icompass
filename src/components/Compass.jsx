@@ -33,8 +33,6 @@ class Compass extends Component {
     super(props);
 
     this.hasEditingRights = !this.props.viewOnly;
-    this.quadrants = _.map(QUADRANTS, this.renderQuadrant);
-
     this.state = {
       showFullTopic: false,
     };
@@ -283,7 +281,7 @@ class Compass extends Component {
         }
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
         <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
-        {this.quadrants}
+        {_.map(QUADRANTS, this.renderQuadrant)}
         {this.renderLabels()}
         <MaybeTappable onTapOrClick={this.showOrHideFullTopic}>
           <div id={'ic-compass-topic'}
