@@ -179,20 +179,19 @@ class Workspace extends Component {
   }
 
   notifyIfNewVersion = ({ mustShow = false } = {}) => {
-    const appVersion = 'v2.3.0';
+    const appVersion = 'v2.4.0';
     // mustShow overrides automatic decision-making
     if (mustShow || (!isWebdriverIO() && Storage.getVersion() !== appVersion)) {
       Storage.setVersion(appVersion);
 
       this.modal.alert({
-        heading: `${appVersion} Release!!`,
+        heading: `${appVersion} Release`,
         body: [
           'New features:',
           [
-            '● Workspace topic is now visible in the top right corner',
-            '● Check a box when creating a new workspace to always receive an email',
+            '● <b>Menu > Export as > Google Doc</b> to collect your notes into a single document (thanks @Audrey!)',
+            '● <b>Help > Leave Feedback</b> for a convenient feedback form. I love hearing from iCompass users!',
           ].join('<br/>'),
-          // 'See the full list <a href="https://github.com/thecardkid/icompass/releases" target="_blank"><u>here</u></a>.',
         ],
       });
     }
