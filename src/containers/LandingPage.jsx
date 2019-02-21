@@ -14,7 +14,6 @@ import Socket from '../utils/Socket.js';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import MaybeTappable from '../utils/MaybeTappable';
 import DevOnly from '../utils/DevOnly';
 
 import { REGEX } from '../../lib/constants';
@@ -156,9 +155,6 @@ class LandingPage extends Component {
   render() {
     return (
       <div id={'ic-landing'}>
-        <MaybeTappable onTapOrClick={this.toast.clear}>
-          <div id={'ic-toast'}/>
-        </MaybeTappable>
         <img src={'https://s3.us-east-2.amazonaws.com/innovatorscompass/landing.jpg'} className={'ic-background'} style={this.sizeImage()}/>
         <BookmarkList start={this.start}/>
         <div id={'ic-landing-container'}>

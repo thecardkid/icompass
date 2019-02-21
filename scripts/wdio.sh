@@ -56,7 +56,7 @@ until $(curl --output /dev/null --silent --head --fail "http://localhost:8080");
 done
 echo "iCompass server detected"
 
-echo "clearing errorShots/folder"
+echo "clearing errorShots/ folder"
 if [[ -d "$IC_ROOT/errorShots" ]]; then
     rm -r "$IC_ROOT/errorShots/"
 fi

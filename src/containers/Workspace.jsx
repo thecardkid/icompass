@@ -20,7 +20,6 @@ import GDocModal from '../components/modals/GDocModal';
 import ScreenshotModal from '../components/modals/ScreenshotModal';
 import ShareModal from '../components/modals/ShareModal';
 import WorkspaceMenu from '../components/WorkspaceMenu';
-import MaybeTappable from '../utils/MaybeTappable';
 
 import { isWebdriverIO } from '../utils/Browser';
 import Modal from '../utils/Modal';
@@ -226,9 +225,6 @@ class Workspace extends Component {
 
     return (
       <div>
-        <MaybeTappable onTapOrClick={this.toast.clear}>
-          <div id={'ic-toast'} />
-        </MaybeTappable>
         <HelpAndFeedback editCode={this.props.compass.editCode}
                          notifyVersionChanges={this.notifyIfNewVersion}
         />

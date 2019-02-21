@@ -14,6 +14,9 @@ import Workspace from '../containers/Workspace.jsx';
 
 import PromptName from '../components/PromptName.jsx';
 
+import MaybeTappable from '../utils/MaybeTappable';
+import Toast from '../utils/Toast';
+
 import Store from '../store';
 
 (function() {
@@ -25,18 +28,28 @@ import Store from '../store';
 })();
 
 class App extends Component {
+  constructor() {
+    super();
+    this.toast = Toast.getInstance();
+  }
+
   render() {
     return (
-      <Provider store={Store()}>
-        <Router history={browserHistory}>
-          <Route path={'/'} component={LandingPage} />
-          <Route path={'/compass/view/:code(/:username)'} viewOnly={true} component={Workspace} />
-          <Route path={'/compass/edit/:code/:username'} viewOnly={false} component={Workspace} />
-          <Route path={'/compass/edit/:code'} viewOnly={false} component={PromptName} />
-          <Route path={'/disable-auto-email'} component={DisableAutoEmail} />
-          <Route path={'*'} component={NotFound} />
-        </Router>
-      </Provider>
+      <div>
+        <MaybeTappable onTapOrClick={this.toast.clear}>
+          <div id={'ic-toast'} />
+        </MaybeTappable>
+        <Provider store={Store()}>
+          <Router history={browserHistory}>
+            <Route path={'/'} component={LandingPage} />
+            <Route path={'/compass/view/:code(/:username)'} viewOnly={true} component={Workspace} />
+            <Route path={'/compass/edit/:code/:username'} viewOnly={false} component={Workspace} />
+            <Route path={'/compass/edit/:code'} viewOnly={false} component={PromptName} />
+            <Route path={'/disable-auto-email'} component={DisableAutoEmail} />
+            <Route path={'*'} component={NotFound} />
+          </Router>
+        </Provider>
+      </div>
     );
   }
 }

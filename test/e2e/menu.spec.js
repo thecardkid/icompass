@@ -125,7 +125,7 @@ describe('workspace menu', () => {
         b.setValue('#ic-modal-input', 'fakeemail@valid.com');
         b.click('#ic-modal-confirm');
         b.waitForVisible('#ic-toast span');
-        expect('#ic-toast span').to.have.text(/email/);
+        expect('#ic-toast span').to.have.text(/link to this workspace/);
       });
     });
 
@@ -338,7 +338,7 @@ describe('workspace menu', () => {
             b.setValue('#ic-modal-input', 'fakeemail@test.com');
             b.click('#ic-modal-confirm');
             b.waitForVisible('#ic-toast');
-            expect('#ic-toast').to.have.text(/email/);
+            expect('#ic-toast').to.have.text(/link to this workspace/);
           });
         });
 
