@@ -137,6 +137,12 @@ const SocketSingleton = (() => {
       }
     };
 
+    emitSendFeedback = (email, note) => {
+      if (this.checkConnected()) {
+        this.socket.emit('send feedback', { email, note });
+      }
+    };
+
     emitSendMail = (editCode, username, email) => {
       if (this.checkConnected()) {
         this.socket.emit('send mail', { editCode, username, email });

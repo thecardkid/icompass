@@ -67,8 +67,8 @@ describe('help menu', () => {
 
   it('contact', () => {
     selectHelpOption(actions.contact);
-    b.waitForVisible('#ic-modal');
-    expect('#ic-modal-body').to.have.text(/We'd love to hear from you/);
-    b.click('#ic-modal-confirm');
+    b.waitForVisible('.ic-dynamic-modal');
+    expect('.ic-dynamic-modal .contents').to.have.text(/I'd love to hear from you/);
+    b.click('button.ic-close-window');
   });
 });

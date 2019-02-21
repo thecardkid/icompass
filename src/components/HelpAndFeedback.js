@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import { Link } from 'react-router';
 
+import FeedbackModal from './modals/FeedbackModal';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
+import Toast from '../utils/Toast';
 
 import { COLORS } from '../../lib/constants';
 
@@ -12,10 +14,23 @@ export default class HelpAndFeedback extends Component {
     super();
     this.state = {
       active: false,
+      showFeedbackModal: false,
     };
     this.socket = Socket.getInstance();
     this.modal = Modal.getInstance();
+    this.toast = Toast.getInstance();
+    this.socket.subscribe({
+      'feedback status': this.onFeedbackStatus,
+    });
   }
+
+  onFeedbackStatus = (success) => {
+    if (success) {
+      this.toast.success('Your feedback has been submitted!');
+    } else {
+      this.toast.error('Something went wrong. Please reach out to hieumaster95@gmail.com directly instead!');
+    }
+  };
 
   toggleMenu = () => {
     this.setState({ active: !this.state.active });
@@ -41,8 +56,8 @@ export default class HelpAndFeedback extends Component {
     this.hideMenu();
   };
 
-  showFeedback = () => {
-    this.modal.alertFeedback(this.props.editCode);
+  showFeedback = (val) => () => {
+    this.setState({ showFeedbackModal: val });
     this.hideMenu();
   };
 
@@ -77,11 +92,11 @@ export default class HelpAndFeedback extends Component {
           </div>
           <div className={'ic-menu-item'} onClick={this.showWhatsNew}>
             <i className={'material-icons'}>new_releases</i>
-            What's new?
+            What's New?
           </div>
-          <div className={'ic-menu-item'} onClick={this.showFeedback}>
-            <i className={'material-icons'}>alternate_email</i>
-            Contact Us
+          <div className={'ic-menu-item'} onClick={this.showFeedback(true)}>
+            <i className={'material-icons'}>feedback</i>
+            Leave Feedback
           </div>
         </section>
       </div>
@@ -97,6 +112,7 @@ export default class HelpAndFeedback extends Component {
           ?
         </button>
         {this.state.active && this.renderHelpMenu()}
+        {this.state.showFeedbackModal && <FeedbackModal close={this.showFeedback(false)} />}
       </div>
     );
   }

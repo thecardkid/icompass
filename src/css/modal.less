@@ -129,7 +129,7 @@ div.ic-dynamic-modal {
     div.header {
       h1.title {
         width: 100% !important;
-        font-size: 15px;
+        font-size: 18px;
       }
 
       button.ic-close-window {
@@ -240,8 +240,6 @@ div.ic-gdoc {
 }
 
 div.ic-screenshot {
-
-
   div#exported-png {
     margin-top: 15px;
     width: 100%;
@@ -254,6 +252,50 @@ div.ic-screenshot {
       margin-top: 10px;
       max-width: 100%;
       height: auto !important;
+    }
+  }
+}
+
+div.ic-feedback {
+  .explain {
+    line-height: 17px;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+  input, textarea {
+    border: 1px solid transparent;
+    width: 100%;
+    padding: 6px 10px;
+    .border-box;
+    font-family: inherit;
+    font-size: 14px;
+    .border-radius(2px);
+  }
+
+  input.feedback-email {
+    margin-top: 15px;
+    cursor: text;
+  }
+
+  textarea.feedback-note {
+    resize: none;
+    margin-top: 10px;
+    height: 120px;
+  }
+
+  div.send {
+    height: 20px;
+    margin-top: 10px;
+
+    button {
+      background: @dark;
+      color: @light;
+      width: 120px;
+      height: 29px;
+      font-family: inherit;
+      float: right;
+      font-size: 13px;
     }
   }
 }

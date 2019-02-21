@@ -47,6 +47,8 @@ class ShortcutManager extends Component {
 
     if (document.activeElement.id === 'ic-modal-input') return;
 
+    if (document.activeElement.className.includes('disable-shortcuts')) return;
+
     this.props.handle(e);
   };
 
