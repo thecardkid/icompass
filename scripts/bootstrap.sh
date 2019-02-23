@@ -51,6 +51,12 @@ setup_credentials() {
     local runner_sh_contents="$(bw get item "c335b8e6-a8cb-45ec-9a8c-a9c30035dbd1" --session ${session_key} | jq -r .notes)"
     echo -e "$runner_sh_contents" > "$creds_dir/runner.sh"
     chmod +x "$creds_dir/runner.sh"
+
+    echo "Retrieving deployment .env files.." >&2
+    local prod_env="$(bw get item prod-env --session ${session_key} | jq -r .notes)"
+    echo -e "$prod_env" > "$creds_dir/prod.env"
+    local staging_env="$(bw get item staging-env --session ${session_key} | jq -r .notes)"
+    echo -e "$staging_env" > "$creds_dir/staging.env"
 }
 
 ensure_nvm_installed() {

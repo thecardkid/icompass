@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
+ensure_credentials_exist
+
+# Any update to this file should be made to ./deploy-prod.sh too
+. "$IC_ROOT/build/credentials/runner.sh"
+
+scp -i "$pem_file" "$IC_ROOT/build/credentials/staging.env" "$EC2_INSTANCE:~/staging.env"
+
+ssh -i "$pem_file" "$EC2_INSTANCE" << 'ENDSSH'
+sudo docker pull thecardkid/icompass:develop
+sudo docker container kill staging
+sudo docker container prune --force
+docker images -qf dangling=true | xargs sudo docker rmi
+sudo docker run -p 4000:8080 --name staging --env-file staging.env --detach thecardkid/icompass:develop
+ENDSSH

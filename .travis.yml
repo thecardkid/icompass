@@ -54,7 +54,7 @@ jobs:
     - sleep 15s
     - npm run mocha
     - ./scripts/wdio-travis.sh
-  - stage: deploy master
+  - stage: build production docker image
     if: branch = master
     script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -63,7 +63,7 @@ jobs:
     - docker images
     - docker tag $DOCKER_TAG $REPO:latest
     - docker push $REPO:latest
-  - stage: deploy develop
+  - stage: build staging docker image
     if: branch = develop
     script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS
