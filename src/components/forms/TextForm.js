@@ -130,6 +130,8 @@ class TextForm extends Component {
   };
 
   render() {
+    const submitText = this.props.switch ? 'Publish' : 'Save';
+
     return (
       <div id={'ic-backdrop'} onMouseDown={this.backdropMouseDown} onMouseUp={this.close}>
         <div className="ic-form" id="ic-note-form" onClick={this.dontClose}>
@@ -160,7 +162,7 @@ class TextForm extends Component {
             />
             <div className="note-form-footer">
               {this.props.switch && this.renderSwitches()}
-              <button name="ship" onClick={this.submit(false)}>Publish</button>
+              <button name="ship" onClick={this.submit(false)}>{submitText}</button>
               {this.props.switch && this.renderDraftButton()}
               <button name="nvm" onClick={this.props.close}>Cancel</button>
             </div>
