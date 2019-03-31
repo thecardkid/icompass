@@ -22,7 +22,7 @@ class TextForm extends Component {
       // text includes HTML tags, which allows users to
       // save visually empty notes (perceived string lenth
       // is 0 but actual string length is > 0).
-      effectiveText: '',
+      effectiveText: props.defaultText,
     };
 
     this.modal = ModalSingleton.getInstance();
@@ -44,6 +44,12 @@ class TextForm extends Component {
 
   submit = (isDraft) => () => {
     const { text, effectiveText } = this.state;
+
+    // No text edit was made
+    if (effectiveText === text) {
+      this.props.submit(text, false, this.state, isDraft);
+      return;
+    }
 
     if (effectiveText.trim().length === 0) return;
 
