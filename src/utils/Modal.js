@@ -139,9 +139,10 @@ const ModalSingleton = (() => {
       this.alert({
         heading: 'Privacy Statement',
         body: [
-          'iCompass does not store any personally-identifiable information about you. We ask for emails, but don\'t record them in any way.',
-          'iCompass will not share your workspace, code, data, or any personal information included in your compass with any third party.',
-          'Anyone who has your workspace\'s edit code with will be able to modify, add, or delete any and all data in your Compass. Save and share your workspace link with care, and ask any collaborator to do the same.'
+          'iCompass uses MongoLab and AWS S3 to store data about your workspaces in a secured manner, in order to provide you reliable access. iCompass will not expose your workspace, code, data, or any other information included in your Compass with any unmentioned third-party.',
+          'Anyone who has your workspace\'s edit code with will be able to access and modify any and all data in your Compass. Save and share your workspace link with care, and ask collaborators to do the same.',
+          'iCompass does not require any personally-identifiable information about you. Where privacy is a concern, consider having collaborators not include their real/entire names or other personally-identifiable information in their screen names or Compass.',
+          'If you choose to "save via email", your email is only used to send you your workspace code at that time, and is not stored.',
         ],
       });
     };

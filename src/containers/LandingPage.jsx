@@ -173,6 +173,9 @@ class LandingPage extends Component {
                      ref="username"
                      maxLength={15}
                      required />
+              <div className={'ic-show-privacy-statement'} onClick={this.modal.alertPrivacyStatement}>
+                Click here to view our <u>privacy statement</u>
+              </div>
               <br/>
               <button type={'submit'} id={'user-submit'}>
                 Get started
