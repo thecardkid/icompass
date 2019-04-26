@@ -139,10 +139,10 @@ const ModalSingleton = (() => {
       this.alert({
         heading: 'Privacy Statement',
         body: [
-          'iCompass uses MongoLab and AWS S3 to store data about your workspaces in a secured manner, in order to provide you reliable access. iCompass will not expose your workspace, code, data, or any other information included in your Compass with any unmentioned third-party.',
-          'Anyone who has your workspace\'s edit code with will be able to access and modify any and all data in your Compass. Save and share your workspace link with care, and ask collaborators to do the same.',
           'iCompass does not require any personally-identifiable information about you. Where privacy is a concern, consider having collaborators not include their real/entire names or other personally-identifiable information in their screen names or Compass.',
           'If you choose to "save via email", your email is only used to send you your workspace code at that time, and is not stored.',
+          'iCompass stores data pertaining to your workspace in a secured manner, in order to provide you reliable access. iCompass will not expose your workspace\'s contents, code, or any other information, to any unauthorized third-party for any other purposes than storage.',
+          'Anyone who has your workspace\'s edit code will be able to access and modify any and all data in your Compass. Save and share your workspace link with care, and ask collaborators to do the same.',
         ],
       });
     };
@@ -170,14 +170,24 @@ const ModalSingleton = (() => {
       this.alert({
         heading: 'The Innovator\'s Compass',
         body: [
-          'Starting something or feeling stuck? Use five questions, asked by all kinds of innovators, to make things better.',
-          'Explore anything you\'re doing, alone or with others. You\'ll see challenges in new ways.',
+          'Starting something or feeling stuck? Use five powerful questions to make things better.',
+          '<h4>Tips for each question:</h4>',
           '<b>1. PEOPLE: Who could be involved?</b> ...including you? For and with everyone involved, explore...',
-          '<b>2. OBSERVATIONS: What\'s happening? Why?</b> What are people doing? Saying? Thinking? Feeling? Why? See all sides, ups and downs.',
-          '<b>3. PRINCIPLES: What matters most</b> for everyone involved? Principles often compete - inspiring us to get creative!',
-          '<b>4. IDEAS: What ways are there?</b> Anyone and anything can help. Look around for ideas! Play with who/what/when/where/how.',
-          '<b>5. EXPERIMENTS: What\'s a step to try?</b> With little time/risk/cost? Do it! What happens for all involved (#1 & 2)?',
-          'Really explore. Look, listen, feel; use words, draw, move, make. In this order (P.O.P.I.E.) or any way that moves you forward.',
+          '<b>2. OBSERVATIONS: What\'s happening? Why?</b> Details and all sides of what people are doing, saying, thinking, and feeling.',
+          '<b>3. PRINCIPLES: What matters most for everyone involved?</b> Different, maybe competing things here. That\'s the challenge!',
+          '<b>4. IDEAS: What ways are there?</b> Different who/what/when/where/hows. Anyone and anything can help. Look around for ideas!',
+          '<b>5. EXPERIMENTS: What\'s a step to try?</b> Small, with real details so you DO it! What happens? (back to #2)</b>',
+          'Really explore. Look, listen, feel; use words, draw, move, or make. In this order or any way they you forward. Guesses are fine—just add ? marks and go find out!',
+
+          '<h4>Tips for organizing</h4>',
+          'Cluster related stickies together and add a label with a sticky that stands out—e.g. in bold capitals, and/or a different color.',
+
+          '<h4>Tips for groups</h4>',
+          'Divide up the time you have to work on each part. For each part of the compass...',
+          '1. Give everyone a little quiet time to write their own stickies as drafts, one thought per sticky.  If they have thoughts about other parts, they can draft those too.',
+          '2. One person publishes one sticky, and reads out just what it says.',
+          '3. Others publish any similar notes they have, clustering them around the first',
+          '4. Then someone else publishes and reads a different note to start a new cluster, and so on',
           'For more information, visit <a href="http://innovatorscompass.org" target="_blank"><u>innovatorscompass.org</u></a>.',
         ],
       });

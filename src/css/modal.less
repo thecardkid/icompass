@@ -23,10 +23,10 @@ div#ic-modal-container {
   }
 
   div#ic-modal {
-    width: 350px;
-    padding: 10px 20px;
+    width: 400px;
+    padding: 15px 20px;
     background: var(--modal-bg);
-    margin: 100px auto 0;
+    margin: 130px auto 0;
     .border-radius(2px);
     -webkit-box-shadow: var(--shadow);
     -moz-box-shadow: var(--shadow);
@@ -38,6 +38,8 @@ div#ic-modal-container {
       text-align: left;
       padding: 10px 0;
       margin-top: 10px;
+      max-height: 500px;
+      overflow-y: scroll;
 
       a {
         color: @blue !important;
@@ -48,7 +50,14 @@ div#ic-modal-container {
         margin-bottom: 20px;
       }
 
-      p, span {
+      // meant for subheadings. see alertCompassPrompt
+      h4 {
+        font-size: 15px;
+        text-decoration: underline;
+        margin-top: 30px;
+      }
+
+      p, span, ol, ul {
         margin-top: 10px;
         font-size: 13px;
         line-height: 15px;
