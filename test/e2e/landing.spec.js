@@ -27,7 +27,7 @@ describe('landing page', () => {
   it('make flow shows correct prompts', () => {
     const prompts = b.elements('div#get-started-form p').value;
     expect(prompts[0].getText()).to.equal('What topic are you working on?');
-    expect(prompts[1].getText()).to.equal('Your name:');
+    expect(prompts[1].getText()).to.equal('Your name');
   });
 
   describe('invalid input', () => {
