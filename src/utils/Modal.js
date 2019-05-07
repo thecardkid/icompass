@@ -141,7 +141,7 @@ const ModalSingleton = (() => {
         body: [
           'iCompass does not require any personally-identifiable information about you. Where privacy is a concern, consider having collaborators not include their real/entire names or other personally-identifiable information in their screen names or Compass.',
           'If you choose to "save via email", your email is only used to send you your workspace code at that time, and is not stored.',
-          'iCompass stores data pertaining to your workspace in a secured manner, in order to provide you reliable access. iCompass will not expose your workspace\'s contents, code, or any other information, to any unauthorized third-party for any other purposes than storage.',
+          'iCompass stores data pertaining to your workspace in a secure manner, in order to provide you reliable access. iCompass will not expose your workspace\'s contents, code, or any other information, to any third-party for reasons other than storage.',
           'Anyone who has your workspace\'s edit code will be able to access and modify any and all data in your Compass. Save and share your workspace link with care, and ask collaborators to do the same.',
         ],
       });
