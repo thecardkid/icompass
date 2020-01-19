@@ -39,6 +39,8 @@ class FormManager extends Component {
         <EditTextForm title={'Edit this draft'}
                       info={this.props.forms.formInfo}
                       ship={this.props.workspaceX.editDraft}
+                      submitDraft={this.props.workspaceX.undraft}
+                      color={this.props.color}
                       {...this.props.commonAttrs} />
       );
     }
@@ -67,6 +69,8 @@ class FormManager extends Component {
         <EditImageForm title={'Edit photo draft'}
                        info={this.props.forms.formInfo}
                        ship={this.props.workspaceX.editDraft}
+                       submitDraft={this.props.workspaceX.undraft}
+                       color={this.props.color}
                        {...this.props.commonAttrs}
         />
       );
@@ -117,6 +121,7 @@ const mapStateToProps = (state) => {
     drafts: state.workspace.drafts,
     forms: state.ui.forms,
     visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
+    color: state.users.nameToColor[state.users.me],
   };
 };
 

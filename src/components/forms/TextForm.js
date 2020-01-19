@@ -20,9 +20,13 @@ class TextForm extends Component {
       color: props.bg,
       text: props.defaultText || '',
       // text includes HTML tags, which allows users to
-      // save visually empty notes (perceived string lenth
+      // save visually empty notes (perceived string length
       // is 0 but actual string length is > 0).
-      effectiveText: props.defaultText,
+      // We must initialize this to a non-nil value if
+      // props.defaultText is non-nil. Otherwise, the if
+      // statement in this.submit fails, when it should pass,
+      // when a user clicks on a draft to Publish it.
+      effectiveText: props.defaultText.length > 0 ? 'dummy' : '',
     };
 
     this.modal = ModalSingleton.getInstance();

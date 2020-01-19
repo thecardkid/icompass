@@ -10,7 +10,7 @@ export default class EditTextForm extends Component {
     this.socket = Socket.getInstance();
   }
 
-  edit = (text, isImage, { style, color }) => {
+  edit = (text, isImage, { style, color }, isDraft) => {
     if (!text) return;
 
     const edited = {
@@ -22,6 +22,15 @@ export default class EditTextForm extends Component {
     };
     const { idx } = edited;
     delete edited.idx;
+
+    if (isDraft === false && this.props.info.draft === true) {
+      this.props.submitDraft(idx);
+      delete edited.draft;
+      edited.color = this.props.color;
+      /* Can't submit draft in visual mode, no need to check */
+      this.socket.emitNewNote(edited);
+      this.socket.emitMetric('draft submit');
+    }
 
     this.socket.emitMetric('note edit');
     this.props.ship(edited, idx);
