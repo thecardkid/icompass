@@ -18,7 +18,7 @@ const setup = () => {
   browser.click('button[type=submit]');
   browser.waitForVisible('#ic-modal', 1000);
   // do not email
-  browser.click('#ic-modal-confirm');
+  browser.click('#ic-modal-cancel');
   browser.waitForVisible('#compass', 1000);
   // set center
   browser.waitForVisible('#ic-modal');

@@ -103,29 +103,22 @@ class LandingPage extends Component {
 
   promptForEmail = () => {
     this.modal.promptForEmail(
-      (status, email) => {
-        if (!status) {
-          this.toast.warn('You need to complete this action');
-          return this.promptForEmail();
-        }
-
+      (hasValue, email) => {
         const { username, data: { code } } = this.state;
-        if (!email.length) {
-          return browserHistory.push(`/compass/edit/${code}/${username}`);
-        }
+        if (hasValue) {
+          if (!REGEX.EMAIL.test(email)) {
+            this.toast.error(`"${email}" is not a valid email address`);
+            return this.promptForEmail();
+          }
 
-        if (!REGEX.EMAIL.test(email)) {
-          this.toast.error(`"${email}" is not a valid email address`);
-          return this.promptForEmail();
-        }
+          // Specifically check for "true" to avoid setting it when
+          // an email is already stored
+          if (Storage.getAlwaysSendEmail() === true) {
+            Storage.setAlwaysSendEmail(email);
+          }
 
-        // Specifically check for "true" to avoid setting it when
-        // an email is already stored
-        if (Storage.getAlwaysSendEmail() === true) {
-          Storage.setAlwaysSendEmail(email);
+          this.socket.emitSendMail(code, username, email);
         }
-
-        this.socket.emitSendMail(code, username, email);
         return browserHistory.push(`/compass/edit/${code}/${username}`);
       },
       (alwaysSendEmail) => {

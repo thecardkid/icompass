@@ -267,6 +267,7 @@ const ModalSingleton = (() => {
       html = this.getModalHtml(
         html,
         '<button id="ic-modal-confirm">Submit</button>',
+        '<button id="ic-modal-cancel">Skip</button>',
       );
 
       this._prompt(html, confirmCb);
@@ -379,7 +380,7 @@ const ModalSingleton = (() => {
         response = $('#ic-modal-input').val();
         $(window).off('keydown', this.enterAsSubmit);
         this.close();
-        cb(false, response);
+        // Don't call cb here
       });
 
       $(window).on('keydown', this.enterAsSubmit);

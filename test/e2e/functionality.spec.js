@@ -148,7 +148,7 @@ describe('basic functionality', () => {
       b.click('button[type=submit]');
       b.waitForVisible('#ic-modal', 1000);
       // do not email
-      b.click('#ic-modal-confirm');
+      b.click('#ic-modal-cancel');
       b.waitForVisible('#compass', 1000);
       // set center
       b.waitForVisible('#ic-modal');

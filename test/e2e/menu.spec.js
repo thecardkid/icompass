@@ -70,7 +70,7 @@ describe('workspace menu', () => {
 
     it('as screenshot', () => {
       selectSubmenuOption(menuActions.screenshot);
-      expect('div.ic-screenshot.ic-dynamic-modal').to.be.visible();
+      b.waitForVisible('div.ic-screenshot.ic-dynamic-modal');
       expect('div#exported-png canvas').to.be.visible();
       expect('div#exported-png p').to.have.text(/Right click/);
       b.click('button.ic-close-window');

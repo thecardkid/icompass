@@ -5,13 +5,12 @@ let DefaultCompass = require('./defaultCompass');
 const { STICKY_COLORS } = require('../lib/constants');
 
 function generateUUID() {
-  let d = new Date().getTime();
-  let uuid = 'xxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx'.replace(/[xy]/g, function(c) {
+    let d = new Date().getTime();
     let r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
-  return uuid;
 }
 
 mongoose.Promise = global.Promise;

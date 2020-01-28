@@ -66,22 +66,18 @@ describe('landing page', () => {
       b.waitForVisible('#ic-modal');
 
       expect('#ic-modal-body').to.have.text(/Receive a Link/);
-      expect(b.getAttribute('#ic-modal-input', 'placeholder')).to.equal('enter email or leave blank');
-      expect('#ic-modal-cancel').to.not.be.visible();
+      expect('#ic-modal-confirm').to.be.visible();
+      expect('#ic-modal-cancel').to.be.visible();
       expect('#ic-modal-input').to.be.visible();
     });
 
-    it('wrong email format reprompts for email', () => {
-      b.setValue('#ic-modal-input', 'fakeemail');
-      b.click('#ic-modal-confirm');
-      b.waitForVisible('#ic-toast');
-      expect('#ic-toast').to.have.text(/not a valid email address/);
+    it('can skip providing email', () => {
+      b.click('#ic-modal-cancel');
+      b.waitForVisible('#compass');
     });
 
     it('empty email skips sending reminder', () => {
       b.clearElement('#ic-modal-input');
-      b.click('#ic-modal-confirm');
-      b.waitForVisible('#compass');
     });
 
     it('valid email shows toast', () => {
@@ -98,69 +94,105 @@ describe('landing page', () => {
     });
   });
 
-  describe('always email', () => {
+  describe('email', () => {
     beforeEach(() => {
-      b.url('http://localhost:8080/');
-      b.setValue('#compass-center', 'center');
-      b.setValue('#username', 'sandbox');
-    });
-
-    it('does not store an invalid email', () => {
-      b.click('button[type=submit]');
-      b.waitForVisible('#ic-always-email-value');
-
-      b.setValue('#ic-modal-input', 'invalidemail');
-      b.click('#ic-always-email-value');
-      b.click('#ic-modal-confirm');
-      b.waitForVisible('#ic-toast');
-      expect('#ic-toast').to.have.text(/not a valid email address/);
-
-      // to test that it's not stored, refresh the page and
-      // re-execute the form
+      // Fills out the fields, and clicks the submit button so that each test
+      // starts with the email prompt showing.
       b.url('http://localhost:8080/');
       b.setValue('#compass-center', 'center');
       b.setValue('#username', 'sandbox');
       b.click('button[type=submit]');
-      // assert that the modal is shown again
-      b.waitForVisible('#ic-always-email-value');
-      expect(b.isSelected('#ic-always-email-value')).to.be.false;
+      b.waitForVisible('#ic-modal-body');
     });
 
-    it('does store valid email', () => {
-      b.click('button[type=submit]');
-      b.waitForVisible('#ic-always-email-value');
+    describe('email validation', () => {
+      it('rejects empty email', () => {
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/not a valid email address/);
+      });
 
-      b.setValue('#ic-modal-input', 'fakeuser@fakedomain.com');
-      b.click('#ic-always-email-value');
-      b.click('#ic-modal-confirm');
-      b.waitForVisible('#ic-toast');
-      expect('#ic-toast').to.have.text(/link to this workspace/);
+      it('rejects invalid email', () => {
+        b.setValue('#ic-modal-input', 'fakeemail');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/not a valid email address/);
+      });
 
-      // to test that it's stored, refresh the page and
-      // re-execute the form
-      b.url('http://localhost:8080/');
-      b.setValue('#compass-center', 'center');
-      b.setValue('#username', 'sandbox');
-      b.click('button[type=submit]');
-      // assert that we are taken straight to workspace
-      b.waitForVisible('#ic-toast');
-      expect('#ic-toast').to.have.text(/automatically/);
+      it('valid email goes through', () => {
+        b.setValue('#ic-modal-input', 'tester@test.com');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#compass');
+      });
+
+      it('skipping goes through', () => {
+        b.click('#ic-modal-cancel');
+        b.waitForVisible('#compass');
+      });
+
+      it('skipping goes through even with invalid input', () => {
+        b.setValue('#ic-modal-input', 'fakeemail');
+        b.click('#ic-modal-cancel');
+        b.waitForVisible('#compass');
+      });
     });
 
-    it('unsubscription', () => {
-      b.url('http://localhost:8080/disable-auto-email');
-      b.waitForVisible('#ic-modal');
-      expect('#ic-modal-body').to.have.text(/turned off/);
-      // redirects to home page
-      b.click('#ic-modal-confirm');
+    describe('always email feature', () => {
+      it('does not store an invalid email', () => {
+        b.waitForVisible('#ic-always-email-value');
 
-      b.waitForVisible('#ic-landing-container');
-      b.setValue('#compass-center', 'center');
-      b.setValue('#username', 'sandbox');
-      b.click('button[type=submit]');
-      // assert shown and unchecked
-      b.waitForVisible('#ic-always-email-value');
-      expect(b.isSelected('#ic-always-email-value')).to.be.false;
+        b.setValue('#ic-modal-input', 'invalidemail');
+        b.click('#ic-always-email-value');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/not a valid email address/);
+
+        // to test that it's not stored, refresh the page and
+        // re-execute the form
+        b.url('http://localhost:8080/');
+        b.setValue('#compass-center', 'center');
+        b.setValue('#username', 'sandbox');
+        b.click('button[type=submit]');
+        // assert that the modal is shown again
+        b.waitForVisible('#ic-always-email-value');
+        expect(b.isSelected('#ic-always-email-value')).to.be.false;
+      });
+
+      it('does store valid email', () => {
+        b.waitForVisible('#ic-always-email-value');
+
+        b.setValue('#ic-modal-input', 'fakeuser@fakedomain.com');
+        b.click('#ic-always-email-value');
+        b.click('#ic-modal-confirm');
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/link to this workspace/);
+
+        // to test that it's stored, refresh the page and
+        // re-execute the form
+        b.url('http://localhost:8080/');
+        b.setValue('#compass-center', 'center');
+        b.setValue('#username', 'sandbox');
+        b.click('button[type=submit]');
+        // assert that we are taken straight to workspace
+        b.waitForVisible('#ic-toast');
+        expect('#ic-toast').to.have.text(/automatically/);
+      });
+
+      it('unsubscription', () => {
+        b.url('http://localhost:8080/disable-auto-email');
+        b.waitForVisible('#ic-modal');
+        expect('#ic-modal-body').to.have.text(/turned off/);
+        // redirects to home page
+        b.click('#ic-modal-confirm');
+
+        b.waitForVisible('#ic-landing-container');
+        b.setValue('#compass-center', 'center');
+        b.setValue('#username', 'sandbox');
+        b.click('button[type=submit]');
+        // assert shown and unchecked
+        b.waitForVisible('#ic-always-email-value');
+        expect(b.isSelected('#ic-always-email-value')).to.be.false;
+      });
     });
   });
 });
