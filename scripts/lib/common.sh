@@ -2,6 +2,7 @@
 set -euo pipefail
 
 export IC_ROOT="$(unset CDPATH;cd "$(dirname "${BASH_SOURCE[0]}")"/../.. && pwd)"
+export IC_BUILD="$IC_ROOT/build"
 
 ensure_brew_installed() {
     set +e

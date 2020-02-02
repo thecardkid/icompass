@@ -11,3 +11,12 @@
 1. In Route 53, change the A-records of `icompass.me` and `beta.icompass.me` to point to the new instance's IP address.
 1. Run `./scripts/deploy-staging`, and verify that staging environment is accessible at [https://beta.icompass.me](https://beta.icompass.me).
 1. Run `./scripts/deploy-prod`, and verify production environment is accessible at [https://icompass.me](https://icompass.me).
+
+## Release procedure
+
+1. Make sure all changes have landed on `develop`.
+1. Tag the new release version: `git tag vA.B.C`.
+1. (Optional) Dump the production logs for metrics `scripts/ec2-dump-logs`.
+1. Merge to master: `git checkout master; git merge develop`.
+1. (Optional) Deploy to staging: `scripts/deploy-staging`.
+1. Deploy to prod: `scripts/deploy-prod`.
