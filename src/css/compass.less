@@ -89,7 +89,8 @@ div.ic-compass-label {
 
 #center-drag-modal {
   position: absolute;
-  background: @light;
+  background: var(--standout);
+  color: var(--bg);
   top: 70px;
   left: 70px;
   z-index: @centerZIndex;
@@ -117,12 +118,12 @@ div.ic-compass-label {
 
       &.cancel {
         background: none;
-        color: @dark;
+        color: var(--bg);
       }
 
       &.accept {
-        background: @dark;
-        color: @light;
+        background: var(--bg);
+        color: var(--standout);
       }
     }
   }

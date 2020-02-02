@@ -236,28 +236,30 @@ export default class BookmarkList extends Component {
             Receive an email with a list of all your bookmarks
           </div>
         </ReactTooltip>
-        <button id={'export'} onClick={this.exportBookmarks} data-tip data-for="export-tooltip">
-          <i className={'material-icons'}>cloud_download</i>
-        </button>
-        <ReactTooltip id={'export-tooltip'} place={'right'} effect={'solid'}>
-          <div className={'bookmark-tooltip'}>
-            Download your bookmarks as a .json file that you can upload to the app. Useful when you are changing devices, or if you are about to clear your cache data.
-          </div>
-        </ReactTooltip>
-        <button id={'import'} onClick={this.clickFile} data-tip data-for="import-tooltip">
-          <i className={'material-icons'}>cloud_upload</i>
-        </button>
-        <ReactTooltip id={'import-tooltip'} place={'right'} effect={'solid'}>
-          <div className={'bookmark-tooltip'}>
-            Upload the .json file you downloaded from another device to restore those bookmarks.
-          </div>
-        </ReactTooltip>
-        <a className={'hidden'} ref={'exporter'} />
-        <input className={'hidden'}
-               type={'file'}
-               ref={'importer'}
-               multiple={false}
-               onChange={this.importBookmarks}/>
+        {/* These are temporarily disabled because they are a confusing feature, useful only
+         when we migrate domains */}
+        {/*<button id={'export'} onClick={this.exportBookmarks} data-tip data-for="export-tooltip">*/}
+        {/*  <i className={'material-icons'}>cloud_download</i>*/}
+        {/*</button>*/}
+        {/*<ReactTooltip id={'export-tooltip'} place={'right'} effect={'solid'}>*/}
+        {/*  <div className={'bookmark-tooltip'}>*/}
+        {/*    Download your bookmarks as a .json file that you can upload to the app. Useful when you are changing devices, or if you are about to clear your cache data.*/}
+        {/*  </div>*/}
+        {/*</ReactTooltip>*/}
+        {/*<button id={'import'} onClick={this.clickFile} data-tip data-for="import-tooltip">*/}
+        {/*  <i className={'material-icons'}>cloud_upload</i>*/}
+        {/*</button>*/}
+        {/*<ReactTooltip id={'import-tooltip'} place={'right'} effect={'solid'}>*/}
+        {/*  <div className={'bookmark-tooltip'}>*/}
+        {/*    Upload the .json file you downloaded from another device to restore those bookmarks.*/}
+        {/*  </div>*/}
+        {/*</ReactTooltip>*/}
+        {/*<a className={'hidden'} ref={'exporter'} />*/}
+        {/*<input className={'hidden'}*/}
+        {/*       type={'file'}*/}
+        {/*       ref={'importer'}*/}
+        {/*       multiple={false}*/}
+        {/*       onChange={this.importBookmarks}/>*/}
       </div>
     );
   };

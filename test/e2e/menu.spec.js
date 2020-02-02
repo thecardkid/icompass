@@ -310,67 +310,67 @@ describe('workspace menu', () => {
           expect('.ic-saved').to.not.be.there();
         });
 
-        describe('import/export bookmarks', () => {
-          it('warns if exporting empty bookmarks', () => {
-            b.click('button#export');
-            b.pause(200);
-            expect('#ic-toast').to.be.visible();
-            expect('#ic-toast').to.have.text(/no bookmarks/);
-          });
-
-          it('notifies if empty file', () => {
-            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/empty.json');
-            b.pause(200);
-            expect('#ic-toast').to.be.visible();
-            expect('#ic-toast').to.have.text(/Nothing happened/);
-          });
-
-          it('errors if not json', () => {
-            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
-            b.pause(200);
-            expect('#ic-toast').to.be.visible();
-            expect('#ic-toast').to.have.text(/Invalid file type/);
-          });
-
-          it('aborts if attribute is missing', () => {
-            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
-            b.pause(200);
-            expect('#ic-modal').to.be.visible();
-            expect('#ic-modal-body').to.have.text(/correct format/);
-            b.click('#ic-modal-confirm');
-          });
-
-          it('aborts if href is invalid', () => {
-            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
-            b.pause(200);
-            expect('#ic-modal').to.be.visible();
-            expect('#ic-modal-body').to.have.text(/correct format/);
-            b.click('#ic-modal-confirm');
-          });
-
-          it('aborts if username is invalid', () => {
-            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
-            b.pause(200);
-            expect('#ic-modal').to.be.visible();
-            expect('#ic-modal-body').to.have.text(/correct format/);
-            b.click('#ic-modal-confirm');
-          });
-
-          it('succeeds and adds to existing bookmarks, without checking for duplicates', () => {
-            expect('.ic-saved').to.have.count(0);
-            b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/valid.json');
-            b.pause(200);
-            expect('#ic-toast').to.be.visible();
-            expect('#ic-toast').to.have.text(/Bookmarks imported/);
-            expect('.ic-saved').to.have.count(1);
-          });
-
-          it('prompts for email', () => {
-            expect('#ic-modal').to.be.visible();
-            expect('#ic-modal').to.have.text(/Email your bookmarks/);
-            b.click('#ic-modal-cancel');
-          });
-        });
+        // describe('import/export bookmarks', () => {
+        //   it('warns if exporting empty bookmarks', () => {
+        //     b.click('button#export');
+        //     b.pause(200);
+        //     expect('#ic-toast').to.be.visible();
+        //     expect('#ic-toast').to.have.text(/no bookmarks/);
+        //   });
+        //
+        //   it('notifies if empty file', () => {
+        //     b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/empty.json');
+        //     b.pause(200);
+        //     expect('#ic-toast').to.be.visible();
+        //     expect('#ic-toast').to.have.text(/Nothing happened/);
+        //   });
+        //
+        //   it('errors if not json', () => {
+        //     b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/notjson.xml');
+        //     b.pause(200);
+        //     expect('#ic-toast').to.be.visible();
+        //     expect('#ic-toast').to.have.text(/Invalid file type/);
+        //   });
+        //
+        //   it('aborts if attribute is missing', () => {
+        //     b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/missingattribute.json');
+        //     b.pause(200);
+        //     expect('#ic-modal').to.be.visible();
+        //     expect('#ic-modal-body').to.have.text(/correct format/);
+        //     b.click('#ic-modal-confirm');
+        //   });
+        //
+        //   it('aborts if href is invalid', () => {
+        //     b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidhref.json');
+        //     b.pause(200);
+        //     expect('#ic-modal').to.be.visible();
+        //     expect('#ic-modal-body').to.have.text(/correct format/);
+        //     b.click('#ic-modal-confirm');
+        //   });
+        //
+        //   it('aborts if username is invalid', () => {
+        //     b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/invalidusername.json');
+        //     b.pause(200);
+        //     expect('#ic-modal').to.be.visible();
+        //     expect('#ic-modal-body').to.have.text(/correct format/);
+        //     b.click('#ic-modal-confirm');
+        //   });
+        //
+        //   it('succeeds and adds to existing bookmarks, without checking for duplicates', () => {
+        //     expect('.ic-saved').to.have.count(0);
+        //     b.chooseFile('input[type=file]', './test/e2e/files/bookmarks/valid.json');
+        //     b.pause(200);
+        //     expect('#ic-toast').to.be.visible();
+        //     expect('#ic-toast').to.have.text(/Bookmarks imported/);
+        //     expect('.ic-saved').to.have.count(1);
+        //   });
+        //
+        //   it('prompts for email', () => {
+        //     expect('#ic-modal').to.be.visible();
+        //     expect('#ic-modal').to.have.text(/Email your bookmarks/);
+        //     b.click('#ic-modal-cancel');
+        //   });
+        // });
 
         describe('emailing bookmarks', () => {
           it('toasts error if email invalid', () => {

@@ -147,7 +147,7 @@ class WorkspaceMenu extends Component {
     if (Storage.hasBookmark(editCode)) {
       this.modal.alert({
         heading: 'Already bookmarked!',
-        body: 'Check for the yellow bookmark icon at the top right.',
+        body: 'Check for the yellow bookmark icon in the bottom left.',
       });
     } else {
       ReactGA.modalview('modals/menu-bookmark');
