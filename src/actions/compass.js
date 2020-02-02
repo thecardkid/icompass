@@ -17,3 +17,10 @@ export const setCenter = (center) => {
     center,
   };
 };
+
+export const setCenterPosition = (x, y) => {
+  return {
+    type: 'setCenterPosition',
+    x, y,
+  };
+};

@@ -3,7 +3,7 @@ set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 ensure_credentials_exist
 
-# Any update to this file should be made to ./deploy-prod.sh too
+# Any update to this file should be made to ./deploy-prod too
 . "$IC_ROOT/build/credentials/runner.sh"
 
 scp -i "$pem_file" "$IC_ROOT/build/credentials/staging.env" "$EC2_INSTANCE:~/staging.env"

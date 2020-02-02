@@ -17,7 +17,7 @@ ensure_credentials_exist() {
     pem_file="$IC_ROOT/build/credentials/icompass.pem"
 
     if [[ ! -e "$runner_file" || ! -e "$pem_file" ]]; then
-        echo -e "\n$runner_file and/or $pem_file does not exist.\n\nRun scripts/bootstrap.sh\n" >&2
+        echo -e "\n$runner_file and/or $pem_file does not exist.\n\nRun scripts/bootstrap\n" >&2
         exit 1
     fi
 }

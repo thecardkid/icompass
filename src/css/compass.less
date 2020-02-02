@@ -87,6 +87,47 @@ div.ic-compass-label {
   .unselectable;
 }
 
+#center-drag-modal {
+  position: absolute;
+  background: @light;
+  top: 70px;
+  left: 70px;
+  z-index: @centerZIndex;
+  width: 200px;
+  padding: 10px;
+  text-align: center;
+  font-family: @notosans;
+  .border-radius(3px);
+
+  .header {
+    font-size: 14px;
+    margin: 20px 0;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    button {
+      width: 60px;
+      .border-radius(3px);
+      font-size: 13px;
+      padding: 3px;
+
+      &.cancel {
+        background: none;
+        color: @dark;
+      }
+
+      &.accept {
+        background: @dark;
+        color: @light;
+      }
+    }
+  }
+}
+
 #center {
   .border-radius(25%);
   position: absolute;
@@ -159,7 +200,7 @@ div#ic-visual-toolbar {
     }
 
     button#ic-bulk-submit {
-      background: #23C12B;
+      background: @green;
       color: @light;
     }
   }

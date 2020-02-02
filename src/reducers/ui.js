@@ -10,6 +10,7 @@ const defaultState = {
     editImage: false,
   },
   bookmarked: false,
+  dragCenterEnabled: false,
   showGDocModal: false,
   showShareModal: false,
   showScreenshotModal: false,
@@ -43,6 +44,18 @@ const showNewNote = (state, action, formType) => {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case 'enableDragCenter':
+      return {
+        ...state,
+        dragCenterEnabled: true,
+      };
+
+    case 'disableDragCenter':
+      return {
+        ...state,
+        dragCenterEnabled: false,
+      };
+
     case 'setBookmark':
       return {
         ...state,

@@ -163,6 +163,14 @@ const SocketSingleton = (() => {
       this.socket.emit('set center', { id, center });
     };
 
+    emitSetCenterPosition = (id, x, y) => {
+      this.socket.emit('set center position', { id, x, y });
+    };
+
+    emitResetCenterPosition = () => {
+      this.socket.emit('set center position', { x: 0.5, y: 0.5 });
+    };
+
     emitMetricLandingPage = (start, end, action) => {
       this.socket.emit('metric landing page time', start, end, action);
     };

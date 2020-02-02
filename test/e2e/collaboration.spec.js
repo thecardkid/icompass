@@ -8,10 +8,10 @@ const b = browser;
 const { setup, cleanup, menuActions, selectSubmenuOption } = require('./utils');
 
 const expectNumUsers = (expected) => {
-  // TODO refactor this using submenuActions
+  // TODO refactor this to use submenuActions
   b.click('button.ic-workspace-button');
   b.waitForVisible('div.ic-workspace-menu');
-  b.moveTo(b.elements('div.has-more').value[3].ELEMENT, 10, 10);
+  b.moveTo(b.elements('div.has-more').value[4].ELEMENT, 10, 10);
   b.waitForVisible('div.ic-users-submenu');
   expect('div.ic-user').to.have.count(expected);
   b.click('button.ic-workspace-button');

@@ -50,7 +50,7 @@ jobs:
         - sleep 20
         - docker logs docker_icompass_1
         - npm run mocha
-        - ./scripts/wdio-travis.sh
+        - ./scripts/wdio-travis
     - stage: build production docker image
       if: branch = master
       script:

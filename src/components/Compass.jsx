@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { DraggableCore } from 'react-draggable';
 import React, { Component } from 'react';
 import { isMobile } from 'react-device-detect';
 import { connect } from 'react-redux';
@@ -22,10 +23,29 @@ import Toast from '../utils/Toast';
 import { EDITING_MODE } from '../../lib/constants';
 
 const QUADRANTS = [
-  { id: 'observations', prompt: '2. What\'s happening? Why?' },
-  { id: 'principles', prompt: '3. What matters most?' },
-  { id: 'ideas', prompt: '4. What ways are there?' },
-  { id: 'experiments', prompt: '5. What\'s a step to try?' },
+  {
+    id: 'observations',
+    prompt: '2. What\'s happening? Why?',
+    // decides how the x and y offset of the center
+    // affect the quadrant's height and width
+    xOffsetSign: 1,
+    yOffsetSign: -1,
+  },
+  { id: 'principles',
+    prompt: '3. What matters most?',
+    xOffsetSign: 1,
+    yOffsetSign: 1,
+  },
+  { id: 'ideas',
+    prompt: '4. What ways are there?',
+    xOffsetSign: -1,
+    yOffsetSign: 1,
+  },
+  { id: 'experiments',
+    prompt: '5. What\'s a step to try?',
+    xOffsetSign: -1,
+    yOffsetSign: -1,
+  },
 ];
 
 class Compass extends Component {
@@ -35,6 +55,13 @@ class Compass extends Component {
     this.hasEditingRights = !this.props.viewOnly;
     this.state = {
       showFullTopic: false,
+      isDraggingCenter: false,
+      centerPosition: {
+        // buffer these in the state to bypass redux when
+        // updating them.
+        x: props.compass.centerPosition.x,
+        y: props.compass.centerPosition.y,
+      },
     };
 
     if (this.hasEditingRights) {
@@ -44,6 +71,7 @@ class Compass extends Component {
       this.socket = Socket.getInstance();
       this.socket.subscribe({
         'center set': this.setCompassCenter,
+        'center position set': this.setCompassCenterPosition,
       });
       if (props.compass.center.length === 0) {
         this.setPeopleInvolved();
@@ -107,12 +135,14 @@ class Compass extends Component {
   };
 
   renderQuadrant = (q) => {
+    const { centerPosition } = this.state;
+    const { vw, vh } = this.props.ui;
     return (
       <div className="ic-quadrant"
            key={`quadrant-${q.id}`}
            style={{
-             width: this.props.ui.vw / 2,
-             height: this.props.ui.vh / 2,
+             width: vw * (0.5 + ((centerPosition.x - 0.5) * q.xOffsetSign)),
+             height: vh * (0.5 + ((centerPosition.y - 0.5) * q.yOffsetSign)),
            }}
            id={q.id}>
         <div className={'interactable'}
@@ -134,19 +164,19 @@ class Compass extends Component {
     );
   };
 
-  renderLabels() {
-    let left = this.props.ui.vw / 2 - 35,
-      top = this.props.ui.vh / 2 - 9;
-
+  renderLabels = () => {
+    const { centerPosition } = this.state;
+    const left = (this.props.ui.vw * centerPosition.x) - 35;
+    const top = (this.props.ui.vh * centerPosition.y) - 9;
     return (
       <div>
-        <div className="ic-compass-label" style={{ left: '5px', top: top }}>PRESENT</div>
-        <div className="ic-compass-label" style={{ left: left, top: '5px' }}>BIG PICTURE</div>
-        <div className="ic-compass-label" style={{ right: '5px', top: top }}>FUTURE</div>
-        <div className="ic-compass-label" style={{ left: left, bottom: '5px' }}>DETAILS</div>
+        <div className="ic-compass-label" style={{ left: 5, top: top }}>PRESENT</div>
+        <div className="ic-compass-label" style={{ left: left, top: 5 }}>BIG PICTURE</div>
+        <div className="ic-compass-label" style={{ right: 5, top: top }}>FUTURE</div>
+        <div className="ic-compass-label" style={{ left: left, bottom: 5 }}>DETAILS</div>
       </div>
     );
-  }
+  };
 
   setCompassCenter = (center) => {
     if (this.props.compass.center.length === 0) {
@@ -154,6 +184,13 @@ class Compass extends Component {
       this.animateQuadrants = true;
     }
     this.props.compassX.setCenter(center);
+  };
+
+  setCompassCenterPosition = (x, y) => {
+    this.props.compassX.setCenterPosition(x, y);
+    this.setState({
+      centerPosition: { x, y },
+    });
   };
 
   fadeInQuadrants = (deltaTimeMs) => {
@@ -219,10 +256,15 @@ class Compass extends Component {
   };
 
   renderPromptFirstQuestion() {
-    const style = Object.assign(this.getCenterCss(100, 100), {zIndex: 5});
     return (
       <div>
-        <div id="center" className="wordwrap" style={style} onClick={this.setPeopleInvolved}>
+        <div id="center" className="wordwrap" style={{
+          top: Math.max((this.props.ui.vh - length) / 2, 0),
+          left: Math.max((this.props.ui.vw - length) / 2, 0),
+          width: length,
+          height: length,
+          zIndex: 5,
+        }} onClick={this.setPeopleInvolved}>
           <p id="first-prompt">Start here</p>
         </div>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
@@ -232,8 +274,29 @@ class Compass extends Component {
     );
   }
 
-  renderCompassStructure = () => {
-    const { center, topic } = this.props.compass;
+  onCenterDragStart = () => {
+    if (!this.props.ui.dragCenterEnabled) {
+      return;
+    }
+    this.setState({ isDraggingCenter: true });
+  };
+
+  onCenterDragMove = ({ x, y }) => {
+    if (!this.props.ui.dragCenterEnabled) {
+      return;
+    }
+    const { vw, vh } = this.props.ui;
+    this.setState({
+      centerPosition: {
+        x: Math.min(Math.max(x / vw, 0.25), 0.75),
+        y: Math.min(Math.max(y / vh, 0.25), 0.75),
+      },
+    });
+  };
+
+  renderCenter = () => {
+    const { center } = this.props.compass;
+    const { centerPosition } = this.state;
     let css, length;
     if (center.length <= 40) {
       css = this.getCenterTextCss(11, length = 100);
@@ -243,46 +306,90 @@ class Compass extends Component {
       // center text at most 100
       css = this.getCenterTextCss(16, length = 140);
     }
+    return (
+      <DraggableCore
+        onStart={this.onCenterDragStart}
+        onDrag={this.onCenterDragMove}>
+        <div>
+          <div id="center"
+               data-tip={'Double-click to edit'}
+               data-for="center-tooltip"
+               style={{
+                 top: (this.props.ui.vh * centerPosition.y) - (length / 2),
+                 left: (this.props.ui.vw * centerPosition.x) - (length / 2),
+                 width: length,
+                 height: length,
+                 cursor: this.hasEditingRights ? 'pointer' : 'auto',
+               }}
+               onDoubleClick={this.hasEditingRights ? this.editPeopleInvolved : _.noop}>
+            <p className="wordwrap" style={css}>{center}</p>
+          </div>
+          {this.hasEditingRights && !this.props.ui.dragCenterEnabled &&
+            <ReactTooltip
+              id={'center-tooltip'}
+              place={'bottom'}
+              type={Storage.getTooltipTypeBasedOnDarkTheme()}
+              delayShow={200}
+              effect={'solid'}/>
+          }
+        </div>
+      </DraggableCore>
+    );
+  };
 
+  cancelCenterDrag = () => {
+    this.props.uiX.disableDragCenter();
+    this.setState({
+      isDraggingCenter: false,
+      centerPosition: {
+        x: this.props.compass.centerPosition.x,
+        y: this.props.compass.centerPosition.y,
+      },
+    });
+  };
+
+  submitCenterDrag = () => {
+    this.props.uiX.disableDragCenter();
+    this.setState({ isDraggingCenter: false });
+    this.socket.emitSetCenterPosition(this.props.compass._id, this.state.centerPosition.x, this.state.centerPosition.y);
+  };
+
+  renderCenterDragModal() {
+    return (
+      <div id={'center-drag-modal'}>
+        <div className={'header'}>
+          Click and drag the center to move it.
+        </div>
+        <div className={'actions'}>
+          <button className={'cancel'} onClick={this.cancelCenterDrag}>
+            Cancel
+          </button>
+          <button className={'accept'} onClick={this.submitCenterDrag}>
+            Accept
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  renderTopic = () => {
+    const { topic } = this.props.compass;
     let displayedTopic = topic;
-    let needsTooltip = true;
+    let needsTooltip = false;
     if (!this.state.showFullTopic) {
       const topicLengthCap = 35;
       if (topic.length > topicLengthCap) {
+        needsTooltip = true;
         displayedTopic = '';
         const words = topic.split(' ');
         while (displayedTopic.length + words[0].length < topicLengthCap) {
           displayedTopic += words.shift() + ' ';
         }
         displayedTopic += '...';
-      } else {
-        needsTooltip = false;
       }
     }
-
     return (
       <div>
-        <div id="center"
-             data-tip="Double-click to edit"
-             data-for="center-tooltip"
-             style={{
-               ...this.getCenterCss(length, length),
-               cursor: this.hasEditingRights ? 'pointer' : 'auto',
-             }}
-             onDoubleClick={this.hasEditingRights ? this.editPeopleInvolved : _.noop} >
-          <p className="wordwrap" style={css}>{center}</p>
-        </div>
-        {this.hasEditingRights &&
-          <ReactTooltip id={'center-tooltip'}
-                        place={'bottom'}
-                        type={Storage.getTooltipTypeBasedOnDarkTheme()}
-                        delayShow={200}
-                        effect={'solid'}/>
-        }
-        <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
-        <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
-        {_.map(QUADRANTS, this.renderQuadrant)}
-        {this.renderLabels()}
         <MaybeTappable onTapOrClick={this.showOrHideFullTopic}>
           <div id={'ic-compass-topic'}
                data-tip={this.state.showFullTopic ? 'Click to truncate' : 'Click to expand'}
@@ -296,6 +403,21 @@ class Compass extends Component {
                       type={Storage.getTooltipTypeBasedOnDarkTheme()}
                       effect={'solid'} />
         }
+      </div>
+    );
+  };
+
+  renderCompassStructure = () => {
+    const { centerPosition } = this.state;
+    return (
+      <div>
+        {this.renderCenter()}
+        {this.props.ui.dragCenterEnabled && this.renderCenterDragModal()}
+        <div id="hline" style={{ top: (this.props.ui.vh * centerPosition.y) - 2 }}/>
+        <div id="vline" style={{ left: (this.props.ui.vw * centerPosition.x) - 2 }}/>
+        {_.map(QUADRANTS, this.renderQuadrant)}
+        {this.renderLabels()}
+        {this.renderTopic()}
       </div>
     );
   };
@@ -324,7 +446,6 @@ class Compass extends Component {
       } else {
         this.fadeInQuadrants(0);
       }
-
       compass = this.renderCompassStructure();
     }
 

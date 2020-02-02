@@ -9,6 +9,7 @@ import _ from 'underscore';
 import ExportSubmenu from './submenus/ExportSubmenu';
 import ModesSubmenu from './submenus/ModesSubmenu';
 import NotesSubmenu from './submenus/NotesSubmenu';
+import ResizeSubmenu from './submenus/ResizeSubmenu';
 import ShortcutManager from './ShortcutManager';
 
 import MaybeTappable from '../utils/MaybeTappable';
@@ -32,6 +33,7 @@ class WorkspaceMenu extends Component {
         notes: false,
         modes: false,
         users: false,
+        resize: false,
       },
     };
 
@@ -68,23 +70,23 @@ class WorkspaceMenu extends Component {
     switch (mode) {
       case 'standard':
         this.toast.info('Switched to standard mode');
-        this.hideMenu();
-        return this.props.uiX.normalMode();
+        this.props.uiX.normalMode();
+        break;
 
       case 'compact':
         this.toast.info('Switched to compact mode');
-        this.hideMenu();
-        return this.props.uiX.compactMode();
+        this.props.uiX.compactMode();
+        break;
 
       case 'bulk':
         this.toast.info('Switched to bulk edit mode');
-        this.hideMenu();
-        return this.props.uiX.visualMode(this.props.notes.length);
+        this.props.uiX.visualMode(this.props.notes.length);
+        break;
 
       default:
-        this.hideMenu();
         return;
     }
+    this.hideMenu();
   };
 
   showShareModal = () => {
@@ -96,6 +98,10 @@ class WorkspaceMenu extends Component {
   buttonChangeMode = (switchTo) => () => {
     this.socket.emitMetric(`menu ${switchTo}`);
     this.changeMode(switchTo)();
+    // Hack - for some reason, when clicking on a mode it fires
+    // a "show" event for the submenu. So we get around that by
+    // hiding after a short delay.
+    setTimeout(() => this.hideSubmenus(), 100);
   };
 
   openNewWorkspace = () => {
@@ -192,6 +198,7 @@ class WorkspaceMenu extends Component {
       notes: false,
       modes: false,
       users: false,
+      resize: false,
       [submenu]: true,
     }});
   };
@@ -202,6 +209,7 @@ class WorkspaceMenu extends Component {
       notes: false,
       modes: false,
       users: false,
+      resize: false,
     }});
   };
 
@@ -228,7 +236,7 @@ class WorkspaceMenu extends Component {
   };
 
   renderMenu = () => {
-    const { exports, notes, modes, users } = this.state.submenus;
+    const { exports, notes, modes, users, resize } = this.state.submenus;
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -270,13 +278,19 @@ class WorkspaceMenu extends Component {
           </MaybeTappable>
         </section>
         <section className={'border-bottom'}>
+          <MaybeTappable onTapOrClick={this.showSubmenu('resize')}>
+            <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('resize')}>
+              Move Center
+              {resize && <ResizeSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
+            </div>
+          </MaybeTappable>
           <MaybeTappable onTapOrClick={this.showSubmenu('notes')}>
             <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('notes')}>
               Add Note
               {notes && <NotesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
             </div>
           </MaybeTappable>
-          <MaybeTappable onOrClickTap={this.showSubmenu('modes')}>
+          <MaybeTappable onTapOrClick={this.showSubmenu('modes')}>
             <div className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
               Change Mode
               {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode} hideMenu={this.hideMenu}/>}
@@ -318,6 +332,7 @@ class WorkspaceMenu extends Component {
         notes: false,
         modes: false,
         users: false,
+        resize: false,
       },
     });
   };

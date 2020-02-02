@@ -24,7 +24,7 @@ exports.config = {
   bail: 0,
   screenshotPath: './errorShots/',
   baseUrl: 'http://localhost',
-  waitforTimeout: 10000,
+  waitforTimeout: 5000,
   connectionRetryTimeout: 90000,
   connectionRetryCount: 3,
   services: ['selenium-standalone', 'chromedriver'],
@@ -34,7 +34,6 @@ exports.config = {
     defaultTimeoutInterval: 100000,
     expectationResultHandler: (function () {
       let i = 0;
-
       return function (passed) {
         if (!passed) {
           browser.saveScreenshot(`errorShots/${i++}.png`);

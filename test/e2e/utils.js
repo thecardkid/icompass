@@ -32,8 +32,9 @@ const setup = () => {
 
 const cleanup = () => {
   selectMenuOption(menuActions.deleteWorkspace);
+  browser.pause(5000);
   // confirm delete
-  browser.waitForVisible('#ic-modal', 1000);
+  browser.waitForVisible('#ic-modal', 100);
   browser.click('#ic-modal-confirm');
   // confirm thank-you-note
   browser.waitForVisible('#ic-modal', 5000);
@@ -44,7 +45,7 @@ const cleanup = () => {
 const switchMode = (modeId) => {
   browser.click('button.ic-workspace-button');
   browser.waitForVisible('div.ic-workspace-menu');
-  browser.moveTo(browser.elements('div.has-more').value[2].ELEMENT, 10, 10);
+  browser.moveTo(browser.elements('div.has-more').value[3].ELEMENT, 10, 10);
   browser.waitForVisible('div.ic-modes-submenu');
   browser.click(modeId);
 };
@@ -73,25 +74,32 @@ const selectColor = (color) => {
 };
 
 const exportsSubmenu = { submenu: 'div.ic-exports-submenu', submenuPosition: 0 };
-const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 1 };
-const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 2 };
+const moveCenterSubmenu = { submenu: 'div.ic-resize-submenu', submenuPosition: 1 };
+const notesSubmenu = { submenu: 'div.ic-notes-submenu', submenuPosition: 2 };
+const modesSubmenu = { submenu: 'div.ic-modes-submenu', submenuPosition: 3 };
 const menuActions = {
   newWorkspace: 0,
   darkTheme: 1,
   email: 2,
   bookmark: 3,
   share: 4,
-  logout: 9,
-  deleteWorkspace: 10,
-  googleDocs: Object.assign({}, exportsSubmenu, { position: 0 }),
-  screenshot: Object.assign({}, exportsSubmenu, { position: 1 }),
-  textNote: Object.assign({}, notesSubmenu, { position: 0 }),
-  imageNote: Object.assign({}, notesSubmenu, { position: 1 }),
-  doodleNote: Object.assign({}, notesSubmenu, { position: 2 }),
-  standardMode: Object.assign({}, modesSubmenu, { position: 0 }),
-  compactMode: Object.assign({}, modesSubmenu, { position: 1 }),
-  bulkMode: Object.assign({}, modesSubmenu, { position: 2 }),
-  explainModes: Object.assign({}, modesSubmenu, { position: 3 }),
+  logout: 10,
+  deleteWorkspace: 11,
+
+  googleDocs: { ...exportsSubmenu, position: 0 },
+  screenshot: { ...exportsSubmenu, position: 1 },
+
+  customCenterPosition: {...moveCenterSubmenu, position: 0},
+  resetCenterPosition: {...moveCenterSubmenu, position: 1},
+
+  textNote: { ...notesSubmenu, position: 0 },
+  imageNote: { ...notesSubmenu, position: 1 },
+  doodleNote: { ...notesSubmenu, position: 2 },
+
+  standardMode: { ...modesSubmenu, position: 0 },
+  compactMode: { ...modesSubmenu, position: 1 },
+  bulkMode: { ...modesSubmenu, position: 2 },
+  explainModes: { ...modesSubmenu, position: 3 },
 };
 
 const selectMenuOption = (count) => {

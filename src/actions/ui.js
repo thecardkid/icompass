@@ -1,5 +1,13 @@
 import verge from 'verge';
 
+export const enableDragCenter = () => {
+  return { type: 'enableDragCenter' };
+};
+
+export const disableDragCenter = () => {
+  return { type: 'disableDragCenter' };
+};
+
 export const setBookmark = (show) => {
   return {
     type: 'setBookmark',
