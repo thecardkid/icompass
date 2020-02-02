@@ -14,9 +14,10 @@
 
 ## Release procedure
 
-1. Make sure all changes have landed on `develop`.
+1. Make sure all changes have landed on `develop`. Then run `git push`.
 1. Tag the new release version: `git tag vA.B.C`.
 1. (Optional) Dump the production logs for metrics `scripts/ec2-dump-logs`.
-1. Merge to master: `git checkout master; git merge develop`.
+1. Merge to master: `git checkout master; git merge develop; git push`.
+1. Wait for Travis to run (which builds the new Docker image).
 1. (Optional) Deploy to staging: `scripts/deploy-staging`.
 1. Deploy to prod: `scripts/deploy-prod`.
