@@ -258,15 +258,6 @@ class Compass extends Component {
   renderPromptFirstQuestion() {
     return (
       <div>
-        <div id="center" className="wordwrap" style={{
-          top: Math.max((this.props.ui.vh - length) / 2, 0),
-          left: Math.max((this.props.ui.vw - length) / 2, 0),
-          width: length,
-          height: length,
-          zIndex: 5,
-        }} onClick={this.setPeopleInvolved}>
-          <p id="first-prompt">Start here</p>
-        </div>
         <div id="hline" style={{ top: this.props.ui.vh / 2 - 2 }}/>
         <div id="vline" style={{ left: this.props.ui.vw / 2 - 2 }}/>
         {this.renderLabels()}

@@ -71,9 +71,57 @@ describe('workspace menu', () => {
     it('as screenshot', () => {
       selectSubmenuOption(menuActions.screenshot);
       b.waitForVisible('div.ic-screenshot.ic-dynamic-modal');
-      expect('div#exported-png canvas').to.be.visible();
+      b.waitForVisible('div#exported-png canvas', 10000);
       expect('div#exported-png p').to.have.text(/Right click/);
       b.click('button.ic-close-window');
+    });
+  });
+
+  describe('move center submenu', () => {
+    let defaultCenterX, defaultCenterY;
+
+    it('(part of test setup) set default center x/y', () => {
+      const { x, y } = b.getLocation('#center');
+      defaultCenterX = x;
+      defaultCenterY = y;
+    });
+
+    describe('custom position', () => {
+      beforeEach(() => {
+        selectSubmenuOption(menuActions.customCenterPosition);
+        expect('#center-drag-modal').to.be.visible();
+        b.moveToObject('#center', 10, 10);
+        b.buttonDown(0);
+        b.moveToObject('#center', -400, -400);
+        b.buttonUp(0);
+      });
+
+      it('cancel will reset', () => {
+        // TODO make selector stricter
+        b.click('button.cancel');
+        const { x, y } = b.getLocation('#center');
+        expect(x).to.equal(defaultCenterX);
+        expect(y).to.equal(defaultCenterY);
+      });
+
+      it('accept will save', () => {
+        // TODO make selector stricter
+        b.click('button.accept');
+        b.refresh();
+        b.waitForVisible('#center', 10000);
+        const { x, y } = b.getLocation('#center');
+        expect(x).to.be.below(defaultCenterX);
+        expect(y).to.be.below(defaultCenterY);
+      });
+    });
+
+    it('reset to center', () => {
+      selectSubmenuOption(menuActions.resetCenterPosition);
+      const { x, y } = b.getLocation('#center');
+      expect(x).to.equal(defaultCenterX);
+      expect(y).to.equal(defaultCenterY);
+      // Hide the menu to reset the state for the next test
+      b.click('.ic-workspace-button');
     });
   });
 

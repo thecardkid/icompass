@@ -179,18 +179,20 @@ class Workspace extends Component {
   }
 
   notifyIfNewVersion = ({ mustShow = false } = {}) => {
-    const appVersion = 'v2.4.0';
+    const appVersion = 'v2.5.0';
     // mustShow overrides automatic decision-making
-    if (mustShow || (!isWebdriverIO() && Storage.getVersion() !== appVersion)) {
+    if (mustShow || (!isWebdriverIO() &&
+      // Don't show release notes to first-time visitors
+      Storage.getVersion() !== 'v0.0.0' &&
+      Storage.getVersion() !== appVersion)) {
       Storage.setVersion(appVersion);
 
       this.modal.alert({
         heading: `${appVersion} Release`,
         body: [
-          'New features:',
+          'New feature(s):',
           [
-            '● <b>Menu > Export as > Google Doc</b> to collect your notes into a single document (thanks @Audrey!)',
-            '● <b>Help > Leave Feedback</b> for a convenient feedback form. I love hearing from iCompass users!',
+            '● <b>Menu > Move Center</b> to change the box sizes (thank you Hannah for the suggestion!)',
           ].join('<br/>'),
         ],
       });

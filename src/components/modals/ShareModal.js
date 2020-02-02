@@ -3,20 +3,13 @@ import React, { Component } from 'react';
 import { HOST, TWEET } from '../../../lib/constants';
 import ToastSingleton from '../../utils/Toast';
 import SocketSingleton from '../../utils/Socket';
+import DynamicModal from './DynamicModal';
 
 export default class ShareModal extends Component {
-  constructor(props) {
-    super(props);
-
-    this.editLink = `${HOST}/compass/edit/${this.props.compass.editCode}`;
-    this.viewLink = `${HOST}/compass/view/${this.props.compass.viewCode}`;
-    this.toast = ToastSingleton.getInstance();
-    this.socket = SocketSingleton.getInstance();
-  }
-
-  dontClose(e) {
-    e.stopPropagation();
-  }
+  editLink = `${HOST}/compass/edit/${this.props.compass.editCode}`;
+  viewLink = `${HOST}/compass/view/${this.props.compass.viewCode}`;
+  toast = ToastSingleton.getInstance();
+  socket = SocketSingleton.getInstance();
 
   copyEditLink = () => {
     const text = document.getElementById('ic-edit-link');
@@ -37,39 +30,30 @@ export default class ShareModal extends Component {
     window.open(tweetURL, '_blank').focus();
   };
 
-  close = () => {
-    this.props.close();
-  };
-
   render() {
     return (
-      <div id={'ic-backdrop'} onClick={this.close}>
-        <div className={'ic-share ic-dynamic-modal'} onClick={this.dontClose}>
-          <div className={'contents'}>
-            <div className={'header'}>
-              <h1 className={'title'}>Share this Workspace</h1>
-              <button className={'ic-close-window'} onClick={this.close}>X</button>
-            </div>
-            <div className={'ic-share-link'}>
-              <p>Anyone can <b>edit</b></p>
-              <div className={'share-box'}>
-                <input id={'ic-edit-link'} value={this.editLink} readOnly={true} />
-                <button className={'copy-edit'} onClick={this.copyEditLink}>Copy</button>
-              </div>
-            </div>
-            <div className={'ic-share-link'}>
-              <p>Anyone can <b>view</b></p>
-              <div className={'share-box'}>
-                <input id={'ic-view-link'} value={this.viewLink} readOnly={true} />
-                <button className={'copy-view'} onClick={this.copyViewLink}>Copy</button>
-              </div>
-            </div>
-            <div className={'actions'}>
-              <button onClick={this.tweetThis}>Tweet</button>
-            </div>
+      <DynamicModal
+        className={'ic-share'}
+        heading={'Share this Workspace'}
+        close={this.props.close}>
+        <div className={'ic-share-link'}>
+          <p>Anyone can <b>edit</b></p>
+          <div className={'share-box'}>
+            <input id={'ic-edit-link'} value={this.editLink} readOnly={true} />
+            <button className={'copy-edit'} onClick={this.copyEditLink}>Copy</button>
           </div>
         </div>
-      </div>
+        <div className={'ic-share-link'}>
+          <p>Anyone can <b>view</b></p>
+          <div className={'share-box'}>
+            <input id={'ic-view-link'} value={this.viewLink} readOnly={true} />
+            <button className={'copy-view'} onClick={this.copyViewLink}>Copy</button>
+          </div>
+        </div>
+        <div className={'actions'}>
+          <button onClick={this.tweetThis}>Tweet</button>
+        </div>
+      </DynamicModal>
     );
   }
 }

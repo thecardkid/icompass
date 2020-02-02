@@ -2,14 +2,12 @@ import html2canvas from 'html2canvas';
 import React, { Component } from 'react';
 import { isMobile } from 'react-device-detect';
 
+import DynamicModal from './DynamicModal';
 import ToastSingleton from '../../utils/Toast';
 
 export default class ScreenshotModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { canvas: null };
-    this.toast = ToastSingleton.getInstance();
-  }
+  state = { canvas: null };
+  toast = ToastSingleton.getInstance();
 
   componentDidMount() {
     this.exportPng();
@@ -22,10 +20,6 @@ export default class ScreenshotModal extends Component {
       }
       this.refs.canvas.appendChild(this.state.canvas);
     }
-  }
-
-  dontClose(e) {
-    e.stopPropagation();
   }
 
   close = () => {
@@ -51,36 +45,26 @@ export default class ScreenshotModal extends Component {
   render() {
     if (isMobile) {
       return (
-        <div id={'ic-backdrop'} onClick={this.close}>
-          <div className={'ic-screenshot ic-dynamic-modal'} onClick={this.dontClose}>
-            <div className={'contents'}>
-              <div className={'header'}>
-                <h1 className={'title'}>Export as Screenshot</h1>
-                <button className={'ic-close-window'} onClick={this.close}>X</button>
-              </div>
-              <div className={'warning'}>
-                <b>NOTE:</b> This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
-              </div>
-            </div>
+        <DynamicModal
+          className={'ic-screenshot'}
+          heading={'Export as Screenshot'}
+          close={this.close}>
+          <div className={'warning'}>
+            <b>NOTE:</b> This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
           </div>
-        </div>
+        </DynamicModal>
       );
     }
 
     return (
-      <div id={'ic-backdrop'} onClick={this.close}>
-        <div className={'ic-screenshot ic-dynamic-modal'} onClick={this.dontClose}>
-          <div className={'contents'}>
-            <div className={'header'}>
-              <h1 className={'title'}>Export as Screenshot</h1>
-              <button className={'ic-close-window'} onClick={this.close}>X</button>
-              <div ref={'canvas'} id={'exported-png'}>
-                <p>Right click on the image below and choose "Save Image As..."</p>
-              </div>
-            </div>
-          </div>
+      <DynamicModal
+        className={'ic-screenshot'}
+        heading={'Export as Screenshot'}
+        close={this.close}>
+        <div ref={'canvas'} id={'exported-png'}>
+          <p>Right click on the image below and choose "Save Image As..."</p>
         </div>
-      </div>
+      </DynamicModal>
     );
   }
 }

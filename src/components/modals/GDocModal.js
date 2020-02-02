@@ -2,22 +2,12 @@ import React, { Component } from 'react';
 import { isMobile } from 'react-device-detect';
 import htmlparser from 'htmlparser2';
 
-import { HOST } from '../../../lib/constants';
+import DynamicModal from './DynamicModal';
 import ToastSingleton from '../../utils/Toast';
+import { HOST } from '../../../lib/constants';
 
 export default class GDocModal extends Component {
-  constructor(props) {
-    super(props);
-    this.toast = ToastSingleton.getInstance();
-  }
-
-  dontClose(e) {
-    e.stopPropagation();
-  }
-
-  close = () => {
-    this.props.close();
-  };
+  toast = ToastSingleton.getInstance();
 
   getDefaultDocData() {
     const data = {
@@ -115,19 +105,14 @@ ${header}:`;
   render() {
     if (isMobile) {
       return (
-        <div id={'ic-backdrop'} onClick={this.close}>
-          <div className={'ic-gdoc ic-dynamic-modal'} onClick={this.dontClose}>
-            <div className={'contents'}>
-              <div className={'header'}>
-                <h1 className={'title'}>Export to Google Doc</h1>
-                <button className={'ic-close-window'} onClick={this.close}>X</button>
-              </div>
-              <div className={'warning'}>
-                <b>NOTE:</b> This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
-              </div>
-            </div>
+        <DynamicModal
+          className={'ic-gdoc'}
+          heading={'Export to Google Doc'}
+          close={this.props.close}>
+          <div className={'warning'}>
+            <b>NOTE:</b> This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
           </div>
-        </div>
+        </DynamicModal>
       );
     }
 
@@ -152,25 +137,20 @@ ${header}:`;
     });
 
     return (
-      <div id={'ic-backdrop'} onClick={this.close}>
-        <div className={'ic-gdoc ic-dynamic-modal'} onClick={this.dontClose}>
-          <div className={'contents'}>
-            <div className={'header'}>
-              <h1 className={'title'}>Export to Google Doc</h1>
-              <button className={'ic-close-window'} onClick={this.close}>X</button>
-            </div>
-            <div className={'warning'}>
-              <b>NOTE:</b> Doodles will not be included. All formatting (bold, italics, ...) will be omitted.
-            </div>
-            <div className={'copy-to-clipboard'}>
-              <button onClick={this.copyToClipboard}>
-                Copy to Clipboard
-              </button>
-            </div>
-            {this.renderPreview(docData)}
+      <DynamicModal
+        className={'ic-gdoc'}
+        heading={'Export to Google Doc'}
+        close={this.props.close}>
+          <div className={'warning'}>
+            <b>NOTE:</b> Doodles will not be included. All formatting (bold, italics, ...) will be omitted.
           </div>
-        </div>
-      </div>
+          <div className={'copy-to-clipboard'}>
+            <button onClick={this.copyToClipboard}>
+              Copy to Clipboard
+            </button>
+          </div>
+          {this.renderPreview(docData)}
+      </DynamicModal>
     );
   }
 }
