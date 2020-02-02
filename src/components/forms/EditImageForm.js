@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 
+import { trackFeatureEvent } from '../../utils/Analytics';
 import Socket from '../../utils/Socket';
 import ImageForm from './ImageForm';
 
 export default class EditImageForm extends Component {
-  constructor(props) {
-    super(props);
-    this.socket = Socket.getInstance();
-  }
+  socket = Socket.getInstance();
 
   edit = ({ imgSource, color, altText }) => {
     if (!imgSource) return;
@@ -20,7 +18,7 @@ export default class EditImageForm extends Component {
     const { idx } = edited;
     delete edited.idx;
 
-    this.socket.emitMetric('note image edit');
+    trackFeatureEvent('Edit note (image)');
     this.props.ship(edited, idx);
     this.props.close();
   };

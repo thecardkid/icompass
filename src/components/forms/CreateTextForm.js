@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 
 import TextForm from './TextForm';
 
+import { trackFeatureEvent } from '../../utils/Analytics';
 import Socket from '../../utils/Socket';
 
 export default class CreateTextForm extends Component {
-  constructor() {
-    super();
-    this.socket = Socket.getInstance();
-  }
+  socket = Socket.getInstance();
 
   make = (text, isImage, { style, color }, isDraft) => {
     if (!text) return;
@@ -20,9 +18,13 @@ export default class CreateTextForm extends Component {
       user: this.props.user,
     };
 
-    this.socket.emitMetric(`note ${isImage ? 'image' : 'create'}`);
-    if (isDraft) this.props.asDraft(note);
-    else this.props.asNote(note);
+    if (isDraft) {
+      this.props.asDraft(note);
+      trackFeatureEvent('Create draft (text)');
+    } else {
+      this.props.asNote(note);
+      trackFeatureEvent('Create note (text)');
+    }
     this.props.close();
   };
 

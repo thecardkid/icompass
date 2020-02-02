@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 
+import { trackFeatureEvent } from '../../utils/Analytics';
 import Socket from '../../utils/Socket';
 import ImageForm from './ImageForm';
 
 export default class CreateImageForm extends Component {
-  constructor(props) {
-    super(props);
-    this.socket = Socket.getInstance();
-  }
+  socket = Socket.getInstance();
 
   make = ({ imgSource, color, altText }, isDraft) => {
     if (!imgSource) return;
@@ -21,9 +19,13 @@ export default class CreateImageForm extends Component {
       user: this.props.user,
     };
 
-    this.socket.emitMetric('note image');
-    if (isDraft) this.props.asDraft(note);
-    else this.props.asNote(note);
+    if (isDraft) {
+      this.props.asDraft(note);
+      trackFeatureEvent('Create draft (image)');
+    } else {
+      this.props.asNote(note);
+      trackFeatureEvent('Create note (image)');
+    }
     this.props.close();
   };
 

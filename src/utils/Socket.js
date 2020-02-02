@@ -61,7 +61,7 @@ const SocketSingleton = (() => {
       this.modal.alert({
         heading: 'Sorry!',
         body: [
-          'There was a problem retrieving your workspace. Please contact <a href="mailto:hieu@shift.com">hieu@shift.com</a> directly.',
+          'There was a problem retrieving your workspace.',
           'You will now be taken to the home page.',
         ],
         cb: () => browserHistory.push('/'),
@@ -171,20 +171,8 @@ const SocketSingleton = (() => {
       this.socket.emit('set center position', { x: 0.5, y: 0.5 });
     };
 
-    emitMetricLandingPage = (start, end, action) => {
-      this.socket.emit('metric landing page time', start, end, action);
-    };
-
-    emitMetricEditLinkAccess = (url) => {
-      this.socket.emit('metric edit link access', url);
-    };
-
     emitWorkspace = (event, ...args) => {
       this.socket.emit(event, ...args);
-    };
-
-    emitMetric = (event, ...args) => {
-      this.socket.emit(`metric ${event}`, ...args);
     };
   }
 

@@ -12,6 +12,7 @@ import NotesSubmenu from './submenus/NotesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
 import ShortcutManager from './ShortcutManager';
 
+import { trackFeatureEvent } from '../utils/Analytics';
 import MaybeTappable from '../utils/MaybeTappable';
 import ModalSingleton from '../utils/Modal';
 import SocketSingleton from '../utils/Socket';
@@ -47,6 +48,14 @@ class WorkspaceMenu extends Component {
         51: this.changeMode('bulk'),
       },
     };
+    this.shortcutEvents = {
+      68: 'Shortcut N new note',
+      73: 'Shortcut I new image',
+      78: 'Shortcut D new doodle',
+      49: 'Shortcut Shift-1 (standard mode)',
+      50: 'Shortcut Shift-2 (compact mode)',
+      51: 'Shortcut Shift-3 (bulk mode)',
+    };
     this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
     this.toast = ToastSingleton.getInstance();
@@ -61,8 +70,8 @@ class WorkspaceMenu extends Component {
 
     if (_.has(shortcuts, e.which)) {
       e.preventDefault();
-      this.socket.emitMetric('shortcut key', e.which);
       shortcuts[e.which]();
+      trackFeatureEvent(this.shortcutEvents[e.which]);
     }
   };
 
@@ -96,7 +105,7 @@ class WorkspaceMenu extends Component {
   };
 
   buttonChangeMode = (switchTo) => () => {
-    this.socket.emitMetric(`menu ${switchTo}`);
+    trackFeatureEvent('Menu: Switch mode');
     this.changeMode(switchTo)();
     // Hack - for some reason, when clicking on a mode it fires
     // a "show" event for the submenu. So we get around that by
@@ -105,7 +114,7 @@ class WorkspaceMenu extends Component {
   };
 
   openNewWorkspace = () => {
-    this.socket.emitMetric('menu new workspace');
+    trackFeatureEvent('Menu: New workspace');
     window.open('/', '_blank').focus();
     this.hideMenu();
   };
@@ -173,7 +182,7 @@ class WorkspaceMenu extends Component {
   };
 
   logout = () => {
-    this.socket.emitMetric('menu log out');
+    trackFeatureEvent('Menu: Log out');
     browserHistory.push('/');
   };
 

@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import ReactGA from 'react-ga';
 import Tappable from 'react-tappable/lib/Tappable';
 
+import { trackFeatureEvent } from '../../utils/Analytics';
 import SocketSingleton from '../../utils/Socket';
 
 export default class ResizeSubmenu extends Component {
   socket = SocketSingleton.getInstance();
 
   beginCustomResize = () => {
-    this.socket.emitMetric('menu custom set center');
+    trackFeatureEvent('Menu: Set center custom position');
     this.props.uiX.enableDragCenter();
     this.props.hideMenu();
   };
 
   recenter = () => {
-    this.socket.emitMetric('menu reset center');
+    trackFeatureEvent('Menu: Reset center position');
     this.socket.emitResetCenterPosition();
   };
 

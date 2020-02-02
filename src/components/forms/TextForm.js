@@ -6,6 +6,7 @@ import ReactTooltip from 'react-tooltip';
 
 import * as uiX from '../../actions/ui';
 
+import { trackFeatureEvent } from '../../utils/Analytics';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
 import FormPalette from './FormPalette';
@@ -74,13 +75,13 @@ class TextForm extends Component {
   }
 
   switchImage = () => {
-    this.socket.emitMetric('switch text to image');
     this.props.uiX.switchToImage();
+    trackFeatureEvent('Switch form (text to image)');
   };
 
   switchDoodle = () => {
-    this.socket.emitMetric('switch text to doodle');
     this.props.uiX.switchToDoodle();
+    trackFeatureEvent('Switch form (text to doodle)');
   };
 
   renderSwitches = () => {

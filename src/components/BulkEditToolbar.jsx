@@ -1,26 +1,21 @@
 import React, { Component } from 'react';
-import ReactGA from 'react-ga';
 import Draggable from 'react-draggable';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
+import FormPalette from './forms/FormPalette';
+import { trackFeatureEvent } from '../utils/Analytics';
 import Modal from '../utils/Modal';
+import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
-
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import Socket from '../utils/Socket';
-import FormPalette from './forms/FormPalette';
-
 class BulkEditToolbar extends Component {
-  constructor(props) {
-    super(props);
-    this.modal = Modal.getInstance();
-    this.socket = Socket.getInstance();
-  }
+  modal = Modal.getInstance();
+  socket = Socket.getInstance();
 
   getSelectedNotes = () => {
     const selected = [];
@@ -32,12 +27,12 @@ class BulkEditToolbar extends Component {
 
   bulkDelete = (ev) => {
     ev.stopPropagation();
-    ReactGA.modalview('modals/bulk-delete');
     this.modal.confirm({
       body: 'You are about to delete all selected notes. This action cannot be undone.',
       confirmText: 'Delete',
       cb: (confirmed) => {
         if (confirmed) {
+          trackFeatureEvent('Bulk edit: Delete');
           this.socket.emitBulkDeleteNotes(this.getSelectedNotes());
           this.cancel();
         }
@@ -54,11 +49,13 @@ class BulkEditToolbar extends Component {
     let { color } = this.props.workspace;
     let transformation = { color };
     this.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
+    trackFeatureEvent('Bulk edit: Submit');
     this.cancel();
   };
 
   bulkColor = (color) => {
     this.props.workspaceX.colorAll(color);
+    trackFeatureEvent('Bulk edit: Color');
   };
 
   render() {

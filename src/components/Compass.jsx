@@ -15,6 +15,7 @@ import NoteManager from '../components/NoteManager.jsx';
 import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 import MaybeTappable from '../utils/MaybeTappable';
 
+import { trackFeatureEvent } from '../utils/Analytics';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
@@ -87,18 +88,18 @@ class Compass extends Component {
     this.setState({ select: false });
 
     if (ev.shiftKey) {
-      this.socket.emitMetric('double click image');
+      trackFeatureEvent('Double-clicked to image form');
       this.props.uiX.showImage(ev);
       return;
     }
 
     if (ev.altKey) {
-      this.socket.emitMetric('double click doodle');
+      trackFeatureEvent('Double-clicked to doodle form');
       this.props.uiX.showDoodle(ev);
       return;
     }
 
-    this.socket.emitMetric('double click text');
+    trackFeatureEvent('Double-clicked to text form');
     this.props.uiX.showNewNote(ev);
   };
 
@@ -201,15 +202,6 @@ class Compass extends Component {
     setTimeout(() => $('#experiments').css({opacity: 1}), start + (3 * deltaTimeMs));
   };
 
-  getCenterCss(r) {
-    return {
-      top: Math.max((this.props.ui.vh - r) / 2, 0),
-      left: Math.max((this.props.ui.vw - r) / 2, 0),
-      width: r,
-      height: r,
-    };
-  }
-
   getCenterTextCss = (charPerLine, r, width) => {
     const lineHeight = 13;
 
@@ -237,6 +229,7 @@ class Compass extends Component {
 
   setPeopleInvolved = () => {
     this.modal.promptForCenter(this.toast.warn, (people) => {
+      trackFeatureEvent('Compass center: Set text');
       this.socket.emitSetCenter(this.props.compass._id, people);
     });
   };
@@ -246,7 +239,7 @@ class Compass extends Component {
       if (!edited) {
         return;
       }
-
+      trackFeatureEvent('Compass center: Edit text');
       this.socket.emitSetCenter(this.props.compass._id, edited);
     });
   };
@@ -330,6 +323,7 @@ class Compass extends Component {
 
   cancelCenterDrag = () => {
     this.props.uiX.disableDragCenter();
+    trackFeatureEvent('Compass center: Cancel custom position');
     this.setState({
       isDraggingCenter: false,
       centerPosition: {
@@ -341,6 +335,7 @@ class Compass extends Component {
 
   submitCenterDrag = () => {
     this.props.uiX.disableDragCenter();
+    trackFeatureEvent('Compass center: Submit custom position');
     this.setState({ isDraggingCenter: false });
     this.socket.emitSetCenterPosition(this.props.compass._id, this.state.centerPosition.x, this.state.centerPosition.y);
   };

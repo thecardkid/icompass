@@ -34,7 +34,6 @@ class LandingPage extends Component {
   }
 
   componentDidMount() {
-    this.start = Date.now();
     $(window).on('resize', this.props.uiX.resize);
   }
 
@@ -84,7 +83,6 @@ class LandingPage extends Component {
 
     this.setState({ username });
     this.socket.emitCreateCompass(topic, username);
-    this.socket.emitMetricLandingPage(this.start, Date.now(), 'create');
   };
 
   automateSetup = (e) => {
@@ -149,7 +147,7 @@ class LandingPage extends Component {
     return (
       <div id={'ic-landing'}>
         <img src={'https://s3.us-east-2.amazonaws.com/innovatorscompass/landing.jpg'} className={'ic-background'} style={this.sizeImage()}/>
-        <BookmarkList start={this.start}/>
+        <BookmarkList />
         <div id={'ic-landing-container'}>
           <div id={'message'}>
             <h1>Innovators' Compass</h1>

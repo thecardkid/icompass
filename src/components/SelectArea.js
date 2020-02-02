@@ -6,16 +6,12 @@ import _ from 'underscore';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-
+import { trackFeatureEvent } from '../utils/Analytics';
 import { EDITING_MODE } from '../../lib/constants';
 
 class SelectArea extends Component {
-  constructor() {
-    super();
-
-    this.notePositions = {};
-    this.highlighted = new Set();
-  }
+  notePositions = {};
+  highlighted = new Set();
 
   componentWillUpdate(nextProps) {
     if (!nextProps.show || this.ignoreUpdate) return;
@@ -85,6 +81,7 @@ class SelectArea extends Component {
   }
 
   onMouseUp = (ev) => {
+    trackFeatureEvent('Drag select');
     ev.preventDefault();
     if (this.highlighted.size > 0) {
       if (!this.originallyVisualMode) {

@@ -3,6 +3,7 @@ import ReactGA from 'react-ga';
 import { Link } from 'react-router';
 
 import FeedbackModal from './modals/FeedbackModal';
+import { trackFeatureEvent } from '../utils/Analytics';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
@@ -10,8 +11,8 @@ import Toast from '../utils/Toast';
 import { COLORS } from '../../lib/constants';
 
 export default class HelpAndFeedback extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       active: false,
       showFeedbackModal: false,
@@ -27,13 +28,20 @@ export default class HelpAndFeedback extends Component {
   onFeedbackStatus = (success) => {
     if (success) {
       this.toast.success('Your feedback has been submitted!');
+      trackFeatureEvent('Help menu: Submit feedback');
     } else {
       this.toast.error('Something went wrong. Please reach out to hieumaster95@gmail.com directly instead!');
+      trackFeatureEvent('Help menu: Error submitting feedback');
     }
   };
 
   toggleMenu = () => {
-    this.setState({ active: !this.state.active });
+    this.setState(state => {
+      if (!state.active) {
+        trackFeatureEvent('Help menu: View');
+      }
+      return { active: state.active };
+    });
   };
 
   hideMenu = () => {
@@ -41,6 +49,7 @@ export default class HelpAndFeedback extends Component {
   };
 
   showPrivacyStatement = () => {
+    ReactGA.modalview('modals/privacy-statement');
     this.modal.alertPrivacyStatement();
     this.hideMenu();
   };
@@ -57,11 +66,15 @@ export default class HelpAndFeedback extends Component {
   };
 
   showFeedback = (val) => () => {
+    if (val) {
+      ReactGA.modalview('modals/feedback');
+    }
     this.setState({ showFeedbackModal: val });
     this.hideMenu();
   };
 
   showAboutUs = () => {
+    ReactGA.modalview('modals/about-us');
     this.modal.alertAboutUs();
     this.hideMenu();
   };

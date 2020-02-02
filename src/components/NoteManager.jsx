@@ -9,6 +9,7 @@ import StickyNote from './StickyNote.jsx';
 import * as noteX from '../actions/notes';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
+import { trackFeatureEvent } from '../utils/Analytics';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 import { EDITING_MODE } from '../../lib/constants';
@@ -174,9 +175,9 @@ class NoteManager extends Component {
     this.props.workspaceX.undraft(idx);
     delete note.draft;
     note.color = this.props.color;
-    /* Can't submit draft in visual mode, no need to check */
+    // Can't submit draft in visual mode, no need to check
     this.socket.emitNewNote(note);
-    this.socket.emitMetric('draft submit');
+    trackFeatureEvent('Submit draft');
   };
 
   enterVisualMode = (idx) => {

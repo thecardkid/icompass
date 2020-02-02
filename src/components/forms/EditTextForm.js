@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 
+import { trackFeatureEvent } from '../../utils/Analytics';
 import Socket from '../../utils/Socket';
 
 import TextForm from './TextForm';
 
 export default class EditTextForm extends Component {
-  constructor() {
-    super();
-    this.socket = Socket.getInstance();
-  }
+  socket = Socket.getInstance();
 
   edit = (text, isImage, { style, color }) => {
     if (!text) return;
@@ -23,7 +21,7 @@ export default class EditTextForm extends Component {
     const { idx } = edited;
     delete edited.idx;
 
-    this.socket.emitMetric('note edit');
+    trackFeatureEvent('Edit note (text)');
     this.props.ship(edited, idx);
     this.props.close();
   };

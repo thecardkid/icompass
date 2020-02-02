@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
-import Tappable from 'react-tappable/lib/Tappable';
 
+import { trackFeatureEvent } from '../utils/Analytics';
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
 import Socket from '../utils/Socket';
 import { REGEX } from '../../lib/constants';
 
 export default class PromptName extends Component {
-  constructor() {
-    super();
-    this.modal = Modal.getInstance();
-    this.toast = Toast.getInstance();
-    this.socket = Socket.getInstance();
-  }
+  modal = Modal.getInstance();
+  toast = Toast.getInstance();
+  socket = Socket.getInstance();
 
   componentDidMount() {
     this.promptForName();
@@ -27,8 +24,9 @@ export default class PromptName extends Component {
         return this.promptForName();
       }
 
+
       const url = `/compass/edit/${code}/${name}`;
-      this.socket.emitMetricEditLinkAccess(url);
+      trackFeatureEvent('Use edit link');
       browserHistory.push(url);
     });
   };

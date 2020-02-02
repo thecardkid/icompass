@@ -7,6 +7,7 @@ import _ from 'underscore';
 
 import * as uiX from '../../actions/ui';
 
+import { trackFeatureEvent } from '../../utils/Analytics';
 import Socket from '../../utils/Socket';
 import FormPalette from './FormPalette';
 
@@ -132,7 +133,6 @@ class DoodleForm extends Component {
 
   submit = (isDraft) => () => {
     if (this.state.strokes.length === 0) return;
-    this.socket.emitMetric('note doodle');
     const { x, y } = this.props.info;
     const note = {
       text: null,
@@ -142,8 +142,13 @@ class DoodleForm extends Component {
       x, y,
     };
 
-    if (isDraft) this.props.asDraft(note);
-    else this.props.asNote(note);
+    if (isDraft) {
+      this.props.asDraft(note);
+      trackFeatureEvent('Create draft (doodle)');
+    } else {
+      this.props.asNote(note);
+      trackFeatureEvent('Create note (doodle)');
+    }
     this.props.close();
   };
 
@@ -152,13 +157,13 @@ class DoodleForm extends Component {
   };
 
   switchText = () => {
-    this.socket.emitMetric('switch doodle to text');
     this.props.uiX.switchToText();
+    trackFeatureEvent('Switch form (doodle to text)');
   };
 
   switchImage = () => {
-    this.socket.emitMetric('switch doodle to image');
     this.props.uiX.switchToImage();
+    trackFeatureEvent('Switch form (doodle to image)');
   };
 
   dontClose(e) {
