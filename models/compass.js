@@ -3,6 +3,7 @@ let _ = require('underscore');
 
 let DefaultCompass = require('./defaultCompass');
 const { STICKY_COLORS } = require('../lib/constants');
+const logger = require('../lib/logger');
 
 function generateUUID() {
   return 'xxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -73,6 +74,10 @@ compassSchema.statics.makeCompass = function(topic) {
 };
 
 function onReadHook(compass) {
+  if (!compass) {
+    logger.info(`onReadHook for compass ${compass}`);
+    return compass;
+  }
   if (compass && compass.centerPosition || (compass.centerPosition.x === undefined && compass.centerPosition.y === undefined)) {
     compass.centerPosition.x = 0.5;
     compass.centerPosition.y = 0.5;
