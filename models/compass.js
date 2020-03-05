@@ -73,7 +73,7 @@ compassSchema.statics.makeCompass = function(topic) {
 };
 
 function onReadHook(compass) {
-  if (compass.centerPosition.x === undefined && compass.centerPosition.y === undefined) {
+  if (!compass.centerPosition || (compass.centerPosition.x === undefined && compass.centerPosition.y === undefined)) {
     compass.centerPosition.x = 0.5;
     compass.centerPosition.y = 0.5;
   }
