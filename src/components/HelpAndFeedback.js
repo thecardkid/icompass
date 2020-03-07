@@ -37,10 +37,11 @@ export default class HelpAndFeedback extends Component {
 
   toggleMenu = () => {
     this.setState(state => {
-      if (!state.active) {
+      const active = !state.active;
+      if (active) {
         trackFeatureEvent('Help menu: View');
       }
-      return { active: state.active };
+      return { active };
     });
   };
 
