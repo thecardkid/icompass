@@ -11,7 +11,6 @@ scp -i "$pem_file" "$IC_ROOT/build/credentials/prod.env" "$EC2_INSTANCE:~/prod.e
 ssh -i "$pem_file" "$EC2_INSTANCE" << 'ENDSSH'
 sudo docker pull thecardkid/icompass:latest
 sudo docker container kill production
-sudo docker container prune --force
-docker images -qf dangling=true | xargs docker rmi
-sudo docker run -p 8080:8080 --name production --env-file prod-env --detach thecardkid/icompass:latest
+sudo docker system prune --force
+sudo docker run -p 8080:8080 --name production --env-file prod.env --detach thecardkid/icompass:latest
 ENDSSH

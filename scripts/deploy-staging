@@ -11,7 +11,6 @@ scp -i "$pem_file" "$IC_ROOT/build/credentials/staging.env" "$EC2_INSTANCE:~/sta
 ssh -i "$pem_file" "$EC2_INSTANCE" << 'ENDSSH'
 sudo docker pull thecardkid/icompass:develop
 sudo docker container kill staging
-sudo docker container prune --force
-docker images -qf dangling=true | xargs sudo docker rmi
+sudo docker system prune --force
 sudo docker run -p 4000:8080 --name staging --env-file staging.env --detach thecardkid/icompass:develop
 ENDSSH
