@@ -30,7 +30,7 @@ export default class ExportSubmenu extends Component {
         <section>
           <Tappable onTap={this.showExportGDocModal}>
             <div className={'ic-menu-item'} onClick={this.showExportGDocModal}>
-              Google Doc
+              Text
             </div>
           </Tappable>
           <Tappable onTap={this.showExportScreenshot}>

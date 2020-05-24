@@ -139,7 +139,7 @@ ${header}:`;
     return (
       <DynamicModal
         className={'ic-gdoc'}
-        heading={'Export to Google Doc'}
+        heading={'Export as text'}
         close={this.props.close}>
           <div className={'warning'}>
             <b>NOTE:</b> Doodles will not be included. All formatting (bold, italics, ...) will be omitted.
