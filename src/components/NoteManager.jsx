@@ -98,7 +98,7 @@ class NoteManager extends Component {
   }
 
   dragStart = (e) => {
-    // TODO(hieu): pinching with one finger on a note shows edit form.
+    // TODO pinching with one finger on a note shows edit form.
     // But I also don't really care about this problem. Can fix at later date.
     e.target.dragging = true;
   };
@@ -161,6 +161,11 @@ class NoteManager extends Component {
       y = this.notes[i].y + e.dy / this.props.ui.vh;
     let note = Object.assign({}, this.notes[i], { x, y });
 
+    // This is an easy hack to avoid this bug where, on mobile, a note would
+    // zap to the top-left corner when the user is trying to drag it.
+    if (x < 0.0001 && y < 0.0001) {
+      return;
+    }
     if (note.draft) {
       return this.props.workspaceX.dragDraft(i, x, y);
     } else {

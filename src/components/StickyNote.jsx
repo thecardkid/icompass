@@ -134,13 +134,13 @@ class StickyNote extends Component {
     );
   };
 
-  getContents = () => {
+  renderContents = () => {
     let n = this.props.note;
     if (n.doodle || n.isImage) return this.renderDoodle(n);
     else return this.renderText(n);
   };
 
-  getX = () => {
+  renderCloseButton = () => {
     // TODO refactor this to use MaybeTappable. It will mess with the
     // DOM hierarchy so could potentially break tests the rely on parent > child
     // selectors. Currently, hitting "X" does call this.confirmDelete twice
@@ -416,8 +416,8 @@ class StickyNote extends Component {
            onContextMenu={this.showContextMenu}
            id={`note${i}`}
            height={n.doodle ? '100px' : null}>
-        {this.getX()}
-        {this.getContents()}
+        {this.renderCloseButton()}
+        {this.renderContents()}
         {this.state.contextMenu && this.renderContextMenu()}
       </div>
     );
