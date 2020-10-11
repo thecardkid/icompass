@@ -61,10 +61,33 @@ compassSchema.statics.makeCompass = function(topic) {
       editCode: generateUUID(),
       viewCode: generateUUID(),
       topic: topic,
+      notes: [],
     });
     this.create(newCompass, function(err, compass) {
       if (err) {
         reject('Failed to create compass');
+        return;
+      }
+      resolve(compass);
+    });
+  });
+};
+
+compassSchema.statics.makeCompassCopy = function(original) {
+  // TODO check all required fields are present
+  return new Promise((resolve, reject) => {
+    const newCompass = Object.assign({}, original, {
+      editCode: generateUUID(),
+      viewCode: generateUUID(),
+      // Avoid "undefined"
+      notes: original.notes || [],
+      // Not sure why these fields aren't set by the original
+      center: original.center,
+      topic: original.topic,
+    });
+    this.create(newCompass, function(err, compass) {
+      if (err) {
+        reject(`Failed to create a copy of original compass with edit code ${compass.editCode}: ${err}`);
         return;
       }
       resolve(compass);

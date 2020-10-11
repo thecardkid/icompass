@@ -143,15 +143,15 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitSendMail = (editCode, username, email) => {
+    emitSendMail = (editCode, username, email, topic) => {
       if (this.checkConnected()) {
-        this.socket.emit('send mail', { editCode, username, email });
+        this.socket.emit('send mail', { editCode, username, email, topic });
       }
     };
 
-    emitAutoSendMail = (editCode, username, email) => {
+    emitAutoSendMail = (editCode, username, email, topic) => {
       if (this.checkConnected()) {
-        this.socket.emit('auto send mail', { editCode, username, email });
+        this.socket.emit('auto send mail', { editCode, username, email, topic });
       }
     };
 
@@ -174,6 +174,10 @@ const SocketSingleton = (() => {
     emitWorkspace = (event, ...args) => {
       this.socket.emit(event, ...args);
     };
+
+    emitCreateCopyOfWorkspace = (originalWorkspaceEditCode) => {
+      this.socket.emit('create copy of compass', { originalWorkspaceEditCode });
+    }
   }
 
   let instance;

@@ -49,14 +49,14 @@ class LandingPage extends Component {
       });
       return this.modal.alert({
         heading: 'Whoops...',
-        body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let Hieu know.</u></a>',
+        body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let the developer know.</u></a>',
       });
     }
 
     const rememberedEmail = Storage.getAlwaysSendEmail();
     if (typeof rememberedEmail === 'string') {
       if (REGEX.EMAIL.test(rememberedEmail)) {
-        this.socket.emitAutoSendMail(data.code, this.state.username, rememberedEmail);
+        this.socket.emitAutoSendMail(data.code, this.state.username, rememberedEmail, data.topic);
         return browserHistory.push(`/compass/edit/${data.code}/${this.state.username}`);
       }
     }
@@ -102,7 +102,7 @@ class LandingPage extends Component {
   promptForEmail = () => {
     this.modal.promptForEmail(
       (hasValue, email) => {
-        const { username, data: { code } } = this.state;
+        const { username, data: { code, topic } } = this.state;
         if (hasValue) {
           if (!REGEX.EMAIL.test(email)) {
             this.toast.error(`"${email}" is not a valid email address`);
@@ -115,7 +115,7 @@ class LandingPage extends Component {
             Storage.setAlwaysSendEmail(email);
           }
 
-          this.socket.emitSendMail(code, username, email);
+          this.socket.emitSendMail(code, username, email, topic);
         }
         return browserHistory.push(`/compass/edit/${code}/${username}`);
       },
