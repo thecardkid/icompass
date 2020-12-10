@@ -63,6 +63,10 @@ class Workspace extends Component {
       ReactGA.pageview('/compass/edit/');
     }
 
+    if (this.props.location.query['fi']) {
+      this.props.uiX.setIsFiona();
+    }
+
     this.props.uiX.resize();
   }
 

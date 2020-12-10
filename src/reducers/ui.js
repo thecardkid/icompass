@@ -18,6 +18,7 @@ const defaultState = {
   vw: 0,
   vh: 0,
   editingMode: EDITING_MODE.NORMAL,
+  isFiona: false,
 };
 
 const showNewNote = (state, action, formType) => {
@@ -180,6 +181,9 @@ export default (state = defaultState, action) => {
 
     case 'resetUI':
       return defaultState;
+
+    case 'setIsFiona':
+      return { ...state, isFiona: true };
 
     default:
       return state;

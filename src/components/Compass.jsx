@@ -26,24 +26,57 @@ import { EDITING_MODE } from '../../lib/constants';
 const QUADRANTS = [
   {
     id: 'observations',
+    header: 'observations',
     prompt: '2. What\'s happening? Why?',
     // decides how the x and y offset of the center
     // affect the quadrant's height and width
     xOffsetSign: 1,
     yOffsetSign: -1,
   },
-  { id: 'principles',
+  {
+    id: 'principles',
+    header: 'principles',
     prompt: '3. What matters most?',
     xOffsetSign: 1,
     yOffsetSign: 1,
   },
-  { id: 'ideas',
+  {
+    id: 'ideas',
+    header: 'ideas',
     prompt: '4. What ways are there?',
     xOffsetSign: -1,
     yOffsetSign: 1,
   },
-  { id: 'experiments',
+  {
+    id: 'experiments',
+    header: 'experiments',
     prompt: '5. What\'s a step to try?',
+    xOffsetSign: -1,
+    yOffsetSign: -1,
+  },
+];
+const FI_QUADRANTS = [
+  {
+    id: 'observations',
+    header: 'Double devolution',
+    xOffsetSign: 1,
+    yOffsetSign: -1,
+  },
+  {
+    id: 'principles',
+    header: 'Internal evolution',
+    xOffsetSign: 1,
+    yOffsetSign: 1,
+  },
+  {
+    id: 'ideas',
+    header: 'Double evolution',
+    xOffsetSign: -1,
+    yOffsetSign: 1,
+  },
+  {
+    id: 'experiments',
+    header: 'External evolution',
     xOffsetSign: -1,
     yOffsetSign: -1,
   },
@@ -158,8 +191,8 @@ class Compass extends Component {
              onMouseDown={this.onMouseDown}
              onMouseUp={this.onMouseUp} />
         <div>
-          <h1>{q.id.toUpperCase()}</h1>
-          <h2>{q.prompt}</h2>
+          <h1>{q.header.toUpperCase()}</h1>
+          {q.prompt && <h2>{q.prompt}</h2>}
         </div>
       </div>
     );
@@ -395,6 +428,20 @@ class Compass extends Component {
 
   renderCompassStructure = () => {
     const { centerPosition } = this.state;
+    if (this.props.ui.isFiona) {
+      return (
+        <div>
+          {this.renderCenter()}
+          <div id="hline" className="half" style={{ top: (this.props.ui.vh * 0.25) - 2, opacity: 0.2 }}/>
+          <div id="hline" style={{ top: (this.props.ui.vh * 0.5) - 2 }}/>
+          <div id="hline" className="half" style={{ top: (this.props.ui.vh * 0.75) - 2, opacity: 0.2 }}/>
+          <div id="vline" className="half" style={{ left: (this.props.ui.vw * 0.25) - 2, opacity: 0.2 }}/>
+          <div id="vline" style={{ left: (this.props.ui.vw * 0.5) - 2 }}/>
+          <div id="vline" className="half" style={{ left: (this.props.ui.vw * 0.75) - 2, opacity: 0.2 }}/>
+          {_.map(FI_QUADRANTS, this.renderQuadrant)}
+        </div>
+      );
+    }
     return (
       <div>
         {this.renderCenter()}

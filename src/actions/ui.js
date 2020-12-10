@@ -158,3 +158,9 @@ export const reset = () => {
     type: 'resetUI',
   };
 };
+
+export const setIsFiona = () => {
+  return {
+    type: 'setIsFiona',
+  };
+};
