@@ -1,0 +1,36 @@
+name: checks
+
+# Run this workflow every time a new commit pushed to your repository
+on: push
+
+jobs:
+  run-checks:
+    name: run-checks
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '8.17.0'
+    - run: npm install --depth 0
+    - run: npm run lint
+    - run: npm run api
+    - run: npm run mocha
+      env:
+        CI: true
+
+
+#    steps:
+#      # Checks out a copy of your repository on the ubuntu-latest machine
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      # Runs the Super-Linter action
+#      - name: Run Super-Linter
+#        uses: github/super-linter@v3
+#        env:
+#          DEFAULT_BRANCH: main
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
