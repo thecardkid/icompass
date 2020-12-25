@@ -55,7 +55,9 @@ socket.connect(server);
 
 function cleanup() {
   logger.info('Disconnecting from MongoDB');
-  db.connection.close();
+  if (!!db.connection) {
+    db.connection.close();
+  }
   process.exit(0);
 }
 

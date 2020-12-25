@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import request from 'supertest';
 
-import app from '../../icompass';
-import Compass from '../../models/compass';
+import app from '../../backend/server';
+import Compass from '../../backend/models/compass';
 
 const TOPIC = 'test suite';
 

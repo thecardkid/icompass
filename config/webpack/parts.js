@@ -3,6 +3,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const root = path.resolve(__dirname, '../../');
+const websiteDist = path.resolve(root, 'backend/website-dist');
 
 const jsxLoader = () => ({
   test: /\.jsx?/,
@@ -75,6 +76,7 @@ const compressionPlugin = () => new CompressionPlugin({
 
 module.exports = {
   root,
+  websiteDist,
   jsxLoader,
   lessLoader,
   fileLoader,

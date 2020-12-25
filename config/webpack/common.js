@@ -1,11 +1,11 @@
 const path = require('path');
 
-const { root, jsxLoader, lessLoader, fileLoader } = require('./parts');
+const { root, jsxLoader, lessLoader, fileLoader, websiteDist } = require('./parts');
 
 module.exports = () => ({
   entry: path.resolve(root, 'src/containers/App.jsx'),
   output: {
-    path: path.resolve(root, 'backend/website-dist/'),
+    path: websiteDist,
     filename: 'bundle.js',
   },
   module: {

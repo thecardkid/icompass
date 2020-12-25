@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const { root, uglifyJsPlugin } = require('./parts');
+const { root, uglifyJsPlugin, websiteDist } = require('./parts');
 
 module.exports = {
   mode: 'production',
@@ -29,7 +29,7 @@ module.exports = {
     ],
   },
   output: {
-    path: path.resolve(root, 'public'),
+    path: websiteDist,
     filename: 'vendor.dll.js',
     library: 'vendor_lib',
   },
