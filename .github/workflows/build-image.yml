@@ -1,7 +1,8 @@
 name: build-image
 on:
   push:
-    - master
+    branches:
+      - github-actions
 jobs:
   webpack-build:
     runs-on: ubuntu-18.04
