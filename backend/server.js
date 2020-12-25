@@ -10,10 +10,11 @@ let logger = require('./lib/logger.js');
 let apiRoutes = require('./routes');
 
 let app = express();
-let db;
-const PORT = process.env.PORT || 8080;
 
-app.use(express.static(__dirname + '/public'));
+const PORT = process.env.PORT || 8080;
+const staticDir = path.join(__dirname, 'website-dist');
+
+app.use(express.static(staticDir));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(helmet({
@@ -40,10 +41,11 @@ app.use('/s3', s3Router({
 
 
 app.get('*', function(request, response) {
-  response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+  response.sendFile(path.resolve(staticDir, 'index.html'));
 });
 
-let server = app.listen(PORT, function() {
+let db;
+const server = app.listen(PORT, function() {
   logger.info('Listening on port:', PORT);
   db = require('./lib/db.js');
 });
@@ -53,7 +55,7 @@ socket.connect(server);
 
 function cleanup() {
   logger.info('Disconnecting from MongoDB');
-  db.disconnect();
+  db.connection.close();
   process.exit(0);
 }
 

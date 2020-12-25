@@ -17,7 +17,7 @@ function getNodeEnv() {
 }
 
 function getGATrackingID() {
-  if (getHost() === 'https://icompass.me') {
+  if (getNodeEnv() === 'production') {
     return process.env.GA_TRACKING_ID;
   }
   return '';

@@ -6,7 +6,10 @@ const root = path.resolve(__dirname, '../../');
 
 const jsxLoader = () => ({
   test: /\.jsx?/,
-  include: path.resolve(root, 'src'),
+  include: [
+    path.resolve(root, 'src'),
+    path.resolve(root, 'lib'),
+  ],
   loader: 'babel-loader',
   query: {
     presets: [
