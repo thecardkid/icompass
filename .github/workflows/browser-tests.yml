@@ -1,0 +1,18 @@
+on:
+  push:
+    branches:
+    - 'staging/**'
+jobs:
+  browser-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.15.3'
+      - run: npm install
+      - run: NODE_ENV=production scripts/build-webpack
+      - run: NODE_ENV=test node backend/server &
+      - run: scripts/cypress-run-record
+    env:
+      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

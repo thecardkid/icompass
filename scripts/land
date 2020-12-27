@@ -2,21 +2,22 @@
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
+base_branch=master
 curr_branch="$(git branch | grep \* | cut -d ' ' -f2)"
-if [[ "$curr_branch" == "develop" ]]; then
+if [[ "$curr_branch" == "$base_branch" ]]; then
     echo "Need to be on feature branch to merge" >&2
     exit 1
 fi
 
-echo "rebasing the $curr_branch onto develop.." >&2
-git rebase develop
+echo "rebasing the $curr_branch onto $base_branch.." >&2
+git rebase "$base_branch"
 
-commit_messages="$(git log --format=%B --reverse develop..${curr_branch})"
+commit_messages="$(git log --format=%B --reverse ${base_branch}..${curr_branch})"
 
 cat <<EOF >&2
 
 
-about to squash merge branch "$curr_branch" into develop with the following commit message:
+about to squash merge branch "$curr_branch" into "$base_branch" with the following commit message:
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Merge branch "$curr_branch"
@@ -42,7 +43,7 @@ if [[ ! -z "$status" ]]; then
 fi
 
 echo "committing..." >&2
-git checkout develop
+git checkout "$base_branch"
 git merge --squash "$curr_branch"
 git commit -m "Merge branch \"$curr_branch\"" -m "$commit_messages"
 git branch -D "$curr_branch"
