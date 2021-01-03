@@ -125,10 +125,10 @@ class StickyNote extends Component {
   };
 
   renderText = (n) => {
-    const divClazz = this.compactMode ? 'compact contents' : 'contents';
+    const divClass = this.compactMode ? 'compact contents' : 'contents';
 
     return (
-      <div style={{ background: n.color || 'chartreuse' }} className={divClazz}>
+      <div style={{ background: n.color || 'chartreuse' }} className={divClass}>
         <p className={'text'} ref={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
         {this.getTooltip(n)}
       </div>

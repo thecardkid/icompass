@@ -8,7 +8,7 @@ import FormPalette from './FormPalette';
 
 import * as uiX from '../../actions/ui';
 
-import { REGEX, HOST, S3_URL } from '../../../lib/constants';
+import { HOST, S3_URL } from '../../../lib/constants';
 import SocketSingleton from '../../utils/Socket';
 import ToastSingleton from '../../utils/Toast';
 
@@ -52,11 +52,6 @@ class ImageForm extends Component {
   };
 
   renderPreview = () => {
-    let img;
-    if (REGEX.URL.test(this.state.imgSource)) {
-      img = <img src={this.state.imgSource} />;
-    }
-
     return (
       <div className="preview">
         <div style={{minHeight: '10px'}}>
@@ -76,7 +71,7 @@ class ImageForm extends Component {
               </p>
             </div>
           </ReactTooltip>
-          {img}
+          <img src={this.state.imgSource} />;
         </div>
       </div>
     );

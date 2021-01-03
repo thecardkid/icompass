@@ -48,7 +48,7 @@ const lessLoader = () => ({
 
 const fileLoader = () => ({
   test: /\.(png|jpg|jpeg|mp4)$/,
-  include: path.resolve(root, 'public/static'),
+  include: websiteDist,
   loader: 'file-loader',
 });
 

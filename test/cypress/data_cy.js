@@ -46,6 +46,15 @@ export const workspaceMenu = {
   },
 };
 
+export const helpMenu = {
+  getStarted: 'help-get-started',
+  guide: 'help-guide',
+  aboutUs: 'help-about-us',
+  privacyStatement: 'help-privacy-statement',
+  whatsNew: 'help-whats-new',
+  leaveFeedback: 'help-leave-feedback',
+};
+
 export function getColorAttr(c) {
   return `color-${c}`;
 }

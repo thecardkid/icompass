@@ -1,9 +1,9 @@
 /* global process: 1 */
 
-let bodyParser = require('body-parser');
-let express = require('express');
-let helmet = require('helmet');
-let path = require('path');
+const bodyParser = require('body-parser');
+const express = require('express');
+const helmet = require('helmet');
+const path = require('path');
 const s3Router = require('react-dropzone-s3-uploader/s3router');
 
 const initializeDB = require('./lib/db');
@@ -12,9 +12,9 @@ const socket = require('./lib/sockets');
 const apiRoutes = require('./routes');
 
 function initApp() {
-  let app = express();
+  const app = express();
 
-  const PORT = process.env.PORT || 8080;
+  const port = process.env.PORT || 8080;
   const staticDir = path.join(__dirname, 'website-dist');
 
   app.use(express.static(staticDir));
@@ -42,14 +42,13 @@ function initApp() {
     uniquePrefix: true,
   }));
 
-
-  app.get('*', function(request, response) {
+  app.get('*/', function(request, response) {
     response.sendFile(path.resolve(staticDir, 'index.html'));
   });
 
   let db;
-  const server = app.listen(PORT, async function() {
-    logger.info(`Listening on port ${PORT}`);
+  const server = app.listen(port, async function() {
+    logger.info(`Listening on port ${port}`);
     db = await initializeDB();
   });
 
@@ -66,6 +65,7 @@ function initApp() {
   process.on('SIGINT', cleanup);
   process.on('SIGTERM', cleanup);
 
+  return server;
 }
 
 module.exports = initApp();

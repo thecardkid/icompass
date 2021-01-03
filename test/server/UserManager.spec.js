@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import _ from 'underscore';
 
-import UserManager from '../../backend/lib/UserManager';
+import UserManager from '../../backend/lib/userManager';
 import { STICKY_COLORS } from '../../backend/lib/constants';
 
 const code = '1a2b3c4d';

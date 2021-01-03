@@ -1,3 +1,4 @@
+name: build-production-image
 on:
   push:
     branches:

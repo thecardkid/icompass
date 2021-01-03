@@ -15,5 +15,6 @@
   "supportFile": "config/cypress/support.js",
   "integrationFolder": "test/cypress/",
   "screenshotsFolder": "test/cypress/screenshots",
-  "videosFolder": "test/cypress/videos"
+  "videosFolder": "test/cypress/videos",
+  "fixturesFolder": "test/cypress/fixtures"
 }

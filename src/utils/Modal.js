@@ -257,7 +257,7 @@ const ModalSingleton = (() => {
           <br/><br/>
           I will not store your email address or send you spam.
         </p>
-        <input id="ic-modal-input" placeholder="enter email or leave blank">
+        <input id="ic-modal-input" type="email" placeholder="enter email or leave blank">
         <div class="ic-always">
           <input type="checkbox" id="ic-always-email-value" /> 
           <span>Always send me the link to workspaces I create</span>

@@ -107,7 +107,7 @@ class FormManager extends Component {
     } else {
       return null;
     }
-  };
+  }
 }
 
 const mapStateToProps = (state) => {

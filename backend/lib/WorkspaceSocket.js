@@ -1,14 +1,13 @@
 require('babel-polyfill');
 const _ = require('underscore');
 
-let UserManager = require('./UserManager');
-let MailerSingleton = require('./Mailer');
-let { HOST, STICKY_COLORS } = require('./constants');
+let UserManager = require('./userManager');
+const mailer = require('./mailer').getInstance();
+const { HOST, STICKY_COLORS } = require('./constants');
+const logger = require('./logger');
 const Compass = require('../models/compass');
-let logger = require('./logger');
 
 let Manager = new UserManager();
-let Mail = MailerSingleton.getInstance();
 
 // TODO properly implement catch for all async event handlers.
 
@@ -93,7 +92,7 @@ class WorkspaceSocket {
   }
 
   sendFeedback({ email, note }) {
-    Mail.sendMessage({
+    mailer.sendMessage({
       subject: 'iCompass Feedback',
       toEmail: 'hieumaster95@gmail.com',
       text: note + `\n\nFrom: ${email || 'No email specified'}` ,
@@ -105,7 +104,7 @@ class WorkspaceSocket {
     const text = 'Access your compass via this link ' +
       `${HOST}/compass/edit/${data.editCode}/${data.username}`;
 
-    Mail.sendMessage({
+    mailer.sendMessage({
       subject: `Your iCompass workspace "${data.topic}"`,
       text,
       toEmail: data.email,
@@ -125,7 +124,7 @@ whenever you create one. To stop receiving these automatic emails, please go to 
 ${HOST}/disable-auto-email.
 `;
 
-    Mail.sendMessage({
+    mailer.sendMessage({
       subject: `Your iCompass workspace "${data.topic}"`,
       text,
       toEmail: data.email,
@@ -138,7 +137,7 @@ ${HOST}/disable-auto-email.
 
     _.each(data.bookmarks, ({ center, href }) => text += `${center}: ${HOST}${href}\n\n`);
 
-    Mail.sendMessage({
+    mailer.sendMessage({
       subject: 'Your iCompass bookmarks',
       text,
       toEmail: data.email,

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
-import { Link } from 'react-router';
 
 import FeedbackModal from './modals/FeedbackModal';
 import { trackFeatureEvent } from '../utils/Analytics';
@@ -9,6 +8,7 @@ import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 
 import { COLORS } from '../../lib/constants';
+import { helpMenu } from '../../test/cypress/data_cy';
 
 export default class HelpAndFeedback extends Component {
   constructor(props) {
@@ -84,31 +84,31 @@ export default class HelpAndFeedback extends Component {
     return (
       <div className={'ic-menu ic-help-menu'}>
         <section className={'border-bottom'}>
-          <div className={'ic-menu-item'} onClick={this.openPrompt}>
+          <div data-cy={helpMenu.getStarted} className={'ic-menu-item'} onClick={this.openPrompt}>
             <i className={'material-icons'}>play_arrow</i>
             Get Started
           </div>
-          <Link to={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.hideMenu}>
+          <a data-cy={helpMenu.guide} href={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.hideMenu}>
             <div className={'ic-menu-item'}>
               <i className={'material-icons'}>ondemand_video</i>
               iCompass Guide
             </div>
-          </Link>
+          </a>
         </section>
         <section>
-          <div className={'ic-menu-item'} onClick={this.showAboutUs}>
+          <div data-cy={helpMenu.aboutUs} className={'ic-menu-item'} onClick={this.showAboutUs}>
             <i className={'material-icons'}>person</i>
             About Us
           </div>
-          <div className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
+          <div data-cy={helpMenu.privacyStatement} className={'ic-menu-item'} onClick={this.showPrivacyStatement}>
             <i className={'material-icons'}>lock</i>
             Privacy Statement
           </div>
-          <div className={'ic-menu-item'} onClick={this.showWhatsNew}>
+          <div data-cy={helpMenu.whatsNew} className={'ic-menu-item'} onClick={this.showWhatsNew}>
             <i className={'material-icons'}>new_releases</i>
             What's New?
           </div>
-          <div className={'ic-menu-item'} onClick={this.showFeedback(true)}>
+          <div data-cy={helpMenu.leaveFeedback} className={'ic-menu-item'} onClick={this.showFeedback(true)}>
             <i className={'material-icons'}>feedback</i>
             Leave Feedback
           </div>

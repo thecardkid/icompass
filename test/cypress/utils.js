@@ -1,10 +1,12 @@
 const { getColorAttr, workspaceMenu } = require('./data_cy');
 
-function waitForVisible(selector) {
+export const testImageURL = 'https://icompass-testing.s3-us-west-1.amazonaws.com/pup.jpg';
+
+export function waitForVisible(selector) {
   cy.get(selector, { timeout: 10000 }).should('be.visible');
 }
 
-function setup() {
+export function setup() {
   cy.visit('/');
   // TODO compass-center is legacy (from before "topic" existed).
   // Rename to compass-topic
@@ -24,13 +26,13 @@ function setup() {
   cy.wait(2000);
 }
 
-function selectMenuOption(attr) {
+export function selectMenuOption(attr) {
   cy.get('button.ic-workspace-button').click();
   waitForVisible('div.ic-workspace-menu');
   getElemWithDataCy(attr).click();
 }
 
-function cleanup() {
+export function cleanup() {
   selectMenuOption(workspaceMenu.deleteWorkspace);
   // confirm delete
   waitForVisible('#ic-modal', 100);
@@ -40,7 +42,7 @@ function cleanup() {
   cy.get('#ic-modal-confirm').click();
 }
 
-function expectCompassStructure() {
+export function expectCompassStructure() {
   cy.get('#observations').should('be.visible');
   cy.get('#observations h1').should('contain', 'OBSERVATIONS');
   cy.get('#observations h2').should('contain', 'What\'s happening? Why?');
@@ -58,28 +60,17 @@ function expectCompassStructure() {
   cy.get('#experiments h2').should('contain', 'What\'s a step to try?');
 }
 
-function selectColor(color) {
+export function selectColor(color) {
   cy.get('.ic-form-palette .icon').click();
   getElemWithDataCy(getColorAttr(color)).click();
 }
 
-function selectSubmenuOption({ submenu, suboption }) {
+export function selectSubmenuOption({ submenu, suboption }) {
   cy.get('button.ic-workspace-button').click();
   getElemWithDataCy(submenu).trigger('mouseover');
   getElemWithDataCy(suboption).click();
 }
 
-function getElemWithDataCy(attr) {
+export function getElemWithDataCy(attr) {
   return cy.get(`[data-cy=${attr}]`);
 }
-
-module.exports = {
-  setup,
-  cleanup,
-  expectCompassStructure,
-  selectColor,
-  selectMenuOption,
-  selectSubmenuOption,
-  waitForVisible,
-  getElemWithDataCy,
-};

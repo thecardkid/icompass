@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 const _ = require('underscore');
 
-const Mail = require('./Mailer').getInstance();
+const mail = require('./mailer').getInstance();
 
 module.exports = {
   error: function() {
     const args = Array.prototype.slice.call(arguments);
     args.unshift(new Date() + ' [ERROR]');
-    Mail.sendMessage({
+    mail.sendMessage({
       toEmail: 'hieumaster95@gmail.com',
       subject: 'iCompass server error',
       text: args,
@@ -22,7 +22,7 @@ module.exports = {
     console.log.apply(console, args);
   },
 
-  api: (req, res, next) => {
+  api: function(req, res, next) {
     const args = [new Date() + ' [API]', req.method, req.url, res.statusCode];
     console.log.apply(console, args);
     next();

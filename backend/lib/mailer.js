@@ -1,5 +1,5 @@
 const email = require('emailjs/email');
-const process = require('process');
+const makeSingleton = require('./singletonFactory');
 
 function getEmailPassword() {
   const pw = process.env.EMAIL_PASSWORD;
@@ -54,17 +54,4 @@ class Mailer {
 
 }
 
-module.exports = (() => {
-  let instance = null;
-
-  return {
-    getInstance: () => {
-      if (!instance) {
-        instance = new Mailer();
-        instance.constructor = null;
-      }
-
-      return instance;
-    },
-  };
-})();
+module.exports = makeSingleton(Mailer);

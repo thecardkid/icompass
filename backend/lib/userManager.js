@@ -1,7 +1,8 @@
 const _ = require('underscore');
+
 const { STICKY_COLORS, REGEX } = require('./constants');
 
-module.exports = class UserManager {
+class UserManager {
   constructor() {
     this.rooms = {};
   }
@@ -21,7 +22,7 @@ module.exports = class UserManager {
     return this.rooms[code] = manager;
   }
 
-  cleanUsers(code) {
+  deleteInvalidUsernames(code) {
     const manager = this.getRoom(code);
     for (let username in manager.usernameToColor) {
       if (!manager.usernameToColor.hasOwnProperty(username)) {
@@ -34,7 +35,7 @@ module.exports = class UserManager {
   }
 
   refreshUser(code, username) {
-    this.cleanUsers(code);
+    this.deleteInvalidUsernames(code);
     if (username.length === 0) {
       return { message: 'bad username' };
     }
@@ -54,7 +55,7 @@ module.exports = class UserManager {
   }
 
   addUser(code, username) {
-    this.cleanUsers(code);
+    this.deleteInvalidUsernames(code);
     // Pretty jank here - but fast fix. Return object with
     // a string that is a socket message to be handled by the frontend.
     if (username.length === 0 || !REGEX.CHAR_ONLY.test(username)) {
@@ -87,4 +88,6 @@ module.exports = class UserManager {
     }
     return this.setRoom(code, m);
   }
-};
+}
+
+module.exports = UserManager;

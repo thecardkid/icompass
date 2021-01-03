@@ -1,6 +1,5 @@
-const { setup, getElemWithDataCy, waitForVisible } = require('./utils');
+const { setup, getElemWithDataCy, testImageURL, waitForVisible } = require('./utils');
 const { contextMenu } = require('./data_cy');
-const imageUrl = 'https://icompass-testing.s3-us-west-1.amazonaws.com/pup.jpg';
 
 
 describe('context menus', () => {
@@ -75,7 +74,7 @@ describe('context menus', () => {
   describe('image note context menu', () => {
     before(() => {
       cy.get('body').dblclick(x, y, { shiftKey: true });
-      cy.get('#ic-form-text').type(imageUrl);
+      cy.get('#ic-form-text').type(testImageURL);
       cy.get('button[name=ship]').click();
       cy.get('div.ic-sticky-note').should('have.length', 1);
     });
@@ -87,7 +86,7 @@ describe('context menus', () => {
 
     it('edit', () => {
       getElemWithDataCy(contextMenu.editAction).click();
-      cy.get('#ic-form-text').should('contain', imageUrl);
+      cy.get('#ic-form-text').should('contain', testImageURL);
       cy.get('button[name=nvm]').click();
     });
 
@@ -99,7 +98,7 @@ describe('context menus', () => {
     it('view image', () => {
       getElemWithDataCy(contextMenu.zoomAction).click();
       cy.wait(200);
-      cy.get('#ic-modal-image img').should('have.attr', 'src').should('contain', imageUrl);
+      cy.get('#ic-modal-image img').should('have.attr', 'src').should('contain', testImageURL);
       cy.get('#ic-backdrop').click();
       cy.get('#ic-modal-image').should('not.exist');
     });

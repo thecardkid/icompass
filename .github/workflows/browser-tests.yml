@@ -1,3 +1,4 @@
+name: browser-tests
 on:
   push:
     branches:
