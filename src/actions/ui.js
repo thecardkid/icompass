@@ -153,6 +153,18 @@ export const hideScreenshotModal = () => {
   };
 };
 
+export const showCopyWorkspaceModal = () => {
+  return {
+    type: 'showCopyWorkspaceModal',
+  };
+};
+
+export const hideCopyWorkspaceModal = () => {
+  return {
+    type: 'hideCopyWorkspaceModal',
+  };
+};
+
 export const reset = () => {
   return {
     type: 'resetUI',

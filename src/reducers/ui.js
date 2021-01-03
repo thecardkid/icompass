@@ -11,9 +11,11 @@ const defaultState = {
   },
   bookmarked: false,
   dragCenterEnabled: false,
+  // TODO refactor under modals
   showGDocModal: false,
   showShareModal: false,
   showScreenshotModal: false,
+  showCopyWorkspaceModal: false,
   focusedNote: -1,
   vw: 0,
   vh: 0,
@@ -178,6 +180,12 @@ export default (state = defaultState, action) => {
 
     case 'hideScreenshotModal':
       return { ...state, showScreenshotModal: false };
+
+    case 'showCopyWorkspaceModal':
+      return { ...state, showCopyWorkspaceModal: true };
+
+    case 'hideCopyWorkspaceModal':
+      return { ...state, showCopyWorkspaceModal: false };
 
     case 'resetUI':
       return defaultState;

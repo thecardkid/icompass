@@ -207,17 +207,23 @@ div.ic-share {
       background: @dark;
     }
   }
+}
 
-  div.share-copy {
+div.ic-modal-make-copy {
+  .make-a-copy-explanation {
+    font-size: 13px;
     margin-top: 20px;
-    padding-top: 30px;
-    border-top: 1px solid black;
+    line-height: 16px;
+  }
 
-    .make-a-copy-explanation {
-      font-size: 13px;
-      margin-top: 20px;
-      line-height: 16px;
-    }
+  button[name=make-copy] {
+    margin-top: 20px;
+    margin-right: 5px;
+    color: @light;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    background: @dark;
   }
 }
 

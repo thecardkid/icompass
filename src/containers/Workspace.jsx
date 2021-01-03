@@ -16,6 +16,7 @@ import BulkEditToolbar from '../components/BulkEditToolbar.jsx';
 import Compass from '../components/Compass.jsx';
 import HelpAndFeedback from '../components/HelpAndFeedback';
 import FormManager from '../components/forms/FormManager.jsx';
+import CopyWorkspaceModal from '../components/modals/CopyWorkspaceModal';
 import GDocModal from '../components/modals/GDocModal';
 import ScreenshotModal from '../components/modals/ScreenshotModal';
 import ShareModal from '../components/modals/ShareModal';
@@ -248,6 +249,9 @@ class Workspace extends Component {
         }
         {this.props.ui.showScreenshotModal &&
           <ScreenshotModal close={this.props.uiX.hideScreenshotModal}/>
+        }
+        {this.props.ui.showCopyWorkspaceModal &&
+          <CopyWorkspaceModal close={this.props.uiX.hideCopyWorkspaceModal} compass={this.props.compass} />
         }
       </div>
     );

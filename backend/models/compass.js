@@ -79,11 +79,11 @@ compassSchema.statics.makeCompassCopy = function(original) {
     const newCompass = Object.assign({}, original, {
       editCode: generateUUID(),
       viewCode: generateUUID(),
+      topic: original.topic + ' (copy)',
       // Avoid "undefined"
       notes: original.notes || [],
-      // Not sure why these fields aren't set by the original
+      // Not sure why this field aren't set by the original
       center: original.center,
-      topic: original.topic,
     });
     this.create(newCompass, function(err, compass) {
       if (err) {

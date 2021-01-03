@@ -105,6 +105,12 @@ class WorkspaceMenu extends Component {
     this.hideMenu();
   };
 
+  showCopyWorkspaceModal = () => {
+    ReactGA.modalview('modals/menu-copy-workspace');
+    this.props.uiX.showCopyWorkspaceModal();
+    this.hideMenu();
+  };
+
   buttonChangeMode = (switchTo) => () => {
     trackFeatureEvent('Menu: Switch mode');
     this.changeMode(switchTo)();
@@ -251,10 +257,6 @@ class WorkspaceMenu extends Component {
     return (
       <div className={'ic-menu ic-workspace-menu'}>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
-          <div data-cy={workspaceMenu.newWorkspace} className={'ic-menu-item'} onClick={this.openNewWorkspace}>
-            <i className={'material-icons'}>create_new_folder</i>
-            New Workspace
-          </div>
           <div data-cy={workspaceMenu.darkTheme} className={'ic-menu-item'}>
             <i className={'material-icons'}>brightness_2</i>
             Dark Theme
@@ -265,6 +267,20 @@ class WorkspaceMenu extends Component {
           </div>
         </section>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
+          <div data-cy={workspaceMenu.newWorkspace} className={'ic-menu-item'} onClick={this.openNewWorkspace}>
+            <i className={'material-icons'}>create_new_folder</i>
+            New Workspace
+          </div>
+          <div data-cy={workspaceMenu.copyWorkspace} className={'ic-menu-item'} onClick={this.showCopyWorkspaceModal}>
+            <i className={'material-icons'}>content_copy</i>
+            Copy Workspace
+          </div>
+          <div data-cy={workspaceMenu.share} className={'ic-menu-item'} onClick={this.showShareModal}>
+            <i className={'material-icons'}>share</i>
+            Share Workspace
+          </div>
+        </section>
+        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div data-cy={workspaceMenu.email} className={'ic-menu-item'} onClick={this.triggerEmailModal}>
             <i className={'material-icons'}>email</i>
             Save via Email
@@ -272,10 +288,6 @@ class WorkspaceMenu extends Component {
           <div data-cy={workspaceMenu.bookmark} className={'ic-menu-item'} onClick={this.bookmark}>
             <i className={'material-icons'}>bookmark</i>
             Save as Bookmark
-          </div>
-          <div data-cy={workspaceMenu.share} className={'ic-menu-item'} onClick={this.showShareModal}>
-            <i className={'material-icons'}>share</i>
-            Share Workspace
           </div>
         </section>
         <section className={'border-bottom'}>

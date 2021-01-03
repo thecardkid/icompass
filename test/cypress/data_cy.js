@@ -10,6 +10,7 @@ export const contextMenu = {
 
 export const workspaceMenu = {
   newWorkspace: 'action-new-workspace',
+  copyWorkspace: 'action-copy-workspace',
   darkTheme: 'action-dark-theme',
   email: 'action-email-modal',
   bookmark: 'action-boomark',

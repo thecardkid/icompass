@@ -156,6 +156,14 @@ describe('workspace menu', () => {
   });
 
   describe('main menu', () => {
+    describe('copy workspace', () => {
+      it('modal looks right', () => {
+        selectMenuOption(workspaceMenu.copyWorkspace);
+        cy.get('button[name=make-copy]').should('be.visible');
+        cy.get('.ic-close-window').click();
+      });
+    });
+
     describe('dark mode', () => {
       const expectDarkTheme = function(val) {
         cy.should(() => {
