@@ -1,21 +1,21 @@
 require('babel-polyfill');
 const _ = require('underscore');
 
-let UserManager = require('./userManager');
 const mailer = require('./mailer').getInstance();
 const { HOST, STICKY_COLORS } = require('./constants');
-const logger = require('./logger');
+const { DefaultLogger, Logger } = require('./logger');
 const Compass = require('../models/compass');
 
-let Manager = new UserManager();
-
 // TODO properly implement catch for all async event handlers.
+// TODO standardize logs
 
+// Represents a client connection to the server.
 class WorkspaceSocket {
-  constructor(session) {
-    this.io = session.getIo();
-    this.socket = session.getSocket();
-    this.session = session;
+  constructor(io, socket, roomManager) {
+    this.io = io;
+    this.socket = socket;
+    this.roomManager = roomManager;
+    this.logger = DefaultLogger;
 
     this.socket.on('disconnect', this.onDisconnect.bind(this));
     this.socket.on('reconnected', this.onReconnect.bind(this));
@@ -42,49 +42,65 @@ class WorkspaceSocket {
     this.socket.on('bulk delete notes', this.bulkDeleteNotes.bind(this));
   }
 
-  joinRoom(data) {
-    this.room = data.code;
-    this.username = data.username;
-    this.compassId = data.compassId;
-    this.socket.join(this.room);
+  getUserColor() {
+    return this.frontendUserColor;
+  }
+
+  setUserColor(color) {
+    this.frontendUserColor = color;
+  }
+
+  joinRoom({ code, username, compassId, isReconnecting }) {
+    this.roomID = code;
+    this.username = username;
+    this.compassId = compassId;
+    this.logger = new Logger(`room=${this.roomID} user=${this.username}`);
+
+    try {
+      // This is the effective call to socket-io.
+      this.socket.join(this.roomID);
+      // This is for reporting purposes.
+      this.roomManager.joinRoom(code, this, isReconnecting);
+    } catch (ex) {
+      this.socket.emit(ex.message);
+    }
   }
 
   broadcast(event, ...args) {
-    this.io.sockets.in(this.room).emit(event, ...args);
+    this.io.sockets.in(this.roomID).emit(event, ...args);
   }
 
   onDisconnect(reason) {
-    if (this.username) {
-      logger.info(`${this.username} left room ${this.room} because "${reason}"`);
-      let m = Manager.removeUser(this.room, this.username);
-      this.broadcast('user left', { users: m, left: this.username });
+    if (this.roomID && this.username) {
+      this.roomManager.leaveRoom(this.roomID, this.username);
+      this.logger.info(`disconnected reason: "${reason}"`);
+      this.broadcast('user left', {
+        users: this.roomManager.getRoomState(this.roomID),
+      });
     }
   }
 
-  async onReconnect(data) {
-    if (!data.code) {
+  async onReconnect({ code, compassId, username }) {
+    if (!code) {
       this.socket.emit('workspace not found');
-      logger.error('received undefined or null compass code; aborting', JSON.stringify(data));
+      this.logger.error('failed to reconnect: invalid code provided');
       return;
     }
-    const compass = await Compass.findByEditCode(data.code);
-    if (compass == null) {
+    const compass = await Compass.findByEditCode(code);
+    if (compass === null) {
       // workspace was probably deleted, but user hasn't navigated away from the page.
       this.socket.emit('workspace not found');
       return;
     }
 
     this.compass = compass;
-    if (data.sessionId) {
-      this.session.restoreSessionId(data.sessionId);
-    } else {
-      this.session.newSessionId();
-    }
-    this.joinRoom(data);
-    logger.info(this.username, 'rejoined room', this.room);
+    this.joinRoom({ code, compassId, username, isReconnecting: true });
+    this.logger.info('reconnected');
 
-    let o = Manager.refreshUser(this.room, this.username, data.color);
-    this.broadcast('user joined', { users: o.manager, joined: this.username });
+    this.broadcast('user joined', {
+      users: this.roomManager.getRoomState(code),
+      joined: this.username,
+    });
   }
 
   onLogout() {
@@ -145,17 +161,18 @@ ${HOST}/disable-auto-email.
     });
   }
 
+  // TODO make this an API call.
   async createCompass(data) {
     try {
       const compass = await Compass.makeCompass(data.topic);
-      logger.debug('Created compass with topic', data.topic, compass._id);
+      this.logger.info('Created compass with topic', data.topic, compass._id);
       this.socket.emit('compass ready', {
         success: !!compass,
         topic: data.topic,
         code: compass.editCode,
       });
     } catch (ex) {
-      logger.error('Error creating compass: ', JSON.stringify(data), ex);
+      this.logger.error('Error creating compass: ', JSON.stringify(data), ex);
     }
   }
 
@@ -168,7 +185,7 @@ ${HOST}/disable-auto-email.
         editCode: copy.editCode,
       });
     } catch (ex) {
-      logger.error('Error creating copy of compass: ', JSON.stringify(data), ex);
+      this.logger.error('Error creating copy of compass: ', JSON.stringify(data), ex);
     }
   }
 
@@ -176,14 +193,14 @@ ${HOST}/disable-auto-email.
     // Copy-pasted from above
     try {
       const compass = await Compass.makeCompass(data.topic);
-      logger.debug('Automation created compass with topic', data.topic, compass._id);
+      this.logger.debug('Automation created compass with topic', data.topic, compass._id);
       this.socket.emit('automated compass ready', {
         success: !!compass,
         topic: data.topic,
         code: compass.editCode,
       });
     } catch (ex) {
-      logger.error('Error automate creating compass: ', JSON.stringify(data), ex);
+      this.logger.error('Error automate creating compass: ', JSON.stringify(data), ex);
     }
   }
 
@@ -194,7 +211,7 @@ ${HOST}/disable-auto-email.
         this.socket.emit('center set', data.center);
       }
     } catch (ex) {
-      logger.error('Error setting center: ', JSON.stringify(data), ex);
+      this.logger.error('Error setting center: ', JSON.stringify(data), ex);
     }
   }
 
@@ -205,50 +222,46 @@ ${HOST}/disable-auto-email.
         this.broadcast('center position set', x, y);
       }
     } catch (ex) {
-      logger.error(ex);
+      this.logger.error(ex);
     }
   }
 
-  async findCompassEdit(data) {
+  async findCompassEdit({ code, username }) {
     try {
-      const compass = await Compass.findByEditCode(data.code);
+      const compass = await Compass.findByEditCode(code);
       if (compass !== null) {
-        let o = Manager.addUser(data.code, data.username);
-        if (o.message) {
-          // o.message is 'bad username' | 'username exists'. These
-          // are handled in Workspace.jsx
-          this.socket.emit(o.message);
-          return;
-        }
-        data.username = o.newUser;
-        data.compassId = compass._id.toString();
-
-        this.joinRoom(data);
-        logger.info(this.username, 'joined room', this.room);
-        this.broadcast('user joined', { users: o.manager, joined: this.username });
+        this.joinRoom({ code, username, isReconnecting: false });
+        this.logger.info('joined room');
+        this.broadcast('user joined', {
+          users: this.roomManager.getRoomState(code),
+          joined: this.username,
+        });
       }
       this.compass = compass;
       this.socket.emit('compass found', {
         compass: compass,
-        username: this.username || data.username,
+        username: this.username,
         viewOnly: false,
       });
     } catch (ex) {
-      logger.error('Error find compass edit: ', JSON.stringify(data), ex);
+      this.logger.error(`Error find compass edit: code=${code} username=${username}`, ex);
     }
   }
 
+  // TODO make API request
   deleteCompass(id) {
-    if (this.compassId !== id) {
+    const expectedID = this.compass._id.toString();
+    if (expectedID !== id) {
+      this.logger.warn(`Attempted to delete compass id=${id}, but socket's compass id is ${expectedID}`);
       return;
     }
 
     Compass.remove({ _id: id }, (err) => {
       if (err) {
-        logger.error('Error deleting compass: ', id, err);
+        this.logger.error(`Error deleting compass id=${id}:`, err);
       }
 
-      logger.info(this.username, 'deleted compass', id);
+      this.logger.info(`Deleted compass id=${id}`);
       this.broadcast('compass deleted');
     });
   }
@@ -258,7 +271,7 @@ ${HOST}/disable-auto-email.
       this.compass = await this.compass.addNote(note);
       this.broadcast('update notes', this.compass.notes);
     } catch (ex) {
-      logger.error('Error creating note: ', JSON.stringify(note), ex);
+      this.logger.error('Error creating note: ', JSON.stringify(note), ex);
     }
   }
 
@@ -267,7 +280,7 @@ ${HOST}/disable-auto-email.
       this.compass = await this.compass.updateNote(updatedNote);
       this.broadcast('update notes', this.compass.notes);
     } catch (ex) {
-      logger.error('Error updating note: ', JSON.stringify(updatedNote), ex);
+      this.logger.error('Error updating note: ', JSON.stringify(updatedNote), ex);
     }
   }
 
@@ -278,7 +291,7 @@ ${HOST}/disable-auto-email.
       this.broadcast('update notes', compass.notes);
       this.broadcast('deleted notes', deletedIdx);
     } catch (ex) {
-      logger.error('Error deleting note: ', id, ex);
+      this.logger.error('Error deleting note: ', id, ex);
     }
   }
 
@@ -287,7 +300,7 @@ ${HOST}/disable-auto-email.
       this.compass = await this.compass.plusOneNote(id);
       this.broadcast('update notes', this.compass.notes);
     } catch (ex) {
-      logger.error('Error upvoting note: ', id, ex);
+      this.logger.error('Error upvoting note: ', id, ex);
     }
   }
 
@@ -300,7 +313,7 @@ ${HOST}/disable-auto-email.
       this.compass = await this.compass.bulkUpdateNotes(ids, transformation);
       this.broadcast('update notes', this.compass.notes);
     } catch (ex) {
-      logger.error('Error bulk updating notes: ', JSON.stringify({ ids, transformation }), ex);
+      this.logger.error('Error bulk updating notes: ', JSON.stringify({ ids, transformation }), ex);
     }
   }
 
@@ -309,7 +322,7 @@ ${HOST}/disable-auto-email.
       this.compass = await this.compass.bulkDragNotes(ids, { dx, dy });
       this.broadcast('update notes', this.compass.notes);
     } catch (ex) {
-      logger.error('Error bulk dragging notes: ', JSON.stringify({ ids, dx, dy }), ex);
+      this.logger.error('Error bulk dragging notes: ', JSON.stringify({ ids, dx, dy }), ex);
     }
   }
 
@@ -320,13 +333,9 @@ ${HOST}/disable-auto-email.
       this.broadcast('update notes', this.compass.notes);
       this.broadcast('deleted notes', deletedIdx);
     } catch (ex) {
-      logger.error('Error bulk deleting notes: ', ids, ex);
+      this.logger.error('Error bulk deleting notes: ', ids, ex);
     }
   }
 }
 
-const bindWorkspaceEvents = (io, socket) => {
-  return new WorkspaceSocket(io, socket);
-};
-
-module.exports = bindWorkspaceEvents;
+module.exports = WorkspaceSocket;

@@ -1,6 +1,6 @@
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
-const logger = require('./logger');
+const logger = require('./logger').DefaultLogger;
 
 async function initializeDB() {
   let uri = process.env.MONGODB_URI || 'mongodb://localhost/compass';

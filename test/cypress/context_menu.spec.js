@@ -99,7 +99,7 @@ describe('context menus', () => {
       getElemWithDataCy(contextMenu.zoomAction).click();
       cy.wait(200);
       cy.get('#ic-modal-image img').should('have.attr', 'src').should('contain', testImageURL);
-      cy.get('#ic-backdrop').click();
+      cy.get('#ic-backdrop').click({ force: true });
       cy.get('#ic-modal-image').should('not.exist');
     });
 

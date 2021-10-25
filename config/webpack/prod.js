@@ -12,10 +12,10 @@ const prodConfig = () => merge(
       new webpack.DefinePlugin({
         __DEV__: false,
         GA_TRACKING_ID: JSON.stringify(process.env.GA_TRACKING_ID || ''),
-        'process.env': {
-          HOST: JSON.stringify('https://icompass.me'),
+        'icompass.config': {
+          APP_ENV: JSON.stringify('production'),
+          APP_HOST: JSON.stringify('https://icompass.me'),
           S3_URL: JSON.stringify('https://s3.us-east-2.amazonaws.com/innovatorscompassprod'),
-          NODE_ENV: JSON.stringify('production'),
         },
       }),
       new webpack.optimize.ModuleConcatenationPlugin(),

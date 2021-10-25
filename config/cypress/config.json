@@ -4,6 +4,8 @@
   "baseUrl": "http://localhost:8080",
   "viewportHeight": 1000,
   "viewportWidth": 1600,
+  "chromeWebSecurity": false,
+  "_chromeWebSecurityComment": "With this on, the test `view image` in context_menu.spec.js fails, not sure why.",
   "waitForAnimations": true,
 
   "ignoreTestFiles": [

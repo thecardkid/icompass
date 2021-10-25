@@ -7,10 +7,10 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 
-import DisableAutoEmail from '../containers/DisableAutoEmail';
-import LandingPage from '../containers/LandingPage.jsx';
-import NotFound from '../containers/NotFound.jsx';
-import Workspace from '../containers/Workspace.jsx';
+import DisableAutoEmail from './DisableAutoEmail';
+import LandingPage from './LandingPage.jsx';
+import NotFound from './NotFound.jsx';
+import Workspace from './Workspace.jsx';
 
 import PromptName from '../components/PromptName.jsx';
 

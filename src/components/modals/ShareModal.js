@@ -1,12 +1,14 @@
+/* global icompass */
+
 import React, { Component } from 'react';
 
-import { HOST, TWEET } from '../../../lib/constants';
+import { TWEET } from '../../../lib/constants';
 import ToastSingleton from '../../utils/Toast';
 import DynamicModal from './DynamicModal';
 
 export default class ShareModal extends Component {
-  editLink = `${HOST}/compass/edit/${this.props.compass.editCode}`;
-  viewLink = `${HOST}/compass/view/${this.props.compass.viewCode}`;
+  editLink = `${icompass.config.APP_HOST}/compass/edit/${this.props.compass.editCode}`;
+  viewLink = `${icompass.config.APP_HOST}/compass/view/${this.props.compass.viewCode}`;
   toast = ToastSingleton.getInstance();
 
   copyEditLink = () => {

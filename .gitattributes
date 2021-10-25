@@ -1,0 +1,1 @@
+test/cypress/snapshots/*.spec.js/*.png filter=lfs diff=lfs merge=lfs -text

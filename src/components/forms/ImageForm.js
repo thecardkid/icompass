@@ -1,3 +1,5 @@
+/* global icompass */
+
 import React, { Component } from 'react';
 import DropzoneS3Uploader from 'react-dropzone-s3-uploader';
 import { connect } from 'react-redux';
@@ -8,7 +10,6 @@ import FormPalette from './FormPalette';
 
 import * as uiX from '../../actions/ui';
 
-import { HOST, S3_URL } from '../../../lib/constants';
 import SocketSingleton from '../../utils/Socket';
 import ToastSingleton from '../../utils/Toast';
 
@@ -181,8 +182,8 @@ class ImageForm extends Component {
             <DropzoneS3Uploader onFinish={this.onImageUpload}
                                 onProgress={this.onProgress}
                                 onDropRejected={this.onRejected}
-                                s3Url={S3_URL}
-                                upload={{server: HOST}}
+                                s3Url={icompass.config.S3_URL}
+                                upload={{server: icompass.config.APP_HOST}}
                                 maxSize={OneMB}
                                 accept={'image/*'}
                                 multiple={false}

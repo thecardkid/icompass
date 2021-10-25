@@ -69,10 +69,6 @@ ensure_nvm_installed() {
 
 setup_node_env() {
     echo -e "installing npm packages..\n" >&2
-    if [[ -d "$IC_ROOT/node_modules" ]]; then
-        echo "removing old node_modules/" >&2
-        rm -r "$IC_ROOT/node_modules/"
-    fi
     # webdriverio uses wdio-sync to execute commands synchronously.
     # wdio-sync depends on the fibers package.
     # According to https://github.com/laverdet/node-fibers/issues/378#issuecomment-402384739,

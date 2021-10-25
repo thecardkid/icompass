@@ -1,12 +1,17 @@
-import { waitForVisible } from './utils';
-
-const { setup, selectSubmenuOption, testImageURL } = require('./utils');
+import {
+  assertDraggable,
+  matchImageSnapshot,
+  selectSubmenuOption,
+  setup,
+  testImageURL,
+  waitForVisible
+} from './utils';
 const { workspaceMenu } = require('./data_cy');
 
 describe('draft mode', () => {
   before(() => {
     setup();
-    // insert some test notes
+    // insert some test notes.
     const positions = [{ x: 400, y: 200 }, { x: 500, y: 200 }];
     for (let i = 0; i < positions.length; i++) {
       let p = positions[i];
@@ -30,6 +35,7 @@ describe('draft mode', () => {
       cy.get('.draft div.contents').should('have.css', 'background-color', 'rgb(128, 128, 128)');
     });
 
+    // Note ordering: [draft, real, real]
     it('form has correct heading', () => {
       cy.get('#note0').dblclick(10, 10);
       cy.get('h1.title').should('contain', 'Edit this draft');
@@ -42,8 +48,8 @@ describe('draft mode', () => {
       cy.get('#note0').should('contain', 'Edited draft');
     });
 
-    it.skip('can drag draft', () => {
-      // TODO implement when cypress supports dragging
+    it('can drag draft', () => {
+      assertDraggable('#note0', { deltaX: 50, deltaY: 50 });
     });
   });
 
@@ -60,8 +66,8 @@ describe('draft mode', () => {
       cy.get('#note1').should('contain', 'Edited note');
     });
 
-    it.skip('can drag', () => {
-      // TODO implement when cypress supports dragging
+    it('can drag', () => {
+      assertDraggable('#note1', { deltaX: 50, deltaY: 50 });
     });
   });
 
@@ -75,6 +81,7 @@ describe('draft mode', () => {
       cy.get('.ic-img').should('have.length', 1);
     });
 
+    // Note ordering: [draft, draft, real, real]
     it('renders draft with image', () => {
       waitForVisible('#note1 div.contents img');
       waitForVisible('#note1 div.contents button.submit');
@@ -89,58 +96,48 @@ describe('draft mode', () => {
       cy.get('button[name=nvm]').click();
     });
 
-    it.skip('can drag', () => {
-      // TODO
+    it('can drag', () => {
+      assertDraggable('#note1', { deltaX: 50, deltaY: 50 });
     });
   });
-  //
-  // describe('doodle draft', () => {
-  //   it('create doodle draft', () => {
-  //     b.keys('Alt');
-  //     b.keys('d');
-  //     b.keys('Alt');
-  //     b.waitForVisible('#ic-doodle-form');
-  //     b.moveToObject('#ic-doodle', 155, 75);
-  //     b.buttonDown(0);
-  //     b.moveToObject('#ic-doodle', 255, 175);
-  //     b.buttonUp(0);
-  //     cy.wait(1000);
-  //     cy.get('button[name=draft]').click();
-  //     cy.wait(200);
-  //     expect('.ic-sticky-note').to.have.count(5);
-  //     expect('.draft').to.have.count(3);
-  //     expect('.ic-img').to.have.count(2);
-  //     expect(b.getAttribute('#note2 div.contents img', 'src')).to.contain('data:image/png;base64');
-  //   });
-  //
-  //   it('cannot edit doodle', () => {
-  //     b.moveToObject('#note2', 10, 10);
-  //     b.doDoubleClick();
-  //     b.waitForVisible('#ic-toast span');
-  //     expect(b.getAttribute('#ic-toast span', 'class')).to.equal('warning');
-  //     expect('#ic-toast span').to.have.text(/Sketches cannot be edited/);
-  //   });
-  //
-  //   it('can drag', () => {
-  //     const oldPos = b.getLocation('#note2');
-  //     b.moveToObject('#note2', 10, 10);
-  //     b.buttonDown(0);
-  //     b.moveToObject('#note2', 30, 30);
-  //     b.buttonUp(0);
-  //     const newPosition = b.getLocation('#note2');
-  //
-  //     expect(oldPos.x - newPosition.x).to.equal(-20);
-  //     expect(oldPos.y - newPosition.y).to.equal(-20);
-  //   });
-  // });
-  //
-  // it('drafts are saved in local storage', () => {
-  //   b.refresh().pause(5000);
-  //   b.waitForVisible('.ic-sticky-note');
-  //   expect('.ic-sticky-note').to.have.count(5);
-  //   expect('.draft').to.have.count(3);
-  // });
-  //
+
+  describe('doodle draft', () => {
+    it('create doodle draft', () => {
+      cy.get('#ideas .interactable').dblclick('center', { altKey: true });
+      cy.get('.ic-form-palette').should('be.visible');
+      // draw doodle
+      cy.get('#ic-doodle')
+        .trigger('mousedown', { force: true })
+        .trigger('mousemove', -50, 50, { force: true })
+        .trigger('mouseup', { force: true });
+      cy.get('button[name=draft]').click();
+
+      cy.get('.ic-sticky-note').should('have.length', 5);
+      cy.get('.draft').should('have.length', 3);
+      cy.get('.ic-img').should('have.length', 2);
+      cy.get('#note2 div.contents img',).should('have.attr', 'src').and('contain', 'data:image/png;base64');
+    });
+
+    it('cannot edit doodle', () => {
+      cy.get('#note2').dblclick('center');
+      cy.get('#ic-toast span',).should('have.attr', 'class', 'warning');
+      cy.get('#ic-toast span').should('contain', 'Sketches cannot be edited');
+    });
+
+    it('can drag', () => {
+      assertDraggable('#note2', { deltaX: 50, deltaY: 50 });
+    });
+  });
+
+  describe('drafts are persisted', () => {
+    it('persisted', () => {
+      cy.reload();
+      cy.wait(1000);
+      cy.get('.ic-sticky-note').should('have.length', 5);
+      cy.get('.draft').should('have.length', 3);
+      matchImageSnapshot();
+    });
+  });
 
   describe('bulk edit mode', () => {
     it('does not discard drafts', () => {
@@ -148,7 +145,7 @@ describe('draft mode', () => {
         submenu: workspaceMenu.modes,
         suboption: workspaceMenu.modesSubactions.bulk,
       });
-      cy.get('.ic-sticky-note').should('have.length', 4); // TODO should be 5 after enabling doodles
+      cy.get('.ic-sticky-note').should('have.length', 5);
     });
 
     it('cannot select draft in bulk mode', () => {
@@ -169,19 +166,19 @@ describe('draft mode', () => {
         submenu: workspaceMenu.modes,
         suboption: workspaceMenu.modesSubactions.compact,
       });
-      cy.get('.compact').should('have.length', 4); // TODO should be 5 after enabling doodles
+      cy.get('.compact').should('have.length', 5);
     });
   });
 
   describe('submit drafts', () => {
-    it('submit text note', () => {
+    it('text note', () => {
       cy.get('#note0 div.contents button.submit').click();
-      cy.get('.ic-sticky-note').should('have.length', 4);
-      cy.get('.draft').should('have.length', 1);
-      cy.get('.ic-img').should('have.length', 1);
+      cy.get('.ic-sticky-note').should('have.length', 5);
+      cy.get('.draft').should('have.length', 2);
+      cy.get('.ic-img').should('have.length', 2);
     });
 
-    it.skip('submit image note', () => {
+    it('submit image note', () => {
       cy.get('#note0 div.contents button.submit').click();
       cy.get('.ic-sticky-note').should('have.length', 5);
       cy.get('.draft').should('have.length', 1);
@@ -196,12 +193,12 @@ describe('draft mode', () => {
         suboption: workspaceMenu.modesSubactions.standard,
       });
       cy.get('#note0 .ic-close-window').click({ force: true });
-      cy.get('#ic-modal-body').should('contain', 'discard this draft');
+      matchImageSnapshot();
     });
 
     it('can discard draft', () => {
       cy.get('#ic-modal-confirm').click();
-      cy.get('.ic-sticky-note').should('have.length', 3);
+      cy.get('.ic-sticky-note').should('have.length', 4);
       cy.get('.draft').should('have.length', 0);
     });
   });

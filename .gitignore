@@ -14,6 +14,7 @@ main.css
 main.css.map
 
 test/cypress/videos
+test/cypress/snapshots/*.spec.js/__diff_output__
 
 backend/website-dist/*.js
 
@@ -26,3 +27,4 @@ selenium-debug.log
 screenshots/
 reports
 screenshots
+config/webpack/vendor-manifest.json

@@ -57,5 +57,8 @@ export const helpMenu = {
 };
 
 export function getColorAttr(c) {
-  return `color-${c}`;
+  if (c.indexOf('#') === 0) {
+    return `color${c.substr(1)}`;
+  }
+  return `color${c}`;
 }

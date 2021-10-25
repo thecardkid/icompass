@@ -3,38 +3,44 @@ const _ = require('underscore');
 
 const mail = require('./mailer').getInstance();
 
-module.exports = {
-  error: function() {
-    const args = Array.prototype.slice.call(arguments);
-    args.unshift(new Date() + ' [ERROR]');
+class Logger {
+  constructor(prefix) {
+    this.prefix = prefix;
+  }
+
+  // Internal logging method. Returns array of arguments passed to
+  // `console.log`.
+  _log(log_type, original_args) {
+    const args = Array.prototype.slice.call(original_args);
+    if (this.prefix) {
+      args.unshift(this.prefix);
+    }
+    args.unshift((new Date()).toISOString(), '[' + log_type + ']');
+    console.log.apply(console, args);
+    return args;
+  }
+
+  error() {
+    const args = this._log('ERROR', arguments);
     mail.sendMessage({
       toEmail: 'hieumaster95@gmail.com',
       subject: 'iCompass server error',
       text: args,
       cb: _.noop,
     });
-    console.log.apply(console, args);
-  },
+  }
 
-  info: function() {
-    const args = Array.prototype.slice.call(arguments);
-    args.unshift(new Date() + ' [INFO]');
-    console.log.apply(console, args);
-  },
+  info() {
+    this._log('INFO', arguments);
+  }
 
-  api: function(req, res, next) {
-    const args = [new Date() + ' [API]', req.method, req.url, res.statusCode];
-    console.log.apply(console, args);
-    next();
-  },
+  debug() {
+    this._log('DEBUG', arguments);
+  }
+}
 
-  debug: function() {
-    const args = Array.prototype.slice.call(arguments);
-    args.unshift(new Date() + ' [DEBUG]');
-    console.log.apply(console, args);
-  },
-
-  metric: (statistic, ...args) => {
-    console.log(`${Date.now()} [METRIC] ${statistic}`, ...args);
-  },
+const DefaultLogger = new Logger();
+module.exports = {
+  DefaultLogger,
+  Logger,
 };

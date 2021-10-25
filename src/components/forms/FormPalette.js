@@ -29,6 +29,10 @@ export default class FormPalette extends Component {
         />
       );
     });
+    let s = {};
+    if (!this.state.show) {
+      s = {display: 'none'};
+    }
 
     return (
       <div className={'ic-form-palette'}>
@@ -37,11 +41,9 @@ export default class FormPalette extends Component {
               onBlur={this.setOrToggle(false)}
               onClick={this.setOrToggle()}>
           A
-          {this.state.show &&
-            <div className={'ic-options'}>
-              {options}
-            </div>
-          }
+          <div className={'ic-options'} style={s}>
+            {options}
+          </div>
         </button>
       </div>
     );

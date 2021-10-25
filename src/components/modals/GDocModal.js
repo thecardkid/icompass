@@ -1,10 +1,11 @@
+/* global icompass */
+
 import React, { Component } from 'react';
 import { isMobile } from 'react-device-detect';
 import htmlparser from 'htmlparser2';
 
 import DynamicModal from './DynamicModal';
 import ToastSingleton from '../../utils/Toast';
-import { HOST } from '../../../lib/constants';
 
 export default class GDocModal extends Component {
   toast = ToastSingleton.getInstance();
@@ -117,7 +118,7 @@ ${header}:`;
     }
 
     const docData = this.getDefaultDocData();
-    docData.link = `${HOST}/compass/view/${this.props.compass.viewCode}`;
+    docData.link = `${icompass.config.APP_HOST}/compass/view/${this.props.compass.viewCode}`;
     docData.topic = this.props.compass.topic;
     docData.involved = this.props.compass.center;
     this.props.notes.forEach(n => {

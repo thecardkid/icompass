@@ -25,7 +25,3 @@ module.exports.REGEX = {
 };
 
 module.exports.TWEET = 'https://twitter.com/home?status=Check%20out%20my%20%23innovatorscompass%3A%20https%3A//icompass.me/compass/view/';
-
-module.exports.HOST = process.env.HOST;
-
-module.exports.S3_URL = process.env.S3_URL;
