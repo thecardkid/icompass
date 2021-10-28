@@ -1,7 +1,7 @@
 require('babel-polyfill');
 const router = require('express').Router();
 
-router.get('/show_rooms', async (req, res) => {
+router.get('/get_rooms', async (req, res) => {
   const out = {};
   for (const roomID of Object.keys(req.roomManager.clientsByUsernameByRoomID)) {
     const clients = Object.values(req.roomManager.clientsByUsernameByRoomID[roomID]);

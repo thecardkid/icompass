@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 
-import ListWorkspaces from './ListWorkspaces';
+import AdminPage from '../components/AdminPage';
 
 import Toast from '../utils/Toast';
 
@@ -23,7 +23,7 @@ class AdminApp extends Component {
       <div>
         <Provider store={Store()}>
           <Router history={browserHistory}>
-            <Route path={'/admin'} component={ListWorkspaces} />
+            <Route path={'/admin'} component={AdminPage} />
           </Router>
         </Provider>
       </div>

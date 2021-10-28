@@ -1,0 +1,48 @@
+#admin_page {
+  font-family: 'Arial';
+  margin: 50px 200px 0;
+
+  .section_header {
+    font-size: 20px;
+    margin: 10px 0;
+  }
+
+  p.action_link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 5px 0;
+  }
+
+  #workspaces_list {
+    .room {
+      border: 1px solid black;
+
+      .header {
+        padding: 2px 5px;
+        background: black;
+        color: white;
+      }
+
+      .client {
+        padding: 2px 5px;
+
+        .username {
+          display: inline-block;
+          white-space: nowrap;
+          width: 100px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .user_agent {
+          display: inline-block;
+          width: 1000px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}
