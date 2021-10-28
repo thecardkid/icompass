@@ -22,6 +22,7 @@ import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
 import { EDITING_MODE } from '../../lib/constants';
+import events from 'socket-events';
 
 const QUADRANTS = [
   {
@@ -104,8 +105,8 @@ class Compass extends Component {
       this.modal = Modal.getInstance();
       this.socket = Socket.getInstance();
       this.socket.subscribe({
-        'center set': this.setCompassCenter,
-        'center position set': this.setCompassCenterPosition,
+        [events.frontend.SET_CENTER_TEXT]: this.setCompassCenter,
+        [events.frontend.SET_CENTER_POSITION]: this.setCompassCenterPosition,
       });
       if (props.compass.center.length === 0) {
         this.setPeopleInvolved();

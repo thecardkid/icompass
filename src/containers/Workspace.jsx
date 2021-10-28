@@ -2,6 +2,7 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import request from 'superagent';
 import _ from 'underscore';
@@ -29,7 +30,7 @@ import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
 import { EDITING_MODE, REGEX } from '../../lib/constants';
-import { browserHistory } from 'react-router';
+import events from 'socket-events';
 
 class Workspace extends Component {
   constructor(props) {
@@ -51,14 +52,14 @@ class Workspace extends Component {
     } else if (this.validateRouteParams(this.props.params)) {
       this.socket = Socket.getInstance();
       this.socket.subscribe({
-        'compass found': this.onCompassFound,
-        'compass deleted': this.onCompassDeleted,
-        'user joined': this.onUserJoined,
-        'user left': this.onUserLeft,
-        'disconnect': () => this.toast.error('Lost connection to server'),
-        'reconnect': this.handleReconnect.bind(this),
-        'bad username': this.handleBadUsername.bind(this),
-        'username exists': this.handleUsernameExists.bind(this),
+        [events.frontend.WORKSPACE_FOUND]: this.onCompassFound,
+        [events.frontend.WORKSPACE_DELETED]: this.onCompassDeleted,
+        [events.frontend.USER_JOINED]: this.onUserJoined,
+        [events.frontend.USER_LEFT]: this.onUserLeft,
+        [events.DISCONNECT]: () => this.toast.error('Lost connection to server'),
+        [events.RECONNECT]: this.handleReconnect.bind(this),
+        [events.frontend.BAD_USERNAME]: this.handleBadUsername.bind(this),
+        [events.frontend.DUPLICATE_USERNAME]: this.handleUsernameExists.bind(this),
       });
       this.socket.emitFindCompassEdit(this.props.params);
       ReactGA.pageview('/compass/edit/');

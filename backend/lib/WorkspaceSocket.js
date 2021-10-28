@@ -3,6 +3,7 @@ const _ = require('underscore');
 
 const mailer = require('./mailer').getInstance();
 const { HOST, STICKY_COLORS } = require('./constants');
+const events = require('./socket_events');
 const { DefaultLogger, Logger } = require('./logger');
 const Compass = require('../models/compass');
 
@@ -17,29 +18,29 @@ class WorkspaceSocket {
     this.roomManager = roomManager;
     this.logger = DefaultLogger;
 
-    this.socket.on('disconnect', this.onDisconnect.bind(this));
-    this.socket.on('reconnected', this.onReconnect.bind(this));
-    this.socket.on('logout', this.onLogout.bind(this));
-    this.socket.on('send feedback', this.sendFeedback.bind(this));
-    this.socket.on('send mail', this.sendMail.bind(this));
-    this.socket.on('auto send mail', this.autoSendMail.bind(this));
-    this.socket.on('send mail bookmarks', this.sendMailBookmarks.bind(this));
+    this.socket.on(events.DISCONNECT, this.onDisconnect.bind(this));
+    this.socket.on(events.RECONNECTED, this.onReconnect.bind(this));
+    this.socket.on(events.backend.LOGOUT, this.onLogout.bind(this));
+    this.socket.on(events.backend.SEND_FEEDBACK, this.sendFeedback.bind(this));
+    this.socket.on(events.backend.SEND_MAIL, this.sendMail.bind(this));
+    this.socket.on(events.backend.AUTO_SEND_MAIL, this.autoSendMail.bind(this));
+    this.socket.on(events.backend.SEND_MAIL_BOOKMARKS, this.sendMailBookmarks.bind(this));
 
-    this.socket.on('create compass', this.createCompass.bind(this));
-    this.socket.on('create copy of compass', this.createCompassCopy.bind(this));
-    this.socket.on('automated create compass', this.automatedCreateCompass.bind(this));
-    this.socket.on('find compass edit', this.findCompassEdit.bind(this));
-    this.socket.on('set center', this.setCenter.bind(this));
-    this.socket.on('set center position', this.setCenterPosition.bind(this));
-    this.socket.on('delete compass', this.deleteCompass.bind(this));
+    this.socket.on(events.backend.CREATE_WORKSPACE, this.createCompass.bind(this));
+    this.socket.on(events.backend.CREATE_COPY_OF_WORKSPACE, this.createCompassCopy.bind(this));
+    this.socket.on(events.backend.AUTOMATED_CREATE_DEV_WORKSPACE, this.automatedCreateCompass.bind(this));
+    this.socket.on(events.backend.FIND_COMPASS_EDIT, this.findCompassEdit.bind(this));
+    this.socket.on(events.backend.SET_CENTER_TEXT, this.setCenter.bind(this));
+    this.socket.on(events.backend.SET_CENTER_POSITION, this.setCenterPosition.bind(this));
+    this.socket.on(events.backend.DELETE_WORKSPACE, this.deleteCompass.bind(this));
 
-    this.socket.on('new note', this.createNote.bind(this));
-    this.socket.on('update note', this.updateNote.bind(this));
-    this.socket.on('delete note', this.deleteNote.bind(this));
-    this.socket.on('+1 note', this.plusOneNote.bind(this));
-    this.socket.on('bulk update notes', this.bulkUpdateNotes.bind(this));
-    this.socket.on('bulk drag notes', this.bulkDragNotes.bind(this));
-    this.socket.on('bulk delete notes', this.bulkDeleteNotes.bind(this));
+    this.socket.on(events.backend.NEW_NOTE, this.createNote.bind(this));
+    this.socket.on(events.backend.UPDATE_NOTE, this.updateNote.bind(this));
+    this.socket.on(events.backend.DELETE_NOTE, this.deleteNote.bind(this));
+    this.socket.on(events.backend.UPVOTE_NOTE, this.plusOneNote.bind(this));
+    this.socket.on(events.backend.BULK_UPDATE_NOTES, this.bulkUpdateNotes.bind(this));
+    this.socket.on(events.backend.BULK_DRAG_NOTES, this.bulkDragNotes.bind(this));
+    this.socket.on(events.backend.BULK_DELETE_NOTES, this.bulkDeleteNotes.bind(this));
   }
 
   getUserColor() {
@@ -74,7 +75,7 @@ class WorkspaceSocket {
     if (this.roomID && this.username) {
       this.roomManager.leaveRoom(this.roomID, this.username);
       this.logger.info(`disconnected reason: "${reason}"`);
-      this.broadcast('user left', {
+      this.broadcast(events.frontend.USER_LEFT, {
         users: this.roomManager.getRoomState(this.roomID),
       });
     }
@@ -82,14 +83,14 @@ class WorkspaceSocket {
 
   async onReconnect({ code, compassId, username }) {
     if (!code) {
-      this.socket.emit('workspace not found');
+      this.socket.emit(events.frontend.WORKSPACE_NOT_FOUND);
       this.logger.error('failed to reconnect: invalid code provided');
       return;
     }
     const compass = await Compass.findByEditCode(code);
     if (compass === null) {
       // workspace was probably deleted, but user hasn't navigated away from the page.
-      this.socket.emit('workspace not found');
+      this.socket.emit(events.frontend.WORKSPACE_NOT_FOUND);
       return;
     }
 
@@ -97,7 +98,7 @@ class WorkspaceSocket {
     this.joinRoom({ code, compassId, username, isReconnecting: true });
     this.logger.info('reconnected');
 
-    this.broadcast('user joined', {
+    this.broadcast(events.frontend.USER_JOINED, {
       users: this.roomManager.getRoomState(code),
       joined: this.username,
     });
@@ -112,7 +113,7 @@ class WorkspaceSocket {
       subject: 'iCompass Feedback',
       toEmail: 'hieumaster95@gmail.com',
       text: note + `\n\nFrom: ${email || 'No email specified'}` ,
-      cb: (status) => this.socket.emit('feedback status', status),
+      cb: () => {},
     });
   }
 
@@ -125,7 +126,7 @@ class WorkspaceSocket {
       text,
       toEmail: data.email,
       cb: (status) => {
-        this.socket.emit('mail status', status);
+        this.socket.emit(events.frontend.MAIL_STATUS, status);
       }
     });
   }
@@ -144,7 +145,7 @@ ${HOST}/disable-auto-email.
       subject: `Your iCompass workspace "${data.topic}"`,
       text,
       toEmail: data.email,
-      cb: (status) => this.socket.emit('auto mail status', status),
+      cb: (status) => this.socket.emit(events.frontend.AUTO_MAIL_STATUS, status),
     });
   }
 
@@ -157,7 +158,7 @@ ${HOST}/disable-auto-email.
       subject: 'Your iCompass bookmarks',
       text,
       toEmail: data.email,
-      cb: (status) => this.socket.emit('mail status', status),
+      cb: (status) => this.socket.emit(events.frontend.MAIL_STATUS, status),
     });
   }
 
@@ -166,7 +167,7 @@ ${HOST}/disable-auto-email.
     try {
       const compass = await Compass.makeCompass(data.topic);
       this.logger.info('Created compass with topic', data.topic, compass._id);
-      this.socket.emit('compass ready', {
+      this.socket.emit(events.frontend.WORKSPACE_READY, {
         success: !!compass,
         topic: data.topic,
         code: compass.editCode,
@@ -180,7 +181,7 @@ ${HOST}/disable-auto-email.
     try {
       const compass = await Compass.findByEditCode(data.originalWorkspaceEditCode);
       const copy = await Compass.makeCompassCopy(compass);
-      this.socket.emit('copy of compass ready', {
+      this.socket.emit(events.frontend.CREATED_COPY_OF_WORKSPACE, {
         success: !!copy,
         editCode: copy.editCode,
       });
@@ -194,7 +195,7 @@ ${HOST}/disable-auto-email.
     try {
       const compass = await Compass.makeCompass(data.topic);
       this.logger.debug('Automation created compass with topic', data.topic, compass._id);
-      this.socket.emit('automated compass ready', {
+      this.socket.emit(events.frontend.CREATED_WORKSPACE_DEV, {
         success: !!compass,
         topic: data.topic,
         code: compass.editCode,
@@ -208,7 +209,7 @@ ${HOST}/disable-auto-email.
     try {
       this.compass = await this.compass.setCenter(data.center);
       if (!!this.compass) {
-        this.socket.emit('center set', data.center);
+        this.broadcast(events.frontend.SET_CENTER_TEXT, data.center);
       }
     } catch (ex) {
       this.logger.error('Error setting center: ', JSON.stringify(data), ex);
@@ -219,7 +220,7 @@ ${HOST}/disable-auto-email.
     try {
       this.compass = await this.compass.setCenterPosition(x, y);
       if (!!this.compass) {
-        this.broadcast('center position set', x, y);
+        this.broadcast(events.frontend.SET_CENTER_POSITION, x, y);
       }
     } catch (ex) {
       this.logger.error(ex);
@@ -232,13 +233,13 @@ ${HOST}/disable-auto-email.
       if (compass !== null) {
         this.joinRoom({ code, username, isReconnecting: false });
         this.logger.info('joined room');
-        this.broadcast('user joined', {
+        this.broadcast(events.frontend.USER_JOINED, {
           users: this.roomManager.getRoomState(code),
           joined: this.username,
         });
       }
       this.compass = compass;
-      this.socket.emit('compass found', {
+      this.socket.emit(events.frontend.WORKSPACE_FOUND, {
         compass: compass,
         username: this.username,
         viewOnly: false,
@@ -262,7 +263,7 @@ ${HOST}/disable-auto-email.
       }
 
       this.logger.info(`Deleted compass id=${id}`);
-      this.broadcast('compass deleted');
+      this.broadcast(events.frontend.WORKSPACE_DELETED);
     });
   }
 
@@ -288,8 +289,8 @@ ${HOST}/disable-auto-email.
     try {
       const { compass, deletedIdx } = await this.compass.deleteNote(id);
       this.compass = compass;
-      this.broadcast('update notes', compass.notes);
-      this.broadcast('deleted notes', deletedIdx);
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, compass.notes);
+      this.broadcast(events.frontend.DELETED_NOTE, deletedIdx);
     } catch (ex) {
       this.logger.error('Error deleting note: ', id, ex);
     }
@@ -330,8 +331,8 @@ ${HOST}/disable-auto-email.
     try {
       const { compass, deletedIdx } = await this.compass.deleteNotes(ids);
       this.compass = compass;
-      this.broadcast('update notes', this.compass.notes);
-      this.broadcast('deleted notes', deletedIdx);
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, this.compass.notes);
+      this.broadcast(events.frontend.DELETED_NOTE, deletedIdx);
     } catch (ex) {
       this.logger.error('Error bulk deleting notes: ', ids, ex);
     }

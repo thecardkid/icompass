@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ToastSingleton from '../../utils/Toast';
 import SocketSingleton from '../../utils/Socket';
 import DynamicModal from './DynamicModal';
+import events from 'socket-events';
 
 export default class CopyWorkspaceModal extends Component {
   toast = ToastSingleton.getInstance();
@@ -12,7 +13,7 @@ export default class CopyWorkspaceModal extends Component {
     super(props);
 
     this.socket.subscribe({
-      'copy of compass ready': (data) => {
+      [events.frontend.CREATED_COPY_OF_WORKSPACE]: (data) => {
         if (!data.success) {
           this.toast.error('There was a problem creating a copy of your workspace. Please report this error.');
         }

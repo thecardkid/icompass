@@ -81,7 +81,7 @@ class StickyNote extends Component {
     }
 
     if (!this.props.note.draft) {
-      this.props.socket.emitWorkspace('+1 note', this.props.note._id);
+      this.props.socket.emitUpvoteNote(this.props.note._id);
     }
   };
 

@@ -16,6 +16,7 @@ export default class FeedbackModal extends Component {
       return;
     }
     this.socket.emitSendFeedback(email, note);
+    this.toast.success('Your feedback has been submitted!');
     this.props.close();
   };
 

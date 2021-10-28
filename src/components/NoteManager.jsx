@@ -13,6 +13,7 @@ import { trackFeatureEvent } from '../utils/Analytics';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 import { EDITING_MODE } from '../../lib/constants';
+import events from 'socket-events';
 
 class NoteManager extends Component {
   constructor() {
@@ -22,8 +23,8 @@ class NoteManager extends Component {
 
     this.socket = Socket.getInstance();
     this.socket.subscribe({
-      'update notes': this.onUpdateNotes,
-      'deleted notes': this.onDeleteNotes,
+      [events.frontend.UPDATE_ALL_NOTES]: this.onUpdateNotes,
+      [events.frontend.DELETED_NOTE]: this.onDeleteNotes,
     });
 
     interact('.draggable').draggable({
@@ -141,7 +142,7 @@ class NoteManager extends Component {
   bulkDrag = (ids, { dx, dy }) => {
     dx /= this.props.ui.vw;
     dy /= this.props.ui.vh;
-    this.socket.emitWorkspace('bulk drag notes', ids, { dx, dy });
+    this.socket.emitBulkDragNotes(ids, dx, dy);
   };
 
   dragEnd = (e) => {

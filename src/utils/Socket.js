@@ -2,6 +2,7 @@ import { browserHistory } from 'react-router';
 import SocketIOClient from 'socket.io-client';
 import _ from 'underscore';
 
+import events from 'socket-events';
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
 
@@ -13,12 +14,10 @@ const SocketSingleton = (() => {
       this.socket = new SocketIOClient('/', {
         transports: ['websocket'],
       });
-      this.sessionId = null;
       this.subscribe({
-        'session id': this.onSessionId,
-        'mail status': this.onMailStatus,
-        'auto mail status': this.onAutoMailStatus,
-        'workspace not found': this.onWorkspaceNotFound,
+        [events.frontend.MAIL_STATUS]: this.onMailStatus,
+        [events.frontend.AUTO_MAIL_STATUS]: this.onAutoMailStatus,
+        [events.frontend.WORKSPACE_NOT_FOUND]: this.onWorkspaceNotFound,
       });
     }
 
@@ -35,10 +34,6 @@ const SocketSingleton = (() => {
     checkConnected = () => {
       if (this.isConnected()) return true;
       Toast.getInstance().error('You are not connected to the server');
-    };
-
-    onSessionId = (sessionId) => {
-      this.sessionId = this.sessionId || sessionId;
     };
 
     onMailStatus = (success) => {
@@ -69,45 +64,44 @@ const SocketSingleton = (() => {
     };
 
     onReconnect = ({ editCode, users }) => {
-      this.socket.emit('reconnected', {
+      this.socket.emit(events.RECONNECTED, {
         code: editCode,
         username: users.me,
         color: users.nameToColor[users.me],
-        sessionId: this.sessionId,
       });
     };
 
     logout = () => {
-      this.socket.emit('logout');
+      this.socket.emit(events.backend.LOGOUT);
     };
 
     emitNewNote = (note) => {
       if (this.checkConnected()) {
-        this.socket.emit('new note', note);
+        this.socket.emit(events.backend.NEW_NOTE, note);
       }
     };
 
     emitEditNote = (edited) => {
       if (this.checkConnected()) {
-        this.socket.emit('update note', edited);
+        this.socket.emit(events.backend.UPDATE_NOTE, edited);
       }
     };
 
     emitBulkEditNotes = (noteIds, transformation) => {
       if (this.checkConnected()) {
-        this.socket.emit('bulk update notes', noteIds, transformation);
+        this.socket.emit(events.backend.BULK_UPDATE_NOTES, noteIds, transformation);
       }
     };
 
     emitBulkDeleteNotes = (noteIds) => {
       if (this.checkConnected()) {
-        this.socket.emit('bulk delete notes', noteIds);
+        this.socket.emit(events.backend.BULK_DELETE_NOTES, noteIds);
       }
     };
 
     emitDragNote = (note) => {
       if (this.checkConnected()) {
-        this.socket.emit('update note', note);
+        this.socket.emit(events.backend.UPDATE_NOTE, note);
         return true;
       }
       return false;
@@ -115,68 +109,76 @@ const SocketSingleton = (() => {
 
     emitDeleteCompass = (id) => {
       if (this.checkConnected()) {
-        this.socket.emit('delete compass', id);
+        this.socket.emit(events.backend.DELETE_WORKSPACE, id);
       }
     };
 
     emitDeleteNote = (noteId) => {
       if (this.checkConnected()) {
-        this.socket.emit('delete note', noteId);
+        this.socket.emit(events.backend.DELETE_NOTE, noteId);
       }
     };
 
     emitCreateCompass = (topic, username) => {
       if (this.checkConnected()) {
-        this.socket.emit('create compass', { topic, username });
+        this.socket.emit(events.backend.CREATE_WORKSPACE, { topic, username });
       }
     };
 
     emitAutomatedCreateCompass = (topic, username) => {
       if (this.checkConnected()) {
-        this.socket.emit('automated create compass', { topic, username });
+        this.socket.emit(events.backend.AUTOMATED_CREATE_DEV_WORKSPACE, { topic, username });
       }
     };
 
     emitSendFeedback = (email, note) => {
       if (this.checkConnected()) {
-        this.socket.emit('send feedback', { email, note });
+        this.socket.emit(events.backend.SEND_FEEDBACK, { email, note });
       }
     };
 
     emitSendMail = (editCode, username, email, topic) => {
       if (this.checkConnected()) {
-        this.socket.emit('send mail', { editCode, username, email, topic });
+        this.socket.emit(events.backend.SEND_MAIL, { editCode, username, email, topic });
       }
     };
 
     emitAutoSendMail = (editCode, username, email, topic) => {
       if (this.checkConnected()) {
-        this.socket.emit('auto send mail', { editCode, username, email, topic });
+        this.socket.emit(events.backend.AUTO_SEND_MAIL, { editCode, username, email, topic });
       }
     };
 
     emitFindCompassEdit = ({ code, username }) => {
-      this.socket.emit('find compass edit', { code, username });
+      this.socket.emit(events.backend.FIND_COMPASS_EDIT, { code, username });
     };
 
     emitSetCenter = (id, center) => {
-      this.socket.emit('set center', { id, center });
+      this.socket.emit(events.backend.SET_CENTER_TEXT, { id, center });
     };
 
     emitSetCenterPosition = (id, x, y) => {
-      this.socket.emit('set center position', { id, x, y });
+      this.socket.emit(events.backend.SET_CENTER_POSITION, { id, x, y });
     };
 
     emitResetCenterPosition = () => {
-      this.socket.emit('set center position', { x: 0.5, y: 0.5 });
+      this.socket.emit(events.backend.SET_CENTER_POSITION, { x: 0.5, y: 0.5 });
     };
 
-    emitWorkspace = (event, ...args) => {
-      this.socket.emit(event, ...args);
+    emitSendMailBookmarks = (bookmarks, email) => {
+      this.socket.emit(events.backend.SEND_MAIL_BOOKMARKS, { bookmarks, email });
+    };
+
+    emitBulkDragNotes = (ids, dx, dy) => {
+      this.socket.emit(events.backend.BULK_DRAG_NOTES, ids, { dx, dy });
+    };
+
+    emitUpvoteNote = (noteID) => {
+      this.socket.emit(events.backend.UPVOTE_NOTE, noteID);
     };
 
     emitCreateCopyOfWorkspace = (originalWorkspaceEditCode) => {
-      this.socket.emit('create copy of compass', { originalWorkspaceEditCode });
+      this.socket.emit(events.backend.CREATE_COPY_OF_WORKSPACE, { originalWorkspaceEditCode });
     }
   }
 

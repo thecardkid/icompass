@@ -17,6 +17,7 @@ import Toast from '../utils/Toast';
 import DevOnly from '../utils/DevOnly';
 
 import { REGEX } from '../../lib/constants';
+import events from 'socket-events';
 
 class LandingPage extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class LandingPage extends Component {
 
     this.socket = Socket.getInstance();
     this.socket.subscribe({
-      'compass ready': this.onCompassReady,
+      [events.frontend.WORKSPACE_READY]: this.onCompassReady,
     });
 
     ReactGA.pageview('/');
@@ -94,7 +95,7 @@ class LandingPage extends Component {
     this.setState({ username });
 
     this.socket.subscribe({
-      'automated compass ready': this.onAutomatedCompassReady,
+      [events.frontend.CREATED_WORKSPACE_DEV]: this.onAutomatedCompassReady,
     });
     this.socket.emitAutomatedCreateCompass(topic, username);
   };

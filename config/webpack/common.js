@@ -11,6 +11,11 @@ module.exports = () => ({
     path: websiteDist,
     filename: '[name].js',
   },
+  resolve: {
+    alias: {
+      'socket-events': path.resolve(root, 'backend/lib/socket_events.js'),
+    },
+  },
   module: {
     rules: [
       jsxLoader(),

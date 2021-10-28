@@ -196,10 +196,7 @@ export default class BookmarkList extends Component {
           return;
         }
 
-        this.socket.emitWorkspace('send mail bookmarks', {
-          bookmarks: this.state.bookmarks,
-          email,
-        });
+        this.socket.emitSendMailBookmarks(this.state.bookmarks, email);
       },
     });
   };

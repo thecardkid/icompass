@@ -1,19 +1,22 @@
 const { STICKY_COLORS, REGEX } = require('./constants');
+const events = require('./socket_events');
 
 class RoomManager {
   constructor() {
     this.clientsByUsernameByRoomID = {};
   }
 
+  // If the username is invalid, this function throws an error whose message
+  // is the socket event to be handled by the frontend.
   joinRoom(roomID, workspaceSocket, isReconnecting=false) {
     const { username } = workspaceSocket;
     if (typeof username !== 'string' || username.length === 0 || !REGEX.CHAR_ONLY.test(username)) {
-      throw new Error('bad username');
+      throw new Error(events.frontend.BAD_USERNAME);
     }
     const state = this.clientsByUsernameByRoomID[roomID] || {};
 
     if (state.hasOwnProperty(username) && !isReconnecting) {
-      throw new Error('username exists');
+      throw new Error(events.frontend.DUPLICATE_USERNAME);
     }
     state[workspaceSocket.username] = workspaceSocket;
 

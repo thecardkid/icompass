@@ -4,8 +4,6 @@ import ReactGA from 'react-ga';
 import FeedbackModal from './modals/FeedbackModal';
 import { trackFeatureEvent } from '../utils/Analytics';
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket';
-import Toast from '../utils/Toast';
 
 import { COLORS } from '../../lib/constants';
 import { helpMenu } from '../../test/cypress/data_cy';
@@ -17,23 +15,8 @@ export default class HelpAndFeedback extends Component {
       active: false,
       showFeedbackModal: false,
     };
-    this.socket = Socket.getInstance();
     this.modal = Modal.getInstance();
-    this.toast = Toast.getInstance();
-    this.socket.subscribe({
-      'feedback status': this.onFeedbackStatus,
-    });
   }
-
-  onFeedbackStatus = (success) => {
-    if (success) {
-      this.toast.success('Your feedback has been submitted!');
-      trackFeatureEvent('Help menu: Submit feedback');
-    } else {
-      this.toast.error('Something went wrong. Please reach out to hieumaster95@gmail.com directly instead!');
-      trackFeatureEvent('Help menu: Error submitting feedback');
-    }
-  };
 
   toggleMenu = () => {
     this.setState(state => {
