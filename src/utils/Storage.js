@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { REGEX } from '../../lib/constants';
 
 // TODO provide better structure to the prefs object
 export default {
@@ -29,16 +30,20 @@ export default {
     return 'dark';
   },
 
-  setAlwaysSendEmail(value) {
+  setAlwaysSendEmail(enabled, email=null) {
     const prefs = this.getUserPrefs();
-    prefs.alwaysSendEmail = value;
+    prefs.alwaysSendEmail = { enabled, email };
     this.setUserPrefs(prefs);
-    return value;
   },
 
   getAlwaysSendEmail() {
     const prefs = this.getUserPrefs();
-    return prefs.alwaysSendEmail || false;
+    if (prefs.hasOwnProperty('alwaysSendEmail') &&
+    prefs.alwaysSendEmail.enabled &&
+    REGEX.EMAIL.test(prefs.alwaysSendEmail.email)) {
+      return prefs.alwaysSendEmail;
+    }
+    return { enabled: false };
   },
 
   setShowBookmarks(value) {

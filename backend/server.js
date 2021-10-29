@@ -76,6 +76,7 @@ function initApp() {
   let db;
   const server = app.listen(appConfig.appPort, async function() {
     logger.info(`Listening on port ${appConfig.appPort}`);
+    logger.info(`Server environment is: ${appConfig.serverEnv.nodeEnv}`);
     db = await initializeDB();
   });
 

@@ -4,11 +4,16 @@ set -euo pipefail
 ensure_credentials_exist
 
 port=8080
+OVERRIDE_NODE_ENV=development
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --port|-p)
             port="$2"
+            ;;
+
+        --test)
+            OVERRIDE_NODE_ENV=test
             ;;
 
         -*)
@@ -22,4 +27,6 @@ done
 . "$IC_ROOT/build/credentials/runner.sh"
 export HOST="http://localhost:$port"
 export PORT="$port"
+# Override the value set in runner.sh.
+export NODE_ENV="$OVERRIDE_NODE_ENV"
 "$IC_ROOT/node_modules/.bin/nodemon" "$IC_ROOT/backend/server.js"

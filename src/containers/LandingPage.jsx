@@ -4,31 +4,24 @@ import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
+import request from 'superagent';
 
 import * as uiX from '../actions/ui';
 
 import BookmarkList from '../components/BookmarkList.jsx';
 
 import Modal from '../utils/Modal';
-import Socket from '../utils/Socket.js';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
-
 import DevOnly from '../utils/DevOnly';
-
+import { sendReminderEmail } from '../utils/api';
 import { REGEX } from '../../lib/constants';
-import events from 'socket-events';
 
 class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
-
-    this.socket = Socket.getInstance();
-    this.socket.subscribe({
-      [events.frontend.WORKSPACE_READY]: this.onCompassReady,
-    });
 
     ReactGA.pageview('/');
     this.props.uiX.resize();
@@ -42,37 +35,7 @@ class LandingPage extends Component {
     $(window).off('resize', this.props.uiX.resize);
   }
 
-  onCompassReady = (data) => {
-    if (!data.success) {
-      ReactGA.exception({
-        description: `Failed to create workspace: ${data}`,
-        fatal: true,
-      });
-      return this.modal.alert({
-        heading: 'Whoops...',
-        body: 'Something went wrong. Please <a href="mailto:hieumaster95@gmail.com"><u>let the developer know.</u></a>',
-      });
-    }
-
-    const rememberedEmail = Storage.getAlwaysSendEmail();
-    if (typeof rememberedEmail === 'string') {
-      if (REGEX.EMAIL.test(rememberedEmail)) {
-        this.socket.emitAutoSendMail(data.code, this.state.username, rememberedEmail, data.topic);
-        return browserHistory.push(`/compass/edit/${data.code}/${this.state.username}`);
-      }
-    }
-    this.setState({ data }, this.promptForEmail);
-  };
-
-  onAutomatedCompassReady = (data) => {
-    if (!data.success) {
-      return this.toast.error('Failed to create workspace. Check logs');
-    }
-
-    return browserHistory.push(`/compass/edit/${data.code}/${this.state.username}`);
-  };
-
-  validateMakeInput = (e) => {
+  validateMakeInput = async (e) => {
     e.preventDefault();
 
     const topic = this.refs.topic.value;
@@ -83,26 +46,48 @@ class LandingPage extends Component {
     }
 
     this.setState({ username });
-    this.socket.emitCreateCompass(topic, username);
+    try {
+      const resp = await request.post('/api/v1/workspace/create').send({ topic })
+      const data = resp.body;
+      if (data.error) {
+        // Caught later on.
+        throw new Error(data.error);
+      }
+      const alwaysSend = Storage.getAlwaysSendEmail();
+      if (alwaysSend.enabled) {
+        await sendReminderEmail({
+          topic: data.topic,
+          editCode: data.code,
+          username,
+          recipientEmail: alwaysSend.email,
+          isAutomatic: true,
+        });
+        return browserHistory.push(`/compass/edit/${data.code}/${this.state.username}`);
+      }
+      this.setState({ data }, this.promptForEmail);
+    } catch(err) {
+      this.modal.alert({
+        heading: 'Failed to create new workspace',
+        body: 'An error has occurred',
+      });
+    }
   };
 
-  automateSetup = (e) => {
+  automateSetup = async (e) => {
     e.preventDefault();
-
-    const topic = 'test-topic';
-    const username = 'testuser';
-
-    this.setState({ username });
-
-    this.socket.subscribe({
-      [events.frontend.CREATED_WORKSPACE_DEV]: this.onAutomatedCompassReady,
-    });
-    this.socket.emitAutomatedCreateCompass(topic, username);
+    const resp = await request.post('/api/v1/workspace/create_dev').send();
+    if (resp.body.error) {
+      alert(resp.body.error);
+      return;
+    }
+    browserHistory.push(`/compass/edit/${resp.body.code}/dev`);
   };
 
+  // TODO this is an atrocity.
   promptForEmail = () => {
+    let alwaysSendChecked = false;
     this.modal.promptForEmail(
-      (hasValue, email) => {
+      async (hasValue, email) => {
         const { username, data: { code, topic } } = this.state;
         if (hasValue) {
           if (!REGEX.EMAIL.test(email)) {
@@ -110,18 +95,22 @@ class LandingPage extends Component {
             return this.promptForEmail();
           }
 
-          // Specifically check for "true" to avoid setting it when
-          // an email is already stored
-          if (Storage.getAlwaysSendEmail() === true) {
-            Storage.setAlwaysSendEmail(email);
+          if (alwaysSendChecked) {
+            Storage.setAlwaysSendEmail(true, email);
           }
 
-          this.socket.emitSendMail(code, username, email, topic);
+          await sendReminderEmail({
+            topic: topic,
+            editCode: code,
+            username,
+            recipientEmail: email,
+            isAutomatic: false,
+          });
         }
         return browserHistory.push(`/compass/edit/${code}/${username}`);
       },
-      (alwaysSendEmail) => {
-        Storage.setAlwaysSendEmail(alwaysSendEmail);
+      (enabled) => {
+        alwaysSendChecked = enabled;
       },
     );
   };

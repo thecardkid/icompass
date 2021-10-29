@@ -2,9 +2,10 @@ require('babel-polyfill');
 const _ = require('underscore');
 
 const mailer = require('./mailer').getInstance();
-const { HOST, STICKY_COLORS } = require('./constants');
+const { STICKY_COLORS } = require('./constants');
 const events = require('./socket_events');
 const { DefaultLogger, Logger } = require('./logger');
+const config = require('../config');
 const Compass = require('../models/compass');
 
 // TODO properly implement catch for all async event handlers.
@@ -22,13 +23,8 @@ class WorkspaceSocket {
     this.socket.on(events.RECONNECTED, this.onReconnect.bind(this));
     this.socket.on(events.backend.LOGOUT, this.onLogout.bind(this));
     this.socket.on(events.backend.SEND_FEEDBACK, this.sendFeedback.bind(this));
-    this.socket.on(events.backend.SEND_MAIL, this.sendMail.bind(this));
-    this.socket.on(events.backend.AUTO_SEND_MAIL, this.autoSendMail.bind(this));
-    this.socket.on(events.backend.SEND_MAIL_BOOKMARKS, this.sendMailBookmarks.bind(this));
 
-    this.socket.on(events.backend.CREATE_WORKSPACE, this.createCompass.bind(this));
     this.socket.on(events.backend.CREATE_COPY_OF_WORKSPACE, this.createCompassCopy.bind(this));
-    this.socket.on(events.backend.AUTOMATED_CREATE_DEV_WORKSPACE, this.automatedCreateCompass.bind(this));
     this.socket.on(events.backend.FIND_COMPASS_EDIT, this.findCompassEdit.bind(this));
     this.socket.on(events.backend.SET_CENTER_TEXT, this.setCenter.bind(this));
     this.socket.on(events.backend.SET_CENTER_POSITION, this.setCenterPosition.bind(this));
@@ -117,66 +113,6 @@ class WorkspaceSocket {
     });
   }
 
-  sendMail(data) {
-    const text = 'Access your compass via this link ' +
-      `${HOST}/compass/edit/${data.editCode}/${data.username}`;
-
-    mailer.sendMessage({
-      subject: `Your iCompass workspace "${data.topic}"`,
-      text,
-      toEmail: data.email,
-      cb: (status) => {
-        this.socket.emit(events.frontend.MAIL_STATUS, status);
-      }
-    });
-  }
-
-  autoSendMail(data) {
-    const text = `
-Access your compass via this link ${HOST}/compass/edit/${data.editCode}/${data.username}.
-
-
-You received this email because you asked iCompass to automatically send you the link to a workspace
-whenever you create one. To stop receiving these automatic emails, please go to this link:
-${HOST}/disable-auto-email.
-`;
-
-    mailer.sendMessage({
-      subject: `Your iCompass workspace "${data.topic}"`,
-      text,
-      toEmail: data.email,
-      cb: (status) => this.socket.emit(events.frontend.AUTO_MAIL_STATUS, status),
-    });
-  }
-
-  sendMailBookmarks(data) {
-    let text = 'Below are your iCompass bookmarks:\n\n';
-
-    _.each(data.bookmarks, ({ center, href }) => text += `${center}: ${HOST}${href}\n\n`);
-
-    mailer.sendMessage({
-      subject: 'Your iCompass bookmarks',
-      text,
-      toEmail: data.email,
-      cb: (status) => this.socket.emit(events.frontend.MAIL_STATUS, status),
-    });
-  }
-
-  // TODO make this an API call.
-  async createCompass(data) {
-    try {
-      const compass = await Compass.makeCompass(data.topic);
-      this.logger.info('Created compass with topic', data.topic, compass._id);
-      this.socket.emit(events.frontend.WORKSPACE_READY, {
-        success: !!compass,
-        topic: data.topic,
-        code: compass.editCode,
-      });
-    } catch (ex) {
-      this.logger.error('Error creating compass: ', JSON.stringify(data), ex);
-    }
-  }
-
   async createCompassCopy(data) {
     try {
       const compass = await Compass.findByEditCode(data.originalWorkspaceEditCode);
@@ -187,21 +123,6 @@ ${HOST}/disable-auto-email.
       });
     } catch (ex) {
       this.logger.error('Error creating copy of compass: ', JSON.stringify(data), ex);
-    }
-  }
-
-  async automatedCreateCompass(data) {
-    // Copy-pasted from above
-    try {
-      const compass = await Compass.makeCompass(data.topic);
-      this.logger.debug('Automation created compass with topic', data.topic, compass._id);
-      this.socket.emit(events.frontend.CREATED_WORKSPACE_DEV, {
-        success: !!compass,
-        topic: data.topic,
-        code: compass.editCode,
-      });
-    } catch (ex) {
-      this.logger.error('Error automate creating compass: ', JSON.stringify(data), ex);
     }
   }
 

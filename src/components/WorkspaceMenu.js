@@ -13,6 +13,7 @@ import ResizeSubmenu from './submenus/ResizeSubmenu';
 import ShortcutManager from './ShortcutManager';
 
 import { trackFeatureEvent } from '../utils/Analytics';
+import { sendReminderEmail } from '../utils/api';
 import MaybeTappable from '../utils/MaybeTappable';
 import ModalSingleton from '../utils/Modal';
 import SocketSingleton from '../utils/Socket';
@@ -144,15 +145,21 @@ class WorkspaceMenu extends Component {
         'I will not store your email address or send you spam.',
       ],
       defaultValue: email,
-      cb: (status, email) => {
+      cb: async (status, email) => {
         if (!status) return;
 
-        if (REGEX.EMAIL.test(email)) {
-          return this.socket.emitSendMail(this.props.compass.editCode, this.props.users.me, email, this.props.compass.topic);
-        } else {
+        if (!REGEX.EMAIL.test(email)) {
           this.toast.error(`"${email}" is not a valid email address`);
           this.emailReminder(email);
+          return;
         }
+        await sendReminderEmail({
+          topic: this.props.compass.topic,
+          editCode: this.props.compass.editCode,
+          username: this.props.users.me,
+          recipientEmail: email,
+          isAutomatic: false,
+        });
       },
     });
   };

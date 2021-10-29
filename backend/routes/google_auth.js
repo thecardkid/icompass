@@ -16,7 +16,7 @@ const setupPassport = function(passport, serverConfig) {
 
   passport.use(new GoogleStrategy({
     clientID: '1094593733931-mfmschvlj7sjbhvam9acdsh3dgt7oq7h.apps.googleusercontent.com',
-    clientSecret: serverConfig.googleOAuthClientSecret,
+    clientSecret: serverConfig.credentials.googleOAuthClientSecret,
     callbackURL: `${serverConfig.appHost}/auth/google/callback`,
   }, function(req, accessToken, refreshToken, profile, done) {
     if (profile.email !== adminEmail) {

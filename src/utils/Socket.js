@@ -15,8 +15,6 @@ const SocketSingleton = (() => {
         transports: ['websocket'],
       });
       this.subscribe({
-        [events.frontend.MAIL_STATUS]: this.onMailStatus,
-        [events.frontend.AUTO_MAIL_STATUS]: this.onAutoMailStatus,
         [events.frontend.WORKSPACE_NOT_FOUND]: this.onWorkspaceNotFound,
       });
     }
@@ -34,22 +32,6 @@ const SocketSingleton = (() => {
     checkConnected = () => {
       if (this.isConnected()) return true;
       Toast.getInstance().error('You are not connected to the server');
-    };
-
-    onMailStatus = (success) => {
-      if (success) {
-        Toast.getInstance().success('A link to this workspace has been sent to you');
-      } else {
-        Toast.getInstance().error('There was an issue sending you the email. Please note down your codes manually somewhere.');
-      }
-    };
-
-    onAutoMailStatus = (success) => {
-      if (success) {
-        Toast.getInstance().success('A link to this workspace has been automatically sent to you.');
-      } else {
-        Toast.getInstance().error('There was an issue sending you the email. Please note down your codes manually somewhere.');
-      }
     };
 
     onWorkspaceNotFound = () => {
@@ -119,33 +101,9 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitCreateCompass = (topic, username) => {
-      if (this.checkConnected()) {
-        this.socket.emit(events.backend.CREATE_WORKSPACE, { topic, username });
-      }
-    };
-
-    emitAutomatedCreateCompass = (topic, username) => {
-      if (this.checkConnected()) {
-        this.socket.emit(events.backend.AUTOMATED_CREATE_DEV_WORKSPACE, { topic, username });
-      }
-    };
-
     emitSendFeedback = (email, note) => {
       if (this.checkConnected()) {
         this.socket.emit(events.backend.SEND_FEEDBACK, { email, note });
-      }
-    };
-
-    emitSendMail = (editCode, username, email, topic) => {
-      if (this.checkConnected()) {
-        this.socket.emit(events.backend.SEND_MAIL, { editCode, username, email, topic });
-      }
-    };
-
-    emitAutoSendMail = (editCode, username, email, topic) => {
-      if (this.checkConnected()) {
-        this.socket.emit(events.backend.AUTO_SEND_MAIL, { editCode, username, email, topic });
       }
     };
 
@@ -163,10 +121,6 @@ const SocketSingleton = (() => {
 
     emitResetCenterPosition = () => {
       this.socket.emit(events.backend.SET_CENTER_POSITION, { x: 0.5, y: 0.5 });
-    };
-
-    emitSendMailBookmarks = (bookmarks, email) => {
-      this.socket.emit(events.backend.SEND_MAIL_BOOKMARKS, { bookmarks, email });
     };
 
     emitBulkDragNotes = (ids, dx, dy) => {

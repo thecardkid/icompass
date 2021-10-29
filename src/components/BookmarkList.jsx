@@ -3,6 +3,7 @@ import ReactGA from 'react-ga';
 import ReactTooltip from 'react-tooltip';
 import _ from 'underscore';
 
+import { sendBookmarksEmail } from '../utils/api';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
@@ -85,92 +86,6 @@ export default class BookmarkList extends Component {
     this.setState({ showBookmarks });
   };
 
-  importBookmarks = (e) => {
-    const file = e.target.files[0];
-
-    if (file.type !== 'application/json') {
-      return this.toast.error('Invalid file type - must be .json file');
-    }
-
-    const reader = new FileReader();
-    reader.onload = this.onReaderLoad;
-    reader.readAsText(file);
-    e.target.value = null;
-  };
-
-  isValidBookmark({ center, href, name }) {
-    if (!center || !href || !name) {
-      return false;
-    }
-
-    const hrefRegex = /^\/compass\/edit\/[a-zA-Z0-9]{8}\/[a-zA-Z]{1,15}$/;
-    if (!hrefRegex.test(href)) return false;
-
-    const usernameRegex = /^[a-zA-Z]{1,15}$/;
-    return usernameRegex.test(name);
-  }
-
-  onReaderLoad = (ev) => {
-    const uploadedJSON = ev.target.result;
-
-    try {
-      const bookmarks = JSON.parse(uploadedJSON);
-
-      if (_.isEmpty(bookmarks)) {
-        return this.toast.info('Nothing happened - the file was empty');
-      }
-
-      const validBookmarks = [];
-      for (let i = 0; i < bookmarks.length; i++) {
-        const { center, href, name } = bookmarks[i];
-        if (!this.isValidBookmark({ center, href, name })) {
-          throw new Error;
-        }
-
-        validBookmarks.push({ center, href, name });
-      }
-
-      Storage.addAllBookmarks(validBookmarks);
-      const newBookmarks = Storage.getBookmarks();
-
-      this.setState({
-        bookmarks: newBookmarks,
-        show: new Array(newBookmarks.length).fill(false),
-      });
-      this.toast.success('Bookmarks imported!');
-      this.emailBookmarks();
-    } catch (ex) {
-      ReactGA.exception({
-        description: 'Invalid bookmarks json file format/contents',
-      });
-      this.modal.alert({
-        heading: 'Whoops...',
-        body: 'The file you uploaded does not have the correct format. Please export your bookmarks again and retry with the new file.',
-      });
-    }
-  };
-
-  exportBookmarks = () => {
-    if (_.isEmpty(this.state.bookmarks)) {
-      return this.toast.warn('You have no bookmarks to export to file');
-    }
-    ReactGA.modalview('modals/bookmarks-export');
-    this.modal.prompt({
-      heading: 'Export bookmarks',
-      body: 'Enter a name for the file:',
-      defaultValue: 'icompass-bookmarks',
-      cb: (accepted, filename) => {
-        if (!accepted || !filename) return;
-
-        const data = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(Storage.getBookmarks()));
-        const anchor = this.refs.exporter;
-        anchor.setAttribute('href', data);
-        anchor.setAttribute('download', `${filename}.json`);
-        anchor.click();
-      },
-    });
-  };
-
   clickFile = () => {
     this.refs.importer.click();
   };
@@ -185,7 +100,7 @@ export default class BookmarkList extends Component {
         'I will not store your email address or send you spam.',
       ],
       defaultValue: currentEmail,
-      cb: (accepted, email) => {
+      cb: async (accepted, email) => {
         if (!accepted) return;
 
         if (!email.length) return;
@@ -196,7 +111,10 @@ export default class BookmarkList extends Component {
           return;
         }
 
-        this.socket.emitSendMailBookmarks(this.state.bookmarks, email);
+        await sendBookmarksEmail({
+          bookmarks: this.state.bookmarks,
+          recipientEmail: email,
+        });
       },
     });
   };
@@ -233,30 +151,6 @@ export default class BookmarkList extends Component {
             Receive an email with a list of all your bookmarks
           </div>
         </ReactTooltip>
-        {/* These are temporarily disabled because they are a confusing feature, useful only
-         when we migrate domains */}
-        {/*<button id={'export'} onClick={this.exportBookmarks} data-tip data-for="export-tooltip">*/}
-        {/*  <i className={'material-icons'}>cloud_download</i>*/}
-        {/*</button>*/}
-        {/*<ReactTooltip id={'export-tooltip'} place={'right'} effect={'solid'}>*/}
-        {/*  <div className={'bookmark-tooltip'}>*/}
-        {/*    Download your bookmarks as a .json file that you can upload to the app. Useful when you are changing devices, or if you are about to clear your cache data.*/}
-        {/*  </div>*/}
-        {/*</ReactTooltip>*/}
-        {/*<button id={'import'} onClick={this.clickFile} data-tip data-for="import-tooltip">*/}
-        {/*  <i className={'material-icons'}>cloud_upload</i>*/}
-        {/*</button>*/}
-        {/*<ReactTooltip id={'import-tooltip'} place={'right'} effect={'solid'}>*/}
-        {/*  <div className={'bookmark-tooltip'}>*/}
-        {/*    Upload the .json file you downloaded from another device to restore those bookmarks.*/}
-        {/*  </div>*/}
-        {/*</ReactTooltip>*/}
-        {/*<a className={'hidden'} ref={'exporter'} />*/}
-        {/*<input className={'hidden'}*/}
-        {/*       type={'file'}*/}
-        {/*       ref={'importer'}*/}
-        {/*       multiple={false}*/}
-        {/*       onChange={this.importBookmarks}/>*/}
       </div>
     );
   };
