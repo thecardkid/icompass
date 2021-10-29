@@ -81,7 +81,7 @@ compassSchema.statics.makeCompassCopy = function(original) {
       topic: original.topic + ' (copy)',
       // Avoid "undefined"
       notes: original.notes || [],
-      // Not sure why this field aren't set by the original
+      // Not sure why this field isn't set by the original
       center: original.center,
     });
     this.create(newCompass, function(err, compass) {

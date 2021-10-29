@@ -101,12 +101,6 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitSendFeedback = (email, note) => {
-      if (this.checkConnected()) {
-        this.socket.emit(events.backend.SEND_FEEDBACK, { email, note });
-      }
-    };
-
     emitFindCompassEdit = ({ code, username }) => {
       this.socket.emit(events.backend.FIND_COMPASS_EDIT, { code, username });
     };
@@ -130,10 +124,6 @@ const SocketSingleton = (() => {
     emitUpvoteNote = (noteID) => {
       this.socket.emit(events.backend.UPVOTE_NOTE, noteID);
     };
-
-    emitCreateCopyOfWorkspace = (originalWorkspaceEditCode) => {
-      this.socket.emit(events.backend.CREATE_COPY_OF_WORKSPACE, { originalWorkspaceEditCode });
-    }
   }
 
   let instance;

@@ -1,29 +1,15 @@
 import React, { Component } from 'react';
 
-import ToastSingleton from '../../utils/Toast';
-import SocketSingleton from '../../utils/Socket';
+import { createCopyOfWorkspace } from '../../utils/api';
 import DynamicModal from './DynamicModal';
-import events from 'socket-events';
 
 export default class CopyWorkspaceModal extends Component {
-  toast = ToastSingleton.getInstance();
-  socket = SocketSingleton.getInstance();
-
-  constructor(props) {
-    super(props);
-
-    this.socket.subscribe({
-      [events.frontend.CREATED_COPY_OF_WORKSPACE]: (data) => {
-        if (!data.success) {
-          this.toast.error('There was a problem creating a copy of your workspace. Please report this error.');
-        }
-        window.open(`/compass/edit/${data.editCode}`, '_blank');
-      },
-    });
-  }
-
-  makeACopyOfWorkspace = () => {
-    this.socket.emitCreateCopyOfWorkspace(this.props.compass.editCode);
+  makeACopyOfWorkspace = async () => {
+    const out = await createCopyOfWorkspace({ editCode: this.props.compass.editCode });
+    if (!out) {
+      return;
+    }
+    window.open(`/compass/edit/${out.newWorkspaceCode}`, '_blank');
   };
 
   render() {

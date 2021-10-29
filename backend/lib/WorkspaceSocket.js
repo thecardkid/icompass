@@ -22,9 +22,7 @@ class WorkspaceSocket {
     this.socket.on(events.DISCONNECT, this.onDisconnect.bind(this));
     this.socket.on(events.RECONNECTED, this.onReconnect.bind(this));
     this.socket.on(events.backend.LOGOUT, this.onLogout.bind(this));
-    this.socket.on(events.backend.SEND_FEEDBACK, this.sendFeedback.bind(this));
 
-    this.socket.on(events.backend.CREATE_COPY_OF_WORKSPACE, this.createCompassCopy.bind(this));
     this.socket.on(events.backend.FIND_COMPASS_EDIT, this.findCompassEdit.bind(this));
     this.socket.on(events.backend.SET_CENTER_TEXT, this.setCenter.bind(this));
     this.socket.on(events.backend.SET_CENTER_POSITION, this.setCenterPosition.bind(this));
@@ -102,28 +100,6 @@ class WorkspaceSocket {
 
   onLogout() {
     this.onDisconnect('log out');
-  }
-
-  sendFeedback({ email, note }) {
-    mailer.sendMessage({
-      subject: 'iCompass Feedback',
-      toEmail: 'hieumaster95@gmail.com',
-      text: note + `\n\nFrom: ${email || 'No email specified'}` ,
-      cb: () => {},
-    });
-  }
-
-  async createCompassCopy(data) {
-    try {
-      const compass = await Compass.findByEditCode(data.originalWorkspaceEditCode);
-      const copy = await Compass.makeCompassCopy(compass);
-      this.socket.emit(events.frontend.CREATED_COPY_OF_WORKSPACE, {
-        success: !!copy,
-        editCode: copy.editCode,
-      });
-    } catch (ex) {
-      this.logger.error('Error creating copy of compass: ', JSON.stringify(data), ex);
-    }
   }
 
   async setCenter(data) {

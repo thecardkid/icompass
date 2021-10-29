@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
 
 import DynamicModal from './DynamicModal';
-import SocketSingleton from '../../utils/Socket';
+import { submitFeedback } from '../../utils/api';
 import ToastSingleton from '../../utils/Toast';
 
 export default class FeedbackModal extends Component {
   toast = ToastSingleton.getInstance();
-  socket = SocketSingleton.getInstance();
 
-  submitFeedback = () => {
+  submitFeedback = async () => {
     const email = this.refs.email.value;
     const note = this.refs.note.value;
     if (!note) {
       this.toast.warn('Please include some text in the note');
       return;
     }
-    this.socket.emitSendFeedback(email, note);
-    this.toast.success('Your feedback has been submitted!');
+    await submitFeedback({
+      submitterEmail: email,
+      message: note,
+    })
     this.props.close();
   };
 

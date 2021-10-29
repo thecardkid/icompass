@@ -81,6 +81,31 @@ async function handleEmailBookmarks(req, res) {
   });
 }
 
+async function handleSubmitFeedback(req, res) {
+  const { submitterEmail, message } = req.body;
+  mailer.sendMail({
+    subject: 'iCompass Feedback',
+    toEmail: 'hieumaster95@gmail.com',
+    text: message + `\n\nFrom: ${submitterEmail || 'No email specified'}`,
+  }, function(ok) {
+    if (!ok) {
+      throw new Error('failed to send feedback email');
+    }
+    res.send('ok');
+  });
+}
+
+async function handleCreateCopyOfWorkspace(req, res) {
+  const { editCode } = req.body;
+  const compass = await compassSchema.findByEditCode(editCode);
+  if (!compass) {
+    res.json({'error': `no workspace with code ${editCode}`})
+    return;
+  }
+  const copy = await compassSchema.makeCompassCopy(compass);
+  res.json({ editCode: copy.editCode });
+}
+
 function tryCatch(fn) {
   return function(req, res, next) {
     try {
@@ -92,13 +117,14 @@ function tryCatch(fn) {
   }
 }
 
-
 module.exports = (function() {
   const router = express.Router();
   router.get('/view', tryCatch(handleGetWorkspaceWithViewPermissions));
   router.post('/create', tryCatch(handleCreateWorkspace));
+  router.post('/create_a_copy', tryCatch(handleCreateCopyOfWorkspace));
   router.post('/send_reminder_email', tryCatch(handleSendReminderEmail));
   router.post('/send_bookmarks_email', tryCatch(handleEmailBookmarks));
+  router.post('/submit_feedback', tryCatch(handleSubmitFeedback));
   if (config.serverEnv.isDev) {
     router.post('/create_dev', tryCatch(handleCreateWorkspaceForDev));
   }

@@ -52,12 +52,12 @@ class Workspace extends Component {
     } else if (this.validateRouteParams(this.props.params)) {
       this.socket = Socket.getInstance();
       this.socket.subscribe({
+        [events.DISCONNECT]: () => this.toast.error('Lost connection to server'),
+        [events.RECONNECT]: this.handleReconnect.bind(this),
         [events.frontend.WORKSPACE_FOUND]: this.onCompassFound,
         [events.frontend.WORKSPACE_DELETED]: this.onCompassDeleted,
         [events.frontend.USER_JOINED]: this.onUserJoined,
         [events.frontend.USER_LEFT]: this.onUserLeft,
-        [events.DISCONNECT]: () => this.toast.error('Lost connection to server'),
-        [events.RECONNECT]: this.handleReconnect.bind(this),
         [events.frontend.BAD_USERNAME]: this.handleBadUsername.bind(this),
         [events.frontend.DUPLICATE_USERNAME]: this.handleUsernameExists.bind(this),
       });
