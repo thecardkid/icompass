@@ -9,7 +9,7 @@ import StickyNote from './StickyNote.jsx';
 import * as noteX from '../actions/notes';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-import { trackFeatureEvent } from '../utils/Analytics';
+import { trackFeatureEvent } from '../utils/analytics';
 import Socket from '../utils/Socket';
 import Toast from '../utils/Toast';
 import { EDITING_MODE } from '../../lib/constants';

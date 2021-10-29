@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 
-import { trackFeatureEvent } from '../utils/Analytics';
+import { trackFeatureEvent } from '../utils/analytics';
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
 import Socket from '../utils/Socket';

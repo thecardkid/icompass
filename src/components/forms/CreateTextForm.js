@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import TextForm from './TextForm';
 
-import { trackFeatureEvent } from '../../utils/Analytics';
+import { trackFeatureEvent } from '../../utils/analytics';
 import Socket from '../../utils/Socket';
 
 export default class CreateTextForm extends Component {

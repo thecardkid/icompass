@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 
 import FeedbackModal from './modals/FeedbackModal';
-import { trackFeatureEvent } from '../utils/Analytics';
+import { trackFeatureEvent } from '../utils/analytics';
 import Modal from '../utils/Modal';
 
 import { COLORS } from '../../lib/constants';

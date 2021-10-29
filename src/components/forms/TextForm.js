@@ -6,7 +6,7 @@ import ReactTooltip from 'react-tooltip';
 
 import * as uiX from '../../actions/ui';
 
-import { trackFeatureEvent } from '../../utils/Analytics';
+import { trackFeatureEvent } from '../../utils/analytics';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
 import FormPalette from './FormPalette';

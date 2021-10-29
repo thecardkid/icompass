@@ -15,7 +15,7 @@ import NoteManager from '../components/NoteManager.jsx';
 import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 import MaybeTappable from '../utils/MaybeTappable';
 
-import { trackFeatureEvent } from '../utils/Analytics';
+import { trackFeatureEvent } from '../utils/analytics';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';

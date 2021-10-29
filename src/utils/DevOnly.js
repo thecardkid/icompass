@@ -1,7 +1,6 @@
 import React from 'react';
 
 
-
 export default class DevOnly extends React.Component {
   // webpack's DefinePlugin does not work inside react
   // lifecycle methods e.g. render. See

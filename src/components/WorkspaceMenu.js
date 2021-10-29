@@ -12,7 +12,7 @@ import NotesSubmenu from './submenus/NotesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
 import ShortcutManager from './ShortcutManager';
 
-import { trackFeatureEvent } from '../utils/Analytics';
+import { trackFeatureEvent } from '../utils/analytics';
 import { sendReminderEmail } from '../utils/api';
 import MaybeTappable from '../utils/MaybeTappable';
 import ModalSingleton from '../utils/Modal';

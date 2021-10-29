@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { trackFeatureEvent } from '../../utils/Analytics';
+import { trackFeatureEvent } from '../../utils/analytics';
 import Socket from '../../utils/Socket';
 import ImageForm from './ImageForm';
 

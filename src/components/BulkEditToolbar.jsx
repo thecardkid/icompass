@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
 import FormPalette from './forms/FormPalette';
-import { trackFeatureEvent } from '../utils/Analytics';
+import { trackFeatureEvent } from '../utils/analytics';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';

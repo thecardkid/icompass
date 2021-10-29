@@ -23,7 +23,7 @@ import ScreenshotModal from '../components/modals/ScreenshotModal';
 import ShareModal from '../components/modals/ShareModal';
 import WorkspaceMenu from '../components/WorkspaceMenu';
 
-import { isWebdriverIO } from '../utils/Browser';
+import { isWebdriverIO } from '../utils/browser';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';

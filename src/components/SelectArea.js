@@ -6,7 +6,7 @@ import _ from 'underscore';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-import { trackFeatureEvent } from '../utils/Analytics';
+import { trackFeatureEvent } from '../utils/analytics';
 import { EDITING_MODE } from '../../lib/constants';
 
 class SelectArea extends Component {
