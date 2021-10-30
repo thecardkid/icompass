@@ -2,7 +2,7 @@ import request from 'superagent';
 
 import Toast from './Toast';
 
-const toast = Toast.getInstance()
+const toast = Toast.getInstance();
 
 export async function sendReminderEmail({ topic, editCode, username, recipientEmail, isAutomatic }) {
   const resp = await request.post('/api/v1/workspace/send_reminder_email').send({
@@ -36,7 +36,7 @@ export async function sendBookmarksEmail({ bookmarks, recipientEmail }) {
 }
 
 export async function submitFeedback({ submitterEmail, message }) {
-  const resp = await request.post('/api/v1/workspace/submit_feedback').send({
+  await request.post('/api/v1/workspace/submit_feedback').send({
     submitterEmail,
     message,
   });

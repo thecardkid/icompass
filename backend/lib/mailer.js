@@ -10,7 +10,7 @@ class Mailer {
       // Mock out email to avoid Google thinking our gmail account
       // is being accessed from unsafe IP addresses (Travis' VMs).
       this.server = {
-        send: function({ to, from, subject, text }, cb) {
+        send: function({ to, subject, text }, cb) {
           // eslint-disable-next-line no-console
           console.log(`In production, would've sent email:\n
 

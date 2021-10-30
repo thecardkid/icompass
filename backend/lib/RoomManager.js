@@ -11,7 +11,7 @@ class Room {
     Compass.findByEditCode(roomID).then($workspace => {
       this.$workspace = $workspace;
     }).catch(err => {
-      throw new Error(`failed to find workspace with code=${roomID}`);
+      throw new Error(`failed to find workspace with code=${roomID} err: ${err}`);
     });
   }
 

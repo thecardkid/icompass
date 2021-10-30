@@ -17,7 +17,7 @@ export default class FeedbackModal extends Component {
     await submitFeedback({
       submitterEmail: email,
       message: note,
-    })
+    });
     this.props.close();
   };
 

@@ -12,7 +12,7 @@
     "start-server": "npm run build && node backend/server.js",
     "lint": "./node_modules/.bin/eslint --config config/eslint/.eslintrc.js src/ test/ backend/lib/ backend/models/ --ignore-pattern=*.less --quiet",
     "mocha": "NODE_ENV=test mocha --require @babel/register --timeout 300000 --exit test/server",
-    "api": "mocha --require @babel/register --exit test/api",
+    "api": "NODE_ENV=test mocha --require @babel/register --exit test/api",
     "test": "export NODE_ENV=test && npm run mocha && node test/e2e",
     "cy-open": "cypress open --config-file config/cypress/config.json",
     "cy-run": "cypress run --config-file config/cypress/config.json"

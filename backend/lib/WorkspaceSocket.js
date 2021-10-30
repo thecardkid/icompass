@@ -4,7 +4,6 @@ const _ = require('underscore');
 const { STICKY_COLORS } = require('./constants');
 const events = require('./socket_events');
 const { DefaultLogger, Logger } = require('./logger');
-const config = require('../config');
 const Compass = require('../models/compass');
 
 // TODO properly implement catch for all async event handlers.

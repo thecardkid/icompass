@@ -164,7 +164,7 @@ compassSchema.methods.setCenter = function(center) {
       _id,
       { $set: { center: center } },
       { $safe: true, upsert: false, new: true },
-      function(err, compass) {
+      function(err) {
         if (err) {
           reject(`Could not set center to ${center} for compass ${_id}, err: ${err}`);
           return;
