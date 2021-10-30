@@ -32,8 +32,8 @@ const config = {
   },
 
   credentials: {
-    emailPassword: mustGetEnvVar('EMAIL_PASSWORD'),
-    googleOAuthClientSecret: mustGetEnvVar('GOOGLE_OAUTH_CLIENT_SECRET'),
+    emailPassword: getEnvVar('EMAIL_PASSWORD'),
+    googleOAuthClientSecret: getEnvVar('GOOGLE_OAUTH_CLIENT_SECRET'),
   },
 };
 

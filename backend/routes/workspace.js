@@ -6,7 +6,20 @@ const compassSchema = require('../models/compass');
 
 
 async function handleGetWorkspaceWithViewPermissions(req, res) {
+  if (!req.query.id) {
+    res.json({'error': 'missing id'});
+    return;
+  }
   const compass = await compassSchema.findByViewCode(req.query.id);
+  res.json({ compass });
+}
+
+async function handleGetWorkspaceWithEditPermissions(req, res) {
+  if (!req.query.code) {
+    res.json({'error': 'missing id'});
+    return;
+  }
+  const compass = await compassSchema.findByEditCode(req.query.code);
   res.json({ compass });
 }
 
@@ -120,6 +133,7 @@ function tryCatch(fn) {
 module.exports = (function() {
   const router = express.Router();
   router.get('/view', tryCatch(handleGetWorkspaceWithViewPermissions));
+  router.get('/edit', tryCatch(handleGetWorkspaceWithEditPermissions));
   router.post('/create', tryCatch(handleCreateWorkspace));
   router.post('/create_a_copy', tryCatch(handleCreateCopyOfWorkspace));
   router.post('/send_reminder_email', tryCatch(handleSendReminderEmail));

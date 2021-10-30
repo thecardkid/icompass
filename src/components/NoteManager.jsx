@@ -53,8 +53,9 @@ class NoteManager extends Component {
   };
 
   onDeleteNotes = (deletedIdx) => {
-    if (this.props.visualMode)
+    if (this.props.visualMode) {
       this.props.workspaceX.removeNotesIfSelected(deletedIdx);
+    }
   };
 
   componentWillUpdate(nextProps) {

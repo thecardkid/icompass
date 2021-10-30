@@ -25,7 +25,7 @@ describe('workspace access modes', () => {
 
   describe('view-only mode', () => {
     it('invalid code', () => {
-      cy.visit('http://localhost:8080/compass/view/1234abcd');
+      cy.visit('/compass/view/1234abcd');
       cy.get('#ic-modal-body').should('contain', 'Workspace not found');
       cy.get('#ic-modal-confirm').click();
       cy.url().should('eq', 'http://localhost:8080/');
@@ -112,7 +112,7 @@ describe('workspace access modes', () => {
     });
 
     it('invalid code and invalid username', () => {
-      cy.visit('http://localhost:8080/compass/edit/12345/,,,');
+      cy.visit('/compass/edit/12345/,,,');
 
       cy.get('#ic-modal-body').should('contain', 'Your code is not valid');
       cy.get('#ic-modal-body').should('contain', 'You will be redirected');

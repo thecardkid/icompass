@@ -54,7 +54,7 @@ describe('landing page', () => {
     beforeEach(() => {
       // Fill out the fields, and click the submit button, so that each test
       // starts with the email prompt showing.
-      cy.visit('http://localhost:8080/');
+      cy.visit('/');
       cy.get('#compass-center').type('center');
       cy.get('#username').type('sandbox');
       cy.get('button[type=submit]').click();

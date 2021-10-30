@@ -169,7 +169,7 @@ compassSchema.methods.setCenter = function(center) {
           reject(`Could not set center to ${center} for compass ${_id}, err: ${err}`);
           return;
         }
-        resolve(compass);
+        resolve(true);
       }
     );
   });

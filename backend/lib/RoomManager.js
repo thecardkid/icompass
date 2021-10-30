@@ -1,59 +1,87 @@
 const { STICKY_COLORS, REGEX } = require('./constants');
 const events = require('./socket_events');
 
-class RoomManager {
-  constructor() {
-    this.clientsByUsernameByRoomID = {};
+const Compass = require('../models/compass');
+
+class Room {
+  constructor(roomID) {
+    this.roomID = roomID;
+    this.colorIndex = 0;
+    this.clientsByUsername = {};
+    Compass.findByEditCode(roomID).then($workspace => {
+      this.$workspace = $workspace;
+    }).catch(err => {
+      throw new Error(`failed to find workspace with code=${roomID}`);
+    });
   }
 
   // If the username is invalid, this function throws an error whose message
-  // is the socket event to be handled by the frontend.
-  joinRoom(roomID, workspaceSocket, isReconnecting=false) {
+  // is the socket event to be emitted to the frontend.
+  addClient(workspaceSocket, isReconnecting) {
     const { username } = workspaceSocket;
     if (typeof username !== 'string' || username.length === 0 || !REGEX.CHAR_ONLY.test(username)) {
       throw new Error(events.frontend.BAD_USERNAME);
     }
-    const state = this.clientsByUsernameByRoomID[roomID] || {};
-
-    if (state.hasOwnProperty(username) && !isReconnecting) {
+    if (this.clientsByUsername.hasOwnProperty(username) && !isReconnecting) {
       throw new Error(events.frontend.DUPLICATE_USERNAME);
     }
-    state[workspaceSocket.username] = workspaceSocket;
-
-    const assignedColor = STICKY_COLORS[Object.keys(state).length % STICKY_COLORS.length];
+    this.clientsByUsername[username] = workspaceSocket;
+    const assignedColor = STICKY_COLORS[this.colorIndex];
+    this.colorIndex = (this.colorIndex + 1) % STICKY_COLORS.length;
     workspaceSocket.setUserColor(assignedColor);
+  }
 
-    this.clientsByUsernameByRoomID[roomID] = state;
+  removeClient(username) {
+    if (!this.clientsByUsername.hasOwnProperty(username)) {
+      // Ignore, trying to leave twice.
+      return;
+    }
+    delete this.clientsByUsername[username];
+  }
+
+  isEmpty() {
+    return Object.keys(this.clientsByUsername).length === 0;
+  }
+
+  getState() {
+    const usernameToColor = {};
+    for (const x of Object.values(this.clientsByUsername)) {
+      usernameToColor[x.username] = x.getUserColor();
+    }
+    return { usernameToColor };
+  }
+}
+
+class RoomManager {
+  constructor() {
+    this.roomByID = {};
+  }
+
+  joinRoom(roomID, workspaceSocket, isReconnecting=false) {
+    let room = this.roomByID[roomID] || new Room(roomID);
+    room.addClient(workspaceSocket, isReconnecting);
+    this.roomByID[roomID] = room;
+    return room;
   }
 
   leaveRoom(roomID, username) {
-    const room = this.clientsByUsernameByRoomID[roomID];
+    const room = this.roomByID[roomID];
     if (!room) {
       // TODO throw error
       return;
     }
-    if (!room.hasOwnProperty(username)) {
-      // Ignore, trying to leave twice.
-      return;
-    }
-    delete room[username];
-    if (Object.keys(room).length === 0) {
-      delete this.clientsByUsernameByRoomID[roomID];
-    } else {
-      this.clientsByUsernameByRoomID[roomID] = room;
+    room.removeClient(username);
+    if (room.isEmpty()) {
+      delete this.roomByID[roomID];
     }
   }
 
   getRoomState(roomID) {
-    if (!this.clientsByUsernameByRoomID.hasOwnProperty(roomID)) {
+    const room = this.roomByID[roomID];
+    if (!room) {
       return null;
     }
-
-    const usernameToColor = {};
-    for (const x of Object.values(this.clientsByUsernameByRoomID[roomID])) {
-      usernameToColor[x.username] = x.getUserColor();
-    }
-    return { usernameToColor };
+    return room.getState();
   }
 }
 

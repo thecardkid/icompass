@@ -101,9 +101,9 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitFindCompassEdit = ({ code, username }) => {
-      this.socket.emit(events.backend.FIND_COMPASS_EDIT, { code, username });
-    };
+    emitJoinRoom = ({ workspaceEditCode, username }) => {
+      this.socket.emit(events.backend.JOIN_ROOM, { workspaceEditCode, username });
+    }
 
     emitSetCenter = (id, center) => {
       this.socket.emit(events.backend.SET_CENTER_TEXT, { id, center });

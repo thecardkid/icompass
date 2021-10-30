@@ -2,4 +2,4 @@
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
-"$IC_ROOT/node_modules/.bin/cypress" run --config-file config/cypress/config.json
+"$IC_ROOT/node_modules/.bin/cypress" run --config-file config/cypress/config.json "$@"

@@ -1,4 +1,7 @@
-const defaultState = { me: '' };
+const defaultState = {
+  nameToColor: {},
+  me: '',
+};
 
 export default (state = defaultState, action) => {
   switch (action.type) {

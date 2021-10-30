@@ -43,10 +43,10 @@ class Workspace extends Component {
         .query({ id: this.props.params.code })
         .end((err, res) => {
           if (err || !res.body || res.body.compass == null) {
-            return void this.alertNotFound();
+            this.alertNotFound();
+            return;
           }
-
-          this.onCompassFound(res.body);
+          this.onCompassFound(res.body.compass, true);
         });
       ReactGA.pageview('/compass/view/');
     } else if (this.validateRouteParams(this.props.params)) {
@@ -54,14 +54,23 @@ class Workspace extends Component {
       this.socket.subscribe({
         [events.DISCONNECT]: () => this.toast.error('Lost connection to server'),
         [events.RECONNECT]: this.handleReconnect.bind(this),
-        [events.frontend.WORKSPACE_FOUND]: this.onCompassFound,
         [events.frontend.WORKSPACE_DELETED]: this.onCompassDeleted,
         [events.frontend.USER_JOINED]: this.onUserJoined,
         [events.frontend.USER_LEFT]: this.onUserLeft,
         [events.frontend.BAD_USERNAME]: this.handleBadUsername.bind(this),
         [events.frontend.DUPLICATE_USERNAME]: this.handleUsernameExists.bind(this),
       });
-      this.socket.emitFindCompassEdit(this.props.params);
+      const { code, username } = this.props.params;
+      request.get('/api/v1/workspace/edit')
+        .query({ code })
+        .end((err, res) => {
+          if (err || !res.body || res.body.compass == null) {
+            this.alertNotFound();
+            return;
+          }
+          this.socket.emitJoinRoom({ workspaceEditCode: code, username });
+          this.onCompassFound(res.body.compass, false, username);
+        });
       ReactGA.pageview('/compass/edit/');
     }
 
@@ -130,19 +139,20 @@ class Workspace extends Component {
     });
   }
 
-  onCompassFound = (data) => {
-    if (data.compass === null) {
-      return void this.alertNotFound();
+  onCompassFound = (compass, isViewOnly, username) => {
+    if (compass === null) {
+      this.alertNotFound();
+      return;
     }
 
-    this.props.compassX.set(data.compass, data.viewOnly);
-    this.props.noteX.updateAll(data.compass.notes);
-    this.props.workspaceX.setEditCode(data.compass.editCode);
-    this.props.userX.me(data.username);
+    this.props.compassX.set(compass, isViewOnly);
+    this.props.noteX.updateAll(compass.notes);
+    this.props.workspaceX.setEditCode(compass.editCode);
+    this.props.userX.me(username);
 
     // Skip notifying feature changes if the workspace is being
     // created.
-    if (data.compass.center.length > 0) {
+    if (compass.center.length > 0) {
       this.notifyIfNewVersion();
     }
   };
@@ -224,12 +234,6 @@ class Workspace extends Component {
       return <Compass viewOnly={true}/>;
     }
 
-    let formAttrs = {
-      bg: this.props.users.nameToColor[this.props.users.me],
-      user: this.props.users.me,
-      close: this.props.uiX.closeForm,
-    };
-
     return (
       <div>
         <HelpAndFeedback editCode={this.props.compass.editCode}
@@ -238,7 +242,11 @@ class Workspace extends Component {
         <WorkspaceMenu />
         <Compass />
         <BulkEditToolbar show={this.props.visualMode} />
-        <FormManager commonAttrs={formAttrs} />
+        <FormManager commonAttrs={{
+          bg: this.props.users.nameToColor[this.props.users.me],
+          user: this.props.users.me,
+          close: this.props.uiX.closeForm,
+        }} />
         {this.props.ui.showShareModal &&
           <ShareModal close={this.props.uiX.hideShareModal}
                       compass={this.props.compass}/>

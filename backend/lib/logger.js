@@ -30,6 +30,10 @@ class Logger {
     });
   }
 
+  warn() {
+    this._log('WARN', arguments);
+  }
+
   info() {
     this._log('INFO', arguments);
   }

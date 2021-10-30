@@ -7,7 +7,7 @@ module.exports = {
   // Events emitted by the client and handled by the server.
   backend: {
     LOGOUT: 'logout',
-    FIND_COMPASS_EDIT: 'find compass edit',
+    JOIN_ROOM: 'join room',
     SET_CENTER_TEXT: 'set center',
     SET_CENTER_POSITION: 'set center position',
     DELETE_WORKSPACE: 'delete compass',
@@ -26,7 +26,6 @@ module.exports = {
     SET_CENTER_POSITION: 'center position set',
     UPDATE_ALL_NOTES: 'update notes',
     DELETED_NOTE: 'deleted notes',
-    WORKSPACE_FOUND: 'compass found',
     WORKSPACE_DELETED: 'compass deleted',
     USER_JOINED: 'user joined',
     USER_LEFT: 'user left',

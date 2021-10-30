@@ -1,7 +1,6 @@
 require('babel-polyfill');
 const _ = require('underscore');
 
-const mailer = require('./mailer').getInstance();
 const { STICKY_COLORS } = require('./constants');
 const events = require('./socket_events');
 const { DefaultLogger, Logger } = require('./logger');
@@ -20,14 +19,12 @@ class WorkspaceSocket {
     this.logger = DefaultLogger;
 
     this.socket.on(events.DISCONNECT, this.onDisconnect.bind(this));
-    this.socket.on(events.RECONNECTED, this.onReconnect.bind(this));
-    this.socket.on(events.backend.LOGOUT, this.onLogout.bind(this));
+    this.socket.on(events.RECONNECTED, this.onReconnected.bind(this));
 
-    this.socket.on(events.backend.FIND_COMPASS_EDIT, this.findCompassEdit.bind(this));
+    this.socket.on(events.backend.JOIN_ROOM, this.joinRoom.bind(this));
+    this.socket.on(events.backend.LOGOUT, this.onLogout.bind(this));
     this.socket.on(events.backend.SET_CENTER_TEXT, this.setCenter.bind(this));
     this.socket.on(events.backend.SET_CENTER_POSITION, this.setCenterPosition.bind(this));
-    this.socket.on(events.backend.DELETE_WORKSPACE, this.deleteCompass.bind(this));
-
     this.socket.on(events.backend.NEW_NOTE, this.createNote.bind(this));
     this.socket.on(events.backend.UPDATE_NOTE, this.updateNote.bind(this));
     this.socket.on(events.backend.DELETE_NOTE, this.deleteNote.bind(this));
@@ -35,6 +32,7 @@ class WorkspaceSocket {
     this.socket.on(events.backend.BULK_UPDATE_NOTES, this.bulkUpdateNotes.bind(this));
     this.socket.on(events.backend.BULK_DRAG_NOTES, this.bulkDragNotes.bind(this));
     this.socket.on(events.backend.BULK_DELETE_NOTES, this.bulkDeleteNotes.bind(this));
+    this.socket.on(events.backend.DELETE_WORKSPACE, this.deleteCompass.bind(this));
   }
 
   getUserColor() {
@@ -45,18 +43,18 @@ class WorkspaceSocket {
     this.frontendUserColor = color;
   }
 
-  joinRoom({ code, username, compassId, isReconnecting }) {
+  _joinRoom({ code, username, isReconnecting }) {
     this.roomID = code;
     this.username = username;
-    this.compassId = compassId;
     this.logger = new Logger(`room=${this.roomID} user=${this.username}`);
 
     try {
       // This is the effective call to socket-io.
       this.socket.join(this.roomID);
       // This is for reporting purposes.
-      this.roomManager.joinRoom(code, this, isReconnecting);
+      this.room = this.roomManager.joinRoom(code, this, isReconnecting);
     } catch (ex) {
+      this.logger.warn(`Error joining room=${code}: ${ex.message}`);
       this.socket.emit(ex.message);
     }
   }
@@ -75,21 +73,14 @@ class WorkspaceSocket {
     }
   }
 
-  async onReconnect({ code, compassId, username }) {
+  async onReconnected({ code, username }) {
     if (!code) {
       this.socket.emit(events.frontend.WORKSPACE_NOT_FOUND);
       this.logger.error('failed to reconnect: invalid code provided');
       return;
     }
-    const compass = await Compass.findByEditCode(code);
-    if (compass === null) {
-      // workspace was probably deleted, but user hasn't navigated away from the page.
-      this.socket.emit(events.frontend.WORKSPACE_NOT_FOUND);
-      return;
-    }
 
-    this.compass = compass;
-    this.joinRoom({ code, compassId, username, isReconnecting: true });
+    this._joinRoom({ code, username, isReconnecting: true });
     this.logger.info('reconnected');
 
     this.broadcast(events.frontend.USER_JOINED, {
@@ -104,10 +95,8 @@ class WorkspaceSocket {
 
   async setCenter(data) {
     try {
-      this.compass = await this.compass.setCenter(data.center);
-      if (!!this.compass) {
-        this.broadcast(events.frontend.SET_CENTER_TEXT, data.center);
-      }
+      await this.room.$workspace.setCenter(data.center);
+      this.broadcast(events.frontend.SET_CENTER_TEXT, data.center);
     } catch (ex) {
       this.logger.error('Error setting center: ', JSON.stringify(data), ex);
     }
@@ -115,59 +104,46 @@ class WorkspaceSocket {
 
   async setCenterPosition({ x, y }) {
     try {
-      this.compass = await this.compass.setCenterPosition(x, y);
-      if (!!this.compass) {
-        this.broadcast(events.frontend.SET_CENTER_POSITION, x, y);
-      }
+      await this.room.$workspace.setCenterPosition(x, y);
+      this.broadcast(events.frontend.SET_CENTER_POSITION, x, y);
     } catch (ex) {
       this.logger.error(ex);
     }
   }
 
-  async findCompassEdit({ code, username }) {
+  joinRoom({ workspaceEditCode, username }) {
     try {
-      const compass = await Compass.findByEditCode(code);
-      if (compass !== null) {
-        this.joinRoom({ code, username, isReconnecting: false });
-        this.logger.info('joined room');
-        this.broadcast(events.frontend.USER_JOINED, {
-          users: this.roomManager.getRoomState(code),
-          joined: this.username,
-        });
-      }
-      this.compass = compass;
-      this.socket.emit(events.frontend.WORKSPACE_FOUND, {
-        compass: compass,
-        username: this.username,
-        viewOnly: false,
+      this._joinRoom({ code: workspaceEditCode, username, isReconnecting: false });
+      this.logger.info('joined room');
+      this.broadcast(events.frontend.USER_JOINED, {
+        users: this.room.getState(),
+        joined: this.username,
       });
     } catch (ex) {
-      this.logger.error(`Error find compass edit: code=${code} username=${username}`, ex);
+      this.logger.error(`Error joining room: code=${workspaceEditCode} username=${username}`, ex);
     }
   }
 
-  // TODO make API request
-  deleteCompass(id) {
-    const expectedID = this.compass._id.toString();
+  async deleteCompass(id) {
+    const expectedID = this.room.$workspace._id.toString();
     if (expectedID !== id) {
       this.logger.warn(`Attempted to delete compass id=${id}, but socket's compass id is ${expectedID}`);
       return;
     }
 
-    Compass.remove({ _id: id }, (err) => {
-      if (err) {
-        this.logger.error(`Error deleting compass id=${id}:`, err);
-      }
-
+    try {
+      await Compass.remove({ _id: id });
       this.logger.info(`Deleted compass id=${id}`);
       this.broadcast(events.frontend.WORKSPACE_DELETED);
-    });
+    } catch (ex) {
+      this.logger.error(`Error deleting compass id=${id}:`, ex.message);
+    }
   }
 
   async createNote(note) {
     try {
-      this.compass = await this.compass.addNote(note);
-      this.broadcast('update notes', this.compass.notes);
+      const model = await this.room.$workspace.addNote(note);
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
     } catch (ex) {
       this.logger.error('Error creating note: ', JSON.stringify(note), ex);
     }
@@ -175,8 +151,8 @@ class WorkspaceSocket {
 
   async updateNote(updatedNote) {
     try {
-      this.compass = await this.compass.updateNote(updatedNote);
-      this.broadcast('update notes', this.compass.notes);
+      const model = await this.room.$workspace.updateNote(updatedNote);
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
     } catch (ex) {
       this.logger.error('Error updating note: ', JSON.stringify(updatedNote), ex);
     }
@@ -184,8 +160,7 @@ class WorkspaceSocket {
 
   async deleteNote(id) {
     try {
-      const { compass, deletedIdx } = await this.compass.deleteNote(id);
-      this.compass = compass;
+      const { compass, deletedIdx } = await this.room.$workspace.deleteNote(id);
       this.broadcast(events.frontend.UPDATE_ALL_NOTES, compass.notes);
       this.broadcast(events.frontend.DELETED_NOTE, deletedIdx);
     } catch (ex) {
@@ -195,8 +170,8 @@ class WorkspaceSocket {
 
   async plusOneNote(id) {
     try {
-      this.compass = await this.compass.plusOneNote(id);
-      this.broadcast('update notes', this.compass.notes);
+      const model = await this.room.$workspace.plusOneNote(id);
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
     } catch (ex) {
       this.logger.error('Error upvoting note: ', id, ex);
     }
@@ -204,12 +179,14 @@ class WorkspaceSocket {
 
   async bulkUpdateNotes(ids, transformation) {
     try {
-      if (transformation.color == null) return;
-
-      if (!_.contains(STICKY_COLORS, transformation.color)) return;
-
-      this.compass = await this.compass.bulkUpdateNotes(ids, transformation);
-      this.broadcast('update notes', this.compass.notes);
+      if (transformation.color == null) {
+        return;
+      }
+      if (!_.contains(STICKY_COLORS, transformation.color)) {
+        return;
+      }
+      const model = await this.room.$workspace.bulkUpdateNotes(ids, transformation);
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
     } catch (ex) {
       this.logger.error('Error bulk updating notes: ', JSON.stringify({ ids, transformation }), ex);
     }
@@ -217,8 +194,8 @@ class WorkspaceSocket {
 
   async bulkDragNotes(ids, { dx, dy }) {
     try {
-      this.compass = await this.compass.bulkDragNotes(ids, { dx, dy });
-      this.broadcast('update notes', this.compass.notes);
+      const model = await this.room.$workspace.bulkDragNotes(ids, { dx, dy });
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
     } catch (ex) {
       this.logger.error('Error bulk dragging notes: ', JSON.stringify({ ids, dx, dy }), ex);
     }
@@ -226,9 +203,8 @@ class WorkspaceSocket {
 
   async bulkDeleteNotes(ids) {
     try {
-      const { compass, deletedIdx } = await this.compass.deleteNotes(ids);
-      this.compass = compass;
-      this.broadcast(events.frontend.UPDATE_ALL_NOTES, this.compass.notes);
+      const { compass, deletedIdx } = await this.room.$workspace.deleteNotes(ids);
+      this.broadcast(events.frontend.UPDATE_ALL_NOTES, compass.notes);
       this.broadcast(events.frontend.DELETED_NOTE, deletedIdx);
     } catch (ex) {
       this.logger.error('Error bulk deleting notes: ', ids, ex);

@@ -62,8 +62,8 @@ describe('Compass: models', () => {
 
   describe('methods', () => {
     it('#setCenter', async () => {
-      const c = await workspace.setCenter('center');
-      expect(c.center).to.equal('center');
+      const result = await workspace.setCenter('center');
+      expect(result).to.be.true;
     });
 
     it('#addNote', async () => {
