@@ -30,3 +30,5 @@ jobs:
         AWS_ACCESS_KEY_ID: AKIAJPWD7V6OQ3QKFUPA
         NODE_ENV: production
         GA_TRACKING_ID: ${{ secrets.GA_TRACKING_ID }}
+        IC_BUILD_ID: ${{ github.run_number }}
+        IC_BUILD_SHA: ${{ github.sha }}

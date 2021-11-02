@@ -31,6 +31,12 @@ const config = {
     isTest: nodeEnv === 'test',
   },
 
+  build: {
+    // Set in .github/workflows/build-production-image.yml.
+    id: getEnvVar('IC_BUILD_ID'),
+    sha: getEnvVar('IC_BUILD_SHA'),
+  },
+
   credentials: {
     emailPassword: getEnvVar('EMAIL_PASSWORD'),
     googleOAuthClientSecret: getEnvVar('GOOGLE_OAUTH_CLIENT_SECRET'),

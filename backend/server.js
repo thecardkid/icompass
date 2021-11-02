@@ -63,12 +63,13 @@ function initApp() {
   app.get('/compass/edit/:code/:username', handleConsumerSPA);
   app.get('/compass/view/:code', handleConsumerSPA);
 
-  app.use('/api/v1', apiLoggerMiddleware, apiRoutes);
-
   app.use('/s3', s3Router({
     bucket: appConfig.s3Bucket,
     region: 'us-east-2',
-    headers: {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'},
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT',
+    },
     ACL: 'public-read',
     uniquePrefix: true,
   }));
@@ -83,6 +84,7 @@ function initApp() {
   const roomManagerSingleton = new RoomManager();
   const socketIOInstance = socket.connect(server, roomManagerSingleton);
   googleAuth.installRoutes(app, passport);
+  app.use('/', apiLoggerMiddleware, apiRoutes);
   app.get('/admin', googleAuth.ensureAdminAuthenticatedMiddleware, handleAdminSPA);
   app.use('/admin/api', googleAuth.ensureAdminAuthenticatedMiddleware, apiLoggerMiddleware, function(req, res, next) {
     req.socketIOInstance = socketIOInstance;
