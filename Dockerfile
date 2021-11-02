@@ -7,10 +7,10 @@ ENV IC_BUILD_ID=gh-$BUILD_ID
 ENV IC_BUILD_SHA=$BUILD_SHA
 
 WORKDIR /app
-ADD backend/ backend
 ADD package.json package.json
-
 RUN npm install --only=production
+
+ADD backend/ backend/
 
 EXPOSE 8080
 CMD node backend/server.js
