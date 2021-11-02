@@ -1,14 +1,17 @@
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 const logger = require('./logger').DefaultLogger;
+const config = require('../config');
+
+async function getMongoURI() {
+  if (config.serverEnv.isTest) {
+    return await (new MongoMemoryServer()).getUri();
+  }
+  return process.env.MONGODB_URI || 'mongodb://localhost/compass';
+}
 
 async function initializeDB() {
-  let uri = process.env.MONGODB_URI || 'mongodb://localhost/compass';
-  if (process.env.NODE_ENV === 'test') {
-    const mongod = new MongoMemoryServer();
-    uri = await mongod.getUri();
-  }
-  const db = await mongoose.connect(uri, {
+  const db = await mongoose.connect(await getMongoURI(), {
     useNewUrlParser: true,
     autoReconnect: true,
     reconnectTries: 100,

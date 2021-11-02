@@ -106,16 +106,17 @@ const ModalSingleton = (() => {
       });
     }
 
-    generateAlert(text) {
+    generateAlert(text, confirmText) {
       return this.getModalHtml(
         text,
-        '<button id="ic-modal-confirm">Got it</button>',
+        `<button id="ic-modal-confirm">${confirmText}</button>`,
       );
     }
 
     alert({
       heading = '',
       body = '',
+      confirmText = 'Got it',
       cb = _.noop,
     }) {
       let html = `<h3>${heading}</h3>`;
@@ -126,11 +127,20 @@ const ModalSingleton = (() => {
         _.each(body, p => html += `<p>${p}</p>`);
       }
 
-      this.renderModal(this.generateAlert(html));
+      this.renderModal(this.generateAlert(html, confirmText));
       this.onEvent({
         onConfirm: cb,
         onCancel: _.noop,
         onBackdrop: cb,
+      });
+    }
+
+    alertDisconnected = (cb) => {
+      this.alert({
+        heading: 'Are you still there?',
+        body: 'You\'ve left the workspace due to inactivity.',
+        confirmText: 'I\'m back',
+        cb,
       });
     }
 

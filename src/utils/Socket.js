@@ -45,14 +45,6 @@ const SocketSingleton = (() => {
       });
     };
 
-    onReconnect = ({ editCode, users }) => {
-      this.socket.emit(events.RECONNECTED, {
-        code: editCode,
-        username: users.me,
-        color: users.nameToColor[users.me],
-      });
-    };
-
     logout = () => {
       this.socket.emit(events.backend.LOGOUT);
     };
@@ -101,8 +93,9 @@ const SocketSingleton = (() => {
       }
     };
 
-    emitJoinRoom = ({ workspaceEditCode, username }) => {
-      this.socket.emit(events.backend.JOIN_ROOM, { workspaceEditCode, username });
+    // TODO add note: this file should all say `data`, and let the backend handler define the API.
+    emitJoinRoom = (data) => {
+      this.socket.emit(events.backend.JOIN_ROOM, data);
     }
 
     emitSetCenter = (id, center) => {

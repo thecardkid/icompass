@@ -52,8 +52,7 @@ class Workspace extends Component {
     } else if (this.validateRouteParams(this.props.params)) {
       this.socket = Socket.getInstance();
       this.socket.subscribe({
-        [events.DISCONNECT]: () => this.toast.error('Lost connection to server'),
-        [events.RECONNECT]: this.handleReconnect.bind(this),
+        [events.DISCONNECT]: this.handleDisconnect,
         [events.frontend.WORKSPACE_DELETED]: this.onCompassDeleted,
         [events.frontend.USER_JOINED]: this.onUserJoined,
         [events.frontend.USER_LEFT]: this.onUserLeft,
@@ -68,7 +67,11 @@ class Workspace extends Component {
             this.alertNotFound();
             return;
           }
-          this.socket.emitJoinRoom({ workspaceEditCode: code, username });
+          this.socket.emitJoinRoom({
+            workspaceEditCode: code,
+            username,
+            isReconnecting: false,
+          });
           this.onCompassFound(res.body.compass, false, username);
         });
       ReactGA.pageview('/compass/edit/');
@@ -81,12 +84,18 @@ class Workspace extends Component {
     this.props.uiX.resize();
   }
 
-  handleReconnect = () => {
-    this.toast.success('Established connection to server');
-    this.socket.onReconnect({
-      editCode: this.mustGetEditCode(),
-      users: this.props.users,
-    });
+  handleDisconnect = (reason) => {
+    if (reason === 'ping timeout') {
+      this.modal.alertDisconnected(() => {
+        this.socket.emitJoinRoom({
+          workspaceEditCode: this.props.compass.editCode,
+          username: this.props.users.me,
+          isReconnecting: true,
+        });
+      });
+    } else {
+      this.toast.error('Lost connection to server');
+    }
   };
 
   handleBadUsername = () => {

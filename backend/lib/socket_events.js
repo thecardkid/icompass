@@ -1,7 +1,6 @@
 module.exports = {
   // Shared.
   DISCONNECT: 'disconnect',
-  RECONNECTED: 'reconnected',
   RECONNECT: 'reconnect',
 
   // Events emitted by the client and handled by the server.

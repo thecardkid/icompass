@@ -18,7 +18,6 @@ class WorkspaceSocket {
     this.logger = DefaultLogger;
 
     this.socket.on(events.DISCONNECT, this.onDisconnect.bind(this));
-    this.socket.on(events.RECONNECTED, this.onReconnected.bind(this));
 
     this.socket.on(events.backend.JOIN_ROOM, this.joinRoom.bind(this));
     this.socket.on(events.backend.LOGOUT, this.onLogout.bind(this));
@@ -42,22 +41,6 @@ class WorkspaceSocket {
     this.frontendUserColor = color;
   }
 
-  _joinRoom({ code, username, isReconnecting }) {
-    this.roomID = code;
-    this.username = username;
-    this.logger = new Logger(`room=${this.roomID} user=${this.username}`);
-
-    try {
-      // This is the effective call to socket-io.
-      this.socket.join(this.roomID);
-      // This is for reporting purposes.
-      this.room = this.roomManager.joinRoom(code, this, isReconnecting);
-    } catch (ex) {
-      this.logger.warn(`Error joining room=${code}: ${ex.message}`);
-      this.socket.emit(ex.message);
-    }
-  }
-
   broadcast(event, ...args) {
     this.io.sockets.in(this.roomID).emit(event, ...args);
   }
@@ -70,22 +53,6 @@ class WorkspaceSocket {
         users: this.roomManager.getRoomState(this.roomID),
       });
     }
-  }
-
-  async onReconnected({ code, username }) {
-    if (!code) {
-      this.socket.emit(events.frontend.WORKSPACE_NOT_FOUND);
-      this.logger.error('failed to reconnect: invalid code provided');
-      return;
-    }
-
-    this._joinRoom({ code, username, isReconnecting: true });
-    this.logger.info('reconnected');
-
-    this.broadcast(events.frontend.USER_JOINED, {
-      users: this.roomManager.getRoomState(code),
-      joined: this.username,
-    });
   }
 
   onLogout() {
@@ -110,9 +77,16 @@ class WorkspaceSocket {
     }
   }
 
-  joinRoom({ workspaceEditCode, username }) {
+  joinRoom({ workspaceEditCode, username, isReconnecting }) {
     try {
-      this._joinRoom({ code: workspaceEditCode, username, isReconnecting: false });
+      this.roomID = workspaceEditCode;
+      this.username = username;
+      this.logger = new Logger(`room=${this.roomID} user=${this.username}`);
+      // This is the effective call to socket-io.
+      this.socket.join(this.roomID);
+      // This is for reporting purposes.
+      this.room = this.roomManager.joinRoom(workspaceEditCode, this, isReconnecting);
+
       this.logger.info('joined room');
       this.broadcast(events.frontend.USER_JOINED, {
         users: this.room.getState(),
@@ -120,6 +94,10 @@ class WorkspaceSocket {
       });
     } catch (ex) {
       this.logger.error(`Error joining room: code=${workspaceEditCode} username=${username}`, ex);
+      if (ex.message === events.frontend.BAD_USERNAME ||
+          ex.message === events.frontend.DUPLICATE_USERNAME) {
+        this.socket.emit(ex.message);
+      }
     }
   }
 
