@@ -1,3 +1,10 @@
+// Troubleshooting errors on EC2.
+//
+// SMTPError: authorization.failed seems to be caused by Google failing the new
+// (suspicious) sign-in, likely because it is coming from a new IP. Log in to
+// the account in a browser, mark the sign-in as not suspicious, and go to
+// https://accounts.google.com/DisplayUnlockCaptcha.
+
 const email = require('emailjs/email');
 const config = require('../config');
 const makeSingleton = require('./singletonFactory');
@@ -67,13 +74,13 @@ Message: ${text}
         // eslint-disable-next-line no-console
         console.error('Failed sending email: ', err);
         if (done) {
-          done(false);
+          done(err);
         }
         return;
       }
 
       if (done) {
-        done(true);
+        done(null);
       }
     });
   }

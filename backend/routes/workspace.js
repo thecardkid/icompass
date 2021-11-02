@@ -63,9 +63,10 @@ ${config.appHost}/disable-auto-email.`
     recipientEmail,
     subject: `Your iCompass workspace "${topic}"`,
     text,
-  }, function(ok) {
-    if (!ok) {
-      throw new Error('failed to send reminder email');
+  }, function(err) {
+    if (err) {
+      res.json({'error': 'failed'});
+      return;
     }
     res.send('ok');
   });
@@ -86,9 +87,10 @@ async function handleEmailBookmarks(req, res) {
     subject: 'Your iCompass bookmarks',
     text: lines.join('\n'),
     toEmail: recipientEmail,
-  }, function(ok) {
-    if (!ok) {
-      throw new Error('failed to send bookmarks email');
+  }, function(err) {
+    if (err) {
+      res.json({'error': 'failed'});
+      return;
     }
     res.send('ok');
   });
@@ -100,9 +102,10 @@ async function handleSubmitFeedback(req, res) {
     subject: 'iCompass Feedback',
     toEmail: 'hieumaster95@gmail.com',
     text: message + `\n\nFrom: ${submitterEmail || 'No email specified'}`,
-  }, function(ok) {
-    if (!ok) {
-      throw new Error('failed to send feedback email');
+  }, function(err) {
+    if (err) {
+      res.json({'error': 'failed'});
+      return;
     }
     res.send('ok');
   });
