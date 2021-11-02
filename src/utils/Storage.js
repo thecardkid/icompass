@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import { REGEX } from '../../lib/constants';
+import { isEmail } from './regex';
 
 // TODO provide better structure to the prefs object
 export default {
@@ -66,8 +66,8 @@ export default {
   getAlwaysSendEmail() {
     const prefs = this.getUserPrefs();
     if (prefs.hasOwnProperty('alwaysSendEmail') &&
-    prefs.alwaysSendEmail.enabled &&
-    REGEX.EMAIL.test(prefs.alwaysSendEmail.email)) {
+        prefs.alwaysSendEmail.enabled &&
+        isEmail(prefs.alwaysSendEmail.email)) {
       return prefs.alwaysSendEmail;
     }
     return { enabled: false };

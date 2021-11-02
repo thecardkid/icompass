@@ -4,12 +4,12 @@ import ReactTooltip from 'react-tooltip';
 import _ from 'underscore';
 
 import { sendBookmarksEmail } from '../utils/api';
+import { isEmail } from '../utils/regex';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import ToastSingleton from '../utils/Toast';
 
-import { REGEX } from '../../lib/constants';
 import Bookmark from './Bookmark';
 
 export default class BookmarkList extends Component {
@@ -105,7 +105,7 @@ export default class BookmarkList extends Component {
 
         if (!email.length) return;
 
-        if (!REGEX.EMAIL.test(email)) {
+        if (!isEmail(email)) {
           this.toast.error(`"${email}" is not a valid email address`);
           this.emailBookmarks(email);
           return;

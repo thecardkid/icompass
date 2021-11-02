@@ -3,9 +3,9 @@ import ReactGA from 'react-ga';
 
 import FeedbackModal from './modals/FeedbackModal';
 import { trackFeatureEvent } from '../utils/analytics';
+import { CSS } from '../utils/constants';
 import Modal from '../utils/Modal';
 
-import { COLORS } from '../../lib/constants';
 import { helpMenu } from '../../test/cypress/data_cy';
 
 export default class HelpAndFeedback extends Component {
@@ -104,7 +104,7 @@ export default class HelpAndFeedback extends Component {
     return (
       <div id={'ic-help'}>
         <button className={'ic-help-button floating-button'}
-                style={{background: this.state.active ? COLORS.BLUE : ''}}
+                style={{background: this.state.active ? CSS.COLORS.BLUE : ''}}
              onClick={this.toggleMenu}>
           ?
         </button>

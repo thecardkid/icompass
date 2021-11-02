@@ -10,10 +10,10 @@ import * as noteX from '../actions/notes';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 import { trackFeatureEvent } from '../utils/analytics';
+import { EDITING_MODES } from '../utils/constants';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
-import { EDITING_MODE } from '../../lib/constants';
 import events from 'socket-events';
 
 class NoteManager extends Component {
@@ -221,7 +221,7 @@ const mapStateToProps = (state) => {
     drafts: state.workspace.drafts,
     workspace: state.workspace,
     ui: state.ui,
-    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
+    visualMode: state.ui.editingMode === EDITING_MODES.VISUAL || false,
   };
 };
 

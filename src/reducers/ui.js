@@ -1,4 +1,4 @@
-import { EDITING_MODE } from '../../lib/constants.js';
+import { EDITING_MODES } from '../utils/constants.js';
 
 const defaultState = {
   forms: {
@@ -19,7 +19,7 @@ const defaultState = {
   focusedNote: -1,
   vw: 0,
   vh: 0,
-  editingMode: EDITING_MODE.NORMAL,
+  editingMode: EDITING_MODES.NORMAL,
   isFiona: false,
 };
 
@@ -155,13 +155,13 @@ export default (state = defaultState, action) => {
       return { ...state, vw: action.screenWidth, vh: action.screenHeight };
 
     case 'normalMode':
-      return { ...state, editingMode: EDITING_MODE.NORMAL };
+      return { ...state, editingMode: EDITING_MODES.NORMAL };
 
     case 'compactMode':
-      return { ...state, editingMode: EDITING_MODE.COMPACT };
+      return { ...state, editingMode: EDITING_MODES.COMPACT };
 
     case 'visualMode':
-      return { ...state, editingMode: EDITING_MODE.VISUAL };
+      return { ...state, editingMode: EDITING_MODES.VISUAL };
 
     case 'showShareModal':
       return { ...state, showShareModal: true };

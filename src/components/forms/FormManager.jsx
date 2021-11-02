@@ -11,10 +11,10 @@ import EditTextForm from './EditTextForm';
 import * as uiX from '../../actions/ui';
 import * as workspaceX from '../../actions/workspace';
 
+import { EDITING_MODES } from '../../utils/constants';
 import Socket from '../../utils/Socket';
 import Toast from '../../utils/Toast';
 
-import { EDITING_MODE, PROMPTS } from '../../../lib/constants';
 
 class FormManager extends Component {
   constructor(props) {
@@ -116,7 +116,7 @@ const mapStateToProps = (state) => {
     notes: state.notes,
     drafts: state.workspace.drafts,
     forms: state.ui.forms,
-    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
+    visualMode: state.ui.editingMode === EDITING_MODES.VISUAL || false,
   };
 };
 

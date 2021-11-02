@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 
+import { CSS, EDITING_MODES } from '../utils/constants';
 import Modal from '../utils/Modal';
 import Toast from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 
-import { COLORS, EDITING_MODE } from '../../lib/constants';
 import { contextMenu } from '../../test/cypress/data_cy';
 
 const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while in bulk edit mode';
@@ -32,8 +32,8 @@ class StickyNote extends Component {
   }
 
   setModes(props) {
-    this.compactMode = props.ui.editingMode === EDITING_MODE.COMPACT || false;
-    this.visualMode = props.ui.editingMode === EDITING_MODE.VISUAL || false;
+    this.compactMode = props.ui.editingMode === EDITING_MODES.COMPACT || false;
+    this.visualMode = props.ui.editingMode === EDITING_MODES.VISUAL || false;
   }
 
   confirmDelete = (ev) => {
@@ -404,7 +404,7 @@ class StickyNote extends Component {
     if (sel && sel[i]) {
       style.left -= 3;
       style.top -= 3;
-      style.border = `3px solid ${COLORS.BLUE}`;
+      style.border = `3px solid ${CSS.COLORS.BLUE}`;
     }
 
     return (

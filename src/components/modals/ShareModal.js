@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 
-import { TWEET } from '../../../lib/constants';
+import { makeTwitterURL } from '../../utils/constants';
 import ToastSingleton from '../../utils/Toast';
 import DynamicModal from './DynamicModal';
 
@@ -26,8 +26,7 @@ export default class ShareModal extends Component {
   };
 
   tweetThis = () => {
-    const tweetURL = TWEET + this.props.compass.viewCode;
-    window.open(tweetURL, '_blank').focus();
+    window.open(makeTwitterURL(this.props.compass.viewCode), '_blank').focus();
   };
 
   render() {

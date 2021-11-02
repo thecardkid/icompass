@@ -7,7 +7,7 @@ import _ from 'underscore';
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
 import { trackFeatureEvent } from '../utils/analytics';
-import { EDITING_MODE } from '../../lib/constants';
+import { EDITING_MODES } from '../utils/constants';
 
 class SelectArea extends Component {
   notePositions = {};
@@ -159,7 +159,7 @@ const mapStateToProps = (state) => {
     ui: state.ui,
     numDrafts: state.workspace.drafts.length,
     numNotes: state.notes.length,
-    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL,
+    visualMode: state.ui.editingMode === EDITING_MODES.VISUAL,
   };
 };
 

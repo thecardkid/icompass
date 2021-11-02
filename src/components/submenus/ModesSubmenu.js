@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { EDITING_MODES } from '../../utils/constants';
 import ModalSingleton from '../../utils/Modal';
 import SocketSingleton from '../../utils/Socket';
 import MaybeTappable from '../../utils/MaybeTappable';
 
 import * as uiX from '../../actions/ui';
 
-import { EDITING_MODE } from '../../../lib/constants';
 import { workspaceMenu } from '../../../test/cypress/data_cy';
 
 class ModesSubmenu extends Component {
@@ -64,9 +64,9 @@ class ModesSubmenu extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    normal: state.ui.editingMode === EDITING_MODE.NORMAL || false,
-    compact: state.ui.editingMode === EDITING_MODE.COMPACT || false,
-    bulk: state.ui.editingMode === EDITING_MODE.VISUAL || false,
+    normal: state.ui.editingMode === EDITING_MODES.NORMAL || false,
+    compact: state.ui.editingMode === EDITING_MODES.COMPACT || false,
+    bulk: state.ui.editingMode === EDITING_MODES.VISUAL || false,
   };
 };
 

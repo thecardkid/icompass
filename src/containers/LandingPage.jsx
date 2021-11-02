@@ -15,7 +15,7 @@ import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 import DevOnly from '../utils/DevOnly';
 import { sendReminderEmail } from '../utils/api';
-import { REGEX } from '../../lib/constants';
+import { isEmail, isCharOnly } from '../utils/regex';
 
 class LandingPage extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class LandingPage extends Component {
     const topic = this.refs.topic.value;
     const username = this.refs.username.value;
 
-    if (!REGEX.CHAR_ONLY.test(username)) {
+    if (!isCharOnly(username)) {
       return this.toast.error('Username cannot contain spaces or numbers, only letters.');
     }
 
@@ -90,7 +90,7 @@ class LandingPage extends Component {
       async (hasValue, email) => {
         const { username, data: { code, topic } } = this.state;
         if (hasValue) {
-          if (!REGEX.EMAIL.test(email)) {
+          if (!isEmail(email)) {
             this.toast.error(`"${email}" is not a valid email address`);
             return this.promptForEmail();
           }

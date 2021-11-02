@@ -16,12 +16,12 @@ import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
 import MaybeTappable from '../utils/MaybeTappable';
 
 import { trackFeatureEvent } from '../utils/analytics';
+import { EDITING_MODES } from '../utils/constants';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import { EDITING_MODE } from '../../lib/constants';
 import events from 'socket-events';
 
 const QUADRANTS = [
@@ -503,7 +503,7 @@ const mapStateToProps = (state) => {
   return {
     compass: state.compass,
     ui: state.ui,
-    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL,
+    visualMode: state.ui.editingMode === EDITING_MODES.VISUAL,
   };
 };
 

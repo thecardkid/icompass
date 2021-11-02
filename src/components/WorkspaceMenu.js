@@ -14,6 +14,8 @@ import ShortcutManager from './ShortcutManager';
 
 import { trackFeatureEvent } from '../utils/analytics';
 import { sendReminderEmail } from '../utils/api';
+import { EDITING_MODES, CSS } from '../utils/constants';
+import { isEmail } from '../utils/regex';
 import MaybeTappable from '../utils/MaybeTappable';
 import ModalSingleton from '../utils/Modal';
 import SocketSingleton from '../utils/Socket';
@@ -22,7 +24,6 @@ import ToastSingleton from '../utils/Toast';
 
 import * as uiX from '../actions/ui';
 import * as workspaceX from '../actions/workspace';
-import { EDITING_MODE, COLORS, REGEX } from '../../lib/constants';
 import { workspaceMenu } from '../../test/cypress/data_cy';
 
 class WorkspaceMenu extends Component {
@@ -148,7 +149,7 @@ class WorkspaceMenu extends Component {
       cb: async (status, email) => {
         if (!status) return;
 
-        if (!REGEX.EMAIL.test(email)) {
+        if (!isEmail(email)) {
           this.toast.error(`"${email}" is not a valid email address`);
           this.emailReminder(email);
           return;
@@ -377,7 +378,7 @@ class WorkspaceMenu extends Component {
     return (
       <div id={'ic-workspace-menu'}>
         <button className={'ic-workspace-button floating-button'}
-                style={{background: this.state.active ? COLORS.BLUE : ''}}
+                style={{background: this.state.active ? CSS.COLORS.BLUE : ''}}
               onClick={this.toggleMenu}>
           <i className="material-icons">menu</i>
         </button>
@@ -393,9 +394,9 @@ const mapStateToProps = (state) => {
     notes: state.notes,
     users: state.users,
     modes: {
-      normal: state.ui.editingMode === EDITING_MODE.NORMAL || false,
-      compact: state.ui.editingMode === EDITING_MODE.COMPACT || false,
-      bulk: state.ui.editingMode === EDITING_MODE.VISUAL || false,
+      normal: state.ui.editingMode === EDITING_MODES.NORMAL || false,
+      compact: state.ui.editingMode === EDITING_MODES.COMPACT || false,
+      bulk: state.ui.editingMode === EDITING_MODES.VISUAL || false,
     },
     hasDrafts: (state.workspace.drafts || []).length > 0,
   };

@@ -5,9 +5,8 @@ import { bindActionCreators } from 'redux';
 
 import * as uiX from '../actions/ui';
 
+import { EDITING_MODES } from '../utils/constants';
 import SocketSingleton from '../utils/Socket';
-
-import { EDITING_MODE } from '../../lib/constants';
 import ModalSingleton from '../utils/Modal';
 
 class ShortcutManager extends Component {
@@ -62,7 +61,7 @@ const mapStateToProps = (state) => {
 
   return {
     formVisible: forms.newImage || forms.editImage || forms.newText || forms.editText || forms.newDoodle,
-    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL,
+    visualMode: state.ui.editingMode === EDITING_MODES.VISUAL,
   };
 };
 

@@ -24,12 +24,13 @@ import ShareModal from '../components/modals/ShareModal';
 import WorkspaceMenu from '../components/WorkspaceMenu';
 
 import { isWebdriverIO } from '../utils/browser';
+import { EDITING_MODES } from '../utils/constants';
+import { isCharOnly } from '../utils/regex';
 import Modal from '../utils/Modal';
 import Socket from '../utils/Socket';
 import Storage from '../utils/Storage';
 import Toast from '../utils/Toast';
 
-import { EDITING_MODE, REGEX } from '../../lib/constants';
 import events from 'socket-events';
 
 class Workspace extends Component {
@@ -183,11 +184,14 @@ class Workspace extends Component {
   };
 
   validateRouteParams({ code, username }) {
-    let validCode = true,
-      validUsername = true;
+    let validCode = true, validUsername = true;
 
-    if (code.length !== 8) validCode = false;
-    if (!REGEX.CHAR_ONLY.test(username) || username.length > 15) validUsername = false;
+    if (code.length !== 8) {
+      validCode = false;
+    }
+    if (!isCharOnly(username) || username.length > 15) {
+      validUsername = false;
+    }
 
     if (validCode && validUsername) {
       return true;
@@ -283,7 +287,7 @@ const mapStateToProps = (state) => {
     users: state.users,
     ui: state.ui,
     workspace: state.workspace,
-    visualMode: state.ui.editingMode === EDITING_MODE.VISUAL || false,
+    visualMode: state.ui.editingMode === EDITING_MODES.VISUAL || false,
   };
 };
 

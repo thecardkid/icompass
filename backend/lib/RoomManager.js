@@ -1,7 +1,11 @@
-const { REGEX } = require('./constants');
 const events = require('./socket_events');
-
 const Compass = require('../models/compass');
+
+// Duplicated in src/utils/regex.js
+const charOnlyPattern = /^[a-zA-Z]+$/;
+function isCharOnly(s) {
+  return charOnlyPattern.test(s);
+}
 
 class Room {
   constructor(roomID) {
@@ -18,7 +22,7 @@ class Room {
   // If the username is invalid, this function throws an error whose message
   // is the socket event to be emitted to the frontend.
   addClient(username, workspaceSocket, isReconnecting) {
-    if (typeof username !== 'string' || username.length === 0 || !REGEX.CHAR_ONLY.test(username)) {
+    if (typeof username !== 'string' || username.length === 0 || !isCharOnly(username)) {
       throw new Error(events.frontend.BAD_USERNAME);
     }
     if (this.clientsByUsername.hasOwnProperty(username) && !isReconnecting) {
