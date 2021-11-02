@@ -1,0 +1,34 @@
+# This is a docker-compose configuration for the production EC2 environment.
+# This file is scp'ed over to the instance each time scripts/deploy-prod runs.
+
+version: '3.3'
+services:
+  nginx:
+    image: nginx:1.15-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  app:
+    image: thecardkid/icompass:latest
+    ports:
+      - "8080:8080"
+    entrypoint: node backend/server.js
+    env_file:
+      - ./prod.env
+    logging:
+      driver: "awslogs"
+      options:
+        awslogs-region: "us-east-2"
+        awslogs-group: "icompass-logs"
+        tag: "{{.Name}}/{{.ID}}"

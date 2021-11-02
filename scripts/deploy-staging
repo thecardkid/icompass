@@ -3,6 +3,7 @@ set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 ensure_credentials_exist
 
+# TODO rewrite like deploy-prod
 # Any update to this file should be made to ./deploy-prod too
 . "$IC_ROOT/build/credentials/runner.sh"
 

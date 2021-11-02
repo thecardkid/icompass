@@ -5,29 +5,24 @@ ensure_credentials_exist
 
 . "$IC_ROOT/build/credentials/runner.sh"
 
+# These are commands documented after running on an Amazon Linux instance; the
+# script has not been tested against a brand new instance.
 ssh -i "$pem_file" "$EC2_INSTANCE" << 'ENDSSH'
-sudo apt update
-# Nginx
-sudo apt install --assume-yes nginx
-sudo systemctl reload nginx
-sudo chmod -R a+rw /etc/nginx
+yum install docker
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
-# Docker. See https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
-sudo apt install --assume-yes apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-sudo apt update
-apt-cache policy docker-ce
-sudo apt install --assume-yes docker-ce
-sudo usermod -aG docker ${USER}
-
-# Certbot. See https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx
-sudo apt-get install --assume-yes software-properties-common
-sudo add-apt-repository universe
-sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get update
-sudo apt-get install --assume-yes certbot python-certbot-nginx
+# This is setup for init-letsencrypt.sh
+mkdir -p ~/data/nginx
 ENDSSH
 
-scp -i "$pem_file" "$IC_ROOT/config/nginx/beta.conf" "$EC2_INSTANCE:/etc/nginx/conf.d/beta.conf"
-scp -i "$pem_file" "$IC_ROOT/config/nginx/icompass.conf" "$EC2_INSTANCE:/etc/nginx/conf.d/icompass.conf"
+scp -i "$pem_file" "$IC_ROOT/build/credentials/prod.env" "$EC2_INSTANCE:~/prod.env"
+scp -i "$pem_file" "$IC_ROOT/config/docker/compose.yml" "$EC2_INSTANCE:~/compose.yml"
+scp -i "$pem_file" "$IC_ROOT/config/docker/nginx/app.conf" "$EC2_INSTANCE:~/nginx/app.conf"
+scp -i "$pem_file" "$IC_ROOT/config/docker/init-letsencrypt.sh" "$EC2_INSTANCE:~/init-letsencrypt.sh"
+
+ssh -i "$pem_file" "$EC2_INSTANCE" << 'ENDSSH'
+chmod +x ~/init_letsencrypt.sh
+~/init-letsencrypt.sh
+ENDSSH
+

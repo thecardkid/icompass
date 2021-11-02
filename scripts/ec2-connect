@@ -4,4 +4,5 @@ set -euo pipefail
 ensure_credentials_exist
 
 . "$IC_ROOT/build/credentials/runner.sh"
+echo "Connecting to $EC2_INSTANCE.."
 ssh -i "$pem_file" "$EC2_INSTANCE"

@@ -7,10 +7,11 @@ ensure_credentials_exist
 
 # Any update to this file should be made to ./deploy-staging too
 scp -i "$pem_file" "$IC_ROOT/build/credentials/prod.env" "$EC2_INSTANCE:~/prod.env"
+scp -i "$pem_file" "$IC_ROOT/config/docker/compose.yml" "$EC2_INSTANCE:~/compose.yml"
 
 ssh -i "$pem_file" "$EC2_INSTANCE" << 'ENDSSH'
 sudo docker pull thecardkid/icompass:latest
-sudo docker container kill production
-sudo docker system prune --force
-sudo docker run -p 8080:8080 --name production --env-file prod.env --detach thecardkid/icompass:latest
+sudo `which docker-compose` -f compose.yml down
+sudo `which docker-compose` -f compose.yml up -d
+sudo docker ps
 ENDSSH
