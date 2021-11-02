@@ -4,6 +4,13 @@ const merge = require('webpack-merge');
 const commonConfig = require('./common');
 const { compressionPlugin, uglifyJsPlugin } = require('./parts');
 
+function getGoogleAnalyticsTrackingID() {
+  if (!process.env.GA_TRACKING_ID) {
+    throw new Error('Missing env var GA_TRACKING_ID');
+  }
+  return process.env.GA_TRACKING_ID;
+}
+
 const prodConfig = () => merge(
   commonConfig(),
   {
@@ -11,7 +18,7 @@ const prodConfig = () => merge(
     plugins: [
       new webpack.DefinePlugin({
         __DEV__: false,
-        GA_TRACKING_ID: JSON.stringify(process.env.GA_TRACKING_ID || ''),
+        GA_TRACKING_ID: JSON.stringify(getGoogleAnalyticsTrackingID()),
         'icompass.config': {
           APP_ENV: JSON.stringify('production'),
           APP_HOST: JSON.stringify('https://icompass.me'),
