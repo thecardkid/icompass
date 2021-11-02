@@ -43,7 +43,7 @@ describe('user manager', () => {
   it('joinRoom', () => {
     manager.joinRoom(roomID, TEST_WORKSPACE_SOCKET);
     const m = manager.getRoomState(roomID);
-    expect(m.usernameToColor).to.have.keys(TEST_WORKSPACE_SOCKET.username);
+    expect(m.usernames).to.have.members([TEST_WORKSPACE_SOCKET.username]);
   });
 
   it('joinRoom: data validation', () => {
@@ -58,7 +58,7 @@ describe('user manager', () => {
     manager.joinRoom(roomID, new MockWorkspaceSocket('user'));
     manager.leaveRoom(roomID, 'user');
     let m = manager.getRoomState(roomID);
-    expect(m.usernameToColor).to.not.have.keys('user');
+    expect(m.usernames).to.not.have.members(['user']);
 
     // Room state should be null after last user leaves.
     manager.leaveRoom(roomID, TEST_WORKSPACE_SOCKET.username);

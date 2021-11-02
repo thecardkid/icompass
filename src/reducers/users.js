@@ -1,16 +1,15 @@
 const defaultState = {
   nameToColor: {},
+  usernames: [],
   me: '',
 };
 
 export default (state = defaultState, action) => {
   switch (action.type) {
     case 'setUsers':
-      if (action.manager == null) return state;
       return {
         ...state,
-        colors: action.manager.colors,
-        nameToColor: action.manager.usernameToColor,
+        usernames: action.usernames,
       };
     case 'setClientName':
       return {

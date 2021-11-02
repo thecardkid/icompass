@@ -237,12 +237,11 @@ class WorkspaceMenu extends Component {
   };
 
   renderUsersSubmenu = () => {
-    const { me } = this.props.users;
-    const users = _.map(this.props.users.nameToColor, (color, name) => {
+    const users = _.map(this.props.users.usernames, (name) => {
       return (
         <div className={'ic-menu-item ic-user'} key={`user-${name}`}>
-          <span className={'user-color'} style={{background: color}} />
-          {name === me ? `${name} (You)` : name}
+          <span className={'user-color'}/>
+          {name === this.props.users.me ? `${name} (You)` : name}
         </div>
       );
     });

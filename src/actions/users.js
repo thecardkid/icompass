@@ -1,7 +1,7 @@
 export const update = (data) => {
   return {
     type: 'setUsers',
-    manager: data.users,
+    usernames: (data.users || {}).usernames || [],
   };
 };
 

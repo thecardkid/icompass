@@ -1,4 +1,4 @@
-const { STICKY_COLORS, REGEX } = require('./constants');
+const { REGEX } = require('./constants');
 const events = require('./socket_events');
 
 const Compass = require('../models/compass');
@@ -26,9 +26,6 @@ class Room {
       throw new Error(events.frontend.DUPLICATE_USERNAME);
     }
     this.clientsByUsername[username] = workspaceSocket;
-    const assignedColor = STICKY_COLORS[this.colorIndex];
-    this.colorIndex = (this.colorIndex + 1) % STICKY_COLORS.length;
-    workspaceSocket.setUserColor(assignedColor);
   }
 
   removeClient(username) {
@@ -44,11 +41,7 @@ class Room {
   }
 
   getState() {
-    const usernameToColor = {};
-    for (const x of Object.values(this.clientsByUsername)) {
-      usernameToColor[x.username] = x.getUserColor();
-    }
-    return { usernameToColor };
+    return { usernames: Object.keys(this.clientsByUsername), };
   }
 }
 

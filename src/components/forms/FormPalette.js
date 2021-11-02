@@ -3,6 +3,7 @@ import _ from 'underscore';
 
 import { STICKY_COLORS } from '../../../lib/constants';
 import { getColorAttr } from '../../../test/cypress/data_cy';
+import Storage from '../../utils/Storage';
 
 export default class FormPalette extends Component {
   state = {
@@ -14,6 +15,7 @@ export default class FormPalette extends Component {
   };
 
   setColor = (color) => () => {
+    Storage.setStickyNoteColor(color);
     this.props.setColor(color);
     this.setOrToggle(false)();
   };

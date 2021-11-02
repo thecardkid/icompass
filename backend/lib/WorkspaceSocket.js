@@ -33,14 +33,6 @@ class WorkspaceSocket {
     this.socket.on(events.backend.DELETE_WORKSPACE, this.deleteCompass.bind(this));
   }
 
-  getUserColor() {
-    return this.frontendUserColor;
-  }
-
-  setUserColor(color) {
-    this.frontendUserColor = color;
-  }
-
   broadcast(event, ...args) {
     this.io.sockets.in(this.roomID).emit(event, ...args);
   }
@@ -50,7 +42,7 @@ class WorkspaceSocket {
       this.roomManager.leaveRoom(this.roomID, this.username);
       this.logger.info(`disconnected reason: "${reason}"`);
       this.broadcast(events.frontend.USER_LEFT, {
-        users: this.roomManager.getRoomState(this.roomID),
+        users: this.room.getState(),
       });
     }
   }

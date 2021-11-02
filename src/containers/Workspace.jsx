@@ -252,7 +252,7 @@ class Workspace extends Component {
         <Compass />
         <BulkEditToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={{
-          bg: this.props.users.nameToColor[this.props.users.me],
+          bg: Storage.getStickyNoteColor(),
           user: this.props.users.me,
           close: this.props.uiX.closeForm,
         }} />

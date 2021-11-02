@@ -23,6 +23,33 @@ export default {
     return prefs.darkTheme || false;
   },
 
+  parseWorkspaceCodeFromURL() {
+    const pattern = /\/compass\/edit\/(.*)\/.*/;
+    const found = location.pathname.match(pattern);
+    if (!found || found.length !== 2) {
+      return '_notfound';
+    }
+    return found[1];
+  },
+
+  getStickyNoteColor() {
+    const prefs = this.getUserPrefs();
+    const x = prefs.stickyNoteColors || {};
+    return x[this.parseWorkspaceCodeFromURL()] || '#CCFFFF';
+  },
+
+  setStickyNoteColor(c) {
+    const workspaceCode = this.parseWorkspaceCodeFromURL();
+    const prefs = this.getUserPrefs();
+    const x = prefs.stickyNoteColors || {};
+    x[workspaceCode] = c;
+    prefs.stickyNoteColors = x;
+    this.setUserPrefs(prefs);
+    /* eslint-disable no-console */
+    console.log(`Set note color for workspace ${workspaceCode} to ${c}`);
+    return c;
+  },
+
   getTooltipTypeBasedOnDarkTheme() {
     if (this.isDarkTheme()) {
       return 'light';
