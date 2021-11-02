@@ -12,10 +12,10 @@ import LandingPage from './LandingPage.jsx';
 import NotFound from './NotFound.jsx';
 import Workspace from './Workspace.jsx';
 
-import PromptName from '../components/PromptName.jsx';
+import PromptName from '@components/PromptName.jsx';
 
-import MaybeTappable from '../utils/MaybeTappable';
-import Toast from '../utils/Toast';
+import MaybeTappable from '@utils/MaybeTappable';
+import Toast from '@utils/Toast';
 
 import Store from '../store';
 

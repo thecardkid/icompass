@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import Tappable from 'react-tappable/lib/Tappable';
 
-import ModalSingleton from '../../utils/Modal';
-import SocketSingleton from '../../utils/Socket';
+import ModalSingleton from '@utils/Modal';
+import SocketSingleton from '@utils/Socket';
 import { workspaceMenu } from '../../../test/cypress/data_cy';
 
 export default class ExportSubmenu extends Component {

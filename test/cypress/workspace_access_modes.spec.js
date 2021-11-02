@@ -20,7 +20,10 @@ describe('workspace access modes', () => {
 
     cy.url().then($url => editURL = $url);
     selectMenuOption(workspaceMenu.share);
-    cy.get('input#ic-view-link').then($el => viewURL = $el.val());
+    cy.get('input#ic-view-link').then($el => {
+      const u = new URL($el.val());
+      viewURL = u.pathname;
+    });
   });
 
   describe('view-only mode', () => {

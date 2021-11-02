@@ -6,15 +6,15 @@ import _ from 'underscore';
 
 import StickyNote from './StickyNote.jsx';
 
-import * as noteX from '../actions/notes';
-import * as uiX from '../actions/ui';
-import * as workspaceX from '../actions/workspace';
-import { trackFeatureEvent } from '../utils/analytics';
-import { EDITING_MODES } from '../utils/constants';
-import Socket from '../utils/Socket';
-import Storage from '../utils/Storage';
-import Toast from '../utils/Toast';
-import events from 'socket-events';
+import * as noteX from '@actions/notes';
+import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
+import { trackFeatureEvent } from '@utils/analytics';
+import { EDITING_MODES } from '@utils/constants';
+import Socket from '@utils/Socket';
+import Storage from '@utils/Storage';
+import Toast from '@utils/Toast';
+import events from '@socket_events';
 
 class NoteManager extends Component {
   constructor() {

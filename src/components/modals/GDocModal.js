@@ -5,7 +5,7 @@ import { isMobile } from 'react-device-detect';
 import htmlparser from 'htmlparser2';
 
 import DynamicModal from './DynamicModal';
-import ToastSingleton from '../../utils/Toast';
+import ToastSingleton from '@utils/Toast';
 
 export default class GDocModal extends Component {
   toast = ToastSingleton.getInstance();

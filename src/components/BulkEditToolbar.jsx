@@ -6,12 +6,12 @@ import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
 import FormPalette from './forms/FormPalette';
-import { trackFeatureEvent } from '../utils/analytics';
-import Modal from '../utils/Modal';
-import Socket from '../utils/Socket';
-import Storage from '../utils/Storage';
-import * as uiX from '../actions/ui';
-import * as workspaceX from '../actions/workspace';
+import { trackFeatureEvent } from '@utils/analytics';
+import Modal from '@utils/Modal';
+import Socket from '@utils/Socket';
+import Storage from '@utils/Storage';
+import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
 
 class BulkEditToolbar extends Component {
   modal = Modal.getInstance();

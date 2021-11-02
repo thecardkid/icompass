@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { createCopyOfWorkspace } from '../../utils/api';
+import { createCopyOfWorkspace } from '@utils/api';
 import DynamicModal from './DynamicModal';
 
 export default class CopyWorkspaceModal extends Component {

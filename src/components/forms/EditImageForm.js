@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import { trackFeatureEvent } from '../../utils/analytics';
-import Socket from '../../utils/Socket';
+import { trackFeatureEvent } from '@utils/analytics';
+import Socket from '@utils/Socket';
 import ImageForm from './ImageForm';
 
 export default class EditImageForm extends Component {

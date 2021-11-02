@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { EDITING_MODES } from '../../utils/constants';
-import ModalSingleton from '../../utils/Modal';
-import SocketSingleton from '../../utils/Socket';
-import MaybeTappable from '../../utils/MaybeTappable';
+import { EDITING_MODES } from '@utils/constants';
+import ModalSingleton from '@utils/Modal';
+import SocketSingleton from '@utils/Socket';
+import MaybeTappable from '@utils/MaybeTappable';
 
 import * as uiX from '../../actions/ui';
 

@@ -6,9 +6,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 
-import AdminPage from '../components/AdminPage';
+import AdminPage from '@components/AdminPage';
 
-import Toast from '../utils/Toast';
+import Toast from '@utils/Toast';
 
 import Store from '../store';
 

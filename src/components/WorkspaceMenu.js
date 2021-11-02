@@ -12,18 +12,18 @@ import NotesSubmenu from './submenus/NotesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
 import ShortcutManager from './ShortcutManager';
 
-import { trackFeatureEvent } from '../utils/analytics';
-import { sendReminderEmail } from '../utils/api';
-import { EDITING_MODES, CSS } from '../utils/constants';
-import { isEmail } from '../utils/regex';
-import MaybeTappable from '../utils/MaybeTappable';
-import ModalSingleton from '../utils/Modal';
-import SocketSingleton from '../utils/Socket';
-import Storage from '../utils/Storage';
-import ToastSingleton from '../utils/Toast';
+import { trackFeatureEvent } from '@utils/analytics';
+import { sendReminderEmail } from '@utils/api';
+import { EDITING_MODES, CSS } from '@utils/constants';
+import { isEmail } from '@utils/regex';
+import MaybeTappable from '@utils/MaybeTappable';
+import ModalSingleton from '@utils/Modal';
+import SocketSingleton from '@utils/Socket';
+import Storage from '@utils/Storage';
+import ToastSingleton from '@utils/Toast';
 
-import * as uiX from '../actions/ui';
-import * as workspaceX from '../actions/workspace';
+import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
 import { workspaceMenu } from '../../test/cypress/data_cy';
 
 class WorkspaceMenu extends Component {

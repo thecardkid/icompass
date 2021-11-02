@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 
 import FeedbackModal from './modals/FeedbackModal';
-import { trackFeatureEvent } from '../utils/analytics';
-import { CSS } from '../utils/constants';
-import Modal from '../utils/Modal';
+import { trackFeatureEvent } from '@utils/analytics';
+import { CSS } from '@utils/constants';
+import Modal from '@utils/Modal';
 
 import { helpMenu } from '../../test/cypress/data_cy';
 

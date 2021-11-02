@@ -2,8 +2,8 @@
 
 import React, { Component } from 'react';
 
-import { makeTwitterURL } from '../../utils/constants';
-import ToastSingleton from '../../utils/Toast';
+import { makeTwitterURL } from '@utils/constants';
+import ToastSingleton from '@utils/Toast';
 import DynamicModal from './DynamicModal';
 
 export default class ShareModal extends Component {

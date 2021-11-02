@@ -5,12 +5,12 @@ import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 
-import { CSS, EDITING_MODES } from '../utils/constants';
-import Modal from '../utils/Modal';
-import Toast from '../utils/Toast';
+import { CSS, EDITING_MODES } from '@utils/constants';
+import Modal from '@utils/Modal';
+import Toast from '@utils/Toast';
 
-import * as uiX from '../actions/ui';
-import * as workspaceX from '../actions/workspace';
+import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
 
 import { contextMenu } from '../../test/cypress/data_cy';
 

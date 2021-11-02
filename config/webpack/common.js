@@ -13,7 +13,10 @@ module.exports = () => ({
   },
   resolve: {
     alias: {
-      'socket-events': path.resolve(root, 'backend/lib/socket_events.js'),
+      '@actions': path.resolve(root, 'src/actions'),
+      '@components': path.resolve(root, 'src/components'),
+      '@utils': path.resolve(root, 'src/utils'),
+      '@socket_events': path.resolve(root, 'backend/lib/socket_events.js'),
     },
   },
   module: {

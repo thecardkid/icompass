@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { isMobile } from 'react-device-detect';
 
 import DynamicModal from './DynamicModal';
-import ToastSingleton from '../../utils/Toast';
+import ToastSingleton from '@utils/Toast';
 
 export default class ScreenshotModal extends Component {
   state = { canvas: null };

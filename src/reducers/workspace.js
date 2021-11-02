@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-import Storage from '../utils/Storage';
+import Storage from '@utils/Storage';
 
 const defaultState = {
   selected: [],

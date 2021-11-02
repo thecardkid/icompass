@@ -1,8 +1,8 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
-import Modal from '../utils/Modal';
-import Storage from '../utils/Storage';
+import Modal from '@utils/Modal';
+import Storage from '@utils/Storage';
 
 export default class DisableAutoEmail extends React.Component {
   componentDidMount() {

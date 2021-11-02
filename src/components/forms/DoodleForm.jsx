@@ -7,8 +7,8 @@ import _ from 'underscore';
 
 import * as uiX from '../../actions/ui';
 
-import { trackFeatureEvent } from '../../utils/analytics';
-import Socket from '../../utils/Socket';
+import { trackFeatureEvent } from '@utils/analytics';
+import Socket from '@utils/Socket';
 import FormPalette from './FormPalette';
 
 let paint = false;

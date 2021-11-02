@@ -6,9 +6,9 @@ import ReactTooltip from 'react-tooltip';
 
 import * as uiX from '../../actions/ui';
 
-import { trackFeatureEvent } from '../../utils/analytics';
-import ModalSingleton from '../../utils/Modal';
-import SocketSingleton from '../../utils/Socket';
+import { trackFeatureEvent } from '@utils/analytics';
+import ModalSingleton from '@utils/Modal';
+import SocketSingleton from '@utils/Socket';
 import FormPalette from './FormPalette';
 
 class TextForm extends Component {

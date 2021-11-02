@@ -92,10 +92,11 @@ export function matchImageSnapshot() {
     // two images that are the same, but different resolutions.
     Cypress.browser.isHeaded ||
     // matchImageSnapshot runs into this error on Github Actions,
-    // so we skip.
+    // so we skip. The full env var is CYPRESS_SKIP_SNAPSHOTS, but
+    // is truncated by Cypress (https://docs.cypress.io/guides/guides/environment-variables#Option-3-CYPRESS_).
     //
     // Error: Invalid file signature
-   !!process.env['CYPRESS_SKIP_SNAPSHOTS']
+   !!Cypress.env('SKIP_SNAPSHOTS')
   ) {
     cy.log('Skip matchImageSnapshot');
     return;

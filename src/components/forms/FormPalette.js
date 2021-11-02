@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import _ from 'underscore';
 
-import { STICKY_COLORS } from '../../utils/constants';
-import Storage from '../../utils/Storage';
+import { STICKY_COLORS } from '@utils/constants';
+import Storage from '@utils/Storage';
 import { getColorAttr } from '../../../test/cypress/data_cy';
 
 export default class FormPalette extends Component {

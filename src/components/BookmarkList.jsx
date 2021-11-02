@@ -3,12 +3,12 @@ import ReactGA from 'react-ga';
 import ReactTooltip from 'react-tooltip';
 import _ from 'underscore';
 
-import { sendBookmarksEmail } from '../utils/api';
-import { isEmail } from '../utils/regex';
-import Modal from '../utils/Modal';
-import Socket from '../utils/Socket';
-import Storage from '../utils/Storage';
-import ToastSingleton from '../utils/Toast';
+import { sendBookmarksEmail } from '@utils/api';
+import { isEmail } from '@utils/regex';
+import Modal from '@utils/Modal';
+import Socket from '@utils/Socket';
+import Storage from '@utils/Storage';
+import ToastSingleton from '@utils/Toast';
 
 import Bookmark from './Bookmark';
 

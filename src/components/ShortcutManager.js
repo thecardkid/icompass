@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as uiX from '../actions/ui';
+import * as uiX from '@actions/ui';
 
-import { EDITING_MODES } from '../utils/constants';
-import SocketSingleton from '../utils/Socket';
-import ModalSingleton from '../utils/Modal';
+import { EDITING_MODES } from '@utils/constants';
+import SocketSingleton from '@utils/Socket';
+import ModalSingleton from '@utils/Modal';
 
 class ShortcutManager extends Component {
   constructor() {

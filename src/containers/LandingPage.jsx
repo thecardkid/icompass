@@ -6,16 +6,16 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import request from 'superagent';
 
-import * as uiX from '../actions/ui';
+import * as uiX from '@actions/ui';
 
-import BookmarkList from '../components/BookmarkList.jsx';
+import BookmarkList from '@components/BookmarkList.jsx';
 
-import Modal from '../utils/Modal';
-import Storage from '../utils/Storage';
-import Toast from '../utils/Toast';
-import DevOnly from '../utils/DevOnly';
-import { sendReminderEmail } from '../utils/api';
-import { isEmail, isCharOnly } from '../utils/regex';
+import Modal from '@utils/Modal';
+import Storage from '@utils/Storage';
+import Toast from '@utils/Toast';
+import DevOnly from '@utils/DevOnly';
+import { sendReminderEmail } from '@utils/api';
+import { isEmail, isCharOnly } from '@utils/regex';
 
 class LandingPage extends Component {
   constructor(props) {

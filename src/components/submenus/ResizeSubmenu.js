@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Tappable from 'react-tappable/lib/Tappable';
 
-import { trackFeatureEvent } from '../../utils/analytics';
-import SocketSingleton from '../../utils/Socket';
+import { trackFeatureEvent } from '@utils/analytics';
+import SocketSingleton from '@utils/Socket';
 import { workspaceMenu } from '../../../test/cypress/data_cy';
 
 export default class ResizeSubmenu extends Component {

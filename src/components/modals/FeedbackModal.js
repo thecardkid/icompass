@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import DynamicModal from './DynamicModal';
-import { submitFeedback } from '../../utils/api';
-import ToastSingleton from '../../utils/Toast';
+import { submitFeedback } from '@utils/api';
+import ToastSingleton from '@utils/Toast';
 
 export default class FeedbackModal extends Component {
   toast = ToastSingleton.getInstance();

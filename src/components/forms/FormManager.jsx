@@ -11,9 +11,9 @@ import EditTextForm from './EditTextForm';
 import * as uiX from '../../actions/ui';
 import * as workspaceX from '../../actions/workspace';
 
-import { EDITING_MODES } from '../../utils/constants';
-import Socket from '../../utils/Socket';
-import Toast from '../../utils/Toast';
+import { EDITING_MODES } from '@utils/constants';
+import Socket from '@utils/Socket';
+import Toast from '@utils/Toast';
 
 
 class FormManager extends Component {

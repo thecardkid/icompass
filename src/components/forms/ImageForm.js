@@ -10,8 +10,8 @@ import FormPalette from './FormPalette';
 
 import * as uiX from '../../actions/ui';
 
-import SocketSingleton from '../../utils/Socket';
-import ToastSingleton from '../../utils/Toast';
+import SocketSingleton from '@utils/Socket';
+import ToastSingleton from '@utils/Toast';
 
 const OneMB = 1024 * 1024;
 

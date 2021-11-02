@@ -2,9 +2,9 @@ import { browserHistory } from 'react-router';
 import SocketIOClient from 'socket.io-client';
 import _ from 'underscore';
 
-import events from 'socket-events';
-import Modal from '../utils/Modal';
-import Toast from '../utils/Toast';
+import events from '@socket_events';
+import Modal from '@utils/Modal';
+import Toast from '@utils/Toast';
 
 const SocketSingleton = (() => {
   class Socket {

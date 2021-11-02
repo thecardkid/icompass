@@ -7,31 +7,31 @@ import { bindActionCreators } from 'redux';
 import request from 'superagent';
 import _ from 'underscore';
 
-import * as compassX from '../actions/compass';
-import * as noteX from '../actions/notes';
-import * as uiX from '../actions/ui';
-import * as userX from '../actions/users';
-import * as workspaceX from '../actions/workspace';
+import * as compassX from '@actions/compass';
+import * as noteX from '@actions/notes';
+import * as uiX from '@actions/ui';
+import * as userX from '@actions/users';
+import * as workspaceX from '@actions/workspace';
 
-import BulkEditToolbar from '../components/BulkEditToolbar.jsx';
-import Compass from '../components/Compass.jsx';
-import HelpAndFeedback from '../components/HelpAndFeedback';
-import FormManager from '../components/forms/FormManager.jsx';
-import CopyWorkspaceModal from '../components/modals/CopyWorkspaceModal';
-import GDocModal from '../components/modals/GDocModal';
-import ScreenshotModal from '../components/modals/ScreenshotModal';
-import ShareModal from '../components/modals/ShareModal';
-import WorkspaceMenu from '../components/WorkspaceMenu';
+import BulkEditToolbar from '@components/BulkEditToolbar.jsx';
+import Compass from '@components/Compass.jsx';
+import HelpAndFeedback from '@components/HelpAndFeedback';
+import FormManager from '@components/forms/FormManager.jsx';
+import CopyWorkspaceModal from '@components/modals/CopyWorkspaceModal';
+import GDocModal from '@components/modals/GDocModal';
+import ScreenshotModal from '@components/modals/ScreenshotModal';
+import ShareModal from '@components/modals/ShareModal';
+import WorkspaceMenu from '@components/WorkspaceMenu';
 
-import { isWebdriverIO } from '../utils/browser';
-import { EDITING_MODES } from '../utils/constants';
-import { isCharOnly } from '../utils/regex';
-import Modal from '../utils/Modal';
-import Socket from '../utils/Socket';
-import Storage from '../utils/Storage';
-import Toast from '../utils/Toast';
+import { isWebdriverIO } from '@utils/browser';
+import { EDITING_MODES } from '@utils/constants';
+import { isCharOnly } from '@utils/regex';
+import Modal from '@utils/Modal';
+import Socket from '@utils/Socket';
+import Storage from '@utils/Storage';
+import Toast from '@utils/Toast';
 
-import events from 'socket-events';
+import events from '@socket_events';
 
 class Workspace extends Component {
   constructor(props) {

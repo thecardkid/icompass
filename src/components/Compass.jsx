@@ -7,22 +7,22 @@ import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import * as compassX from '../actions/compass';
-import * as uiX from '../actions/ui';
+import * as compassX from '@actions/compass';
+import * as uiX from '@actions/ui';
 
 import SelectArea from './SelectArea';
-import NoteManager from '../components/NoteManager.jsx';
-import NoteManagerViewOnly from '../components/NoteManagerViewOnly.jsx';
-import MaybeTappable from '../utils/MaybeTappable';
+import NoteManager from '@components/NoteManager.jsx';
+import NoteManagerViewOnly from '@components/NoteManagerViewOnly.jsx';
+import MaybeTappable from '@utils/MaybeTappable';
 
-import { trackFeatureEvent } from '../utils/analytics';
-import { EDITING_MODES } from '../utils/constants';
-import Modal from '../utils/Modal';
-import Socket from '../utils/Socket';
-import Storage from '../utils/Storage';
-import Toast from '../utils/Toast';
+import { trackFeatureEvent } from '@utils/analytics';
+import { EDITING_MODES } from '@utils/constants';
+import Modal from '@utils/Modal';
+import Socket from '@utils/Socket';
+import Storage from '@utils/Storage';
+import Toast from '@utils/Toast';
 
-import events from 'socket-events';
+import events from '@socket_events';
 
 const QUADRANTS = [
   {

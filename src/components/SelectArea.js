@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import * as uiX from '../actions/ui';
-import * as workspaceX from '../actions/workspace';
-import { trackFeatureEvent } from '../utils/analytics';
-import { EDITING_MODES } from '../utils/constants';
+import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
+import { trackFeatureEvent } from '@utils/analytics';
+import { EDITING_MODES } from '@utils/constants';
 
 class SelectArea extends Component {
   notePositions = {};
