@@ -17,8 +17,7 @@ class Room {
 
   // If the username is invalid, this function throws an error whose message
   // is the socket event to be emitted to the frontend.
-  addClient(workspaceSocket, isReconnecting) {
-    const { username } = workspaceSocket;
+  addClient(username, workspaceSocket, isReconnecting) {
     if (typeof username !== 'string' || username.length === 0 || !REGEX.CHAR_ONLY.test(username)) {
       throw new Error(events.frontend.BAD_USERNAME);
     }
@@ -50,9 +49,9 @@ class RoomManager {
     this.roomByID = {};
   }
 
-  joinRoom(roomID, workspaceSocket, isReconnecting=false) {
+  joinRoom(roomID, username, workspaceSocket, isReconnecting=false) {
     let room = this.roomByID[roomID] || new Room(roomID);
-    room.addClient(workspaceSocket, isReconnecting);
+    room.addClient(username, workspaceSocket, isReconnecting);
     this.roomByID[roomID] = room;
     return room;
   }

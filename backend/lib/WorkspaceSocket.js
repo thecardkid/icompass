@@ -71,13 +71,20 @@ class WorkspaceSocket {
 
   joinRoom({ workspaceEditCode, username, isReconnecting }) {
     try {
+      // This must be called first, as it will throw on duplicate/invalid usernames.
+      this.room = this.roomManager.joinRoom(workspaceEditCode, username, this, isReconnecting);
       this.roomID = workspaceEditCode;
-      this.username = username;
-      this.logger = new Logger(`room=${this.roomID} user=${this.username}`);
       // This is the effective call to socket-io.
       this.socket.join(this.roomID);
-      // This is for reporting purposes.
-      this.room = this.roomManager.joinRoom(workspaceEditCode, this, isReconnecting);
+      // Don't set this.username until after `joinRoom` succeeds, meaning the username
+      // is valid. Otherwise:
+      // - this.username is set, but joinRoom fails. Client shows "duplicate username"
+      //   modal.
+      // - When user clicks to pick a new username, the socket emits a disconnect event
+      //   with reason "log out". This causes the server to try to broadcast that this
+      //   user has left. However, this.username is wrong, and this.room is undefined.
+      this.username = username;
+      this.logger = new Logger(`room=${this.roomID} user=${this.username}`);
 
       this.logger.info('joined room');
       this.broadcast(events.frontend.USER_JOINED, {
@@ -85,10 +92,12 @@ class WorkspaceSocket {
         joined: this.username,
       });
     } catch (ex) {
-      this.logger.error(`Error joining room: code=${workspaceEditCode} username=${username}`, ex);
       if (ex.message === events.frontend.BAD_USERNAME ||
           ex.message === events.frontend.DUPLICATE_USERNAME) {
+        this.logger.info(`Client error joining room: code=${workspaceEditCode} username=${username}`, ex.message);
         this.socket.emit(ex.message);
+      } else {
+        this.logger.error(`Server error joining room: code=${workspaceEditCode} username=${username}`, ex);
       }
     }
   }

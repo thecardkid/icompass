@@ -17,6 +17,12 @@ const apiRoutes = require('./routes');
 const adminRoutes = require('./routes/admin');
 const googleAuth = require('./routes/google_auth');
 
+process.on('uncaughtException', function (err) {
+  // See warning about HTTP requests under https://stackoverflow.com/a/5999381.
+  logger.error('Uncaught exception', err.message);
+  logger.debug(err.stack);
+});
+
 const staticDir = path.join(__dirname, 'website-dist');
 function handleConsumerSPA(req, res) {
   res.sendFile(path.resolve(staticDir, 'index.html'));

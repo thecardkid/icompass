@@ -2,26 +2,13 @@ import { expect } from 'chai';
 
 import RoomManager from '../../backend/lib/RoomManager';
 
-class MockWorkspaceSocket {
-  constructor(username) {
-    this.username = username;
-  }
-
-  setUserColor(color) {
-    this.color = color;
-  }
-
-  getUserColor() {
-    return this.color;
-  }
-}
-
 const roomID = '1a2b3c4d';
-const TEST_WORKSPACE_SOCKET = new MockWorkspaceSocket('jerry');
+const TEST_WORKSPACE_SOCKET = {};
+const username = 'jerry';
 let manager;
 
-function expectJoinRoomToThrow(code) {
-  const fn = manager.joinRoom.bind(manager, code, TEST_WORKSPACE_SOCKET);
+function expectJoinRoomToThrow(code, username) {
+  const fn = manager.joinRoom.bind(manager, code, username, TEST_WORKSPACE_SOCKET);
   expect(fn).to.throw();
 }
 
@@ -41,27 +28,27 @@ describe('user manager', () => {
   });
 
   it('joinRoom', () => {
-    manager.joinRoom(roomID, TEST_WORKSPACE_SOCKET);
+    manager.joinRoom(roomID, username, TEST_WORKSPACE_SOCKET);
     const m = manager.getRoomState(roomID);
-    expect(m.usernames).to.have.members([TEST_WORKSPACE_SOCKET.username]);
+    expect(m.usernames).to.have.members([username]);
   });
 
   it('joinRoom: data validation', () => {
-    manager.joinRoom(roomID, TEST_WORKSPACE_SOCKET);
-    expectJoinRoomToThrow(roomID, new MockWorkspaceSocket(TEST_WORKSPACE_SOCKET.username));
-    expectJoinRoomToThrow(roomID, new MockWorkspaceSocket('notallchars2'));
-    expectJoinRoomToThrow(roomID, new MockWorkspaceSocket(''));
+    manager.joinRoom(roomID, username, TEST_WORKSPACE_SOCKET);
+    expectJoinRoomToThrow(roomID, username, {});
+    expectJoinRoomToThrow(roomID, 'notallchars2', {});
+    expectJoinRoomToThrow(roomID, '', {});
   });
 
   it('leaveRoom', () => {
-    manager.joinRoom(roomID, TEST_WORKSPACE_SOCKET);
-    manager.joinRoom(roomID, new MockWorkspaceSocket('user'));
+    manager.joinRoom(roomID, username, TEST_WORKSPACE_SOCKET);
+    manager.joinRoom(roomID, 'user', {});
     manager.leaveRoom(roomID, 'user');
     let m = manager.getRoomState(roomID);
     expect(m.usernames).to.not.have.members(['user']);
 
     // Room state should be null after last user leaves.
-    manager.leaveRoom(roomID, TEST_WORKSPACE_SOCKET.username);
+    manager.leaveRoom(roomID, username);
     m = manager.getRoomState(roomID);
     expect(m).to.be.null;
   });
