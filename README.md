@@ -1,4 +1,4 @@
 # About this app
-This is an online, collaborative implementation of Ela Ben-Ur's design tool [**Innovators' Compass**](http://innovatorscompass.org). It's an attempt at reducing paper waste, while allowing more robust collaboration and storage.
+This is a browser-based, collaborative implementation of Ela Ben-Ur's design tool [**Innovators' Compass**](http://innovatorscompass.org).
 
-Take it for a spin: go to [https://icompass.me](https://icompass.me).
+Check it out at [https://icompass.me](https://icompass.me).
