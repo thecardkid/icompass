@@ -42,7 +42,7 @@ function initApp() {
 
   const app = express();
   app.use(expressSession({
-    secret: 'my_precious',
+    secret: appConfig.credentials.expressSessionSecret,
     resave: true,
     saveUninitialized: false,
   }));

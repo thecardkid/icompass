@@ -40,6 +40,7 @@ const config = {
   credentials: {
     emailPassword: getEnvVar('EMAIL_PASSWORD'),
     googleOAuthClientSecret: getEnvVar('GOOGLE_OAUTH_CLIENT_SECRET'),
+    expressSessionSecret: getEnvVar('EXPRESS_SESSION_SECRET', 'dummy'),
   },
 };
 
