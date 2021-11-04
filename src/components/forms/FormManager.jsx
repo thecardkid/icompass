@@ -8,8 +8,8 @@ import CreateTextForm from './CreateTextForm';
 import EditImageForm from './EditImageForm';
 import EditTextForm from './EditTextForm';
 
-import * as uiX from '../../actions/ui';
-import * as workspaceX from '../../actions/workspace';
+import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
 
 import { EDITING_MODES } from '@utils/constants';
 import Socket from '@utils/Socket';

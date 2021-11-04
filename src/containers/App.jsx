@@ -1,4 +1,4 @@
-import '../css/app.less';
+import '@css/app.less';
 
 import $ from 'jquery';
 import React, { Component } from 'react';

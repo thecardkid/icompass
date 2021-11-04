@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 
 import FormPalette from './FormPalette';
 
-import * as uiX from '../../actions/ui';
+import * as uiX from '@actions/ui';
 
 import SocketSingleton from '@utils/Socket';
 import ToastSingleton from '@utils/Toast';

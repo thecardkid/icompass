@@ -12,7 +12,7 @@ import Toast from '@utils/Toast';
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
 
-import { contextMenu } from '../../test/cypress/data_cy';
+import { contextMenu } from '@cypress/data_cy';
 
 const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while in bulk edit mode';
 

@@ -7,9 +7,9 @@ import ModalSingleton from '@utils/Modal';
 import SocketSingleton from '@utils/Socket';
 import MaybeTappable from '@utils/MaybeTappable';
 
-import * as uiX from '../../actions/ui';
+import * as uiX from '@actions/ui';
 
-import { workspaceMenu } from '../../../test/cypress/data_cy';
+import { workspaceMenu } from '@cypress/data_cy';
 
 class ModesSubmenu extends Component {
   constructor() {

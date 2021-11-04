@@ -1,4 +1,4 @@
-import '../css/admin_page.less';
+import '@css/admin_page.less';
 
 import _ from 'underscore';
 import React from 'react';

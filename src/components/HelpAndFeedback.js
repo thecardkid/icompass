@@ -6,7 +6,7 @@ import { trackFeatureEvent } from '@utils/analytics';
 import { CSS } from '@utils/constants';
 import Modal from '@utils/Modal';
 
-import { helpMenu } from '../../test/cypress/data_cy';
+import { helpMenu } from '@cypress/data_cy';
 
 export default class HelpAndFeedback extends Component {
   constructor(props) {

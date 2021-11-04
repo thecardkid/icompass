@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ReactTooltip from 'react-tooltip';
 
-import * as uiX from '../../actions/ui';
+import * as uiX from '@actions/ui';
 
 import { trackFeatureEvent } from '@utils/analytics';
 import ModalSingleton from '@utils/Modal';
@@ -21,7 +21,7 @@ class TextForm extends Component {
       color: props.bg,
       text: props.defaultText || '',
       // text includes HTML tags, which allows users to
-      // save visually empty notes (perceived string lenth
+      // save visually empty notes (perceived string length
       // is 0 but actual string length is > 0).
       effectiveText: props.defaultText,
     };

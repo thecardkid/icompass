@@ -24,7 +24,7 @@ import ToastSingleton from '@utils/Toast';
 
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
-import { workspaceMenu } from '../../test/cypress/data_cy';
+import { workspaceMenu } from '@cypress/data_cy';
 
 class WorkspaceMenu extends Component {
   constructor(props) {

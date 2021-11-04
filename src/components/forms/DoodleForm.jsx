@@ -5,7 +5,7 @@ import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import * as uiX from '../../actions/ui';
+import * as uiX from '@actions/ui';
 
 import { trackFeatureEvent } from '@utils/analytics';
 import Socket from '@utils/Socket';
