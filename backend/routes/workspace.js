@@ -48,11 +48,10 @@ async function handleSendReminderEmail(req, res) {
   const {
     topic,
     editCode,
-    username,
     recipientEmail,
     isAutomatic,
   } = req.body;
-  let text = `Access your workspace via this link: ${config.appHost}/compass/edit/${editCode}/${username}`;
+  let text = `Access your workspace via this link: ${config.appHost}/compass/edit/${editCode}`;
   if (isAutomatic) {
     text += `
 \nYou received this email because you asked iCompass to automatically send you the link to a workspace
