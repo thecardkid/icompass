@@ -120,8 +120,8 @@ describe('draft mode', () => {
 
     it('cannot edit doodle', () => {
       cy.get('#note2').dblclick('center');
-      cy.get('#ic-toast span',).should('have.attr', 'class', 'warning');
-      cy.get('#ic-toast span').should('contain', 'Sketches cannot be edited');
+      cy.get('.ic-toast-error',).should('be.visible');
+      cy.get('.ic-toast-message').should('contain', 'Sketches cannot be edited');
     });
 
     it('can drag', () => {
@@ -150,13 +150,14 @@ describe('draft mode', () => {
 
     it('cannot select draft in bulk mode', () => {
       cy.get('#note3').click(); // drafts come last in bulk mode
-      cy.get('#ic-toast').should('contain', 'Cannot select drafts');
-      cy.get('#ic-toast').click({ force: true });
+      cy.get('.ic-toast-message').should('contain', 'Cannot select drafts');
+      cy.get('.ic-toast-close').click({ force: true });
     });
 
     it('cannot submit drafts in bulk mode', () => {
       cy.get('#note3 div.contents button.submit').click();
-      cy.get('#ic-toast').should('contain', 'Cannot select drafts');
+      cy.get('.ic-toast-message').should('contain', 'Cannot select drafts');
+      cy.get('.bulk-edit-btn.cancel').click();
     });
   });
 

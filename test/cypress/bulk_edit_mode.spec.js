@@ -57,13 +57,13 @@ describe('workspace menu', () => {
   it('editing disabled', () => {
     activateBulkEditMode();
     cy.get('#note0').dblclick('center');
-    cy.get('#ic-toast span').should('have.attr', 'class', 'warning');
-    cy.get('#ic-toast span').should('contain', 'can\'t make changes');
-    cy.get('#ic-toast span').click();
+    cy.get('.ic-toast-error').should('be.visible');
+    cy.get('.ic-toast-message').should('contain', 'Can\'t make changes');
+    cy.get('.ic-toast-close').click();
   });
 
   it('bulk deleting (even with 0 notes selected) returns to standard view', () => {
-    cy.get('button#ic-bulk-delete').click();
+    cy.get('.bulk-edit-btn.delete').click();
     cy.get('#ic-modal-body').should('contain', 'Are you sure');
     cy.get('#ic-modal-confirm').click();
     cy.get(toolbarSelector).should('not.exist');
@@ -116,8 +116,7 @@ describe('workspace menu', () => {
       });
 
       it('update colors on submit', () => {
-        cy.get('#ic-bulk-submit').click();
-
+        cy.get('.bulk-edit-btn.submit').click();
         // TODO test that these changes are visible to another user.
       });
     });
@@ -162,6 +161,7 @@ describe('workspace menu', () => {
         cy.get('#note0',).should('have.attr', 'data-y', '0');
         cy.get('#note1',).should('have.attr', 'data-x', '0');
         cy.get('#note1',).should('have.attr', 'data-y', '0');
+        cy.get('.bulk-edit-btn.cancel').click();
       });
 
       it('dragging after standard is stable', () => {
@@ -178,7 +178,7 @@ describe('workspace menu', () => {
         cy.get('#note1').click();
         cy.get('#note2').click();
         cy.get('#note3').click();
-        cy.get('button#ic-bulk-delete').click();
+        cy.get('.bulk-edit-btn.delete').click();
         cy.get('#ic-modal-body').should('contain', 'Are you sure');
         cy.get('#ic-modal-confirm').click();
 

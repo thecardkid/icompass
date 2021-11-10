@@ -63,20 +63,20 @@ describe('landing page', () => {
     describe('email validation', () => {
       it('rejects empty email', () => {
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast span').should('contain', 'not a valid email address');
+        cy.get('.ic-toast-message').should('contain', 'not a valid email address');
       });
 
       it('rejects invalid email', () => {
         cy.get('#ic-modal-input').type('fakeemail');
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast span').should('contain', 'not a valid email address');
+        cy.get('.ic-toast-message').should('contain', 'not a valid email address');
       });
 
       it('valid email goes through', () => {
         cy.get('#ic-modal-input').type('fakeemail@test.com');
         cy.get('#ic-modal-confirm').click();
         cy.get('#compass').should('be.visible');
-        cy.get('#ic-toast span').should('contain', 'link to this workspace');
+        cy.get('.ic-toast-message').should('contain', 'link to this workspace');
       });
 
       it('skipping goes through', () => {
@@ -96,7 +96,7 @@ describe('landing page', () => {
         cy.get('#ic-modal-input').type('invalidemail');
         cy.get('#ic-always-email-value').check();
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast span').should('contain', 'not a valid email address');
+        cy.get('.ic-toast-message').should('contain', 'not a valid email address');
 
         // to test that it's not stored, refresh the page and
         // re-execute the form
@@ -111,7 +111,7 @@ describe('landing page', () => {
         cy.get('#ic-modal-input').type('fakeuser@fakedomain.com');
         cy.get('#ic-always-email-value').check();
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast').should('contain', 'link to this workspace');
+        cy.get('.ic-toast-message').should('contain', 'link to this workspace');
 
         // to test that it's stored, refresh the page and
         // re-execute the form
@@ -120,7 +120,7 @@ describe('landing page', () => {
         cy.get('#username').type('sandbox');
         cy.get('button[type=submit]').click();
         // assert that we are taken straight to workspace
-        cy.get('#ic-toast').should('contain', 'automatically');
+        cy.get('.ic-toast-message').should('contain', 'automatically');
       });
 
       it('unsubscribe from automatic emails', () => {

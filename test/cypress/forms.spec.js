@@ -107,8 +107,8 @@ describe('forms', () => {
         cy.get('#principles .interactable').dblclick('center', { shiftKey: true });
         cy.get('input[name=s3-uploader]').attachFile('toolarge.jpg');
         cy.wait(500);
-        cy.get('#ic-toast .error').should('be.visible');
-        cy.get('#ic-toast .error').should('contain', 'cannot be larger than 1MB');
+        cy.get('.ic-toast-error').should('be.visible');
+        cy.get('.ic-toast-message').should('contain', 'cannot be larger than 1MB');
         cy.get('button[name=nvm]').click();
       });
 
@@ -139,8 +139,8 @@ describe('forms', () => {
 
     it('edit', () => {
       cy.get('#note2').dblclick('center');
-      cy.get('#ic-toast .warning').should('contain', 'Sketches cannot be edited');
-      cy.get('#ic-toast').click({ force: true });
+      cy.get('.ic-toast-message').should('contain', 'Sketches cannot be edited');
+      cy.get('.ic-toast-close').click({ force: true });
     });
 
     it('drag', () => {

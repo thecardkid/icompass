@@ -16,12 +16,12 @@ import * as workspaceX from '@actions/workspace';
 import BulkEditToolbar from '@components/BulkEditToolbar.jsx';
 import Compass from '@components/Compass.jsx';
 import HelpAndFeedback from '@components/HelpAndFeedback';
+import WorkspaceMenu from '@components/WorkspaceMenu';
 import FormManager from '@components/forms/FormManager.jsx';
 import CopyWorkspaceModal from '@components/modals/CopyWorkspaceModal';
 import GDocModal from '@components/modals/GDocModal';
 import ScreenshotModal from '@components/modals/ScreenshotModal';
 import ShareModal from '@components/modals/ShareModal';
-import WorkspaceMenu from '@components/WorkspaceMenu';
 
 import { isWebdriverIO } from '@utils/browser';
 import { EDITING_MODES } from '@utils/constants';
@@ -29,16 +29,18 @@ import { isCharOnly } from '@utils/regex';
 import Modal from '@utils/Modal';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
-import Toast from '@utils/Toast';
 
 import events from '@socket_events';
 
 class Workspace extends Component {
   constructor(props) {
     super(props);
-    this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
 
+    if (this.props.location.query['fi']) {
+      this.props.uiX.setIsFiona();
+    }
+    this.props.uiX.resize();
     if (this.props.route.viewOnly) {
       request.get('/api/v1/workspace/view')
         .query({ id: this.props.params.code })
@@ -53,6 +55,7 @@ class Workspace extends Component {
     } else if (this.validateRouteParams(this.props.params)) {
       this.socket = Socket.getInstance();
       this.socket.subscribe({
+        [events.RECONNECT]: this.handleReconnect,
         [events.DISCONNECT]: this.handleDisconnect,
         [events.frontend.WORKSPACE_DELETED]: this.onCompassDeleted,
         [events.frontend.USER_JOINED]: this.onUserJoined,
@@ -85,6 +88,10 @@ class Workspace extends Component {
     this.props.uiX.resize();
   }
 
+  handleReconnect = () => {
+    this.props.uiX.toastClear();
+  };
+
   handleDisconnect = (reason) => {
     if (reason === 'ping timeout') {
       this.modal.alertDisconnected(() => {
@@ -95,7 +102,7 @@ class Workspace extends Component {
         });
       });
     } else {
-      this.toast.error('Lost connection to server');
+      this.props.uiX.toastError('Lost connection to server');
     }
   };
 
@@ -232,26 +239,25 @@ class Workspace extends Component {
     this.props.compassX.reset();
     this.props.noteX.reset();
     this.props.uiX.reset();
+    this.props.uiX.toastClear();
     this.props.userX.reset();
     $(window).off('resize', this.props.uiX.resize);
     this.modal.close();
-    this.toast.clear();
 
     if (this.socket) this.socket.logout();
   }
 
   render() {
-    if (_.isEmpty(this.props.compass)) return <div/>;
-
+    if (_.isEmpty(this.props.compass)) {
+      return <div/>;
+    }
     if (this.props.route.viewOnly) {
       return <Compass viewOnly={true}/>;
     }
-
     return (
       <div>
         <HelpAndFeedback editCode={this.props.compass.editCode}
-                         notifyVersionChanges={this.notifyIfNewVersion}
-        />
+                         notifyVersionChanges={this.notifyIfNewVersion}/>
         <WorkspaceMenu />
         <Compass />
         <BulkEditToolbar show={this.props.visualMode} />

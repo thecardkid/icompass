@@ -2,14 +2,14 @@
 
 import React, { Component } from 'react';
 import { isMobile } from 'react-device-detect';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import htmlparser from 'htmlparser2';
 
 import DynamicModal from './DynamicModal';
-import ToastSingleton from '@utils/Toast';
+import * as uiX from '@actions/ui';
 
-export default class GDocModal extends Component {
-  toast = ToastSingleton.getInstance();
-
+class GDocModal extends Component {
   getDefaultDocData() {
     const data = {
       link: '',
@@ -100,7 +100,7 @@ ${header}:`;
       window.getSelection().addRange(range);
     }
     document.execCommand('copy');
-    this.toast.info('Contents copied to clipboard');
+    this.props.uiX.toastInfo('Contents copied to clipboard');
   };
 
   render() {
@@ -111,7 +111,7 @@ ${header}:`;
           heading={'Export to Google Doc'}
           close={this.props.close}>
           <div className={'warning'}>
-            <b>NOTE:</b> This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
+            This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
           </div>
         </DynamicModal>
       );
@@ -155,3 +155,15 @@ ${header}:`;
     );
   }
 }
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GDocModal);

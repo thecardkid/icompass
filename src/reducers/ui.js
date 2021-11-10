@@ -9,6 +9,10 @@ const defaultState = {
     editText: false,
     editImage: false,
   },
+  toast: {
+    type: 'success',
+    message: '',
+  },
   bookmarked: false,
   dragCenterEnabled: false,
   // TODO refactor under modals
@@ -192,6 +196,18 @@ export default (state = defaultState, action) => {
 
     case 'setIsFiona':
       return { ...state, isFiona: true };
+
+    case 'setToast':
+      return {
+        ...state,
+        toast: action.toast,
+      };
+
+    case 'clearToast':
+      return {
+        ...state,
+        toast: {},
+      };
 
     default:
       return state;

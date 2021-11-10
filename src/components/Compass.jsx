@@ -20,7 +20,6 @@ import { EDITING_MODES } from '@utils/constants';
 import Modal from '@utils/Modal';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
-import Toast from '@utils/Toast';
 
 import events from '@socket_events';
 
@@ -101,7 +100,6 @@ class Compass extends Component {
 
     if (this.hasEditingRights) {
       this.state.select = false;
-      this.toast = Toast.getInstance();
       this.modal = Modal.getInstance();
       this.socket = Socket.getInstance();
       this.socket.subscribe({
@@ -262,7 +260,7 @@ class Compass extends Component {
   };
 
   setPeopleInvolved = () => {
-    this.modal.promptForCenter(this.toast.warn, (people) => {
+    this.modal.promptForCenter(this.props.uiX.toastError, (people) => {
       trackFeatureEvent('Compass center: Set text');
       this.socket.emitSetCenter(this.props.compass._id, people);
     });
@@ -475,7 +473,7 @@ class Compass extends Component {
         this.animateQuadrants = false;
         this.fadeInQuadrants(800);
         setTimeout(() => {
-          this.toast.info('You\'re all set up! Double click anywhere to get started.');
+          this.props.uiX.toastInfo('You\'re all set up! Double click anywhere to get started.');
         }, 3250);
       } else {
         this.fadeInQuadrants(0);
@@ -486,9 +484,7 @@ class Compass extends Component {
     return (
       <div id="compass" style={{
         width: this.props.ui.vw,
-        maxWidth: this.props.ui.vw,
         height: this.props.ui.vh,
-        maxHeight: this.props.ui.vh,
       }}>
         <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}

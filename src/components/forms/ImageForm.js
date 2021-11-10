@@ -7,11 +7,8 @@ import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 
 import FormPalette from './FormPalette';
-
 import * as uiX from '@actions/ui';
-
 import SocketSingleton from '@utils/Socket';
-import ToastSingleton from '@utils/Toast';
 
 const OneMB = 1024 * 1024;
 
@@ -26,7 +23,6 @@ class ImageForm extends Component {
       altText: props.defaultAlt || '',
     };
     this.socket = SocketSingleton.getInstance();
-    this.toast = ToastSingleton.getInstance();
     this.driveUrlRegex = /https:\/\/drive\.google\.com\/file\/d\/.*\/view\?usp=sharing/;
   }
 
@@ -72,7 +68,7 @@ class ImageForm extends Component {
               </p>
             </div>
           </ReactTooltip>
-          <img src={this.state.imgSource} />;
+          <img src={this.state.imgSource} />
         </div>
       </div>
     );
@@ -142,7 +138,7 @@ class ImageForm extends Component {
     if (file.length < 0) return;
 
     if (file[0].size > OneMB) {
-      this.toast.error('Image cannot be larger than 1MB');
+      this.props.uiX.toastError('Image cannot be larger than 1MB');
     }
   };
 

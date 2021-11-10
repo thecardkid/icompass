@@ -1,37 +1,37 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import { bindActionCreators } from 'redux';
 
-import { trackFeatureEvent } from '@utils/analytics';
-import { isCharOnly } from '@utils/regex';
+import * as uiX from '@actions/ui';
 import Modal from '@utils/Modal';
-import Toast from '@utils/Toast';
-import Socket from '@utils/Socket';
 
-export default class PromptName extends Component {
+class PromptName extends Component {
   modal = Modal.getInstance();
-  toast = Toast.getInstance();
-  socket = Socket.getInstance();
 
   componentDidMount() {
     this.promptForName();
   }
 
   promptForName = () => {
-    const { code } = this.props.params;
-    this.modal.promptForUsername(this.toast.warn, (name) => {
-      if (name.length > 15 || !isCharOnly(name)) {
-        this.toast.error('Username must be fewer than 15 characters and letters-only');
-        return this.promptForName();
-      }
-
-
-      const url = `/compass/edit/${code}/${name}`;
-      trackFeatureEvent('Use edit link');
-      browserHistory.push(url);
+    this.modal.promptForUsername(this.props.uiX.toastError, (name) => {
+      browserHistory.push(`/compass/edit/${this.props.params.code}/${name}`);
     });
   };
 
   render() {
-    return <div />;
+    return <div id={'ic-prompt-name'} />;
   }
 }
+
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PromptName);

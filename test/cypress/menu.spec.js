@@ -42,15 +42,16 @@ describe('workspace menu', () => {
         submenu: workspaceMenu.modes,
         suboption: workspaceMenu.modesSubactions.compact,
       });
-      cy.get('#ic-toast').should('contain', 'compact');
+      cy.get('.ic-toast-message').should('contain', 'compact');
     });
 
-    it('bulk edit mode', () => {
+    it('multi-edit mode', () => {
       selectSubmenuOption({
         submenu: workspaceMenu.modes,
         suboption: workspaceMenu.modesSubactions.bulk,
       });
-      cy.get('#ic-toast').should('contain', 'bulk edit');
+      cy.get('.ic-toast-message').should('contain', 'multi-edit');
+      cy.get('.bulk-edit-btn.cancel').click();
     });
 
     it('standard mode', () => {
@@ -58,7 +59,7 @@ describe('workspace menu', () => {
         submenu: workspaceMenu.modes,
         suboption: workspaceMenu.modesSubactions.standard,
       });
-      cy.get('#ic-toast').should('contain', 'standard');
+      cy.get('.ic-toast-message').should('contain', 'standard');
     });
 
     it('explain modes', () => {
@@ -195,13 +196,13 @@ describe('workspace menu', () => {
         cy.get('#ic-modal-body').should('contain', 'Receive a Link');
         cy.get('#ic-modal-input').type('fakeemail');
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast span').should('have.class', 'error');
+        cy.get('.ic-toast-error').should('be.visible');
       });
 
       it('valid email shows success toast', () => {
         cy.get('#ic-modal-input').type('fakeemail@valid.com');
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast span').should('have.class', 'success');
+        cy.get('.ic-toast-success').should('be.visible');
       });
     });
 
@@ -213,12 +214,12 @@ describe('workspace menu', () => {
 
       it('copy edit link', () => {
         cy.get('button.copy-edit').click();
-        cy.get('#ic-toast').should('contain', 'Edit link has been copied');
+        cy.get('.ic-toast-message').should('contain', 'Edit link has been copied');
       });
 
       it('copy view link', () => {
         cy.get('button.copy-view').click();
-        cy.get('#ic-toast').should('contain', 'View-only link has been copied');
+        cy.get('.ic-toast-message').should('contain', 'View-only link has been copied');
       });
 
       it('can x out', () => {
@@ -237,7 +238,7 @@ describe('workspace menu', () => {
         cy.get('#ic-modal-body').should('contain', 'Bookmarks give you quick access');
         cy.get('#ic-modal-input').type('My bookmark');
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast span').should('have.class', 'success');
+        cy.get('.ic-toast-success').should('be.visible');
       });
 
       it('bookmark indicator appears', () => {
@@ -325,7 +326,7 @@ describe('workspace menu', () => {
       //       b.waitForVisible('#ic-modal');
       //       cy.get('#ic-modal-input').type('invalidemail@');
       //       cy.get('#ic-modal-confirm').click();
-      //       b.waitForVisible('#ic-toast');
+      //       b.waitForVisible('.ic-toast-message');
       //       cy.get('#ic-toast').should('contain', 'not a valid email');
       //     });
       //

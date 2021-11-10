@@ -13,14 +13,12 @@ import { trackFeatureEvent } from '@utils/analytics';
 import { EDITING_MODES } from '@utils/constants';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
-import Toast from '@utils/Toast';
 import events from '@socket_events';
 
 class NoteManager extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.notes = [];
-    this.toast = Toast.getInstance();
 
     this.socket = Socket.getInstance();
     this.socket.subscribe({

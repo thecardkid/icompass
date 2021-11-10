@@ -7,21 +7,19 @@ import { bindActionCreators } from 'redux';
 
 import { CSS, EDITING_MODES } from '@utils/constants';
 import Modal from '@utils/Modal';
-import Toast from '@utils/Toast';
 
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
 
 import { contextMenu } from '@cypress/data_cy';
 
-const VISUAL_MODE_NO_CHANGE = 'You can\'t make changes to individual notes while in bulk edit mode';
+const MULTI_MODE_NO_EDIT_MESSAGE = 'Can\'t make changes to individual notes while in multi-edit mode';
 
 class StickyNote extends Component {
   constructor(props) {
     super(props);
     this.state = { contextMenu: null };
 
-    this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
     this.hasEditingRights = !this.props.viewOnly;
     this.setModes(this.props);
@@ -39,7 +37,10 @@ class StickyNote extends Component {
   confirmDelete = (ev) => {
     ev.stopPropagation();
 
-    if (this.visualMode) return this.toast.warn(VISUAL_MODE_NO_CHANGE);
+    if (this.visualMode) {
+      this.props.uiX.toastError(MULTI_MODE_NO_EDIT_MESSAGE);
+      return;
+    }
 
     let n = this.props.note;
     if (n.draft) {
@@ -69,7 +70,7 @@ class StickyNote extends Component {
 
   submitDraft = () => {
     if (this.visualMode) {
-      return this.toast.warn('Cannot submit drafts in bulk edit mode');
+      return this.props.uiX.toastError('Cannot submit drafts in multi-edit mode');
     }
     this.props.submitDraft(this.props.note, this.props.i);
   };
@@ -77,7 +78,7 @@ class StickyNote extends Component {
   upvote = (ev) => {
     ev.stopPropagation();
     if (this.visualMode) {
-      return this.toast.warn(VISUAL_MODE_NO_CHANGE);
+      return this.props.uiX.toastError(MULTI_MODE_NO_EDIT_MESSAGE);
     }
 
     if (!this.props.note.draft) {
@@ -158,11 +159,11 @@ class StickyNote extends Component {
     if (ev.target.className === 'ic-upvote') return;
 
     if (this.props.note.doodle) {
-      return this.toast.warn('Sketches cannot be edited.');
+      return this.props.uiX.toastError('Sketches cannot be edited.');
     }
 
     if (this.visualMode) {
-      return this.toast.warn(VISUAL_MODE_NO_CHANGE);
+      return this.props.uiX.toastError(MULTI_MODE_NO_EDIT_MESSAGE);
     }
 
     if (this.hasEditingRights) {
@@ -204,7 +205,7 @@ class StickyNote extends Component {
 
   selectAndEnterVisual = () => {
     if (this.props.note.draft) {
-      this.toast.warn('Cannot enter bulk edit mode by selecting a draft');
+      this.props.uiX.toastError('Cannot enter multi-edit mode by selecting a draft');
     } else {
       this.props.enterVisualMode(this.props.i);
     }
@@ -212,7 +213,7 @@ class StickyNote extends Component {
 
   selectInVisual = () => {
     if (this.props.note.draft) {
-      this.toast.warn('Cannot select drafts in bulk edit mode');
+      this.props.uiX.toastError('Cannot select drafts in multi-edit mode');
     } else {
       this.props.workspaceX.selectNote(this.props.i);
     }

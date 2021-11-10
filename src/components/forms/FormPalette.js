@@ -42,7 +42,7 @@ export default class FormPalette extends Component {
               className={'icon'}
               onBlur={this.setOrToggle(false)}
               onClick={this.setOrToggle()}>
-          A
+          <span className={'text'}>A</span>
           <div className={'ic-options'} style={s}>
             {options}
           </div>

@@ -7,17 +7,9 @@ import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 
 import AdminPage from '@components/AdminPage';
-
-import Toast from '@utils/Toast';
-
 import Store from '../store';
 
 class AdminApp extends Component {
-  constructor() {
-    super();
-    this.toast = Toast.getInstance();
-  }
-
   render() {
     return (
       <div>

@@ -176,3 +176,39 @@ export const setIsFiona = () => {
     type: 'setIsFiona',
   };
 };
+
+export const toastInfo = (message) => {
+  return {
+    type: 'setToast',
+    toast: {
+      type: 'info',
+      message,
+    },
+  };
+};
+
+export const toastSuccess = (message) => {
+  return {
+    type: 'setToast',
+    toast: {
+      type: 'success',
+      message,
+    },
+  };
+};
+
+export const toastError = (message) => {
+  return {
+    type: 'setToast',
+    toast: {
+      type: 'error',
+      message,
+    },
+  };
+};
+
+export const toastClear = () => {
+  return {
+    type: 'clearToast',
+  };
+};

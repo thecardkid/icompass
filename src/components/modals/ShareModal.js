@@ -1,28 +1,29 @@
 /* global icompass */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import { makeTwitterURL } from '@utils/constants';
-import ToastSingleton from '@utils/Toast';
 import DynamicModal from './DynamicModal';
+import * as uiX from '@actions/ui';
+import { makeTwitterURL } from '@utils/constants';
 
-export default class ShareModal extends Component {
+class ShareModal extends Component {
   editLink = `${icompass.config.APP_HOST}/compass/edit/${this.props.compass.editCode}`;
   viewLink = `${icompass.config.APP_HOST}/compass/view/${this.props.compass.viewCode}`;
-  toast = ToastSingleton.getInstance();
 
   copyEditLink = () => {
     const text = document.getElementById('ic-edit-link');
     text.select();
     document.execCommand('copy');
-    this.toast.info('Edit link has been copied to clipboard');
+    this.props.uiX.toastInfo('Edit link has been copied to clipboard');
   };
 
   copyViewLink = () => {
     const text = document.getElementById('ic-view-link');
     text.select();
     document.execCommand('copy');
-    this.toast.info('View-only link has been copied to clipboard');
+    this.props.uiX.toastInfo('View-only link has been copied to clipboard');
   };
 
   tweetThis = () => {
@@ -56,3 +57,15 @@ export default class ShareModal extends Component {
     );
   }
 }
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShareModal);

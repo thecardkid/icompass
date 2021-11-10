@@ -3,6 +3,8 @@ import ReactGA from 'react-ga';
 import { browserHistory } from 'react-router';
 import _ from 'underscore';
 
+import { isCharOnly } from './regex';
+
 const ModalSingleton = (() => {
   class Modal {
     constructor() {
@@ -190,7 +192,7 @@ const ModalSingleton = (() => {
         body: [
           '<b>Standard mode</b> is what you are in by default',
           '<b>Compact mode</b> make notes take up much less space - it is meant for smaller devices.',
-          '<b>Bulk Edit</b> mode allows you to edit notes in bulk! Hold down Shift and click on any note to enter this mode.',
+          '<b>Multi-Edit</b> mode allows you to edit multiple notes at once! Hold down Shift and click on any note to enter this mode.',
         ],
       });
     };
@@ -286,7 +288,7 @@ const ModalSingleton = (() => {
       $('#ic-modal-confirm').on('click', () => {
         response = $('#ic-modal-input').val();
         if (!response) {
-          warnFunc('You can\'t leave this empty');
+          warnFunc('Please list the people group(s) involved');
         } else {
           this.close();
           cb(response);
@@ -328,24 +330,28 @@ const ModalSingleton = (() => {
 
     promptForUsername(warn, cb) {
       ReactGA.modalview('modals/prompt-username');
-      const html = '<h3>Welcome to this workspace!</h3><p>Please enter your name as it would appear to others:</p>';
+      const html = '<h3>Welcome to this workspace!</h3><p>Using only letters, please enter your name as it would appear to others:</p>';
       $('#ic-modal-container').empty().append(this.generatePrompt(html));
       $('#ic-modal-input').focus();
       this.addBackdropIfNecessary();
       this.show = true;
 
-      let response;
-      $('#ic-modal-confirm').on('click', () => {
-        response = $('#ic-modal-input').val();
-        if (!response) {
-          warn('You can\'t leave this empty');
-        } else {
-          this.close();
-          cb(response);
-        }
-      });
+      let username;
       $('#ic-modal-cancel').on('click', () => warn('You need to complete this action'));
       $('#ic-backdrop').on('click', () => warn('You need to complete this action'));
+      $('#ic-modal-confirm').on('click', () => {
+        username = $('#ic-modal-input').val();
+        if (!username) {
+          warn('You can\'t leave this empty');
+        } else if (username.length > 15) {
+          warn('Username too long, please choose something fewer than 15 characters');
+        } else if (!isCharOnly(username)) {
+          warn('Username must be letters-only');
+        } else {
+          this.close();
+          cb(username);
+        }
+      });
     }
 
     _prompt(html, cb, value = '') {

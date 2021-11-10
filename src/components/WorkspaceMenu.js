@@ -13,14 +13,13 @@ import ResizeSubmenu from './submenus/ResizeSubmenu';
 import ShortcutManager from './ShortcutManager';
 
 import { trackFeatureEvent } from '@utils/analytics';
-import { sendReminderEmail } from '@utils/api';
+import getAPIClient from '@utils/api';
 import { EDITING_MODES, CSS } from '@utils/constants';
 import { isEmail } from '@utils/regex';
 import MaybeTappable from '@utils/MaybeTappable';
 import ModalSingleton from '@utils/Modal';
 import SocketSingleton from '@utils/Socket';
 import Storage from '@utils/Storage';
-import ToastSingleton from '@utils/Toast';
 
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
@@ -61,7 +60,6 @@ class WorkspaceMenu extends Component {
     };
     this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
-    this.toast = ToastSingleton.getInstance();
   }
 
   _handleShortcuts = (e) => {
@@ -81,17 +79,17 @@ class WorkspaceMenu extends Component {
   changeMode = (mode) => () => {
     switch (mode) {
       case 'standard':
-        this.toast.info('Switched to standard mode');
+        this.props.uiX.toastInfo('Switched to standard view');
         this.props.uiX.normalMode();
         break;
 
       case 'compact':
-        this.toast.info('Switched to compact mode');
+        this.props.uiX.toastInfo('Switched to compact view');
         this.props.uiX.compactMode();
         break;
 
       case 'bulk':
-        this.toast.info('Switched to bulk edit mode');
+        this.props.uiX.toastInfo('Switched to multi-edit mode');
         this.props.uiX.visualMode(this.props.notes.length);
         break;
 
@@ -150,11 +148,11 @@ class WorkspaceMenu extends Component {
         if (!status) return;
 
         if (!isEmail(email)) {
-          this.toast.error(`"${email}" is not a valid email address`);
+          this.props.uiX.toastError(`"${email}" is not a valid email address`);
           this.emailReminder(email);
           return;
         }
-        await sendReminderEmail({
+        await getAPIClient().sendReminderEmail({
           topic: this.props.compass.topic,
           editCode: this.props.compass.editCode,
           username: this.props.users.me,
@@ -186,7 +184,7 @@ class WorkspaceMenu extends Component {
           if (submit) {
             let username = this.props.users.me.replace(/\d+/g, '');
             Storage.addBookmark(bookmarkName, editCode, username);
-            this.toast.success('Bookmarked this workspace!');
+            this.props.uiX.toastSuccess('Bookmarked this workspace');
             this.props.uiX.setBookmark(true);
           }
         },

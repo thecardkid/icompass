@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-import { createCopyOfWorkspace } from '@utils/api';
+import getAPIClient from '@utils/api';
 import DynamicModal from './DynamicModal';
 
 export default class CopyWorkspaceModal extends Component {
   makeACopyOfWorkspace = async () => {
-    const out = await createCopyOfWorkspace({ editCode: this.props.compass.editCode });
+    const out = await getAPIClient().createCopyOfWorkspace({ editCode: this.props.compass.editCode });
     if (!out) {
       return;
     }

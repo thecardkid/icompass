@@ -125,21 +125,21 @@ describe('workspace access modes', () => {
     });
 
    describe('username input', () => {
-      it('bad username', () => {
-        cy.visit(editURL.replace('/sandbox', ''));
+     it('missing username', () => {
+       cy.visit(editURL.replace('/sandbox', ''));
+       cy.get('#ic-modal-confirm').click();
+       cy.get('.ic-toast-message').should('contain', 'You can\'t leave this empty');
+     });
+
+     it('bad username', () => {
         cy.get('#ic-modal-body').should('contain', 'Welcome');
         cy.get('#ic-modal-input').type('sandbox2');
         cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast').should('contain', 'Username must be fewer');
-      });
-
-      it('missing username', () => {
-        cy.get('#ic-modal-confirm').click();
-        cy.get('#ic-toast').should('contain', 'You can\'t leave this empty');
+        cy.get('.ic-toast-message').should('contain', 'letters-only');
       });
 
       it('valid username', () => {
-        cy.get('#ic-modal-input').type('sandbox');
+        cy.get('#ic-modal-input').clear().type('sandbox');
         cy.get('#ic-modal-confirm').click();
         cy.get('#center').should('be.visible');
         cy.get('#vline').should('be.visible');

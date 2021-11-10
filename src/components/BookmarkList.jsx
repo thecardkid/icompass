@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
 import ReactTooltip from 'react-tooltip';
+import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import { sendBookmarksEmail } from '@utils/api';
+import * as uiX from '@actions/ui';
+import getAPIClient from '@utils/api';
 import { isEmail } from '@utils/regex';
 import Modal from '@utils/Modal';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
-import ToastSingleton from '@utils/Toast';
 
 import Bookmark from './Bookmark';
 
-export default class BookmarkList extends Component {
+class BookmarkList extends Component {
   constructor(props) {
     super(props);
     this.modal = Modal.getInstance();
     this.socket = Socket.getInstance();
-    this.toast = ToastSingleton.getInstance();
 
     let b = Storage.getBookmarks();
     this.state = {
@@ -106,12 +107,12 @@ export default class BookmarkList extends Component {
         if (!email.length) return;
 
         if (!isEmail(email)) {
-          this.toast.error(`"${email}" is not a valid email address`);
+          this.props.uiX.toastError(`"${email}" is not a valid email address`);
           this.emailBookmarks(email);
           return;
         }
 
-        await sendBookmarksEmail({
+        await getAPIClient().sendBookmarksEmail({
           bookmarks: this.state.bookmarks,
           recipientEmail: email,
         });
@@ -178,3 +179,16 @@ export default class BookmarkList extends Component {
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookmarkList);

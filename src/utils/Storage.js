@@ -45,7 +45,7 @@ export default {
     x[workspaceCode] = c;
     prefs.stickyNoteColors = x;
     this.setUserPrefs(prefs);
-    /* eslint-disable no-console */
+    // eslint-disable-next-line no-console
     console.log(`Set note color for workspace ${workspaceCode} to ${c}`);
     return c;
   },

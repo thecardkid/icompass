@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
 import { connect } from 'react-redux';
-import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
-import FormPalette from './forms/FormPalette';
-import { trackFeatureEvent } from '@utils/analytics';
+import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
+import FormPalette from '@components/forms/FormPalette';
 import Modal from '@utils/Modal';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
-import * as uiX from '@actions/ui';
-import * as workspaceX from '@actions/workspace';
+import { trackFeatureEvent } from '@utils/analytics';
+import { STICKY_COLORS } from '@utils/constants';
 
 class BulkEditToolbar extends Component {
   modal = Modal.getInstance();
   socket = Socket.getInstance();
+
+  state = {
+    color: STICKY_COLORS[0],
+  };
 
   getSelectedNotes = () => {
     const selected = [];
@@ -55,43 +59,45 @@ class BulkEditToolbar extends Component {
 
   bulkColor = (color) => {
     this.props.workspaceX.colorAll(color);
+    this.setState({ color });
     trackFeatureEvent('Bulk edit: Color');
   };
 
   render() {
     if (!this.props.show) return null;
 
-    const tooltipType = Storage.getTooltipTypeBasedOnDarkTheme();
-
     return (
       <Draggable>
         <div id="ic-visual-toolbar">
           <div id={'header'}>
-            Bulk Edit Toolbar
+            Multi-Edit Toolbar
           </div>
-          <hr />
+          <div id={'explanation'}>
+            <div>Choose an action to perform on selected notes. Moving one selected note will move all selected notes.</div>
+            <div>Select notes by click-dragging, or by holding Shift and clicking on individual notes.</div>
+          </div>
           <div id={'actions'}>
-            <button id="ic-bulk-delete"
-                    onClick={this.bulkDelete}
-                    data-tip="Delete notes"
-                    data-for="bulk-delete-tooltip">
-              <i className={'material-icons'}>delete</i>
-            </button>
-            <ReactTooltip id={'bulk-delete-tooltip'} place={'bottom'} effect={'solid'} type={tooltipType} delayShow={100}/>
-
-            <div data-tip="Color notes"
-                 data-for="bulk-color-tooltip">
-              <FormPalette setColor={this.bulkColor} color={this.props.workspace.color}/>
+            <hr />
+            <div className={'action update-color'}>
+              Update color
+              <FormPalette setColor={this.bulkColor} color={this.state.color}/>
             </div>
-            <ReactTooltip id={'bulk-color-tooltip'} place={'bottom'} effect={'solid'} type={tooltipType} delayShow={100}/>
-
-            <button id="ic-bulk-submit"
-                    onClick={this.submit}
-                    data-tip="Save"
-                    data-for="bulk-commit">
-              <i className={'material-icons'}>check</i>
-            </button>
-            <ReactTooltip id={'bulk-commit'} place={'bottom'} effect={'solid'} type={tooltipType} delayShow={100}/>
+            <hr />
+            <div className={'action'}>
+              <button className={'bulk-edit-btn cancel'} onClick={this.cancel}>
+                Cancel
+              </button>
+            </div>
+            <div className={'action'}>
+              <button className={'bulk-edit-btn submit'} onClick={this.submit}>
+                Apply changes
+              </button>
+            </div>
+            <div className={'action'}>
+              <button className={'bulk-edit-btn delete'} onClick={this.bulkDelete}>
+                Delete all
+              </button>
+            </div>
           </div>
         </div>
       </Draggable>

@@ -7,20 +7,16 @@ import { bindActionCreators } from 'redux';
 import request from 'superagent';
 
 import * as uiX from '@actions/ui';
-
 import BookmarkList from '@components/BookmarkList.jsx';
-
 import Modal from '@utils/Modal';
 import Storage from '@utils/Storage';
-import Toast from '@utils/Toast';
 import DevOnly from '@utils/DevOnly';
-import { sendReminderEmail } from '@utils/api';
+import getAPIClient from '@utils/api';
 import { isEmail, isCharOnly } from '@utils/regex';
 
 class LandingPage extends Component {
   constructor(props) {
     super(props);
-    this.toast = Toast.getInstance();
     this.modal = Modal.getInstance();
 
     ReactGA.pageview('/');
@@ -42,20 +38,15 @@ class LandingPage extends Component {
     const username = this.refs.username.value;
 
     if (!isCharOnly(username)) {
-      return this.toast.error('Username cannot contain spaces or numbers, only letters.');
+      return this.props.uiX.toastError('Username cannot contain spaces or numbers, only letters.');
     }
 
     this.setState({ username });
     try {
-      const resp = await request.post('/api/v1/workspace/create').send({ topic })
-      const data = resp.body;
-      if (data.error) {
-        // Caught later on.
-        throw new Error(data.error);
-      }
+      const data = await getAPIClient().createWorkspace({ topic });
       const alwaysSend = Storage.getAlwaysSendEmail();
       if (alwaysSend.enabled) {
-        await sendReminderEmail({
+        await getAPIClient().sendReminderEmail({
           topic: data.topic,
           editCode: data.code,
           username,
@@ -66,10 +57,8 @@ class LandingPage extends Component {
       }
       this.setState({ data }, this.promptForEmail);
     } catch(err) {
-      this.modal.alert({
-        heading: 'Failed to create new workspace',
-        body: 'An error has occurred',
-      });
+      // eslint-disable-next-line no-console
+      console.error(err);
     }
   };
 
@@ -91,7 +80,7 @@ class LandingPage extends Component {
         const { username, data: { code, topic } } = this.state;
         if (hasValue) {
           if (!isEmail(email)) {
-            this.toast.error(`"${email}" is not a valid email address`);
+            this.props.uiX.toastError(`"${email}" is not a valid email address`);
             return this.promptForEmail();
           }
 
@@ -99,7 +88,7 @@ class LandingPage extends Component {
             Storage.setAlwaysSendEmail(true, email);
           }
 
-          await sendReminderEmail({
+          await getAPIClient().sendReminderEmail({
             topic: topic,
             editCode: code,
             username,

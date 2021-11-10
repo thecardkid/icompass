@@ -13,13 +13,11 @@ import * as workspaceX from '@actions/workspace';
 
 import { EDITING_MODES } from '@utils/constants';
 import Socket from '@utils/Socket';
-import Toast from '@utils/Toast';
 
 
 class FormManager extends Component {
   constructor(props) {
     super(props);
-    this.toast = Toast.getInstance();
     this.socket = Socket.getInstance();
   }
 

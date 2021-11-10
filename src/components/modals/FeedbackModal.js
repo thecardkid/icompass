@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import DynamicModal from './DynamicModal';
-import { submitFeedback } from '@utils/api';
-import ToastSingleton from '@utils/Toast';
+import * as uiX from '@actions/ui';
+import getAPIClient from '@utils/api';
 
-export default class FeedbackModal extends Component {
-  toast = ToastSingleton.getInstance();
+class FeedbackModal extends Component {
 
   submitFeedback = async () => {
     const email = this.refs.email.value;
     const note = this.refs.note.value;
     if (!note) {
-      this.toast.warn('Please include some text in the note');
+      this.props.uiX.toastError('Please include some text in the note');
       return;
     }
-    await submitFeedback({
+    await getAPIClient().submitFeedback({
       submitterEmail: email,
       message: note,
     });
@@ -45,3 +46,15 @@ export default class FeedbackModal extends Component {
     );
   }
 }
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeedbackModal);

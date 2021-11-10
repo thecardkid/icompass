@@ -22,11 +22,12 @@
 @inconsolata: 'Inconsolata', monospace;
 @stickySize: 120px;
 @dark: #343434;
-@light: #ededed;
-@blue: #288aff;
-@yellow: #beba10;
-@red: #c21a03;
+@light: #EDEDED;
+@blue: #288AFF;
+@yellow: #BEBA10;
+@red: #C21A03;
 @green: #23C12B;
+@gray: #4F4A4A;
 
 :root {
   --structure-bg: @dark;
@@ -97,6 +98,11 @@
   display: none;
 }
 
+.max-width-fit-content {
+  max-width: fit-content;
+  max-width: -moz-fit-content; // Firefox
+}
+
 body {
   font-family: @dosis;
   cursor: default;
@@ -157,6 +163,11 @@ button.ic-close-window {
   font-size: 25px;
   cursor: pointer;
   color: @light;
+}
+
+div#ic-prompt-name {
+  width: 100vw;
+  height: 100vh;
 }
 
 div#ic-404 {
@@ -236,6 +247,80 @@ div#ic-toast {
   span.error {
     background: #F2DEDE;
     color: #A94442;
+  }
+}
+
+div.ic-toast-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 0;
+  font-family: @notosans;
+
+  div.ic-toast {
+    .border-box;
+    .max-width-fit-content;
+    .border-radius(2px);
+    .hasTransition(0.2s);
+    display: flex;
+    background: @light;
+    margin-top: 50px;
+    z-index: @toastZIndex;
+    align-items: center;
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    box-shadow: var(--shadow);
+
+    &.hidden {
+      margin-top: -50px;
+    }
+
+    div.ic-toast-icon {
+      width: 25px;
+      height: 25px;
+      padding: 4px;
+      border-top-left-radius: 2px;
+      border-bottom-left-radius: 2px;
+
+      i {
+        color: @light;
+      }
+
+      &.ic-toast-error {
+        background: @red;
+      }
+
+      &.ic-toast-success {
+        background: #3AC53A;
+      }
+
+      &.ic-toast-info {
+        background: #3E8BEF;
+      }
+    }
+
+    div.ic-toast-message {
+      padding: 8px 10px;
+      color: @gray;
+      font-weight: lighter;
+      font-size: 13px;
+    }
+
+    div.ic-toast-close {
+      i {
+        margin-top: 3px;
+        padding-left: 5px;
+        padding-right: 6px;
+        color: @gray;
+        font-size: 17px;
+        cursor: pointer;
+        .hasTransition(0.3s);
+
+        &:hover {
+          color: black;
+        }
+      }
+    }
   }
 }
 

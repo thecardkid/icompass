@@ -46,7 +46,7 @@ class ModesSubmenu extends Component {
           <MaybeTappable onTapOrClick={this.props.changeMode('bulk')}>
             <div data-cy={workspaceMenu.modesSubactions.bulk} id={'ic-bulk'} className={'ic-menu-item'}>
               <span className={bulk ? 'active' : 'inactive'} />
-              Bulk Edit
+              Multi-Edit
               <span className={'ic-shortcut'}>shift+click</span>
             </div>
           </MaybeTappable>

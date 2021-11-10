@@ -1,13 +1,14 @@
 import html2canvas from 'html2canvas';
 import React, { Component } from 'react';
 import { isMobile } from 'react-device-detect';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
+import * as uiX from '@actions/ui';
 import DynamicModal from './DynamicModal';
-import ToastSingleton from '@utils/Toast';
 
-export default class ScreenshotModal extends Component {
+class ScreenshotModal extends Component {
   state = { canvas: null };
-  toast = ToastSingleton.getInstance();
 
   componentDidMount() {
     this.exportPng();
@@ -28,17 +29,16 @@ export default class ScreenshotModal extends Component {
   };
 
   exportPng = async () => {
-    this.toast.info('Converting to file...');
     try {
       const canvas = await html2canvas(document.getElementById('compass'), {
         allowTaint: true,
         logging: false,
       });
-
       this.setState({ canvas });
-      this.toast.clear();
     } catch (ex) {
-      this.toast.error('There was a problem generating a PDF. Please take a screenshot instead.');
+      // eslint-disable-next-line no-console
+      console.error(ex);
+      this.props.uiX.toastError('There was a problem generating an image of your workspace. Please take a screenshot instead.');
     }
   };
 
@@ -68,3 +68,15 @@ export default class ScreenshotModal extends Component {
     );
   }
 }
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScreenshotModal);
