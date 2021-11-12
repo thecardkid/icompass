@@ -30,7 +30,6 @@ module.exports = {
     USER_LEFT: 'user left',
     BAD_USERNAME: 'bad username',
     DUPLICATE_USERNAME: 'username exists',
-    // TODO rename to RECONNECT_FAILED
-    WORKSPACE_NOT_FOUND: 'workspace not found',
+    REFRESH_REQUIRED: 'refresh required',
   },
 };

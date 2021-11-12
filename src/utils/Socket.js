@@ -1,21 +1,18 @@
-import { browserHistory } from 'react-router';
 import SocketIOClient from 'socket.io-client';
 import _ from 'underscore';
 
 import events from '@socket_events';
 import Modal from '@utils/Modal';
-import Toast from '@utils/Toast';
 
 const SocketSingleton = (() => {
   class Socket {
     constructor() {
       this.modal = Modal.getInstance();
-
       this.socket = new SocketIOClient('/', {
         transports: ['websocket'],
       });
       this.subscribe({
-        [events.frontend.WORKSPACE_NOT_FOUND]: this.onWorkspaceNotFound,
+        [events.frontend.REFRESH_REQUIRED]: this.onRefreshRequired,
       });
     }
 
@@ -30,18 +27,18 @@ const SocketSingleton = (() => {
     };
 
     checkConnected = () => {
-      if (this.isConnected()) return true;
-      Toast.getInstance().error('You are not connected to the server');
+      if (this.isConnected()) {
+        return true;
+      }
     };
 
-    onWorkspaceNotFound = () => {
+    onRefreshRequired = () => {
       this.modal.alert({
-        heading: 'Sorry!',
+        heading: 'Please reload this page',
         body: [
-          'There was a problem retrieving your workspace.',
-          'You will now be taken to the home page.',
+          'An update has been made to the app, please reload to get the latest version.',
         ],
-        cb: () => browserHistory.push('/'),
+        cb: () => location.reload(),
       });
     };
 

@@ -6,7 +6,6 @@ const events = require('./socket_events');
 const { DefaultLogger, Logger } = require('./logger');
 const Compass = require('../models/compass');
 
-// TODO properly implement catch for all async event handlers.
 // TODO standardize logs
 
 // Represents a client connection to the server.
@@ -37,6 +36,18 @@ class WorkspaceSocket {
     this.io.sockets.in(this.roomID).emit(event, ...args);
   }
 
+  // When the server is restarted, we lose all Mongoose models loaded into
+  // memory. So we emit an event that will trigger a page reload, to force
+  // the user to re-join the workspace.
+  clientShouldRefresh() {
+    if (!this.room || !this.room.$workspace) {
+      this.socket.emit(events.frontend.REFRESH_REQUIRED);
+      this.logger.info('Requested client-side refresh');
+      return true;
+    }
+    return false;
+  }
+
   onDisconnect(reason) {
     if (this.roomID && this.username) {
       this.roomManager.leaveRoom(this.roomID, this.username);
@@ -49,24 +60,6 @@ class WorkspaceSocket {
 
   onLogout() {
     this.onDisconnect('log out');
-  }
-
-  async setCenter(data) {
-    try {
-      await this.room.$workspace.setCenter(data.center);
-      this.broadcast(events.frontend.SET_CENTER_TEXT, data.center);
-    } catch (ex) {
-      this.logger.error('Error setting center: ', JSON.stringify(data), ex);
-    }
-  }
-
-  async setCenterPosition({ x, y }) {
-    try {
-      await this.room.$workspace.setCenterPosition(x, y);
-      this.broadcast(events.frontend.SET_CENTER_POSITION, x, y);
-    } catch (ex) {
-      this.logger.error(ex);
-    }
   }
 
   joinRoom({ workspaceEditCode, username, isReconnecting }) {
@@ -102,7 +95,34 @@ class WorkspaceSocket {
     }
   }
 
+  async setCenter(data) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
+    try {
+      await this.room.$workspace.setCenter(data.center);
+      this.broadcast(events.frontend.SET_CENTER_TEXT, data.center);
+    } catch (ex) {
+      this.logger.error('Error setting center: ', JSON.stringify(data), ex);
+    }
+  }
+
+  async setCenterPosition({ x, y }) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
+    try {
+      await this.room.$workspace.setCenterPosition(x, y);
+      this.broadcast(events.frontend.SET_CENTER_POSITION, x, y);
+    } catch (ex) {
+      this.logger.error(ex);
+    }
+  }
+
   async deleteCompass(id) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     const expectedID = this.room.$workspace._id.toString();
     if (expectedID !== id) {
       this.logger.warn(`Attempted to delete compass id=${id}, but socket's compass id is ${expectedID}`);
@@ -119,6 +139,9 @@ class WorkspaceSocket {
   }
 
   async createNote(note) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     try {
       const model = await this.room.$workspace.addNote(note);
       this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
@@ -128,6 +151,9 @@ class WorkspaceSocket {
   }
 
   async updateNote(updatedNote) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     try {
       const model = await this.room.$workspace.updateNote(updatedNote);
       this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
@@ -137,6 +163,9 @@ class WorkspaceSocket {
   }
 
   async deleteNote(id) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     try {
       const { compass, deletedIdx } = await this.room.$workspace.deleteNote(id);
       this.broadcast(events.frontend.UPDATE_ALL_NOTES, compass.notes);
@@ -147,6 +176,9 @@ class WorkspaceSocket {
   }
 
   async plusOneNote(id) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     try {
       const model = await this.room.$workspace.plusOneNote(id);
       this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
@@ -156,6 +188,9 @@ class WorkspaceSocket {
   }
 
   async bulkUpdateNotes(ids, transformation) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     try {
       if (transformation.color == null) {
         return;
@@ -171,6 +206,9 @@ class WorkspaceSocket {
   }
 
   async bulkDragNotes(ids, { dx, dy }) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     try {
       const model = await this.room.$workspace.bulkDragNotes(ids, { dx, dy });
       this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
@@ -180,6 +218,9 @@ class WorkspaceSocket {
   }
 
   async bulkDeleteNotes(ids) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
     try {
       const { compass, deletedIdx } = await this.room.$workspace.deleteNotes(ids);
       this.broadcast(events.frontend.UPDATE_ALL_NOTES, compass.notes);
