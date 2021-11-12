@@ -85,7 +85,7 @@ async function handleEmailBookmarks(req, res) {
   mailer.sendMail({
     subject: 'Your iCompass bookmarks',
     text: lines.join('\n'),
-    toEmail: recipientEmail,
+    recipientEmail,
   }, function(err) {
     if (err) {
       res.json({'error': 'failed'});
@@ -99,7 +99,7 @@ async function handleSubmitFeedback(req, res) {
   const { submitterEmail, message } = req.body;
   mailer.sendMail({
     subject: 'iCompass Feedback',
-    toEmail: 'hieumaster95@gmail.com',
+    recipientEmail: 'hieumaster95@gmail.com',
     text: message + `\n\nFrom: ${submitterEmail || 'No email specified'}`,
   }, function(err) {
     if (err) {
