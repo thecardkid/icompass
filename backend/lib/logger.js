@@ -25,7 +25,7 @@ class Logger {
     mail.sendMessage({
       toEmail: 'hieumaster95@gmail.com',
       subject: 'iCompass server error',
-      text: args,
+      text: args.slice(2).join(' '),
       cb: _.noop,
     });
   }

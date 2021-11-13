@@ -62,6 +62,7 @@ class Workspace extends Component {
         [events.frontend.USER_LEFT]: this.onUserLeft,
         [events.frontend.BAD_USERNAME]: this.handleBadUsername.bind(this),
         [events.frontend.DUPLICATE_USERNAME]: this.handleUsernameExists.bind(this),
+        [events.frontend.SERVER_ERROR]: this.handleSocketServerError,
       });
       const { code, username } = this.props.params;
       request.get('/api/v1/workspace/edit')
@@ -126,6 +127,10 @@ class Workspace extends Component {
       ],
       cb: () => browserHistory.push(`/compass/edit/${this.props.params.code}`),
     });
+  };
+
+  handleSocketServerError = (clientAction) => {
+    this.props.uiX.toastError(`Failed to ${clientAction.toLowerCase()}. Please reload the page, or try again later`);
   };
 
   mustGetEditCode() {
