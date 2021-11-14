@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import ReactGA from 'react-ga';
+import { connect } from 'react-redux';
 
 import FeedbackModal from './modals/FeedbackModal';
+import * as uiX from '@actions/ui';
 import { trackFeatureEvent } from '@utils/analytics';
 import { CSS } from '@utils/constants';
-import Modal from '@utils/Modal';
 
 import { helpMenu } from '@cypress/data_cy';
+import { AboutUsModal, PrivacyStatementModal, WhatsNewModal } from './modals/SimpleModal';
+import GetStartedModal from './modals/GetStartedModal';
 
-export default class HelpAndFeedback extends Component {
+class HelpAndFeedback extends Component {
   constructor(props) {
     super(props);
     this.state = {
       active: false,
-      showFeedbackModal: false,
     };
-    this.modal = Modal.getInstance();
   }
 
   toggleMenu = () => {
@@ -34,34 +36,31 @@ export default class HelpAndFeedback extends Component {
 
   showPrivacyStatement = () => {
     ReactGA.modalview('modals/privacy-statement');
-    this.modal.alertPrivacyStatement();
+    this.props.uiX.openPrivacyStatementModal();
     this.hideMenu();
   };
 
   openPrompt = () => {
-    this.modal.alertCompassPrompt();
+    this.props.uiX.openGetStartedModal();
     this.hideMenu();
   };
 
   showWhatsNew = () => {
     ReactGA.modalview('modals/whats-new');
-    this.props.notifyVersionChanges({ mustShow: true });
-    this.hideMenu();
-  };
-
-  showFeedback = (val) => () => {
-    if (val) {
-      ReactGA.modalview('modals/feedback');
-    }
-    this.setState({ showFeedbackModal: val });
+    this.props.uiX.openWhatsNewModal();
     this.hideMenu();
   };
 
   showAboutUs = () => {
     ReactGA.modalview('modals/about-us');
-    this.modal.alertAboutUs();
+    this.props.uiX.openAboutUsModal();
     this.hideMenu();
   };
+
+  openFeedbackModal = () => {
+    this.props.uiX.openFeedbackModal();
+    this.hideMenu();
+  }
 
   renderHelpMenu() {
     return (
@@ -91,7 +90,7 @@ export default class HelpAndFeedback extends Component {
             <i className={'material-icons'}>new_releases</i>
             What's New?
           </div>
-          <div data-cy={helpMenu.leaveFeedback} className={'ic-menu-item'} onClick={this.showFeedback(true)}>
+          <div data-cy={helpMenu.leaveFeedback} className={'ic-menu-item'} onClick={this.openFeedbackModal}>
             <i className={'material-icons'}>feedback</i>
             Leave Feedback
           </div>
@@ -109,8 +108,24 @@ export default class HelpAndFeedback extends Component {
           ?
         </button>
         {this.state.active && this.renderHelpMenu()}
-        {this.state.showFeedbackModal && <FeedbackModal close={this.showFeedback(false)} />}
+        <GetStartedModal />
+        <AboutUsModal />
+        <FeedbackModal />
+        <PrivacyStatementModal />
+        <WhatsNewModal />
       </div>
     );
   }
 }
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HelpAndFeedback);

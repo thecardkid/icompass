@@ -17,7 +17,7 @@ module.exports = () => ({
       '@css': path.resolve(root, 'src/css'),
       '@components': path.resolve(root, 'src/components'),
       '@utils': path.resolve(root, 'src/utils'),
-      '@cypress/data_cy': path.resolve(root, 'test/cypress/data_cy.js'),
+      '@cypress': path.resolve(root, 'test/cypress/'),
       '@socket_events': path.resolve(root, 'backend/lib/socket_events.js'),
     },
   },

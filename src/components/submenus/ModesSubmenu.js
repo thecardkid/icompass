@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { EDITING_MODES } from '@utils/constants';
-import ModalSingleton from '@utils/Modal';
-import SocketSingleton from '@utils/Socket';
 import MaybeTappable from '@utils/MaybeTappable';
 
 import * as uiX from '@actions/ui';
@@ -12,14 +10,8 @@ import * as uiX from '@actions/ui';
 import { workspaceMenu } from '@cypress/data_cy';
 
 class ModesSubmenu extends Component {
-  constructor() {
-    super();
-    this.modal = ModalSingleton.getInstance();
-    this.socket = SocketSingleton.getInstance();
-  }
-
   alertExplainModes = () => {
-    this.modal.alertExplainModes();
+    this.props.uiX.openExplainViewModesModal();
     this.props.hideMenu();
   };
 

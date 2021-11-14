@@ -6,29 +6,36 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
+import ShortcutManager from './ShortcutManager';
+import { DeleteWorkspaceModal } from './modals/ConfirmDelete';
+import CopyWorkspaceModal from './modals/CopyWorkspaceModal';
+import GDocModal from './modals/GDocModal';
+import { BookmarkWorkspacePrompt, EmailWorkspacePrompt } from './modals/Prompt';
+import { ExplainViewModesModal } from './modals/SimpleModal';
+import ScreenshotModal from './modals/ScreenshotModal';
+import ShareModal from './modals/ShareModal';
 import ExportSubmenu from './submenus/ExportSubmenu';
 import ModesSubmenu from './submenus/ModesSubmenu';
 import NotesSubmenu from './submenus/NotesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
-import ShortcutManager from './ShortcutManager';
-
-import { trackFeatureEvent } from '@utils/analytics';
-import getAPIClient from '@utils/api';
-import { EDITING_MODES, CSS } from '@utils/constants';
-import { isEmail } from '@utils/regex';
-import MaybeTappable from '@utils/MaybeTappable';
-import ModalSingleton from '@utils/Modal';
-import SocketSingleton from '@utils/Socket';
-import Storage from '@utils/Storage';
 
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
+import getAPIClient from '@utils/api';
+import { trackFeatureEvent } from '@utils/analytics';
+import { CSS, EDITING_MODES } from '@utils/constants';
+import { modalCheckEmail } from '@utils/regex';
+import MaybeTappable from '@utils/MaybeTappable';
+import SocketSingleton from '@utils/Socket';
+import Storage from '@utils/Storage';
+
 import { workspaceMenu } from '@cypress/data_cy';
 
 class WorkspaceMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      alwaysSendEmail: Storage.getAlwaysSendEmail().enabled,
       active: false,
       darkTheme: Storage.isDarkTheme(),
       submenus: {
@@ -58,7 +65,6 @@ class WorkspaceMenu extends Component {
       50: 'Shortcut Shift-2 (compact mode)',
       51: 'Shortcut Shift-3 (bulk mode)',
     };
-    this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }
 
@@ -99,15 +105,15 @@ class WorkspaceMenu extends Component {
     this.hideMenu();
   };
 
-  showShareModal = () => {
+  openShareModal = () => {
     ReactGA.modalview('modals/menu-share');
-    this.props.uiX.showShareModal();
+    this.props.uiX.openShareModal();
     this.hideMenu();
   };
 
-  showCopyWorkspaceModal = () => {
+  openCopyWorkspaceModal = () => {
     ReactGA.modalview('modals/menu-copy-workspace');
-    this.props.uiX.showCopyWorkspaceModal();
+    this.props.uiX.openCopyWorkspaceModal();
     this.hideMenu();
   };
 
@@ -126,71 +132,19 @@ class WorkspaceMenu extends Component {
     this.hideMenu();
   };
 
-  triggerEmailModal = () => {
-    // Track here instead of in emailReminder because
-    // that function calls itself
+  openEmailPrompt = () => {
     ReactGA.modalview('modals/menu-email');
-    this.emailReminder();
+    this.props.uiX.openEmailWorkspaceModal();
     this.hideMenu();
   };
 
-  emailReminder = (email) => {
-    email = typeof email === 'string' ? email : '';
-
-    this.modal.prompt({
-      heading: 'Receive a Link to this Workspace',
-      body: [
-        ' You\'ll need the link to the compass to access it again. To email yourself the link now, enter your email address below.',
-        'I will not store your email address or send you spam.',
-      ],
-      defaultValue: email,
-      cb: async (status, email) => {
-        if (!status) return;
-
-        if (!isEmail(email)) {
-          this.props.uiX.toastError(`"${email}" is not a valid email address`);
-          this.emailReminder(email);
-          return;
-        }
-        await getAPIClient().sendReminderEmail({
-          topic: this.props.compass.topic,
-          editCode: this.props.compass.editCode,
-          username: this.props.users.me,
-          recipientEmail: email,
-          isAutomatic: false,
-        });
-      },
-    });
-  };
-
-  bookmark = () => {
-    const { topic, editCode } = this.props.compass;
-
-    if (Storage.hasBookmark(editCode)) {
-      this.modal.alert({
-        heading: 'Already bookmarked!',
-        body: 'Check for the yellow bookmark icon in the bottom left.',
-      });
+  openBookmarkModal = () => {
+    if (Storage.hasBookmark(this.props.compass.editCode)) {
+      this.props.uiX.toastSuccess('Bookmarked this workspace');
     } else {
       ReactGA.modalview('modals/menu-bookmark');
-      this.modal.prompt({
-        heading: 'Bookmark',
-        body: [
-          'Bookmarks give you quick access to workspaces from the app\'s home page - but can be lost if your browser cache is erased.',
-          'To never lose access to your compass, email yourself a link, or copy and paste it somewhere secure.'
-        ],
-        defaultValue: topic,
-        cb: (submit, bookmarkName) => {
-          if (submit) {
-            let username = this.props.users.me.replace(/\d+/g, '');
-            Storage.addBookmark(bookmarkName, editCode, username);
-            this.props.uiX.toastSuccess('Bookmarked this workspace');
-            this.props.uiX.setBookmark(true);
-          }
-        },
-      });
+      this.props.uiX.openBookmarkWorkspaceModal();
     }
-
     this.hideMenu();
   };
 
@@ -201,17 +155,19 @@ class WorkspaceMenu extends Component {
 
   confirmDelete = () => {
     ReactGA.modalview('modals/menu-delete');
-    this.modal.confirm({
-      body: 'You are about to delete this workspace. This action cannot be undone',
-      confirmText: 'Delete',
-      cb: (confirmed) => {
-        if (confirmed) {
-          Storage.removeBookmarkByCenter(this.props.compass.topic);
-          this.socket.emitDeleteCompass(this.props.compass._id);
-        }
-      },
-    });
+    this.props.uiX.openDeleteWorkspaceModal();
     this.hideMenu();
+  };
+
+  bookmarkWorkspace = (name) => {
+    Storage.addBookmark(name, this.props.compass.editCode, this.props.users.me);
+    this.props.uiX.toastSuccess('Bookmarked this workspace');
+    this.props.uiX.setBookmark(true);
+  }
+
+  deleteWorkspace = () => {
+    Storage.removeBookmarkByCenter(this.props.compass.topic);
+    this.socket.emitDeleteCompass(this.props.compass._id);
   };
 
   showSubmenu = (submenu) => () => {
@@ -276,21 +232,21 @@ class WorkspaceMenu extends Component {
             <i className={'material-icons'}>create_new_folder</i>
             New Workspace
           </div>
-          <div data-cy={workspaceMenu.copyWorkspace} className={'ic-menu-item'} onClick={this.showCopyWorkspaceModal}>
+          <div data-cy={workspaceMenu.copyWorkspace} className={'ic-menu-item'} onClick={this.openCopyWorkspaceModal}>
             <i className={'material-icons'}>content_copy</i>
             Copy Workspace
           </div>
-          <div data-cy={workspaceMenu.share} className={'ic-menu-item'} onClick={this.showShareModal}>
+          <div data-cy={workspaceMenu.share} className={'ic-menu-item'} onClick={this.openShareModal}>
             <i className={'material-icons'}>share</i>
             Share Workspace
           </div>
         </section>
         <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
-          <div data-cy={workspaceMenu.email} className={'ic-menu-item'} onClick={this.triggerEmailModal}>
+          <div data-cy={workspaceMenu.email} className={'ic-menu-item'} onClick={this.openEmailPrompt}>
             <i className={'material-icons'}>email</i>
             Save via Email
           </div>
-          <div data-cy={workspaceMenu.bookmark} className={'ic-menu-item'} onClick={this.bookmark}>
+          <div data-cy={workspaceMenu.bookmark} className={'ic-menu-item'} onClick={this.openBookmarkModal}>
             <i className={'material-icons'}>bookmark</i>
             Save as Bookmark
           </div>
@@ -364,6 +320,26 @@ class WorkspaceMenu extends Component {
     });
   };
 
+  handleChangeAlwaysSend = (e) => {
+    if (e.target.checked === false) {
+      Storage.setAlwaysSendEmail(false, null);
+    }
+    this.setState({ alwaysSendEmail: e.target.checked });
+  }
+
+  sendReminderEmail = async (email) => {
+    if (this.state.alwaysSendEmail) {
+      Storage.setAlwaysSendEmail(true, email);
+    }
+    await getAPIClient().sendReminderEmail({
+      topic: this.props.compass.topic,
+      editCode: this.props.compass.editCode,
+      username: this.props.users.me,
+      recipientEmail: email,
+      isAutomatic: false,
+    });
+  }
+
   render() {
     if (this.state.darkTheme) {
       $('#container').addClass('dark-theme');
@@ -372,6 +348,8 @@ class WorkspaceMenu extends Component {
       $('#container').removeClass('dark-theme');
       $('#ic-modal-container').removeClass('dark-theme');
     }
+
+    const alwaysSend = Storage.getAlwaysSendEmail();
 
     return (
       <div id={'ic-workspace-menu'}>
@@ -382,6 +360,32 @@ class WorkspaceMenu extends Component {
         </button>
         {this.state.active && this.renderMenu()}
         <ShortcutManager handle={this._handleShortcuts} />
+        <ShareModal />
+        <GDocModal />
+        <ScreenshotModal />
+        <CopyWorkspaceModal />
+        <ExplainViewModesModal />
+        <DeleteWorkspaceModal onConfirm={this.deleteWorkspace} />
+        <BookmarkWorkspacePrompt onSubmit={this.bookmarkWorkspace}
+                                 defaultValue={this.props.compass.topic}
+        />
+        <EmailWorkspacePrompt onSubmit={this.sendReminderEmail}
+                              validateFn={modalCheckEmail}
+        >
+          <div className="ic-always">
+            <input type="checkbox"
+                   id="ic-always-email-value"
+                   checked={this.state.alwaysSendEmail}
+                   onChange={this.handleChangeAlwaysSend}
+            />
+            <span>Automatically send me an email whenever I create a workspace</span>
+          </div>
+          {alwaysSend.enabled && (
+            <div className={'warning'}>
+              Your remembered email is <b>{alwaysSend.email}</b>. To forget, uncheck the box above.
+            </div>
+          )}
+        </EmailWorkspacePrompt>
       </div>
     );
   }

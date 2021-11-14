@@ -4,16 +4,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as uiX from '@actions/ui';
-
 import { EDITING_MODES } from '@utils/constants';
 import SocketSingleton from '@utils/Socket';
-import ModalSingleton from '@utils/Modal';
 
 class ShortcutManager extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.socket = SocketSingleton.getInstance();
-    this.modal = ModalSingleton.getInstance();
   }
 
   componentDidMount() {
@@ -26,10 +23,6 @@ class ShortcutManager extends Component {
 
   keydown = (e) => {
     const isEscapeKey = e.which === 27;
-
-    if (this.modal.show && isEscapeKey) {
-      return this.modal.close();
-    }
 
     if (this.props.visualMode && isEscapeKey) {
       this.props.uiX.normalMode();

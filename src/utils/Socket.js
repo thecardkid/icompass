@@ -2,17 +2,12 @@ import SocketIOClient from 'socket.io-client';
 import _ from 'underscore';
 
 import events from '@socket_events';
-import Modal from '@utils/Modal';
 
 const SocketSingleton = (() => {
   class Socket {
     constructor() {
-      this.modal = Modal.getInstance();
       this.socket = new SocketIOClient('/', {
         transports: ['websocket'],
-      });
-      this.subscribe({
-        [events.frontend.REFRESH_REQUIRED]: this.onRefreshRequired,
       });
     }
 
@@ -31,17 +26,6 @@ const SocketSingleton = (() => {
         return true;
       }
     };
-
-    onRefreshRequired = () => {
-      this.modal.alert({
-        heading: 'Please reload this page',
-        body: [
-          'An update has been made to the app, please reload to get the latest version.',
-        ],
-        cb: () => location.reload(),
-      });
-    };
-
     logout = () => {
       this.socket.emit(events.backend.LOGOUT);
     };

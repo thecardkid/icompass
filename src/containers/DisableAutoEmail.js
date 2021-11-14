@@ -1,21 +1,31 @@
 import React from 'react';
-import { browserHistory } from 'react-router';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import Modal from '@utils/Modal';
+import * as uiX from '@actions/ui';
 import Storage from '@utils/Storage';
+import { DisableAutoEmailModal } from '@components/modals/ConfirmModalWithRedirect';
 
-export default class DisableAutoEmail extends React.Component {
+class DisableAutoEmail extends React.Component {
   componentDidMount() {
+    this.props.uiX.openDisableAutoEmailModal();
     Storage.setAlwaysSendEmail(false);
-
-    Modal.getInstance().alert({
-      heading: 'Auto-email has been turned off',
-      body: 'At your request, you will no longer receive automatic emails when creating workspaces. Click below to go to the home page.',
-      cb: () => browserHistory.push('/'),
-    });
   }
 
   render() {
-    return <div/>;
+    return <DisableAutoEmailModal redirectURL={'/'} />;
   }
 }
+
+
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    uiX: bindActionCreators(uiX, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DisableAutoEmail);

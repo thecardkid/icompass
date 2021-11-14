@@ -26,7 +26,7 @@ class API {
       return;
     }
     if (isAutomatic) {
-      this.success('A link to this workspace has been automatically sent to you.');
+      this.success(`A link to this workspace has automatically been sent to ${recipientEmail}.`);
       return;
     }
     this.success('A link to this workspace has been sent to you');

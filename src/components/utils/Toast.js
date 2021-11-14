@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as uiX from '@actions/ui';
+import { isBrowserTestRunning } from '@utils/browser';
 
 class Toast extends React.Component {
   toast = {
@@ -22,6 +23,10 @@ class Toast extends React.Component {
       let timeoutMs = 3000;
       if (nextProps.toast.type === 'error') {
         timeoutMs = 6000;
+      }
+      if (isBrowserTestRunning()) {
+        // Machines are slow.
+        timeoutMs *= 1.5;
       }
       this.dismisserTimeoutID = setTimeout(this.props.uiX.toastClear, timeoutMs);
     }

@@ -1,4 +1,5 @@
 import verge from 'verge';
+import { MODAL_NAME } from '@utils/constants';
 
 export const enableDragCenter = () => {
   return { type: 'enableDragCenter' };
@@ -117,51 +118,50 @@ export const resize = () => {
   };
 };
 
-export const showShareModal = () => {
-  return {
-    type: 'showShareModal',
-  };
-};
+function openModalAction(modalName) {
+  return () => ({
+    type: 'openModal',
+    name: modalName,
+  });
+}
 
-export const hideShareModal = () => {
-  return {
-    type: 'hideShareModal',
-  };
-};
+export const closeAllModals = openModalAction(null);
+export const openShareModal = openModalAction(MODAL_NAME.SHARE_WORKSPACE);
+export const openExportAsTextModal = openModalAction(MODAL_NAME.EXPORT_AS_TEXT);
+export const openExportAsScreenshotModal = openModalAction(MODAL_NAME.EXPORT_AS_SCREENSHOT);
+export const openFeedbackModal = openModalAction(MODAL_NAME.FEEDBACK);
+export const openCopyWorkspaceModal = openModalAction(MODAL_NAME.COPY_WORKSPACE);
+export const openDisableAutoEmailModal = openModalAction(MODAL_NAME.DISABLE_AUTO_EMAIL);
+export const openAboutUsModal = openModalAction(MODAL_NAME.ABOUT_US);
+export const openExplainViewModesModal = openModalAction(MODAL_NAME.EXPLAIN_VIEW_MODES);
+export const openPrivacyStatementModal = openModalAction(MODAL_NAME.PRIVACY_STATEMENT);
+export const openWhatsNewModal = openModalAction(MODAL_NAME.WHATS_NEW);
+export const openWorkspaceNotFoundModal = openModalAction(MODAL_NAME.WORKSPACE_NOT_FOUND);
+export const openInvalidUsernameModal = openModalAction(MODAL_NAME.INVALID_USERNAME);
+export const openDuplicateUsernameModal = openModalAction(MODAL_NAME.DUPLICATE_USERNAME);
+export const openWorkspaceDeletedModal = openModalAction(MODAL_NAME.WORKSPACE_DELETED);
+export const openRefreshRequiredModal = openModalAction(MODAL_NAME.REFRESH_REQUIRED);
+export const openDeleteBookmarkModal = openModalAction(MODAL_NAME.DELETE_BOOKMARK);
+export const openDeleteNoteModal = openModalAction(MODAL_NAME.DELETE_NOTE);
+export const openDeleteNotesModal = openModalAction(MODAL_NAME.DELETE_NOTES);
+export const openDeleteDraftModal = openModalAction(MODAL_NAME.DELETE_DRAFT);
+export const openDeleteWorkspaceModal = openModalAction(MODAL_NAME.DELETE_WORKSPACE);
+export const openEditBookmarkModal = openModalAction(MODAL_NAME.EDIT_BOOKMARK);
+export const openEmailBookmarksModal = openModalAction(MODAL_NAME.EMAIL_BOOKMARKS);
+export const openBookmarkWorkspaceModal = openModalAction(MODAL_NAME.BOOKMARK_WORKSPACE);
+export const openEmailWorkspaceModal = openModalAction(MODAL_NAME.EMAIL_WORKSPACE);
+export const openPeopleGroupsModal = openModalAction(MODAL_NAME.PEOPLE_GROUPS);
+export const openPeopleGroupsDismissableModal = openModalAction(MODAL_NAME.PEOPLE_GROUPS_DISMISSABLE);
+export const openUsernamePromptModal = openModalAction(MODAL_NAME.USERNAME);
+export const openDisconnectedModal = openModalAction(MODAL_NAME.DISCONNECTED);
+export const openGetStartedModal = openModalAction(MODAL_NAME.GET_STARTED_PROMPT);
+export const openImageModal = openModalAction(MODAL_NAME.IMAGE);
 
-export const showGDocModal = () => {
+// Every open*Modal call will clear out modalExtras, so call this after.
+export const setModalExtras = (modalExtras) => {
   return {
-    type: 'showGDocModal',
-  };
-};
-
-export const hideGDocModal = () => {
-  return {
-    type: 'hideGDocModal',
-  };
-};
-
-export const showScreenshotModal = () => {
-  return {
-    type: 'showScreenshotModal',
-  };
-};
-
-export const hideScreenshotModal = () => {
-  return {
-    type: 'hideScreenshotModal',
-  };
-};
-
-export const showCopyWorkspaceModal = () => {
-  return {
-    type: 'showCopyWorkspaceModal',
-  };
-};
-
-export const hideCopyWorkspaceModal = () => {
-  return {
-    type: 'hideCopyWorkspaceModal',
+    type: 'setModalExtras',
+    modalExtras,
   };
 };
 

@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import Tappable from 'react-tappable/lib/Tappable';
 
-import ModalSingleton from '@utils/Modal';
 import SocketSingleton from '@utils/Socket';
 import { workspaceMenu } from '@cypress/data_cy';
 
 export default class NotesSubmenu extends Component {
   constructor(props) {
     super(props);
-    this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }
 

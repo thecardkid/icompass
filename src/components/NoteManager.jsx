@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
 import StickyNote from './StickyNote.jsx';
+import { DeleteDraftModal, DeleteNoteModal, DeleteNotesModal } from './modals/ConfirmDelete';
+import ImageModal from './modals/ImageModal';
 
 import * as noteX from '@actions/notes';
 import * as uiX from '@actions/ui';
@@ -178,7 +180,7 @@ class NoteManager extends Component {
   };
 
   submitDraft = (note, idx) => {
-    this.props.workspaceX.undraft(idx);
+    this.props.workspaceX.deleteDraft(idx);
     delete note.draft;
     note.color = Storage.getStickyNoteColor();
     // Can't submit draft in visual mode, no need to check
@@ -198,16 +200,40 @@ class NoteManager extends Component {
                   i={i}
                   submitDraft={this.submitDraft}
                   socket={this.socket}
-                  enterVisualMode={this.enterVisualMode}
-                  // Can't delete note in visual mode, no need to check
-                  destroy={this.socket.emitDeleteNote} />
+                  enterVisualMode={this.enterVisualMode}/>
     );
+  };
+
+  deleteNote = () => {
+    if (this.props.ui.editingMode === EDITING_MODES.VISUAL) {
+      return;
+    }
+    this.socket.emitDeleteNote(this.props.ui.modalExtras.deleteNoteID);
+  };
+
+  deleteSelectedNotes = () => {
+    const selected = [];
+    _.each(this.props.notes, (n, i) => {
+      if (this.props.workspace.selected[i]) {
+        selected.push(n._id);
+      }
+    });
+    this.socket.emitBulkDeleteNotes(selected);
+    this.props.uiX.normalMode();
+  };
+
+  deleteDraft = () => {
+    this.props.workspaceX.deleteDraft(this.props.ui.modalExtras.deleteDraftIndex);
   };
 
   render() {
     return (
       <div id="note-manager">
         {_.map(this.notes, this.renderNote)}
+        <DeleteDraftModal onConfirm={this.deleteDraft} />
+        <DeleteNoteModal onConfirm={this.deleteNote} />
+        <DeleteNotesModal onConfirm={this.deleteSelectedNotes} />
+        <ImageModal />
       </div>
     );
   }

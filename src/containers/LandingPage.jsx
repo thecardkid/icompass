@@ -1,6 +1,4 @@
-import $ from 'jquery';
 import React, { Component } from 'react';
-import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
@@ -8,29 +6,13 @@ import request from 'superagent';
 
 import * as uiX from '@actions/ui';
 import BookmarkList from '@components/BookmarkList.jsx';
-import Modal from '@utils/Modal';
+import { PrivacyStatementModal } from '@components/modals/SimpleModal';
 import Storage from '@utils/Storage';
 import DevOnly from '@utils/DevOnly';
 import getAPIClient from '@utils/api';
-import { isEmail, isCharOnly } from '@utils/regex';
+import { isCharOnly } from '@utils/regex';
 
 class LandingPage extends Component {
-  constructor(props) {
-    super(props);
-    this.modal = Modal.getInstance();
-
-    ReactGA.pageview('/');
-    this.props.uiX.resize();
-  }
-
-  componentDidMount() {
-    $(window).on('resize', this.props.uiX.resize);
-  }
-
-  componentWillUnmount() {
-    $(window).off('resize', this.props.uiX.resize);
-  }
-
   validateMakeInput = async (e) => {
     e.preventDefault();
 
@@ -53,9 +35,8 @@ class LandingPage extends Component {
           recipientEmail: alwaysSend.email,
           isAutomatic: true,
         });
-        return browserHistory.push(`/compass/edit/${data.code}/${this.state.username}`);
       }
-      this.setState({ data }, this.promptForEmail);
+      return browserHistory.push(`/compass/edit/${data.code}/${username}`);
     } catch(err) {
       // eslint-disable-next-line no-console
       console.error(err);
@@ -70,38 +51,6 @@ class LandingPage extends Component {
       return;
     }
     browserHistory.push(`/compass/edit/${resp.body.code}/dev`);
-  };
-
-  // TODO this is an atrocity.
-  promptForEmail = () => {
-    let alwaysSendChecked = false;
-    this.modal.promptForEmail(
-      async (hasValue, email) => {
-        const { username, data: { code, topic } } = this.state;
-        if (hasValue) {
-          if (!isEmail(email)) {
-            this.props.uiX.toastError(`"${email}" is not a valid email address`);
-            return this.promptForEmail();
-          }
-
-          if (alwaysSendChecked) {
-            Storage.setAlwaysSendEmail(true, email);
-          }
-
-          await getAPIClient().sendReminderEmail({
-            topic: topic,
-            editCode: code,
-            username,
-            recipientEmail: email,
-            isAutomatic: false,
-          });
-        }
-        return browserHistory.push(`/compass/edit/${code}/${username}`);
-      },
-      (enabled) => {
-        alwaysSendChecked = enabled;
-      },
-    );
   };
 
   sizeImage() {
@@ -127,6 +76,7 @@ class LandingPage extends Component {
       <div id={'ic-landing'}>
         <img src={'https://s3.us-east-2.amazonaws.com/innovatorscompass/landing.jpg'} className={'ic-background'} style={this.sizeImage()}/>
         <BookmarkList />
+        <PrivacyStatementModal />
         <div id={'ic-landing-container'}>
           <div id={'message'}>
             <h1>Innovators' Compass</h1>
@@ -143,7 +93,7 @@ class LandingPage extends Component {
                      ref="username"
                      maxLength={15}
                      required />
-              <div className={'ic-show-privacy-statement'} onClick={this.modal.alertPrivacyStatement}>
+              <div className={'ic-show-privacy-statement'} onClick={this.props.uiX.openPrivacyStatementModal}>
                 <u>Privacy Statement</u>
               </div>
               <br/>

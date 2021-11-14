@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import getAPIClient from '@utils/api';
+import { MODAL_NAME } from '@utils/constants';
 import DynamicModal from './DynamicModal';
+import { ModalFooter } from './shared';
 
-export default class CopyWorkspaceModal extends Component {
+class CopyWorkspaceModal extends Component {
   makeACopyOfWorkspace = async () => {
     const out = await getAPIClient().createCopyOfWorkspace({ editCode: this.props.compass.editCode });
     if (!out) {
@@ -15,14 +18,28 @@ export default class CopyWorkspaceModal extends Component {
   render() {
     return (
       <DynamicModal
+        modalName={MODAL_NAME.COPY_WORKSPACE}
         className={'ic-modal-make-copy'}
-        heading={'Make a Copy of this Workspace'}
-        close={this.props.close}>
+        heading={'Make a copy of this workspace'}
+      >
         <p className={'make-a-copy-explanation'}>Opens a new tab with a workspace that is a copy of your current workspace. The copy can be edited and shared independently of the original.</p>
-        <div className={'actions'}>
-          <button name={'make-copy'} onClick={this.makeACopyOfWorkspace}>Create "{this.props.compass.topic} (copy)" Workspace</button>
-        </div>
+        <ModalFooter confirmButton={{
+          text: 'Create Copy',
+          onConfirm: this.makeACopyOfWorkspace,
+        }} />
       </DynamicModal>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    compass: state.compass,
+  };
+};
+
+const mapDispatchToProps = () => {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CopyWorkspaceModal);

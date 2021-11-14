@@ -54,9 +54,9 @@ export const createDoodleDraft = (note) => {
   };
 };
 
-export const undraft = (idx) => {
+export const deleteDraft = (idx) => {
   return {
-    type: 'undraft',
+    type: 'deleteDraft',
     idx,
   };
 };

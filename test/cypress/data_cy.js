@@ -56,6 +56,12 @@ export const helpMenu = {
   leaveFeedback: 'help-leave-feedback',
 };
 
+export const modal = {
+  heading: 'modal-heading',
+  confirmButton: 'modal-confirm',
+  closeButton: 'modal-close',
+};
+
 export function getColorAttr(c) {
   if (c.indexOf('#') === 0) {
     return `color${c.substr(1)}`;

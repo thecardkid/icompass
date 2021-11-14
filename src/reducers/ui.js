@@ -9,17 +9,14 @@ const defaultState = {
     editText: false,
     editImage: false,
   },
+  openModal: null,
+  modalExtras: {},
   toast: {
     type: 'success',
     message: '',
   },
   bookmarked: false,
   dragCenterEnabled: false,
-  // TODO refactor under modals
-  showGDocModal: false,
-  showShareModal: false,
-  showScreenshotModal: false,
-  showCopyWorkspaceModal: false,
   focusedNote: -1,
   vw: 0,
   vh: 0,
@@ -167,32 +164,15 @@ export default (state = defaultState, action) => {
     case 'visualMode':
       return { ...state, editingMode: EDITING_MODES.VISUAL };
 
-    case 'showShareModal':
-      return { ...state, showShareModal: true };
-
-    case 'hideShareModal':
-      return { ...state, showShareModal: false };
-
-    case 'showGDocModal':
-      return { ...state, showGDocModal: true };
-
-    case 'hideGDocModal':
-      return { ...state, showGDocModal: false };
-
-    case 'showScreenshotModal':
-      return { ...state, showScreenshotModal: true };
-
-    case 'hideScreenshotModal':
-      return { ...state, showScreenshotModal: false };
-
-    case 'showCopyWorkspaceModal':
-      return { ...state, showCopyWorkspaceModal: true };
-
-    case 'hideCopyWorkspaceModal':
-      return { ...state, showCopyWorkspaceModal: false };
-
     case 'resetUI':
-      return defaultState;
+      return {
+        ...defaultState,
+        // Don't reset these two, as it causes weirdness if the Workspace is
+        // unmounted then mounted, e.g. navigating back to landing page, then
+        // forward again to workspace.
+        vw: state.vw,
+        vh: state.vh,
+      };
 
     case 'setIsFiona':
       return { ...state, isFiona: true };
@@ -207,6 +187,19 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         toast: {},
+      };
+
+    case 'openModal':
+      return {
+        ...state,
+        openModal: action.name,
+        modalExtras: {},
+      };
+
+    case 'setModalExtras':
+      return {
+        ...state,
+        modalExtras: action.modalExtras,
       };
 
     default:

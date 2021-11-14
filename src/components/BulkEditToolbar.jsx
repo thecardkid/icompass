@@ -7,14 +7,11 @@ import _ from 'underscore';
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
 import FormPalette from '@components/forms/FormPalette';
-import Modal from '@utils/Modal';
 import Socket from '@utils/Socket';
-import Storage from '@utils/Storage';
 import { trackFeatureEvent } from '@utils/analytics';
 import { STICKY_COLORS } from '@utils/constants';
 
 class BulkEditToolbar extends Component {
-  modal = Modal.getInstance();
   socket = Socket.getInstance();
 
   state = {
@@ -31,17 +28,7 @@ class BulkEditToolbar extends Component {
 
   bulkDelete = (ev) => {
     ev.stopPropagation();
-    this.modal.confirm({
-      body: 'You are about to delete all selected notes. This action cannot be undone.',
-      confirmText: 'Delete',
-      cb: (confirmed) => {
-        if (confirmed) {
-          trackFeatureEvent('Bulk edit: Delete');
-          this.socket.emitBulkDeleteNotes(this.getSelectedNotes());
-          this.cancel();
-        }
-      },
-    });
+    this.props.uiX.openDeleteNotesModal();
   };
 
   cancel = () => {

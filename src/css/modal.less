@@ -1,5 +1,5 @@
 
-div#ic-modal-container {
+div#ic-modal-container, div#ic-modal-container2 {
   position: absolute;
   top: 0;
   width: 100%;
@@ -10,36 +10,39 @@ div#ic-modal-container {
     z-index: -1;
   }
 
-  div#ic-modal-image {
-    text-align: center;
-    margin: 100px auto 0;
-    width: fit-content;
+  div#ic-backdrop2 {
+    z-index: -1;
+    background: var(--backdrop);
+  }
 
-    img {
-      min-width: 200px;
-      max-width: 80vw;
-      max-height: 80vh;
-    }
+
+  div#ic-modal-scroller {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100vh;
+    padding: 15vh 0;
+    .border-box;
+    display: flex;
+    justify-content: center;
   }
 
   div#ic-modal {
     width: 400px;
     padding: 15px 20px;
     background: var(--modal-bg);
-    margin: 130px auto 0;
     .border-radius(2px);
     -webkit-box-shadow: var(--shadow);
     -moz-box-shadow: var(--shadow);
     box-shadow: var(--shadow);
     font-family: @notosans;
+    height: fit-content;
+    height: -moz-fit-content;
 
-    div#ic-modal-body {
+    div.ic-dynamic-modal .title {
       font-size: 19px;
       text-align: left;
       padding: 10px 0;
       margin-top: 10px;
-      max-height: 500px;
-      overflow-y: scroll;
 
       a {
         color: @blue !important;
@@ -58,9 +61,9 @@ div#ic-modal-container {
       }
 
       p, span, ol, ul {
-        margin-top: 10px;
-        font-size: 13px;
-        line-height: 15px;
+        margin-top: 25px;
+        font-size: 14px;
+        line-height: 18px;
       }
 
       input {
@@ -76,14 +79,7 @@ div#ic-modal-container {
         cursor: text;
       }
 
-      div.ic-always {
-        margin-top: 7px;
 
-        input[type="checkbox"] {
-          height: 15px;
-          width: 20px;
-        }
-      }
 
       a {
         color: inherit;
@@ -128,25 +124,121 @@ div#ic-modal-container {
 
 div.ic-dynamic-modal {
   background: var(--modal-bg);
-  position: absolute;
   font-family: @notosans;
-  width: 400px;
+  height: fit-content;
+  height: -moz-fit-content;
+
+  div#ic-modal-image {
+    width: fit-content;
+    margin: 0 auto;
+
+    img {
+      // Width of ImageModal minus 50px;
+      max-width: 550px;
+    }
+  }
 
   div.contents {
-    margin: 25px 25px 30px !important;
+    margin: 25px 25px 20px !important;
 
     div.header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
       h1.title {
         width: 100% !important;
         font-size: 18px;
       }
 
-      button.ic-close-window {
-        color: #343434;
-        top: 15px;
-        right: 11px;
+      i {
+        cursor: pointer;
+      }
+    }
+
+    .body {
+      font-size: 13px;
+      line-height: 16px;
+      margin-top: 20px;
+    }
+
+    h4 {
+      margin-top: 30px;
+      text-decoration: underline;
+    }
+
+    div.ic-always {
+      margin-top: 15px;
+      display: flex;
+
+      input[type="checkbox"] {
+        height: 15px;
+        width: 20px;
+        margin-right: 5px;
+        margin-top: 1px;
+      }
+    }
+
+    div.warning {
+      .border-box;
+      background: #FEF5CF;
+      border-left: 4px solid #F9C300;
+      color: black;
+      margin-top: 15px;
+      padding: 5px 10px;
+      border-radius: 2px;
+      font-size: 13px;
+    }
+
+    p {
+      margin-top: 15px;
+
+      &:first-child {
+        margin-top: 0 !important;
+      }
+    }
+
+    input#ic-modal-input {
+      cursor: text;
+      border: 1px solid grey;
+      width: 93%;
+      font-size: 15px;
+      margin-top: 15px;
+      .border-radius(2px);
+      padding: 5px 10px;
+    }
+
+    .footer {
+      height: 30px;
+      margin-top: 15px;
+
+      button {
+        float: right;
+        height: 28px;
+        font-size: 12px;
+        margin-left: 10px;
+        padding: 0 10px;
         font-family: inherit;
-        font-weight: bold;
+        .border-radius(2px);
+      }
+
+      button#ic-modal-confirm {
+        background: @dark;
+        color: @light;
+      }
+
+      button#ic-modal-cancel {
+        background: none;
+        color: @dark;
+        border: 1px solid @dark;
+      }
+
+      button.danger {
+        background: @red !important;
+      }
+
+      button.confirm {
+        background: @blue !important;
       }
     }
   }
@@ -228,24 +320,16 @@ div.ic-modal-make-copy {
 }
 
 div.ic-gdoc {
-  div.warning {
-    .border-box;
-    background: #FEF5CF;
-    border-left: 4px solid #F9C300;
-    color: black;
-    margin-top: 15px;
-    padding: 5px 10px;
-    border-radius: 2px;
-    font-size: 13px;
-  }
 
   div.copy-to-clipboard {
     margin-top: 20px;
+    display: flex;
+    justify-content: right;
 
     button {
       padding: 5px 10px;
-      background: #5285ec;
-      color: white;
+      background: @dark;
+      color: @light;
       font-family: inherit;
       font-size: 14px;
     }

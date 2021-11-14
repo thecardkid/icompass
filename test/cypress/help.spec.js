@@ -1,5 +1,5 @@
 const { setup, getElemWithDataCy } = require('./utils');
-const { helpMenu } = require('./data_cy');
+const { modal, helpMenu } = require('./data_cy');
 
 function clickHelpButton() {
   cy.get('button.ic-help-button').click({ force: true });
@@ -12,8 +12,8 @@ describe('help menu', () => {
 
   it('show prompt', () => {
     getElemWithDataCy(helpMenu.getStarted).click();
-    cy.get('#ic-modal-body').should('contain', 'Innovator\'s Compass');
-    cy.get('#ic-modal-confirm').click();
+    getElemWithDataCy(modal.heading).should('contain', 'Innovator\'s Compass');
+    getElemWithDataCy(modal.closeButton).click();
   });
 
   it('quick start guide', () => {
@@ -24,25 +24,25 @@ describe('help menu', () => {
 
   it('about us', () => {
     getElemWithDataCy(helpMenu.aboutUs).click();
-    cy.get('#ic-modal-body').should('contain', 'Hi!');
-    cy.get('#ic-modal-confirm').click();
+    getElemWithDataCy(modal.heading).should('contain', 'Hi!');
+    getElemWithDataCy(modal.closeButton).click();
   });
 
   it('release notes', () => {
     getElemWithDataCy(helpMenu.whatsNew).click();
-    cy.get('#ic-modal-body').should('contain', 'Release');
-    cy.get('#ic-modal-confirm').click();
+    getElemWithDataCy(modal.heading).should('contain', 'New Things');
+    getElemWithDataCy(modal.closeButton).click();
   });
 
   it('privacy statement', () => {
     getElemWithDataCy(helpMenu.privacyStatement).click();
-    cy.get('#ic-modal-body').should('contain', 'Privacy Statement');
-    cy.get('#ic-modal-confirm').click();
+    getElemWithDataCy(modal.heading).should('contain', 'Privacy Statement');
+    getElemWithDataCy(modal.closeButton).click();
   });
 
-  it('contact', () => {
+  it('feedback', () => {
     getElemWithDataCy(helpMenu.leaveFeedback).click();
     cy.get('.ic-dynamic-modal .contents').should('contain', 'I\'d love to hear from you');
-    cy.get('button.ic-close-window').click();
+    getElemWithDataCy(modal.closeButton).click();
   });
 });

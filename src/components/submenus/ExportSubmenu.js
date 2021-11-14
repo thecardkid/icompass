@@ -2,26 +2,24 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import Tappable from 'react-tappable/lib/Tappable';
 
-import ModalSingleton from '@utils/Modal';
 import SocketSingleton from '@utils/Socket';
 import { workspaceMenu } from '@cypress/data_cy';
 
 export default class ExportSubmenu extends Component {
   constructor(props) {
     super(props);
-    this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }
 
   showExportGDocModal = () => {
     ReactGA.modalview('modals/export-gdoc');
-    this.props.uiX.showGDocModal();
+    this.props.uiX.openExportAsTextModal();
     this.props.hideMenu();
   };
 
   showExportScreenshot = () => {
     ReactGA.modalview('modals/export-png');
-    this.props.uiX.showScreenshotModal();
+    this.props.uiX.openExportAsScreenshotModal();
     this.props.hideMenu();
   };
 

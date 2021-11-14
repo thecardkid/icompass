@@ -13,7 +13,6 @@ import NotFound from './NotFound.jsx';
 import Workspace from './Workspace.jsx';
 
 import * as uiX from '@actions/ui';
-import PromptName from '@components/PromptName.jsx';
 import Toast from '@components/utils/Toast';
 import { initializeAPI } from '@utils/api';
 
@@ -30,17 +29,28 @@ class ConsumerAppInner extends Component {
       // eslint-disable-next-line no-console
       console.log('Initialized Google Analytics');
     }
+    props.uiX.resize();
+  }
+
+  componentDidMount() {
+    $(window).on('resize', this.props.uiX.resize);
+  }
+
+  componentWillUnmount() {
+    $(window).off('resize', this.props.uiX.resize);
   }
 
   render() {
     return (
       <div>
         <Toast />
+        {/* This is the portal for DynamicModal */}
+        <div id={'ic-modal-container2'} />
         <Router history={browserHistory}>
           <Route path={'/'} component={LandingPage} />
           <Route path={'/compass/view/:code(/:username)'} viewOnly={true} component={Workspace} />
           <Route path={'/compass/edit/:code/:username'} viewOnly={false} component={Workspace} />
-          <Route path={'/compass/edit/:code'} viewOnly={false} component={PromptName} />
+          <Route path={'/compass/edit/:code'} viewOnly={false} component={Workspace} />
           <Route path={'/disable-auto-email'} component={DisableAutoEmail} />
           <Route path={'*'} component={NotFound} />
         </Router>

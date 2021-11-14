@@ -1,6 +1,6 @@
 /* global Cypress */
 
-const { getColorAttr, workspaceMenu } = require('./data_cy');
+const { getColorAttr, modal, workspaceMenu } = require('./data_cy');
 
 export const testImageURL = 'http://localhost:8080/test.jpg';
 
@@ -15,13 +15,13 @@ export function setup({ topic, centerTextInput } = {}) {
   cy.get('#compass-center').type(topic || 'webdriverio');
   cy.get('#username').type('sandbox');
   cy.get('button[type=submit]').click();
-  // do not email
-  cy.get('#ic-modal-cancel').click();
-  waitForVisible('#compass', 1000);
-  // set center
-  waitForVisible('#ic-modal');
+  // Check modal is not dismissable via backdrop or close button.
+  getElemWithDataCy(modal.confirmButton).should('be.visible');
+  getElemWithDataCy(modal.closeButton).should('not.exist');
+  cy.get('#ic-backdrop2').click();
+  getElemWithDataCy(modal.confirmButton).should('be.visible');
   cy.get('#ic-modal-input').type(centerTextInput || 'center');
-  cy.get('#ic-modal-confirm').click();
+  getElemWithDataCy(modal.confirmButton).click();
   // wait for animation
   cy.wait(2000);
 }

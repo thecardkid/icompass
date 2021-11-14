@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 
 import DynamicModal from './DynamicModal';
 import * as uiX from '@actions/ui';
-import { makeTwitterURL } from '@utils/constants';
+import { MODAL_NAME, makeTwitterURL } from '@utils/constants';
 
 class ShareModal extends Component {
   editLink = `${icompass.config.APP_HOST}/compass/edit/${this.props.compass.editCode}`;
@@ -33,9 +33,10 @@ class ShareModal extends Component {
   render() {
     return (
       <DynamicModal
+        modalName={MODAL_NAME.SHARE_WORKSPACE}
         className={'ic-share'}
-        heading={'Share this Workspace'}
-        close={this.props.close}>
+        heading={'Share this workspace'}
+      >
         <div className={'ic-share-link'}>
           <p>Anyone can <b>edit</b></p>
           <div className={'share-box'}>
@@ -58,8 +59,10 @@ class ShareModal extends Component {
   }
 }
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = (state) => {
+  return {
+    compass: state.compass,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {

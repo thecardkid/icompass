@@ -7,7 +7,6 @@ import ReactTooltip from 'react-tooltip';
 import * as uiX from '@actions/ui';
 
 import { trackFeatureEvent } from '@utils/analytics';
-import ModalSingleton from '@utils/Modal';
 import SocketSingleton from '@utils/Socket';
 import FormPalette from './FormPalette';
 
@@ -25,8 +24,6 @@ class TextForm extends Component {
       // is 0 but actual string length is > 0).
       effectiveText: props.defaultText,
     };
-
-    this.modal = ModalSingleton.getInstance();
     this.socket = SocketSingleton.getInstance();
   }
 

@@ -68,7 +68,7 @@ const updateSelected = (state, action) => {
   return state;
 };
 
-const undraft = (state, action) => {
+const deleteDraft = (state, action) => {
   let drafts = Storage.removeDraft(state.editCode, action.idx);
   return { ...state, drafts };
 };
@@ -157,8 +157,8 @@ export default (state = defaultState, action) => {
     case 'updateSelected':
       return updateSelected(state, action);
 
-    case 'undraft':
-      return undraft(state, action);
+    case 'deleteDraft':
+      return deleteDraft(state, action);
 
     default:
       return state;

@@ -63,8 +63,7 @@ describe('context menus', () => {
 
     it('delete', () => {
       getElemWithDataCy(contextMenu.discardAction).click();
-      cy.get('#ic-modal').should('be.visible');
-      cy.get('#ic-modal').should('contain', 'Are you sure');
+      cy.get('.ic-dynamic-modal .title').should('contain', 'Are you sure');
       cy.get('#ic-modal-confirm').click();
       cy.wait(200);
       cy.get('.ic-sticky-note').should('have.length', 0);
@@ -99,7 +98,7 @@ describe('context menus', () => {
       getElemWithDataCy(contextMenu.zoomAction).click();
       cy.wait(200);
       cy.get('#ic-modal-image img').should('have.attr', 'src').should('contain', testImageURL);
-      cy.get('#ic-backdrop').click({ force: true });
+      cy.get('#ic-backdrop2').click({ force: true });
       cy.get('#ic-modal-image').should('not.exist');
     });
 
@@ -116,7 +115,7 @@ describe('context menus', () => {
 
     it('delete', () => {
       getElemWithDataCy(contextMenu.discardAction).click();
-      cy.get('#ic-modal').should('contain', 'Are you sure');
+      cy.get('.ic-dynamic-modal .title').should('contain', 'Are you sure');
       cy.get('#ic-modal-confirm').click();
       cy.wait(200);
       cy.get('.ic-sticky-note').should('have.length', 0);

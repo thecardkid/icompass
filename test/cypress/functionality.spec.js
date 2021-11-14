@@ -2,10 +2,11 @@ const {
   assertDraggable,
   clickXOnNote,
   expectCompassStructure,
+  getElemWithDataCy,
   setup,
   selectSubmenuOption
 } = require('./utils');
-const { workspaceMenu } = require('./data_cy');
+const { modal, workspaceMenu } = require('./data_cy');
 
 describe('basic functionality', () => {
   before(() => {
@@ -63,8 +64,8 @@ describe('basic functionality', () => {
     describe('delete', () => {
       it('rejecting alert preserves note', () => {
         clickXOnNote(0);
-        cy.get('#ic-modal-body').should('contain', 'Are you sure');
-        cy.get('#ic-modal-cancel').click();
+        cy.get('.ic-dynamic-modal .title').should('contain', 'Are you sure');
+        getElemWithDataCy(modal.closeButton).click();
         cy.get('div.ic-sticky-note').should('have.length', 1);
       });
 
@@ -84,14 +85,9 @@ describe('basic functionality', () => {
     it('clearing value, and submitting empty string, is ignored', () => {
       showPrompt();
       cy.get('#ic-modal-input').clear();
-      cy.get('#ic-modal-confirm').click();
+      getElemWithDataCy(modal.confirmButton).click();
       cy.get('#center').should('contain', 'center');
-    });
-
-    it('cancel', () => {
-      showPrompt();
-      cy.get('#ic-modal-cancel').click();
-      cy.get('#center').should('contain', 'center');
+      getElemWithDataCy(modal.closeButton).click();
     });
 
     it('can change compass center', () => {

@@ -64,7 +64,7 @@ describe('workspace menu', () => {
 
   it('bulk deleting (even with 0 notes selected) returns to standard view', () => {
     cy.get('.bulk-edit-btn.delete').click();
-    cy.get('#ic-modal-body').should('contain', 'Are you sure');
+    cy.get('.ic-dynamic-modal .title').should('contain', 'Are you sure');
     cy.get('#ic-modal-confirm').click();
     cy.get(toolbarSelector).should('not.exist');
   });
@@ -179,7 +179,7 @@ describe('workspace menu', () => {
         cy.get('#note2').click();
         cy.get('#note3').click();
         cy.get('.bulk-edit-btn.delete').click();
-        cy.get('#ic-modal-body').should('contain', 'Are you sure');
+        cy.get('.ic-dynamic-modal .title').should('contain', 'Are you sure');
         cy.get('#ic-modal-confirm').click();
 
         cy.get(toolbarSelector).should('not.exist');

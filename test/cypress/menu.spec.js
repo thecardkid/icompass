@@ -1,5 +1,11 @@
-const { expectCompassStructure, setup, selectMenuOption, selectSubmenuOption } = require('./utils');
-const { workspaceMenu } = require('./data_cy');
+const {
+  expectCompassStructure,
+  getElemWithDataCy,
+  setup,
+  selectMenuOption,
+  selectSubmenuOption ,
+} = require('./utils');
+const { modal, workspaceMenu } = require('./data_cy');
 
 describe('workspace menu', () => {
   before(() => {
@@ -67,8 +73,8 @@ describe('workspace menu', () => {
         submenu: workspaceMenu.modes,
         suboption: workspaceMenu.modesSubactions.explain,
       });
-      cy.get('#ic-modal-body').should('contain', 'What are these modes');
-      cy.get('#ic-modal-confirm').click();
+      getElemWithDataCy(modal.heading).should('contain', 'What are these modes');
+      getElemWithDataCy(modal.closeButton).click();
     });
   });
 
@@ -79,9 +85,8 @@ describe('workspace menu', () => {
         suboption: workspaceMenu.exportAsSubactions.googleDocs,
       });
       cy.get('div.ic-gdoc.ic-dynamic-modal').should('be.visible');
-      cy.get('div.ic-gdoc.ic-dynamic-modal div.copy-to-clipboard').should('be.visible');
       cy.get('div.ic-gdoc.ic-dynamic-modal div.warning').should('contain', 'Doodles will not be included');
-      cy.get('button.ic-close-window').click();
+      getElemWithDataCy(modal.closeButton).click();
     });
 
     it('as screenshot', () => {
@@ -90,7 +95,7 @@ describe('workspace menu', () => {
         suboption: workspaceMenu.exportAsSubactions.screenshot,
       });
       cy.get('div#exported-png p').should('contain', 'Right click');
-      cy.get('button.ic-close-window').click();
+      getElemWithDataCy(modal.closeButton).click();
     });
   });
 
@@ -160,8 +165,7 @@ describe('workspace menu', () => {
     describe('copy workspace', () => {
       it('modal looks right', () => {
         selectMenuOption(workspaceMenu.copyWorkspace);
-        cy.get('button[name=make-copy]').should('be.visible');
-        cy.get('.ic-close-window').click();
+        getElemWithDataCy(modal.closeButton).click();
       });
     });
 
@@ -191,18 +195,85 @@ describe('workspace menu', () => {
     });
 
     describe('email reminder', () => {
-      it('wrong email format displays error message', () => {
+      const checkbox = '#ic-always-email-value';
+      const input = '#ic-modal-input';
+
+      const validEmail = 'foo@bar.com';
+
+      const createWorkspace = () => {
+        cy.visit('/');
+        cy.get('#compass-center').type('testing');
+        cy.get('#username').type('sandbox');
+        cy.get('button[type=submit]').click();
+      }
+
+      // state is in LocalStorage, so we need it to persist between tests.
+      beforeEach(cy.restoreLocalStorage);
+      afterEach(cy.saveLocalStorage);
+
+      it('cannot proceed without valid email', () => {
         selectMenuOption(workspaceMenu.email);
-        cy.get('#ic-modal-body').should('contain', 'Receive a Link');
-        cy.get('#ic-modal-input').type('fakeemail');
-        cy.get('#ic-modal-confirm').click();
+        cy.get(checkbox).should('not.be.checked');
+        cy.get(checkbox).check();
+
+        // No input.
+        getElemWithDataCy(modal.confirmButton).click();
+        getElemWithDataCy(modal.confirmButton).should('be.visible');
+
+        // Bad input.
+        cy.get(input).type('foo@.com');
+        getElemWithDataCy(modal.confirmButton).click();
+        getElemWithDataCy(modal.confirmButton).should('be.visible');
         cy.get('.ic-toast-error').should('be.visible');
+
+        // Valid input.
+        cy.get(input).clear().type(validEmail);
+        getElemWithDataCy(modal.confirmButton).click();
+        cy.get('.ic-toast-success').should('be.visible');
+      })
+
+      it('creating a new workspace will trigger email send', () => {
+        cy.url().then($url => {
+          createWorkspace();
+          cy.get('.ic-toast-message').should('contain', 'automatically');
+          // add What's this? with explanation modal to toast, and include email in message.
+          cy.visit($url);
+        });
+
+      })
+
+      it('can unsubscribe by unchecking the box', () => {
+        cy.url().then($url => {
+          selectMenuOption(workspaceMenu.email);
+          cy.get(checkbox).should('be.checked');
+          cy.get('.warning').should('contain', validEmail);
+
+          // Unchecking should forget immediately.
+          cy.get(checkbox).uncheck();
+          cy.get('.warning').should('not.exist');
+          createWorkspace();
+          cy.get('.ic-toast-success').should('not.be.visible');
+
+          cy.visit($url);
+        });
       });
 
-      it('valid email shows success toast', () => {
-        cy.get('#ic-modal-input').type('fakeemail@valid.com');
-        cy.get('#ic-modal-confirm').click();
-        cy.get('.ic-toast-success').should('be.visible');
+      it('can unsubscribe by /disable-auto-email', () => {
+        cy.url().then($url => {
+          // First, enable the auto-email. Repeated from above.
+          selectMenuOption(workspaceMenu.email);
+          cy.get(checkbox).check();
+          cy.get(input).clear().type(validEmail);
+          getElemWithDataCy(modal.confirmButton).click();
+          createWorkspace();
+          cy.get('.ic-toast-message').should('contain', 'automatically');
+
+          cy.visit('/disable-auto-email');
+          createWorkspace();
+          cy.get('.ic-toast-message').should('not.be.visible');
+
+          cy.visit($url);
+        });
       });
     });
 
@@ -223,7 +294,7 @@ describe('workspace menu', () => {
       });
 
       it('can x out', () => {
-        cy.get('button.ic-close-window').click();
+        getElemWithDataCy(modal.closeButton).click();
         cy.get('.ic-share').should('not.exist');
       });
     });
@@ -235,9 +306,8 @@ describe('workspace menu', () => {
 
       it('toast displays success status', () => {
         selectMenuOption(workspaceMenu.bookmark);
-        cy.get('#ic-modal-body').should('contain', 'Bookmarks give you quick access');
         cy.get('#ic-modal-input').type('My bookmark');
-        cy.get('#ic-modal-confirm').click();
+        getElemWithDataCy(modal.confirmButton).click();
         cy.get('.ic-toast-success').should('be.visible');
       });
 
@@ -296,8 +366,8 @@ describe('workspace menu', () => {
       //   it('bookmark prompt indicates workspace is already bookmarked', () => {
       //     selectMenuOption(menuActions.bookmark);
       //     b.waitForVisible('#ic-modal');
-      //     cy.get('#ic-modal-body').should('contain', 'Already bookmarked');
-      //     cy.get('#ic-modal-confirm').click();
+      //     getElemWithDataCy(modal.heading).should('contain', 'Already bookmarked');
+      //     getElemWithDataCy(modal.confirmButton).click();
       //     b.back();
       //   });
       //
@@ -306,17 +376,17 @@ describe('workspace menu', () => {
       //     b.pause(500);
       //     cy.get('button.edit').click();
       //     b.waitForVisible('#ic-modal');
-      //     cy.get('#ic-modal-body').should('contain', 'Enter a new name');
+      //     getElemWithDataCy(modal.heading).should('contain', 'Enter a new name');
       //     cy.get('#ic-modal-input').type('Changed name');
-      //     cy.get('#ic-modal-confirm').click();
+      //     getElemWithDataCy(modal.confirmButton).click();
       //     cy.get('.ic-saved a').should('contain', 'Changed name');
       //   });
       //
       //   it('can remove bookmark', () => {
       //     cy.get('button.remove').click();
       //     b.waitForVisible('#ic-modal');
-      //     cy.get('#ic-modal-body').should('contain', 'Are you sure');
-      //     cy.get('#ic-modal-confirm').click();
+      //     getElemWithDataCy(modal.heading).should('contain', 'Are you sure');
+      //     getElemWithDataCy(modal.confirmButton).click();
       //     expect('.ic-saved').to.not.be.there();
       //   });
       //
@@ -325,14 +395,14 @@ describe('workspace menu', () => {
       //       cy.get('#email').click();
       //       b.waitForVisible('#ic-modal');
       //       cy.get('#ic-modal-input').type('invalidemail@');
-      //       cy.get('#ic-modal-confirm').click();
+      //       getElemWithDataCy(modal.confirmButton).click();
       //       b.waitForVisible('.ic-toast-message');
       //       cy.get('#ic-toast').should('contain', 'not a valid email');
       //     });
       //
       //     it('toast success if email valid', () => {
       //       cy.get('#ic-modal-input').type('fakeemail@test.com');
-      //       cy.get('#ic-modal-confirm').click();
+      //       getElemWithDataCy(modal.confirmButton).click();
       //       b.waitForVisible('#ic-toast');
       //       cy.get('#ic-toast').should('contain', 'link to this workspace');
       //     });
@@ -371,9 +441,9 @@ describe('workspace menu', () => {
     describe('delete workspace', () => {
       it('navigates to landing page', () => {
         selectMenuOption(workspaceMenu.deleteWorkspace);
-        cy.get('#ic-modal-confirm').click();
+        getElemWithDataCy(modal.confirmButton).click();
         // Deleting workspace shows two modals
-        cy.get('#ic-modal-confirm').click();
+        getElemWithDataCy(modal.confirmButton).click();
         cy.wait(500);
         cy.location().should((loc) => {
           expect(loc.pathname).to.equal('/');
@@ -382,7 +452,7 @@ describe('workspace menu', () => {
 
       it('workspace no longer exists', () => {
         cy.go('back');
-        cy.get('#ic-modal-body h3').should('contain', 'not found');
+        getElemWithDataCy(modal.heading).should('contain', 'not found');
       });
     });
   });

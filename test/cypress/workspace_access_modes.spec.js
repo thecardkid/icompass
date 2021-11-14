@@ -1,5 +1,5 @@
-const { expectCompassStructure, setup, selectMenuOption } = require('./utils');
-const { workspaceMenu } = require('./data_cy');
+const { expectCompassStructure, getElemWithDataCy, setup, selectMenuOption } = require('./utils');
+const { modal, workspaceMenu } = require('./data_cy');
 
 describe('workspace access modes', () => {
   let editURL, viewURL;
@@ -29,8 +29,8 @@ describe('workspace access modes', () => {
   describe('view-only mode', () => {
     it('invalid code', () => {
       cy.visit('/compass/view/1234abcd');
-      cy.get('#ic-modal-body').should('contain', 'Workspace not found');
-      cy.get('#ic-modal-confirm').click();
+      getElemWithDataCy(modal.heading).should('contain', 'Workspace not found');
+      getElemWithDataCy(modal.confirmButton).click();
       cy.url().should('eq', 'http://localhost:8080/');
     });
 
@@ -116,23 +116,23 @@ describe('workspace access modes', () => {
 
     it('invalid code and invalid username', () => {
       cy.visit('/compass/edit/12345/,,,');
-
-      cy.get('#ic-modal-body').should('contain', 'Your code is not valid');
-      cy.get('#ic-modal-body').should('contain', 'You will be redirected');
-
-      cy.get('#ic-modal-confirm').click();
+      getElemWithDataCy(modal.heading).should('contain', 'Workspace not found');
+      getElemWithDataCy(modal.confirmButton).click();
       cy.url().should('eq', 'http://localhost:8080/');
     });
 
-   describe('username input', () => {
-     it('missing username', () => {
-       cy.visit(editURL.replace('/sandbox', ''));
-       cy.get('#ic-modal-confirm').click();
-       cy.get('.ic-toast-message').should('contain', 'You can\'t leave this empty');
-     });
+    describe('username input', () => {
+      it('prompts for username if missing from path', () => {
+        cy.visit(editURL.replace('/sandbox', ''));
+        getElemWithDataCy(modal.heading).should('contain', 'Welcome');
+      });
 
-     it('bad username', () => {
-        cy.get('#ic-modal-body').should('contain', 'Welcome');
+      it('ignores submitting empty input', () => {
+        getElemWithDataCy(modal.confirmButton).click();
+        getElemWithDataCy(modal.confirmButton).should('be.visible');
+      });
+
+      it('bad username', () => {
         cy.get('#ic-modal-input').type('sandbox2');
         cy.get('#ic-modal-confirm').click();
         cy.get('.ic-toast-message').should('contain', 'letters-only');

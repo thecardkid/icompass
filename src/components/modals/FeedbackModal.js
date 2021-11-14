@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import DynamicModal from './DynamicModal';
 import * as uiX from '@actions/ui';
 import getAPIClient from '@utils/api';
+import { MODAL_NAME } from '@utils/constants';
+import { ModalFooter } from './shared';
 
 class FeedbackModal extends Component {
 
@@ -19,15 +21,15 @@ class FeedbackModal extends Component {
       submitterEmail: email,
       message: note,
     });
-    this.props.close();
   };
 
   render() {
     return (
       <DynamicModal
+        modalName={MODAL_NAME.FEEDBACK}
         className={'ic-feedback'}
-        close={this.props.close}
-        heading={'I\'d love to hear from you'}>
+        heading={'I\'d love to hear from you'}
+      >
           <div className={'explain'}>
             Have an idea for a new feature? Or saw something go wrong that shouldn't have? Leave me a note, and I'll get back to you as soon as I can!
           </div>
@@ -39,9 +41,10 @@ class FeedbackModal extends Component {
           <textarea placeholder={'Your note...'}
                     ref={'note'}
                     className={'feedback-note disable-shortcuts'} />
-          <div className={'send'}>
-            <button onClick={this.submitFeedback}>Send</button>
-          </div>
+          <ModalFooter confirmButton={{
+            text: 'Send',
+            onConfirm: this.submitFeedback,
+          }} />
       </DynamicModal>
     );
   }

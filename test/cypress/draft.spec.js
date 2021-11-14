@@ -21,7 +21,7 @@ describe('draft mode', () => {
     }
   });
 
-  // drafts are saved in local storage, so we need to persist the storage between tests
+  // Drafts are in LocalStorage, so we need it to persist between tests.
   beforeEach(cy.restoreLocalStorage);
   afterEach(cy.saveLocalStorage);
 

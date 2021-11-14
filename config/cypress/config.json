@@ -7,6 +7,7 @@
   "chromeWebSecurity": false,
   "_chromeWebSecurityComment": "With this on, the test `view image` in context_menu.spec.js fails, not sure why.",
   "waitForAnimations": true,
+  "userAgent" : "cypress",
 
   "ignoreTestFiles": [
     "**/__snapshots__/*",

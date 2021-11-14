@@ -11,13 +11,13 @@ import * as compassX from '@actions/compass';
 import * as uiX from '@actions/ui';
 
 import SelectArea from './SelectArea';
+import { PeopleGroupsDismissablePrompt, PeopleGroupsPrompt } from './modals/Prompt';
 import NoteManager from '@components/NoteManager.jsx';
 import NoteManagerViewOnly from '@components/NoteManagerViewOnly.jsx';
 import MaybeTappable from '@utils/MaybeTappable';
 
 import { trackFeatureEvent } from '@utils/analytics';
 import { EDITING_MODES } from '@utils/constants';
-import Modal from '@utils/Modal';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
 
@@ -100,14 +100,13 @@ class Compass extends Component {
 
     if (this.hasEditingRights) {
       this.state.select = false;
-      this.modal = Modal.getInstance();
       this.socket = Socket.getInstance();
       this.socket.subscribe({
         [events.frontend.SET_CENTER_TEXT]: this.setCompassCenter,
         [events.frontend.SET_CENTER_POSITION]: this.setCompassCenterPosition,
       });
       if (props.compass.center.length === 0) {
-        this.setPeopleInvolved();
+        this.props.uiX.openPeopleGroupsModal();
       }
     }
   }
@@ -259,21 +258,12 @@ class Compass extends Component {
     };
   };
 
-  setPeopleInvolved = () => {
-    this.modal.promptForCenter(this.props.uiX.toastError, (people) => {
-      trackFeatureEvent('Compass center: Set text');
-      this.socket.emitSetCenter(this.props.compass._id, people);
-    });
+  setPeopleGroups = (x) => {
+    this.socket.emitSetCenter(this.props.compass._id, x);
   };
 
-  editPeopleInvolved = () => {
-    this.modal.editCenter(this.props.compass.center, (edited) => {
-      if (!edited) {
-        return;
-      }
-      trackFeatureEvent('Compass center: Edit text');
-      this.socket.emitSetCenter(this.props.compass._id, edited);
-    });
+  editPeopleGroups = () => {
+    this.props.uiX.openPeopleGroupsDismissableModal();
   };
 
   showOrHideFullTopic = () => {
@@ -337,7 +327,7 @@ class Compass extends Component {
                  height: length,
                  cursor: this.hasEditingRights ? 'pointer' : 'auto',
                }}
-               onDoubleClick={this.hasEditingRights ? this.editPeopleInvolved : _.noop}>
+               onDoubleClick={this.hasEditingRights ? this.editPeopleGroups : _.noop}>
             <p className="wordwrap" style={css}>{center}</p>
           </div>
           {this.hasEditingRights && !this.props.ui.dragCenterEnabled &&
@@ -486,6 +476,8 @@ class Compass extends Component {
         width: this.props.ui.vw,
         height: this.props.ui.vh,
       }}>
+        <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} />
+        <PeopleGroupsDismissablePrompt onSubmit={this.setPeopleGroups} />
         <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         <SelectArea show={this.state.select} done={this.onMouseUp}/>

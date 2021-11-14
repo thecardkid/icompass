@@ -1,15 +1,12 @@
 import $ from 'jquery';
-import ReactGA from 'react-ga';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 
-import { CSS, EDITING_MODES } from '@utils/constants';
-import Modal from '@utils/Modal';
-
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
+import { CSS, EDITING_MODES } from '@utils/constants';
 
 import { contextMenu } from '@cypress/data_cy';
 
@@ -19,8 +16,6 @@ class StickyNote extends Component {
   constructor(props) {
     super(props);
     this.state = { contextMenu: null };
-
-    this.modal = Modal.getInstance();
     this.hasEditingRights = !this.props.viewOnly;
     this.setModes(this.props);
   }
@@ -44,27 +39,11 @@ class StickyNote extends Component {
 
     let n = this.props.note;
     if (n.draft) {
-      ReactGA.modalview('modals/discard-draft');
-      this.modal.confirm({
-        body: 'You are about to discard this draft. This action cannot be undone.',
-        confirmText: 'Discard',
-        cb: (confirmed) => {
-          if (confirmed) {
-            this.props.workspaceX.undraft(this.props.i);
-          }
-        },
-      });
+      this.props.uiX.openDeleteDraftModal();
+      this.props.uiX.setModalExtras({ deleteDraftIndex: this.props.i });
     } else {
-      ReactGA.modalview('modals/delete-note');
-      this.modal.confirm({
-        body: 'You are about to delete this note. This action cannot be undone.',
-        confirmText: 'Delete',
-        cb: (confirmed) => {
-          if (confirmed) {
-            this.props.destroy(n._id);
-          }
-        },
-      });
+      this.props.uiX.openDeleteNoteModal();
+      this.props.uiX.setModalExtras({ deleteNoteID: this.props.note._id });
     }
   };
 
@@ -291,11 +270,11 @@ class StickyNote extends Component {
 
   showImage = () => {
     if (this.props.note.isImage) {
-      this.modal.image({
-        src: this.props.note.text,
-      });
+      this.props.uiX.openImageModal();
+      this.props.uiX.setModalExtras({ src: this.props.note.text });
     } else if (this.props.note.doodle) {
-      this.modal.image({
+      this.props.uiX.openImageModal();
+      this.props.uiX.setModalExtras({
         src: this.props.note.doodle,
         background: this.props.note.color || 'chartreuse',
       });

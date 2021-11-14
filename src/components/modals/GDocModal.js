@@ -7,7 +7,9 @@ import { bindActionCreators } from 'redux';
 import htmlparser from 'htmlparser2';
 
 import DynamicModal from './DynamicModal';
+import { ModalFooter } from './shared';
 import * as uiX from '@actions/ui';
+import { MODAL_NAME } from '@utils/constants';
 
 class GDocModal extends Component {
   getDefaultDocData() {
@@ -108,7 +110,7 @@ ${header}:`;
       return (
         <DynamicModal
           className={'ic-gdoc'}
-          heading={'Export to Google Doc'}
+          heading={'Export workspace text'}
           close={this.props.close}>
           <div className={'warning'}>
             This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
@@ -139,25 +141,30 @@ ${header}:`;
 
     return (
       <DynamicModal
+        modalName={MODAL_NAME.EXPORT_AS_TEXT}
         className={'ic-gdoc'}
-        heading={'Export as text'}
-        close={this.props.close}>
-          <div className={'warning'}>
-            <b>NOTE:</b> Doodles will not be included. All formatting (bold, italics, ...) will be omitted.
-          </div>
-          <div className={'copy-to-clipboard'}>
-            <button onClick={this.copyToClipboard}>
-              Copy to Clipboard
-            </button>
-          </div>
-          {this.renderPreview(docData)}
+        heading={'Export workspace text'}
+        width={500}
+      >
+        <div className={'warning'}>
+          Doodles will not be included. All formatting (bold, italics, etc.) will be omitted.
+        </div>
+        {this.renderPreview(docData)}
+        <ModalFooter confirmButton={{
+          text: 'Copy to Clipboard',
+          keepOpenOnConfirm: true,
+          onConfirm: this.copyToClipboard,
+        }} />
       </DynamicModal>
     );
   }
 }
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = (state) => {
+  return {
+    notes: state.notes,
+    compass: state.compass,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {

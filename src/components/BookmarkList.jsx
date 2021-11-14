@@ -7,17 +7,17 @@ import _ from 'underscore';
 
 import * as uiX from '@actions/ui';
 import getAPIClient from '@utils/api';
-import { isEmail } from '@utils/regex';
-import Modal from '@utils/Modal';
+import { modalCheckEmail } from '@utils/regex';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
 
 import Bookmark from './Bookmark';
+import { DeleteBookmarkModal } from './modals/ConfirmDelete';
+import { EditBookmarkPrompt, EmailBookmarksPrompt } from './modals/Prompt';
 
 class BookmarkList extends Component {
   constructor(props) {
     super(props);
-    this.modal = Modal.getInstance();
     this.socket = Socket.getInstance();
 
     let b = Storage.getBookmarks();
@@ -31,34 +31,28 @@ class BookmarkList extends Component {
   edit = (idx) => (e) => {
     e.stopPropagation();
     ReactGA.modalview('modals/bookmarks-edit');
-    this.modal.prompt({
-      heading: 'Edit bookmark',
-      body: 'Enter a new name for your bookmark:',
-      defaultValue: this.state.bookmarks[idx].center,
-      cb: (updated, newName) => {
-        if (updated && newName) {
-          let bookmarks = Storage.updateName(idx, newName);
-          this.setState({ bookmarks });
-        }
-      },
-    });
+    this.props.uiX.openEditBookmarkModal();
+    this.props.uiX.setModalExtras({ editBookmarkIndex: idx });
+  };
+
+  editBookmark = (value) => {
+    const bookmarks = Storage.updateName(this.props.ui.modalExtras.editBookmarkIndex, value);
+    this.setState({ bookmarks });
   };
 
   remove = (idx) => (e) => {
     e.stopPropagation();
     ReactGA.modalview('modals/bookmarks-remove');
-    this.modal.confirm({
-      body: 'You are about to remove this bookmark. This action cannot be undone.',
-      confirmText: 'Delete',
-      cb: (confirmed) => {
-        if (confirmed) {
-          let bookmarks = Storage.removeBookmark(idx);
-          let show = this.state.show;
-          show.splice(idx, 1);
-          this.setState({ bookmarks, show });
-        }
-      },
-    });
+    this.props.uiX.openDeleteBookmarkModal();
+    this.props.uiX.setModalExtras({ deleteBookmarkIndex: idx });
+  };
+
+  deleteBookmark = () => {
+    const idx = this.props.ui.modalExtras.deleteBookmarkIndex;
+    const bookmarks = Storage.removeBookmark(idx);
+    const show = this.state.show;
+    show.splice(idx, 1);
+    this.setState({ bookmarks, show });
   };
 
   expand = (idx) => () => {
@@ -91,34 +85,17 @@ class BookmarkList extends Component {
     this.refs.importer.click();
   };
 
-  emailBookmarks = (currentEmail) => {
-    currentEmail = typeof currentEmail === 'string' ? currentEmail : '';
+  openEmailBookmarksModal = () => {
     ReactGA.modalview('modals/bookmarks-email');
-    this.modal.prompt({
-      heading: 'Email your bookmarks',
-      body: [
-        'Enter your email below to receive all links to your bookmarked workspaces.',
-        'I will not store your email address or send you spam.',
-      ],
-      defaultValue: currentEmail,
-      cb: async (accepted, email) => {
-        if (!accepted) return;
-
-        if (!email.length) return;
-
-        if (!isEmail(email)) {
-          this.props.uiX.toastError(`"${email}" is not a valid email address`);
-          this.emailBookmarks(email);
-          return;
-        }
-
-        await getAPIClient().sendBookmarksEmail({
-          bookmarks: this.state.bookmarks,
-          recipientEmail: email,
-        });
-      },
-    });
+    this.props.uiX.openEmailBookmarksModal();
   };
+
+  emailBookmarks = async (email) => {
+    await getAPIClient().sendBookmarksEmail({
+      bookmarks: this.state.bookmarks,
+      recipientEmail: email,
+    });
+  }
 
   onSort = (bookmarks) => {
     Storage.setBookmarks(bookmarks);
@@ -144,7 +121,7 @@ class BookmarkList extends Component {
   renderActions = () => {
     return (
       <div className={'actions'}>
-        <button id={'email'} onClick={this.emailBookmarks} data-tip data-for="email-tooltip">
+        <button id={'email'} onClick={this.openEmailBookmarksModal} data-tip data-for="email-tooltip">
           <i className={'material-icons'}>email</i>
         </button>
         <ReactTooltip id={'email-tooltip'} place={'right'} effect={'solid'}>
@@ -162,6 +139,10 @@ class BookmarkList extends Component {
 
     return (
       <div id={'ic-bookmarks'} style={{left: showBookmarks ? '0' : '-200px'}}>
+        <EditBookmarkPrompt onSubmit={this.editBookmark} />
+        <EmailBookmarksPrompt onSubmit={this.emailBookmarks}
+                              validateFn={modalCheckEmail} />
+        <DeleteBookmarkModal onConfirm={this.deleteBookmark} />
         <div id={'bookmark-button'}
              style={{left: showBookmarks ? '200px' : '0'}}
              onClick={this.toggleBookmarks}>
@@ -182,7 +163,9 @@ class BookmarkList extends Component {
 
 
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    ui: state.ui,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
