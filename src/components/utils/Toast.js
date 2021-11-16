@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import * as uiX from '@actions/ui';
 import { isBrowserTestRunning } from '@utils/browser';
+import { modal } from '@cypress/data_cy';
 
 class Toast extends React.Component {
   toast = {
@@ -21,7 +22,8 @@ class Toast extends React.Component {
         clearTimeout(this.dismisserTimeoutID);
       }
       let timeoutMs = 3000;
-      if (nextProps.toast.type === 'error') {
+      if (nextProps.toast.type === 'error'
+        || nextProps.toast.message === uiX.specialToasts.automaticEmail) {
         timeoutMs = 6000;
       }
       if (isBrowserTestRunning()) {
@@ -62,6 +64,10 @@ class Toast extends React.Component {
     this.props.uiX.toastClear();
   };
 
+  openAutoEmailFeatureModal = () => {
+    this.props.uiX.openAutoEmailFeatureModal();
+  };
+
   render() {
     let { toast } = this.props;
 
@@ -73,6 +79,19 @@ class Toast extends React.Component {
       // during its dismissed animation.
       toast = this.toast;
     }
+    let message = toast.message || this.message;
+    if (toast.message === uiX.specialToasts.automaticEmail) {
+      let text;
+      if (toast.type === 'success') {
+        text = `A link to this workspace has automatically been sent to ${toast.recipientEmail}`;
+      } else if (toast.type === 'error') {
+        text = 'Failed sending email, please note down your workspace code somewhere.';
+      }
+      message = this.message = (
+        <span className={'auto-email'}>{text}.<u data-cy={modal.whatsThis} onClick={this.openAutoEmailFeatureModal}>What's this?</u>
+        </span>
+      );
+    }
 
     return (
       <div className={'ic-toast-container'}>
@@ -81,7 +100,7 @@ class Toast extends React.Component {
             <i className={'material-icons'}>{this.iconForType(toast.type)}</i>
           </div>
           <div className={'ic-toast-message'}>
-            {toast.message || this.message}
+            {message}
           </div>
           <div className={'ic-toast-close'} onClick={this.handleDismiss}>
             <i className={'material-icons'}>close</i>

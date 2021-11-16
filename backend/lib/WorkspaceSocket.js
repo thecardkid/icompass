@@ -43,7 +43,7 @@ class WorkspaceSocket {
         this.logger.error(`Error in action "${clientAction}": ${ex.message}`);
         this.socket.emit(events.frontend.SERVER_ERROR, clientAction);
       }
-    }
+    };
   }
 
   broadcast(event, ...args) {

@@ -3,7 +3,7 @@ const {
   getElemWithDataCy,
   setup,
   selectMenuOption,
-  selectSubmenuOption ,
+  selectSubmenuOption,
 } = require('./utils');
 const { modal, workspaceMenu } = require('./data_cy');
 
@@ -205,7 +205,7 @@ describe('workspace menu', () => {
         cy.get('#compass-center').type('testing');
         cy.get('#username').type('sandbox');
         cy.get('button[type=submit]').click();
-      }
+      };
 
       // state is in LocalStorage, so we need it to persist between tests.
       beforeEach(cy.restoreLocalStorage);
@@ -230,17 +230,20 @@ describe('workspace menu', () => {
         cy.get(input).clear().type(validEmail);
         getElemWithDataCy(modal.confirmButton).click();
         cy.get('.ic-toast-success').should('be.visible');
-      })
+      });
 
       it('creating a new workspace will trigger email send', () => {
         cy.url().then($url => {
           createWorkspace();
           cy.get('.ic-toast-message').should('contain', 'automatically');
-          // add What's this? with explanation modal to toast, and include email in message.
+          getElemWithDataCy(modal.whatsThis).click();
+          getElemWithDataCy(modal.heading).should('contain', 'Automatic reminder emails');
+          getElemWithDataCy(modal.closeButton).click();
+          // Should now show the prompt.
+          getElemWithDataCy(modal.heading).should('contain', '1.');
           cy.visit($url);
         });
-
-      })
+      });
 
       it('can unsubscribe by unchecking the box', () => {
         cy.url().then($url => {

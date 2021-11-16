@@ -13,6 +13,7 @@ import NotFound from './NotFound.jsx';
 import Workspace from './Workspace.jsx';
 
 import * as uiX from '@actions/ui';
+import { ExplainAutoEmailFeatureModal } from '@components/modals/SimpleModal';
 import Toast from '@components/utils/Toast';
 import { initializeAPI } from '@utils/api';
 
@@ -43,6 +44,7 @@ class ConsumerAppInner extends Component {
   render() {
     return (
       <div>
+        <ExplainAutoEmailFeatureModal />
         <Toast />
         {/* This is the portal for DynamicModal */}
         <div id={'ic-modal-container2'} />

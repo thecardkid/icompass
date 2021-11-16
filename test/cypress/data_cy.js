@@ -60,6 +60,9 @@ export const modal = {
   heading: 'modal-heading',
   confirmButton: 'modal-confirm',
   closeButton: 'modal-close',
+
+  // This triggers a modal.
+  whatsThis: 'whats-this',
 };
 
 export function getColorAttr(c) {

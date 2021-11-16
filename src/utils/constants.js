@@ -30,6 +30,7 @@ export const MODAL_NAME = {
   EXPLAIN_VIEW_MODES: 'explain_view_modes',
   PRIVACY_STATEMENT: 'privacy_statement',
   WHATS_NEW: 'whats_new',
+  AUTO_EMAIL_FEATURE: 'auto_email_feature',
 
   // Confirm with redirect
   DISABLE_AUTO_EMAIL: 'disable_auto_email',

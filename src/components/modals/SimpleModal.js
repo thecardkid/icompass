@@ -34,7 +34,7 @@ export const PrivacyStatementModal = SimpleModal({
   modalName: MODAL_NAME.PRIVACY_STATEMENT,
   heading: 'Privacy statement',
 }, [
-  'iCompass does not require any personally-identifiable information about you. Where privacy is a concern, consider having collaborators not include their real/entire names or other personally-identifiable information in their screen names or Compass.',
+  'iCompass does not require any Personally-Identifiable Information (PII) about you. Where privacy is a concern, consider having collaborators not include their real/entire names or other PII in their screen names or Compass.',
   'If you choose to "save via email", your email is only used to send you your workspace code at that time, and is not stored. If you enable the "always send email" feature, your email is remembered using storage on your device, and is not stored on the server.',
   `iCompass stores data pertaining to your workspace in a secure manner, in order to provide you reliable access. iCompass will not expose your workspace's contents, code, or any other information, to any third-party for reasons other than storage.`,
   `Anyone who has your workspace's edit code will be able to access and modify any and all data in your Compass. Save and share your workspace link with care, and ask collaborators to do the same.`,
@@ -54,5 +54,14 @@ export const ExplainViewModesModal = SimpleModal({
   '<b>Standard mode</b> is what you are in by default.',
   '<b>Compact mode</b> make notes take up much less space - it is meant for smaller devices.',
   '<b>Multi-Edit</b> mode lets you edit multiple notes at once. Hold down Shift and click on any note to enter this mode.',
+]);
+
+export const ExplainAutoEmailFeatureModal = SimpleModal({
+  modalName: MODAL_NAME.AUTO_EMAIL_FEATURE,
+  heading: 'Automatic reminder emails',
+}, [
+  'You have previously enabled a feature to receive automatic reminder emails containing links to workspaces you create.',
+  `Your email is not stored on the server, but is being stored on <a href="https://en.wikipedia.org/wiki/Web_storage" target="_blank" rel="noopener noreferrer">your device</a>. As stated in the Privacy Statement, the app does not store Personally-Identifiable Information.`,
+  'To opt out of this feature, click <a target="_blank" href="/disable-auto-email">here</a>.',
 ]);
 

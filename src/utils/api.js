@@ -22,14 +22,18 @@ class API {
       isAutomatic,
     });
     if (resp.body && resp.body.error) {
+      if (isAutomatic) {
+        this.uiX.toastAutomaticEmail(false, recipientEmail);
+        return;
+      }
       this.error('There was an issue sending you the email. Please note down your codes manually somewhere.');
       return;
     }
     if (isAutomatic) {
-      this.success(`A link to this workspace has automatically been sent to ${recipientEmail}.`);
+      this.uiX.toastAutomaticEmail(true, recipientEmail);
       return;
     }
-    this.success('A link to this workspace has been sent to you');
+    this.success(`A link to this workspace has been sent to ${recipientEmail}`);
   }
 
   async sendBookmarksEmail({ bookmarks, recipientEmail }) {

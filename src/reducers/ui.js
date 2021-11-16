@@ -10,6 +10,7 @@ const defaultState = {
     editImage: false,
   },
   openModal: null,
+  modalBacklog: [],
   modalExtras: {},
   toast: {
     type: 'success',
@@ -190,10 +191,23 @@ export default (state = defaultState, action) => {
       };
 
     case 'openModal':
+      // Simple backlog system to let modals interrupt each other.
+      let backlog = state.modalBacklog;
+      let openModal = action.name;
+      if (openModal === null) { // Closing action
+        if (backlog.length > 0) {
+          openModal = backlog.pop();
+        }
+      } else { // Opening action
+        if (state.openModal && openModal !== state.openModal) {
+          backlog.push(state.openModal);
+        }
+      }
       return {
         ...state,
-        openModal: action.name,
+        openModal,
         modalExtras: {},
+        modalBacklog: backlog,
       };
 
     case 'setModalExtras':

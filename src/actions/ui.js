@@ -156,6 +156,7 @@ export const openUsernamePromptModal = openModalAction(MODAL_NAME.USERNAME);
 export const openDisconnectedModal = openModalAction(MODAL_NAME.DISCONNECTED);
 export const openGetStartedModal = openModalAction(MODAL_NAME.GET_STARTED_PROMPT);
 export const openImageModal = openModalAction(MODAL_NAME.IMAGE);
+export const openAutoEmailFeatureModal = openModalAction(MODAL_NAME.AUTO_EMAIL_FEATURE);
 
 // Every open*Modal call will clear out modalExtras, so call this after.
 export const setModalExtras = (modalExtras) => {
@@ -203,6 +204,20 @@ export const toastError = (message) => {
     toast: {
       type: 'error',
       message,
+    },
+  };
+};
+
+export const specialToasts = {
+  automaticEmail: 'auto_email',
+};
+export const toastAutomaticEmail = (isSuccess, recipientEmail) => {
+  return {
+    type: 'setToast',
+    toast: {
+      type: isSuccess ? 'success' : 'error',
+      message: specialToasts.automaticEmail,
+      recipientEmail,
     },
   };
 };
