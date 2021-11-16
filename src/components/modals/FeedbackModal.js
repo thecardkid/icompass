@@ -28,19 +28,18 @@ class FeedbackModal extends Component {
       <DynamicModal
         modalName={MODAL_NAME.FEEDBACK}
         className={'ic-feedback'}
-        heading={'I\'d love to hear from you'}
+        heading={'Leave your feedback'}
       >
           <div className={'explain'}>
-            Have an idea for a new feature? Or saw something go wrong that shouldn't have? Leave me a note, and I'll get back to you as soon as I can!
+            Have an idea for a new feature, or saw something go wrong that shouldn't have? Leave me a note, and I'll get back to you as soon as I can!
           </div>
+          <textarea ref={'note'}
+                    autoFocus
+                    className={'feedback-note disable-shortcuts'} />
           <input placeholder={'Your email (optional)'}
                  type={'email'}
                  ref={'email'}
-                 autoFocus
-                 className={'feedback-email disable-shortcuts'} />
-          <textarea placeholder={'Your note...'}
-                    ref={'note'}
-                    className={'feedback-note disable-shortcuts'} />
+                 className={'disable-shortcuts'} />
           <ModalFooter confirmButton={{
             text: 'Send',
             onConfirm: this.submitFeedback,

@@ -75,12 +75,6 @@ div#ic-modal-container, div#ic-modal-container2 {
         padding: 5px 10px;
       }
 
-      input#ic-modal-input {
-        cursor: text;
-      }
-
-
-
       a {
         color: inherit;
       }
@@ -320,7 +314,6 @@ div.ic-modal-make-copy {
 }
 
 div.ic-gdoc {
-
   div.copy-to-clipboard {
     margin-top: 20px;
     display: flex;
@@ -336,16 +329,14 @@ div.ic-gdoc {
   }
 
   div#doc-preview {
-    // Default font in GDoc
-    font-family: 'Arial', sans-serif;
     height: 400px;
     background: white;
     color: black;
-    overflow: scroll;
-    font-size: 14px;
+    overflow: auto;
     padding: 20px;
     margin-top: 15px;
     border-radius: 2px;
+    border: 1px solid grey;
 
     a {
       // match href color in GDoc
@@ -372,25 +363,14 @@ div.ic-screenshot {
 }
 
 div.ic-feedback {
-  .explain {
-    line-height: 17px;
-    margin-top: 20px;
-    font-size: 14px;
-  }
-
   input, textarea {
-    border: 1px solid transparent;
-    width: 100%;
+    border: 1px solid grey;
+    width: 100% !important;
     padding: 6px 10px;
     .border-box;
     font-family: inherit;
-    font-size: 14px;
     .border-radius(2px);
-  }
-
-  input.feedback-email {
-    margin-top: 15px;
-    cursor: text;
+    margin-top: 10px;
   }
 
   textarea.feedback-note {

@@ -213,45 +213,6 @@ div#container {
   height: 100vh;
 }
 
-div#ic-toast {
-  height: 0;
-  position: fixed;
-  .border-radius(4px);
-  width: 100%;
-  text-align: center;
-  top: 20px;
-  z-index: @toastZIndex;
-
-  span {
-    padding: 3px 12px;
-    font-size: 15px;
-    cursor: pointer;
-    .border-radius(4px);
-  }
-
-  @opacity: 0.8;
-
-  span.success {
-    background: #DFF0D8;
-    color: #3C763D;
-  }
-
-  span.info {
-    background: #D9EDF7;
-    color: #31708F;
-  }
-
-  span.warning {
-    background: #FCF8E3;
-    color: #8A6D3B;
-  }
-
-  span.error {
-    background: #F2DEDE;
-    color: #A94442;
-  }
-}
-
 div.ic-toast-container {
   display: flex;
   align-items: center;
