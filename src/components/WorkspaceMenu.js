@@ -387,8 +387,8 @@ class WorkspaceMenu extends Component {
           <div className="ic-always">
             <input type="checkbox"
                    id="ic-always-email-value"
-                   checked={this.state.alwaysSendEmail}
-                   onChange={this.handleChangeAlwaysSend}
+                   defaultChecked={this.state.alwaysSendEmail}
+                   onClick={this.handleChangeAlwaysSend}
             />
             <span>Automatically send me an email whenever I create a workspace</span>
           </div>
