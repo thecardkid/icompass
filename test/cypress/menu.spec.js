@@ -13,6 +13,41 @@ describe('workspace menu', () => {
     setup();
   });
 
+  describe('dismissability', () => {
+    const menuButton = 'button.ic-workspace-button';
+    const menu = '.ic-workspace-menu';
+
+    it('dismisses if burger icon clicked', () => {
+      cy.get(menuButton).click();
+      cy.get(menu).should('be.visible');
+      cy.get(menuButton).click();
+      cy.get(menu).should('not.exist');
+    });
+
+    it('dismisses if clicked elsewhere on page', () => {
+      cy.get(menuButton).click();
+      cy.get(menu).should('be.visible');
+      cy.get('#observations').click('right');
+      cy.get(menu).should('not.exist');
+    });
+
+    it('dismisses if help menu clicked', () => {
+      cy.get(menuButton).click();
+      cy.get(menu).should('be.visible');
+      cy.get('button.ic-help-button').click();
+      cy.get(menu).should('not.exist');
+    });
+
+    it('does not dismiss if clicked on one of the expandable items', () => {
+      cy.get(menuButton).click();
+      cy.get(menu).should('be.visible');
+      getElemWithDataCy(workspaceMenu.exportAs).click();
+      cy.get(menu).should('be.visible');
+      // Dismiss.
+      cy.get(menuButton).click();
+    });
+  });
+
   describe('notes submenu', () => {
     it('new text note button', () => {
       selectSubmenuOption({

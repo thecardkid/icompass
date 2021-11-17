@@ -31,6 +31,9 @@ import Storage from '@utils/Storage';
 
 import { workspaceMenu } from '@cypress/data_cy';
 
+const sliderClass = 'ic-menu-dark-theme-slider';
+const menuButtonClass = 'ic-menu-toggler';
+
 class WorkspaceMenu extends Component {
   constructor(props) {
     super(props);
@@ -66,6 +69,15 @@ class WorkspaceMenu extends Component {
       51: 'Shortcut Shift-3 (bulk mode)',
     };
     this.socket = SocketSingleton.getInstance();
+
+    document.addEventListener('click', (e) => {
+      const { classList } = e.target;
+      if (!classList.contains('ic-menu-item')
+        && !classList.contains(sliderClass)
+        && !classList.contains(menuButtonClass)) {
+        this.hideMenu();
+      }
+    }, true);
   }
 
   _handleShortcuts = (e) => {
@@ -118,7 +130,6 @@ class WorkspaceMenu extends Component {
   };
 
   buttonChangeMode = (switchTo) => () => {
-    trackFeatureEvent('Menu: Switch mode');
     this.changeMode(switchTo)();
     // Hack - for some reason, when clicking on a mode it fires
     // a "show" event for the submenu. So we get around that by
@@ -222,8 +233,8 @@ class WorkspaceMenu extends Component {
             <i className={'material-icons'}>brightness_2</i>
             Dark Theme
             <label className={'switch'}>
-              <input type={'checkbox'} onChange={this.toggleDarkTheme} checked={this.state.darkTheme}/>
-              <span className={'slider'} />
+              <input className={sliderClass} type={'checkbox'} onChange={this.toggleDarkTheme} checked={this.state.darkTheme}/>
+              <span className={'slider ' + sliderClass} />
             </label>
           </div>
         </section>
@@ -302,7 +313,8 @@ class WorkspaceMenu extends Component {
 
   toggleMenu = () => {
     if (this.state.active) {
-      return this.hideMenu();
+      this.hideMenu();
+      return;
     }
     this.setState({ active: true });
   };
@@ -327,15 +339,15 @@ class WorkspaceMenu extends Component {
     this.setState({ alwaysSendEmail: e.target.checked });
   }
 
-  sendReminderEmail = async (email) => {
+  sendReminderEmail = async (validEmail) => {
     if (this.state.alwaysSendEmail) {
-      Storage.setAlwaysSendEmail(true, email);
+      Storage.setAlwaysSendEmail(true, validEmail);
     }
     await getAPIClient().sendReminderEmail({
       topic: this.props.compass.topic,
       editCode: this.props.compass.editCode,
       username: this.props.users.me,
-      recipientEmail: email,
+      recipientEmail: validEmail,
       isAutomatic: false,
     });
   }
@@ -355,8 +367,8 @@ class WorkspaceMenu extends Component {
       <div id={'ic-workspace-menu'}>
         <button className={'ic-workspace-button floating-button'}
                 style={{background: this.state.active ? CSS.COLORS.BLUE : ''}}
-              onClick={this.toggleMenu}>
-          <i className="material-icons">menu</i>
+                onClick={this.toggleMenu}>
+          <i className={'material-icons ' + menuButtonClass}>menu</i>
         </button>
         {this.state.active && this.renderMenu()}
         <ShortcutManager handle={this._handleShortcuts} />
@@ -390,6 +402,7 @@ class WorkspaceMenu extends Component {
     );
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     compass: state.compass,

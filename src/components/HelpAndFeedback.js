@@ -12,12 +12,21 @@ import { helpMenu } from '@cypress/data_cy';
 import { AboutUsModal, PrivacyStatementModal, WhatsNewModal } from './modals/SimpleModal';
 import GetStartedModal from './modals/GetStartedModal';
 
+const helpButtonClass = 'ic-help-toggler';
+
 class HelpAndFeedback extends Component {
   constructor(props) {
     super(props);
     this.state = {
       active: false,
     };
+    document.addEventListener('click', (e) => {
+      const { classList } = e.target;
+      if (!classList.contains('ic-menu-item')
+        && !classList.contains(helpButtonClass)) {
+        this.hideMenu();
+      }
+    }, true);
   }
 
   toggleMenu = () => {
@@ -104,8 +113,8 @@ class HelpAndFeedback extends Component {
       <div id={'ic-help'}>
         <button className={'ic-help-button floating-button'}
                 style={{background: this.state.active ? CSS.COLORS.BLUE : ''}}
-             onClick={this.toggleMenu}>
-          ?
+                onClick={this.toggleMenu}>
+          <span className={helpButtonClass}>?</span>
         </button>
         {this.state.active && this.renderHelpMenu()}
         <GetStartedModal />
