@@ -51,7 +51,18 @@ class BulkEditToolbar extends Component {
   };
 
   render() {
-    if (!this.props.show) return null;
+    if (!this.props.show) {
+      return null;
+    }
+
+    let warning;
+    if (this.props.notes.length === 0) {
+      warning = (
+        <div className={'ic-modal-warning'}>
+          To use this tool, first create some sticky notes.
+        </div>
+      );
+    }
 
     return (
       <Draggable>
@@ -59,9 +70,10 @@ class BulkEditToolbar extends Component {
           <div id={'header'}>
             Multi-Edit Toolbar
           </div>
+          {warning}
           <div id={'explanation'}>
-            <div>Choose an action to perform on selected notes. Moving one selected note will move all selected notes.</div>
-            <div>Select notes by click-dragging, or by holding Shift and clicking on individual notes.</div>
+            <div>Select notes by holding Shift and clicking on individual notes. Alternatively, hold left click and drag across the workspace.</div>
+            <div>Choose an action to perform on selected notes. Dragging one note will move all selected notes.</div>
           </div>
           <div id={'actions'}>
             <hr />
@@ -70,19 +82,15 @@ class BulkEditToolbar extends Component {
               <FormPalette setColor={this.bulkColor} color={this.state.color}/>
             </div>
             <hr />
-            <div className={'action'}>
+            <div className={'footer'}>
               <button className={'bulk-edit-btn cancel'} onClick={this.cancel}>
                 Cancel
               </button>
-            </div>
-            <div className={'action'}>
-              <button className={'bulk-edit-btn submit'} onClick={this.submit}>
-                Apply changes
-              </button>
-            </div>
-            <div className={'action'}>
               <button className={'bulk-edit-btn delete'} onClick={this.bulkDelete}>
                 Delete all
+              </button>
+              <button className={'bulk-edit-btn submit'} onClick={this.submit}>
+                Submit
               </button>
             </div>
           </div>

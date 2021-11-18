@@ -33,7 +33,7 @@ class StickyNote extends Component {
     ev.stopPropagation();
 
     if (this.visualMode) {
-      this.props.uiX.toastError(MULTI_MODE_NO_EDIT_MESSAGE);
+      this.props.uiX.toastError('Delete failed. ' + MULTI_MODE_NO_EDIT_MESSAGE);
       return;
     }
 
@@ -57,7 +57,7 @@ class StickyNote extends Component {
   upvote = (ev) => {
     ev.stopPropagation();
     if (this.visualMode) {
-      return this.props.uiX.toastError(MULTI_MODE_NO_EDIT_MESSAGE);
+      return this.props.uiX.toastError('Upvote failed. ' + MULTI_MODE_NO_EDIT_MESSAGE);
     }
 
     if (!this.props.note.draft) {
@@ -142,7 +142,7 @@ class StickyNote extends Component {
     }
 
     if (this.visualMode) {
-      return this.props.uiX.toastError(MULTI_MODE_NO_EDIT_MESSAGE);
+      return this.props.uiX.toastError('Double-click failed. ' + MULTI_MODE_NO_EDIT_MESSAGE);
     }
 
     if (this.hasEditingRights) {

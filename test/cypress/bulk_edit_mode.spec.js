@@ -4,24 +4,18 @@ import {
   matchImageSnapshot,
   setup,
   selectColor,
-  selectSubmenuOption,
+  selectMenuOption,
 } from './utils';
 const { workspaceMenu } = require('./data_cy');
 
 const toolbarSelector = '#ic-visual-toolbar';
 
 function activateBulkEditMode() {
-  selectSubmenuOption({
-    submenu: workspaceMenu.modes,
-    suboption: workspaceMenu.modesSubactions.bulk,
-  });
+  selectMenuOption(workspaceMenu.modesSubactions.bulk);
 }
 
 function activateStandardViewMode() {
-  selectSubmenuOption({
-    submenu: workspaceMenu.modes,
-    suboption: workspaceMenu.modesSubactions.standard,
-  });
+  cy.get('body').type('{esc}', { force: true });
 }
 
 describe('workspace menu', () => {
@@ -35,12 +29,20 @@ describe('workspace menu', () => {
       ['#ideas', 'left'],
       ['#experiments', 'left'],
     ];
+    activateBulkEditMode();
+    // Warns if zero notes.
+    cy.get('.ic-modal-warning').should('be.visible');
+    cy.get('.bulk-edit-btn.cancel').click();
+
     for (let i = 0; i < positions.length; i++) {
       const p = positions[i];
       cy.get(`${p[0]} .interactable`).dblclick(p[1]);
       cy.get('#ic-form-text .ql-editor').type('this is a note');
       cy.get('button[name=ship]').click();
     }
+    activateBulkEditMode();
+    cy.get('.ic-modal-warning').should('not.exist');
+    cy.get('.bulk-edit-btn.cancel').click();
   });
 
   it('visual mode toolbar is draggable', () => {

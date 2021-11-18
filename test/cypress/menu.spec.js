@@ -78,39 +78,35 @@ describe('workspace menu', () => {
   });
 
   describe('modes submenu', () => {
-    it('compact mode', () => {
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.compact,
-      });
-      cy.get('.ic-toast-message').should('contain', 'compact');
-    });
+    // it('compact mode', () => {
+    //   selectSubmenuOption({
+    //     submenu: workspaceMenu.modes,
+    //     suboption: workspaceMenu.modesSubactions.compact,
+    //   });
+    //   cy.get('.ic-toast-message').should('contain', 'compact');
+    // });
 
     it('multi-edit mode', () => {
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.bulk,
-      });
-      cy.get('.ic-toast-message').should('contain', 'multi-edit');
+      selectMenuOption(workspaceMenu.modesSubactions.bulk);
       cy.get('.bulk-edit-btn.cancel').click();
     });
 
-    it('standard mode', () => {
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.standard,
-      });
-      cy.get('.ic-toast-message').should('contain', 'standard');
-    });
-
-    it('explain modes', () => {
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.explain,
-      });
-      getElemWithDataCy(modal.heading).should('contain', 'What are these modes');
-      getElemWithDataCy(modal.closeButton).click();
-    });
+    // it('standard mode', () => {
+    //   selectSubmenuOption({
+    //     submenu: workspaceMenu.modes,
+    //     suboption: workspaceMenu.modesSubactions.standard,
+    //   });
+    //   cy.get('.ic-toast-message').should('contain', 'standard');
+    // });
+    //
+    // it('explain modes', () => {
+    //   selectSubmenuOption({
+    //     submenu: workspaceMenu.modes,
+    //     suboption: workspaceMenu.modesSubactions.explain,
+    //   });
+    //   getElemWithDataCy(modal.heading).should('contain', 'What are these modes');
+    //   getElemWithDataCy(modal.closeButton).click();
+    // });
   });
 
   describe('exports submenu', () => {
@@ -120,7 +116,7 @@ describe('workspace menu', () => {
         suboption: workspaceMenu.exportAsSubactions.googleDocs,
       });
       cy.get('div.ic-gdoc.ic-dynamic-modal').should('be.visible');
-      cy.get('div.ic-gdoc.ic-dynamic-modal div.warning').should('contain', 'Doodles will not be included');
+      cy.get('div.ic-modal-warning').should('contain', 'Doodles will not be included');
       getElemWithDataCy(modal.closeButton).click();
     });
 
@@ -284,11 +280,11 @@ describe('workspace menu', () => {
         cy.url().then($url => {
           selectMenuOption(workspaceMenu.email);
           cy.get(checkbox).should('be.checked');
-          cy.get('.warning').should('contain', validEmail);
+          cy.get('.ic-modal-warning').should('contain', validEmail);
 
           // Unchecking should forget immediately.
           cy.get(checkbox).uncheck();
-          cy.get('.warning').should('not.exist');
+          cy.get('.ic-modal-warning').should('not.exist');
           createWorkspace();
           cy.get('.ic-toast-success').should('not.be.visible');
 

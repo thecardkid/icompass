@@ -15,7 +15,6 @@ import { ExplainViewModesModal } from './modals/SimpleModal';
 import ScreenshotModal from './modals/ScreenshotModal';
 import ShareModal from './modals/ShareModal';
 import ExportSubmenu from './submenus/ExportSubmenu';
-import ModesSubmenu from './submenus/ModesSubmenu';
 import NotesSubmenu from './submenus/NotesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
 
@@ -55,18 +54,10 @@ class WorkspaceMenu extends Component {
       73: props.uiX.showImage,
       78: props.uiX.showNewNote,
       shift: {
-        49: this.changeMode('standard'),
-        50: this.changeMode('compact'),
+        // 49: this.changeMode('standard'),
+        // 50: this.changeMode('compact'),
         51: this.changeMode('bulk'),
       },
-    };
-    this.shortcutEvents = {
-      68: 'Shortcut N new note',
-      73: 'Shortcut I new image',
-      78: 'Shortcut D new doodle',
-      49: 'Shortcut Shift-1 (standard mode)',
-      50: 'Shortcut Shift-2 (compact mode)',
-      51: 'Shortcut Shift-3 (bulk mode)',
     };
     this.socket = SocketSingleton.getInstance();
 
@@ -90,7 +81,6 @@ class WorkspaceMenu extends Component {
     if (_.has(shortcuts, e.which)) {
       e.preventDefault();
       shortcuts[e.which]();
-      trackFeatureEvent(this.shortcutEvents[e.which]);
     }
   };
 
@@ -107,7 +97,6 @@ class WorkspaceMenu extends Component {
         break;
 
       case 'bulk':
-        this.props.uiX.toastInfo('Switched to multi-edit mode');
         this.props.uiX.visualMode(this.props.notes.length);
         break;
 
@@ -224,7 +213,7 @@ class WorkspaceMenu extends Component {
   };
 
   renderMenu = () => {
-    const { exports, notes, modes, users, resize } = this.state.submenus;
+    const { exports, notes, users, resize } = this.state.submenus;
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -284,10 +273,9 @@ class WorkspaceMenu extends Component {
               {notes && <NotesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
             </div>
           </MaybeTappable>
-          <MaybeTappable onTapOrClick={this.showSubmenu('modes')}>
-            <div data-cy={workspaceMenu.modes} className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('modes')}>
-              Change Mode
-              {modes && <ModesSubmenu modes={this.props.modes} changeMode={this.buttonChangeMode} hideMenu={this.hideMenu}/>}
+          <MaybeTappable onTapOrClick={this.changeMode('bulk')}>
+            <div data-cy={workspaceMenu.modesSubactions.bulk} id={'ic-bulk'} className={'ic-menu-item'} onMouseOver={this.hideSubmenus}>
+              Multi-Edit Mode
             </div>
           </MaybeTappable>
           <MaybeTappable onTapOrClick={this.showSubmenu('users')}>
@@ -393,7 +381,7 @@ class WorkspaceMenu extends Component {
             <span>Automatically send me an email whenever I create a workspace</span>
           </div>
           {alwaysSend.enabled && (
-            <div className={'warning'}>
+            <div className={'ic-modal-warning'}>
               Your remembered email is <b>{alwaysSend.email}</b>. To forget, uncheck the box above.
             </div>
           )}

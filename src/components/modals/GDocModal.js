@@ -112,7 +112,7 @@ ${header}:`;
           className={'ic-gdoc'}
           heading={'Export workspace text'}
           close={this.props.close}>
-          <div className={'warning'}>
+          <div className={'ic-modal-warning'}>
             This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
           </div>
         </DynamicModal>
@@ -146,7 +146,7 @@ ${header}:`;
         heading={'Export workspace text'}
         width={500}
       >
-        <div className={'warning'}>
+        <div className={'ic-modal-warning'}>
           Doodles will not be included. All formatting (bold, italics, etc.) will be omitted.
         </div>
         {this.renderPreview(docData)}

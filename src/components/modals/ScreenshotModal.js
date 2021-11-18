@@ -30,7 +30,7 @@ class ScreenshotModal extends Component {
   renderBody() {
     if (isMobile) {
       return (
-        <div className={'warning'}>
+        <div className={'ic-modal-warning'}>
           This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
         </div>
       );

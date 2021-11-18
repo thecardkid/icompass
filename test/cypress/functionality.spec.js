@@ -4,9 +4,8 @@ const {
   expectCompassStructure,
   getElemWithDataCy,
   setup,
-  selectSubmenuOption
 } = require('./utils');
-const { modal, workspaceMenu } = require('./data_cy');
+const { modal } = require('./data_cy');
 
 describe('basic functionality', () => {
   before(() => {
@@ -48,18 +47,18 @@ describe('basic functionality', () => {
       assertDraggable('#note0', { deltaX: 100, deltaY: 100 });
     });
 
-    it('compact mode', () => {
-      cy.get('div.compact').should('have.length', 0);
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.compact,
-      });
-      cy.get('div.compact').should('have.length', 1);
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.standard,
-      });
-    });
+    // it('compact mode', () => {
+    //   cy.get('div.compact').should('have.length', 0);
+    //   selectSubmenuOption({
+    //     submenu: workspaceMenu.modes,
+    //     suboption: workspaceMenu.modesSubactions.compact,
+    //   });
+    //   cy.get('div.compact').should('have.length', 1);
+    //   selectSubmenuOption({
+    //     submenu: workspaceMenu.modes,
+    //     suboption: workspaceMenu.modesSubactions.standard,
+    //   });
+    // });
 
     describe('delete', () => {
       it('rejecting alert preserves note', () => {

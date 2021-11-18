@@ -1,7 +1,7 @@
 import {
   assertDraggable,
   matchImageSnapshot,
-  selectSubmenuOption,
+  selectMenuOption,
   setup,
   testImageURL,
   waitForVisible
@@ -141,10 +141,7 @@ describe('draft mode', () => {
 
   describe('bulk edit mode', () => {
     it('does not discard drafts', () => {
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.bulk,
-      });
+      selectMenuOption(workspaceMenu.modesSubactions.bulk);
       cy.get('.ic-sticky-note').should('have.length', 5);
     });
 
@@ -161,15 +158,15 @@ describe('draft mode', () => {
     });
   });
 
-  describe('compact mode', () => {
-    it('does not discard drafts', () => {
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.compact,
-      });
-      cy.get('.compact').should('have.length', 5);
-    });
-  });
+  // describe('compact mode', () => {
+  //   it('does not discard drafts', () => {
+  //     selectSubmenuOption({
+  //       submenu: workspaceMenu.modes,
+  //       suboption: workspaceMenu.modesSubactions.compact,
+  //     });
+  //     cy.get('.compact').should('have.length', 5);
+  //   });
+  // });
 
   describe('submit drafts', () => {
     it('text note', () => {
@@ -189,10 +186,6 @@ describe('draft mode', () => {
 
   describe('others', () => {
     it('has correct prompt when deleting draft', () => {
-      selectSubmenuOption({
-        submenu: workspaceMenu.modes,
-        suboption: workspaceMenu.modesSubactions.standard,
-      });
       cy.get('#note0 .ic-close-window').click({ force: true });
       matchImageSnapshot();
     });

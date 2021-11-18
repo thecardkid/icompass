@@ -16,7 +16,7 @@ class ModesSubmenu extends Component {
   };
 
   render() {
-    const { normal, compact, bulk } = this.props;
+    const { normal, compact } = this.props;
 
     return (
       <div className={'ic-menu ic-modes-submenu'}>
@@ -33,13 +33,6 @@ class ModesSubmenu extends Component {
               <span className={compact ? 'active' : 'inactive'} />
               Compact
               <span className={'ic-shortcut'}>shift+2</span>
-            </div>
-          </MaybeTappable>
-          <MaybeTappable onTapOrClick={this.props.changeMode('bulk')}>
-            <div data-cy={workspaceMenu.modesSubactions.bulk} id={'ic-bulk'} className={'ic-menu-item'}>
-              <span className={bulk ? 'active' : 'inactive'} />
-              Multi-Edit
-              <span className={'ic-shortcut'}>shift+click</span>
             </div>
           </MaybeTappable>
         </section>
