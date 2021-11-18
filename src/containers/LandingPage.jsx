@@ -50,7 +50,7 @@ class LandingPage extends Component {
       alert(resp.body.error);
       return;
     }
-    browserHistory.push(`/compass/edit/${resp.body.code}/dev`);
+    browserHistory.push(`/compass/edit/${resp.body.code}/dev?auto=1`);
   };
 
   sizeImage() {

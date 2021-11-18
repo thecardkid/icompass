@@ -189,7 +189,7 @@ class Workspace extends Component {
       <div>
         <HelpAndFeedback editCode={this.props.compass.editCode} />
         <WorkspaceMenu />
-        <Compass />
+        <Compass isDevAutoSetup={!!this.props.location.query['auto']} />
         <BulkEditToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={{
           bg: Storage.getStickyNoteColor(),

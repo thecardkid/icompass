@@ -86,6 +86,7 @@ class Compass extends Component {
   constructor(props) {
     super(props);
 
+    this.isAutoSetup = __DEV__ && this.props.isDevAutoSetup;
     this.hasEditingRights = !this.props.viewOnly;
     this.state = {
       showFullTopic: false,
@@ -113,6 +114,12 @@ class Compass extends Component {
 
   componentDidMount() {
     this.props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
+    if (this.isAutoSetup) {
+      const $x = document.getElementById('ic-modal-confirm');
+      if ($x) {
+        $x.click();
+      }
+    }
   }
 
   doubleClickCreate = (ev) => {
@@ -476,7 +483,7 @@ class Compass extends Component {
         width: this.props.ui.vw,
         height: this.props.ui.vh,
       }}>
-        <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} />
+        <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} defaultValue={this.isAutoSetup ? 'Some people group' : null} />
         <PeopleGroupsDismissablePrompt onSubmit={this.setPeopleGroups} />
         <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
