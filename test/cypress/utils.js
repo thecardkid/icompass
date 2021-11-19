@@ -22,8 +22,6 @@ export function setup({ topic, centerTextInput } = {}) {
   getElemWithDataCy(modal.confirmButton).should('be.visible');
   cy.get('#ic-modal-input').type(centerTextInput || 'center');
   getElemWithDataCy(modal.confirmButton).click();
-  // wait for animation
-  cy.wait(2000);
 }
 
 export function selectMenuOption(attr) {

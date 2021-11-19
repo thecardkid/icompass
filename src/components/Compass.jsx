@@ -17,6 +17,7 @@ import NoteManagerViewOnly from '@components/NoteManagerViewOnly.jsx';
 import MaybeTappable from '@utils/MaybeTappable';
 
 import { trackFeatureEvent } from '@utils/analytics';
+import { isBrowserTestRunning } from '@utils/browser';
 import { EDITING_MODES } from '@utils/constants';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
@@ -218,7 +219,7 @@ class Compass extends Component {
   };
 
   setCompassCenter = (center) => {
-    if (this.props.compass.center.length === 0) {
+    if (this.props.compass.center.length === 0 && !isBrowserTestRunning()) {
       // animate only if setting center for a new workspace
       this.animateQuadrants = true;
     }
