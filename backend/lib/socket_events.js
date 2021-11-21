@@ -33,6 +33,7 @@ module.exports = {
     BAD_USERNAME: 'bad username',
     DUPLICATE_USERNAME: 'username exists',
     REFRESH_REQUIRED: 'refresh required',
+    USER_ERROR: 'user error',
     SERVER_ERROR: 'server error',
   },
 };

@@ -64,6 +64,7 @@ class Workspace extends Component {
           this.socket.subscribe({
             [events.RECONNECT]: this.handleReconnect,
             [events.DISCONNECT]: this.handleDisconnect,
+            [events.frontend.USER_ERROR]: this.handleUserError,
             [events.frontend.REFRESH_REQUIRED]: this.props.uiX.openRefreshRequiredModal,
             [events.frontend.WORKSPACE_DELETED]: this.onCompassDeleted,
             [events.frontend.USER_JOINED]: this.onUserJoined,
@@ -93,6 +94,14 @@ class Workspace extends Component {
     } else {
       this.props.uiX.toastError('Lost connection to server');
     }
+  };
+
+  handleUserError = (msg) => {
+    if (!msg.endsWith('.')) {
+      // Changing argument is fine, data flow here is one-way.
+      msg += '.';
+    }
+    this.props.uiX.toastError(`Action failed. ${msg}`);
   };
 
   checkUsername = (u) => {

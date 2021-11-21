@@ -8,6 +8,22 @@ const Compass = require('../models/compass');
 
 // TODO standardize logs
 
+const userError = 'UserError';
+const uErrBadInput = 'Invalid input.';
+function throwUserErr(message) {
+  throw {
+    name: userError,
+    message,
+  };
+}
+
+function isEmptyStr(s) {
+  if (typeof s !== 'string' || s.length === 0) {
+    return true;
+  }
+  return false;
+}
+
 // Represents a client connection to the server.
 class WorkspaceSocket {
   constructor(io, socket, roomManager) {
@@ -40,6 +56,10 @@ class WorkspaceSocket {
       try {
         await bindedFn(...args);
       } catch (ex) {
+        if (ex.name === userError) {
+          this.socket.emit(events.frontend.USER_ERROR, ex.message);
+          return;
+        }
         this.logger.debug(`Error in action "${clientAction}", data:\n${JSON.stringify(args)}`);
         this.logger.error(`Error in action "${clientAction}": ${ex.message}`);
         this.socket.emit(events.frontend.SERVER_ERROR, clientAction);
@@ -115,6 +135,9 @@ class WorkspaceSocket {
       return;
     }
     const { topic } = data;
+    if (isEmptyStr(topic)) {
+      throwUserErr('Topic cannot be empty.');
+    }
     await this.room.$workspace.setTopic(data.topic);
     this.broadcast(events.frontend.SET_TOPIC, data.topic);
   }
@@ -123,8 +146,12 @@ class WorkspaceSocket {
     if (this.clientShouldRefresh()) {
       return;
     }
-    await this.room.$workspace.setCenter(data.center);
-    this.broadcast(events.frontend.SET_CENTER_TEXT, data.center);
+    const { center } = data;
+    if (isEmptyStr(center)) {
+      throwUserErr('People involved cannot be empty.');
+    }
+    await this.room.$workspace.setCenter(center);
+    this.broadcast(events.frontend.SET_CENTER_TEXT, center);
   }
 
   async setCenterPosition({ x, y }) {
@@ -142,7 +169,7 @@ class WorkspaceSocket {
     const expectedID = this.room.$workspace._id.toString();
     if (expectedID !== id) {
       this.logger.warn(`Attempted to delete compass id=${id}, but socket's compass id is ${expectedID}`);
-      return;
+      throwUserErr('Cannot delete workspace.');
     }
     await Compass.remove({ _id: id });
     this.logger.info(`Deleted compass id=${id}`);
@@ -187,10 +214,10 @@ class WorkspaceSocket {
       return;
     }
     if (transformation.color == null) {
-      return;
+      throwUserErr(uErrBadInput);
     }
     if (!_.contains(STICKY_COLORS, transformation.color)) {
-      return;
+      throwUserErr(uErrBadInput);
     }
     const model = await this.room.$workspace.bulkUpdateNotes(ids, transformation);
     this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);
