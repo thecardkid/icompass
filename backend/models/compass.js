@@ -175,6 +175,24 @@ compassSchema.methods.setCenter = function(center) {
   });
 };
 
+compassSchema.methods.setTopic = function(topic) {
+  return new Promise((resolve, reject) => {
+    const { _id } = this;
+    this.model('Compass').findByIdAndUpdate(
+      _id,
+      { $set: { topic: topic } },
+      { $safe: true, upsert: false, new: true },
+      function(err) {
+        if (err) {
+          reject(`Could not set topic to ${topic} for compass ${_id}, err: ${err}`);
+          return;
+        }
+        resolve(true);
+      }
+    );
+  });
+};
+
 compassSchema.methods.addNote = function(newNote) {
   return new Promise((resolve, reject) => {
     if (!isValidNote(newNote)) {

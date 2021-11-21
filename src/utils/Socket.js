@@ -79,6 +79,10 @@ const SocketSingleton = (() => {
       this.socket.emit(events.backend.JOIN_ROOM, data);
     }
 
+    emitSetTopic = (topic) => {
+      this.socket.emit(events.backend.SET_TOPIC, { topic });
+    }
+
     emitSetCenter = (id, center) => {
       this.socket.emit(events.backend.SET_CENTER_TEXT, { id, center });
     };

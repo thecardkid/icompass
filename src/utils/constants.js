@@ -55,6 +55,7 @@ export const MODAL_NAME = {
   EMAIL_WORKSPACE: 'email_workspace',
   PEOPLE_GROUPS: 'people_groups',
   PEOPLE_GROUPS_DISMISSABLE: 'people_groups_2',
+  TOPIC: 'topic',
   USERNAME: 'username',
 
   // Custom

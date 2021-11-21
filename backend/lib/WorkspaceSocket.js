@@ -20,6 +20,7 @@ class WorkspaceSocket {
     this.socket.on(events.backend.LOGOUT, this.onLogout.bind(this));
 
     this.socket.on(events.backend.JOIN_ROOM, this.wrapTryCatchAndBind(this.joinRoom, 'Join workspace'));
+    this.socket.on(events.backend.SET_TOPIC, this.wrapTryCatchAndBind(this.setTopic, 'Update topic'));
     this.socket.on(events.backend.SET_CENTER_TEXT, this.wrapTryCatchAndBind(this.setCenter, 'Update people group'));
     this.socket.on(events.backend.SET_CENTER_POSITION, this.wrapTryCatchAndBind(this.setCenterPosition, 'Move workspace center'));
     this.socket.on(events.backend.NEW_NOTE, this.wrapTryCatchAndBind(this.createNote, 'Create sticky note'));
@@ -107,6 +108,15 @@ class WorkspaceSocket {
         this.logger.error(`Server error joining room: code=${workspaceEditCode} username=${username}`, ex);
       }
     }
+  }
+
+  async setTopic(data) {
+    if (this.clientShouldRefresh()) {
+      return;
+    }
+    const { topic } = data;
+    await this.room.$workspace.setTopic(data.topic);
+    this.broadcast(events.frontend.SET_TOPIC, data.topic);
   }
 
   async setCenter(data) {

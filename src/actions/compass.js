@@ -18,6 +18,13 @@ export const setCenter = (center) => {
   };
 };
 
+export const setTopic = (topic) => {
+  return {
+    type: 'setTopic',
+    topic,
+  };
+};
+
 export const setCenterPosition = (x, y) => {
   return {
     type: 'setCenterPosition',

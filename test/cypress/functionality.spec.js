@@ -77,20 +77,14 @@ describe('basic functionality', () => {
   });
 
   describe('changing compass center', () => {
-    const showPrompt = function() {
+    it('cannot submit empty string', () => {
       cy.get('#center').dblclick('center');
-    };
-
-    it('clearing value, and submitting empty string, is ignored', () => {
-      showPrompt();
       cy.get('#ic-modal-input').clear();
       getElemWithDataCy(modal.confirmButton).click();
-      cy.get('#center').should('contain', 'center');
-      getElemWithDataCy(modal.closeButton).click();
+      getElemWithDataCy(modal.confirmButton).should('be.visible');
     });
 
     it('can change compass center', () => {
-      showPrompt();
       cy.get('#ic-modal-input').type('center2');
       cy.get('#ic-modal-confirm').click();
       cy.wait(200);
@@ -98,7 +92,7 @@ describe('basic functionality', () => {
     });
   });
 
-  describe('really long center text input', () => {
+  describe('topic', () => {
     const longName = 'really long text that is definitely over thirty-five characters';
     it('truncates topic name by default', () => {
       setup({
@@ -115,6 +109,22 @@ describe('basic functionality', () => {
     it('truncates topic on click', () => {
       cy.get('#ic-compass-topic').click();
       cy.get('#ic-compass-topic').should('contain', '...');
+    });
+
+    describe('changing compass topic', () => {
+      it('cannot submit empty string', () => {
+        cy.get('#ic-compass-topic').dblclick('center');
+        cy.get('#ic-modal-input').clear();
+        getElemWithDataCy(modal.confirmButton).click();
+        getElemWithDataCy(modal.confirmButton).should('be.visible');
+      });
+
+      it('can change topic', () => {
+        cy.get('#ic-modal-input').type('new topic');
+        cy.get('#ic-modal-confirm').click();
+        cy.wait(200);
+        cy.get('#ic-compass-topic').should('contain', 'new topic');
+      });
     });
   });
 });

@@ -11,7 +11,7 @@ import * as compassX from '@actions/compass';
 import * as uiX from '@actions/ui';
 
 import SelectArea from './SelectArea';
-import { PeopleGroupsDismissablePrompt, PeopleGroupsPrompt } from './modals/Prompt';
+import { PeopleGroupsDismissablePrompt, PeopleGroupsPrompt, TopicPrompt } from './modals/Prompt';
 import NoteManager from '@components/NoteManager.jsx';
 import NoteManagerViewOnly from '@components/NoteManagerViewOnly.jsx';
 import MaybeTappable from '@utils/MaybeTappable';
@@ -104,6 +104,7 @@ class Compass extends Component {
       this.state.select = false;
       this.socket = Socket.getInstance();
       this.socket.subscribe({
+        [events.frontend.SET_TOPIC]: this.setCompassTopic,
         [events.frontend.SET_CENTER_TEXT]: this.setCompassCenter,
         [events.frontend.SET_CENTER_POSITION]: this.setCompassCenterPosition,
       });
@@ -218,6 +219,10 @@ class Compass extends Component {
     );
   };
 
+  setCompassTopic = (topic) => {
+    this.props.compassX.setTopic(topic);
+  };
+
   setCompassCenter = (center) => {
     if (this.props.compass.center.length === 0 && !isBrowserTestRunning()) {
       // animate only if setting center for a new workspace
@@ -266,12 +271,20 @@ class Compass extends Component {
     };
   };
 
+  setTopic = (topic) => {
+    this.socket.emitSetTopic(topic);
+  };
+
   setPeopleGroups = (x) => {
     this.socket.emitSetCenter(this.props.compass._id, x);
   };
 
   editPeopleGroups = () => {
     this.props.uiX.openPeopleGroupsDismissableModal();
+  };
+
+  editTopic = () => {
+    this.props.uiX.openTopicPromptModal();
   };
 
   showOrHideFullTopic = () => {
@@ -409,6 +422,7 @@ class Compass extends Component {
         <MaybeTappable onTapOrClick={this.showOrHideFullTopic}>
           <div id={'ic-compass-topic'}
                data-tip={this.state.showFullTopic ? 'Click to truncate' : 'Click to expand'}
+               onDoubleClick={this.hasEditingRights ? this.editTopic : _.noop}
                data-for="topic-tooltip">
             TOPIC: {displayedTopic}
           </div>
@@ -486,6 +500,7 @@ class Compass extends Component {
       }}>
         <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} defaultValue={this.isAutoSetup ? 'Some people group' : null} />
         <PeopleGroupsDismissablePrompt onSubmit={this.setPeopleGroups} />
+        <TopicPrompt onSubmit={this.setTopic}/>
         <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         <SelectArea show={this.state.select} done={this.onMouseUp}/>

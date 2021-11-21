@@ -7,6 +7,7 @@ module.exports = {
   backend: {
     LOGOUT: 'logout',
     JOIN_ROOM: 'join room',
+    SET_TOPIC: 'set topic',
     SET_CENTER_TEXT: 'set center',
     SET_CENTER_POSITION: 'set center position',
     DELETE_WORKSPACE: 'delete compass',
@@ -21,6 +22,7 @@ module.exports = {
 
   // Events emitted by the server and handled by the client.
   frontend: {
+    SET_TOPIC: 'topic set',
     SET_CENTER_TEXT: 'center set',
     SET_CENTER_POSITION: 'center position set',
     UPDATE_ALL_NOTES: 'update notes',

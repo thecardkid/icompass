@@ -127,3 +127,10 @@ export const UsernamePrompt = Prompt({
 }, [
   '<p>Please enter your name as it will appear to others:',
 ]);
+
+export const TopicPrompt = Prompt({
+  modalName: MODAL_NAME.TOPIC,
+  heading: 'Edit workspace topic',
+}, [
+  'What are you working on:',
+]);

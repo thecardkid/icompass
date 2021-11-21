@@ -11,6 +11,12 @@ export default (state = {}, action) => {
     case 'resetCompass':
       return {};
 
+    case 'setTopic':
+      return {
+        ...state,
+        topic: action.topic,
+      };
+
     case 'setCenter':
       return {
         ...state,
