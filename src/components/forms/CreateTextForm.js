@@ -37,6 +37,7 @@ export default class CreateTextForm extends Component {
                 bg={this.props.info.color || this.props.bg}
                 switch={true}
                 colors={true}
+                noteProgressKey={'text-create'}
       />
     );
   }

@@ -11,6 +11,17 @@ export default {
     localStorage.setItem('prefs', JSON.stringify(prefs));
   },
 
+  getNoteProgress(key) {
+    const x = JSON.parse(localStorage.getItem('notesProgress')) || {};
+    return x[key] || null;
+  },
+
+  saveNoteProgress(key, value) {
+    const x = JSON.parse(localStorage.getItem('notesProgress')) || {};
+    x[key] = value;
+    localStorage.setItem('notesProgress', JSON.stringify(x));
+  },
+
   setDarkTheme(value) {
     const prefs = this.getUserPrefs();
     prefs.darkTheme = value;

@@ -9,16 +9,24 @@ import * as uiX from '@actions/ui';
 import { trackFeatureEvent } from '@utils/analytics';
 import SocketSingleton from '@utils/Socket';
 import FormPalette from './FormPalette';
+import Storage from '../../utils/Storage';
 
 class TextForm extends Component {
   constructor(props) {
     super(props);
+    let text = props.defaultText || '';
+    const savedProgressText = Storage.getNoteProgress(this.props.noteProgressKey);
+    if (savedProgressText) {
+      text = savedProgressText;
+      props.uiX.toastInfo('Your form contents was restored based on a previous edit');
+    }
+
     this.state = {
       style: {
         ...props.defaultStyle,
       },
       color: props.bg,
-      text: props.defaultText || '',
+      text,
       // text includes HTML tags, which allows users to
       // save visually empty notes (perceived string length
       // is 0 but actual string length is > 0).
@@ -34,24 +42,28 @@ class TextForm extends Component {
 
   componentDidMount() {
     this.refs.quill.focus();
+    // In case contents was restored from localStorage.
+    this.setState({ effectiveText: this.refs.quill.getEditor().getText() });
   }
 
   handleChange = (text, delta, source, editor) => {
-    this.setState({ text, effectiveText: editor.getText() });
+    this.setState({ text, effectiveText: editor.getText() }, () => {
+      Storage.saveNoteProgress(this.props.noteProgressKey, this.state.text);
+    });
   };
 
   submit = (isDraft) => () => {
     const { text, effectiveText } = this.state;
-
     // No text edit was made
     if (effectiveText === text) {
       this.props.submit(text, false, this.state, isDraft);
       return;
     }
-
-    if (effectiveText.trim().length === 0) return;
-
+    if (effectiveText.trim().length === 0) {
+      return;
+    }
     this.props.submit(text, false, this.state, isDraft);
+    Storage.saveNoteProgress(this.props.noteProgressKey, null);
   };
 
   renderStyleToolbar() {
