@@ -33,8 +33,8 @@
   --structure-bg: @dark;
   --bg: @light;
   --standout: @dark;
-  --app-background: none;
-  --quadrant-text: #cacaca;
+  --app-background: #f9f9f9;
+  --quadrant-text: #BBB;
   --shadow: 3px 3px 7px rgba(33, 33, 33, 0.7);
 
   --modal-bg: @light;
@@ -227,7 +227,8 @@ div.ic-toast-container {
     .hasTransition(0.2s);
     display: flex;
     background: @light;
-    margin-top: 50px;
+    // Same as the "BIG PICTURE" label.
+    margin-top: 44px;
     z-index: @toastZIndex;
     align-items: center;
     -webkit-box-shadow: var(--shadow);
