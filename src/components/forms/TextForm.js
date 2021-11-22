@@ -43,6 +43,7 @@ class TextForm extends Component {
   componentDidMount() {
     this.refs.quill.focus();
     // In case contents was restored from localStorage.
+    this.refs.quill.getEditor().setSelection(this.state.text.length-1, 1);
     this.setState({ effectiveText: this.refs.quill.getEditor().getText() });
   }
 

@@ -48,6 +48,10 @@ export function Prompt(dynamicModalProps, paragraphs) {
                  value={this.state.value}
                  autoFocus={true}
                  spellCheck={false}
+                 onFocus={(e)=> {
+                   // A hack to make the cursor come after the default text, instead of before.
+                   e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length);
+                 }}
                  onChange={this.setValue} />
           {this.props.children}
           <ModalFooter confirmButton={{

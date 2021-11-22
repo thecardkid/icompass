@@ -499,8 +499,8 @@ class Compass extends Component {
         height: this.props.ui.vh,
       }}>
         <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} defaultValue={this.isAutoSetup ? 'Some people group' : null} />
-        <PeopleGroupsDismissablePrompt onSubmit={this.setPeopleGroups} />
-        <TopicPrompt onSubmit={this.setTopic}/>
+        <PeopleGroupsDismissablePrompt onSubmit={this.setPeopleGroups} defaultValue={this.props.compass.center} />
+        <TopicPrompt onSubmit={this.setTopic} defaultValue={this.props.compass.topic} />
         <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         <SelectArea show={this.state.select} done={this.onMouseUp}/>
