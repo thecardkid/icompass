@@ -48,6 +48,26 @@ describe('workspace menu', () => {
     });
   });
 
+  describe('editables submenu', () => {
+    it('edit people groups', () => {
+      selectSubmenuOption({
+        submenu: workspaceMenu.editables,
+        suboption: workspaceMenu.editablesSubactions.peopleGroup,
+      });
+      getElemWithDataCy(modal.heading).should('contain', 'Who\'s involved');
+      getElemWithDataCy(modal.closeButton).click();
+    });
+
+    it('edit topic', () => {
+      selectSubmenuOption({
+        submenu: workspaceMenu.editables,
+        suboption: workspaceMenu.editablesSubactions.topic,
+      });
+      getElemWithDataCy(modal.heading).should('contain', 'Edit workspace topic');
+      getElemWithDataCy(modal.closeButton).click();
+    });
+  });
+
   describe('notes submenu', () => {
     it('new text note button', () => {
       selectSubmenuOption({

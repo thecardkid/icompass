@@ -25,6 +25,15 @@ export const workspaceMenu = {
     screenshot: 'export-png',
   },
 
+  // AKA Things-that-can-be-edited-that-makes-sense-to-put-here.
+  // "Edit actions" would be more accurate, but creates confusing
+  // variable names.
+  editables: 'actions-edit-actions',
+  editablesSubactions: {
+    peopleGroup: 'people-group',
+    topic: 'topic',
+  },
+
   moveCenter: 'action-move-center',
   moveCenterSubactions: {
     customPosition: 'custom-position',

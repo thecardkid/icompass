@@ -14,6 +14,7 @@ import { BookmarkWorkspacePrompt, EmailWorkspacePrompt } from './modals/Prompt';
 import { ExplainViewModesModal } from './modals/SimpleModal';
 import ScreenshotModal from './modals/ScreenshotModal';
 import ShareModal from './modals/ShareModal';
+import EditablesSubmenu from './submenus/EditablesSubmenu';
 import ExportSubmenu from './submenus/ExportSubmenu';
 import NotesSubmenu from './submenus/NotesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
@@ -46,6 +47,7 @@ class WorkspaceMenu extends Component {
         modes: false,
         users: false,
         resize: false,
+        editables: false,
       },
     };
 
@@ -73,11 +75,12 @@ class WorkspaceMenu extends Component {
 
   _handleShortcuts = (e) => {
     let shortcuts = this.shortcuts;
-
-    if (e.metaKey) return;
-
-    if (e.shiftKey) shortcuts = this.shortcuts.shift;
-
+    if (e.metaKey) {
+      return;
+    }
+    if (e.shiftKey) {
+      shortcuts = this.shortcuts.shift;
+    }
     if (_.has(shortcuts, e.which)) {
       e.preventDefault();
       shortcuts[e.which]();
@@ -177,6 +180,7 @@ class WorkspaceMenu extends Component {
       modes: false,
       users: false,
       resize: false,
+      editables: false,
       [submenu]: true,
     }});
   };
@@ -188,6 +192,7 @@ class WorkspaceMenu extends Component {
       modes: false,
       users: false,
       resize: false,
+      editables: false,
     }});
   };
 
@@ -213,7 +218,7 @@ class WorkspaceMenu extends Component {
   };
 
   renderMenu = () => {
-    const { exports, notes, users, resize } = this.state.submenus;
+    const { exports, notes, users, resize, editables } = this.state.submenus;
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -276,6 +281,12 @@ class WorkspaceMenu extends Component {
           <MaybeTappable onTapOrClick={this.changeMode('bulk')}>
             <div data-cy={workspaceMenu.modesSubactions.bulk} id={'ic-bulk'} className={'ic-menu-item'} onMouseOver={this.hideSubmenus}>
               Multi-Edit Mode
+            </div>
+          </MaybeTappable>
+          <MaybeTappable onTapOrClick={this.showSubmenu('editables')}>
+            <div data-cy={workspaceMenu.editables} className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('editables')}>
+              Edit
+              {editables && <EditablesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
             </div>
           </MaybeTappable>
           <MaybeTappable onTapOrClick={this.showSubmenu('users')}>
