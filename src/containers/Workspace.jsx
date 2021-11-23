@@ -73,6 +73,12 @@ class Workspace extends Component {
             [events.frontend.DUPLICATE_USERNAME]: this.handleDuplicateUsername,
           });
           this.setupWorkspace(res.body.compass, false);
+          // This check must happen here to avoid racing with the API request, which
+          // would lead to trying to set the center of a workspace whose room the user
+          // has not yet joined, causing the "App updated" modal.
+          if (res.body.compass.center.length === 0) {
+            this.props.uiX.openPeopleGroupsModal();
+          }
           if (!username || !!this.checkUsername(username)) {
             this.props.uiX.openUsernamePromptModal();
           } else {
@@ -198,7 +204,7 @@ class Workspace extends Component {
       <div>
         <HelpAndFeedback editCode={this.props.compass.editCode} />
         <WorkspaceMenu />
-        <Compass isDevAutoSetup={!!this.props.location.query['auto']} />
+        <Compass isDevAutoSetup={__DEV__ && !!this.props.location.query['auto']} />
         <BulkEditToolbar show={this.props.visualMode} />
         <FormManager commonAttrs={{
           bg: Storage.getStickyNoteColor(),

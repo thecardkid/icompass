@@ -87,7 +87,6 @@ class Compass extends Component {
   constructor(props) {
     super(props);
 
-    this.isAutoSetup = __DEV__ && this.props.isDevAutoSetup;
     this.hasEditingRights = !this.props.viewOnly;
     this.state = {
       showFullTopic: false,
@@ -108,19 +107,7 @@ class Compass extends Component {
         [events.frontend.SET_CENTER_TEXT]: this.setCompassCenter,
         [events.frontend.SET_CENTER_POSITION]: this.setCompassCenterPosition,
       });
-      if (props.compass.center.length === 0) {
-        this.props.uiX.openPeopleGroupsModal();
-      }
-    }
-  }
-
-  componentDidMount() {
-    this.props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
-    if (this.isAutoSetup) {
-      const $x = document.getElementById('ic-modal-confirm');
-      if ($x) {
-        $x.click();
-      }
+      this.props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
     }
   }
 
@@ -484,9 +471,6 @@ class Compass extends Component {
       if (this.animateQuadrants) {
         this.animateQuadrants = false;
         this.fadeInQuadrants(800);
-        setTimeout(() => {
-          this.props.uiX.toastInfo('You\'re all set up! Double click anywhere to get started.');
-        }, 3250);
       } else {
         this.fadeInQuadrants(0);
       }
@@ -498,7 +482,7 @@ class Compass extends Component {
         width: this.props.ui.vw,
         height: this.props.ui.vh,
       }}>
-        <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} defaultValue={this.isAutoSetup ? 'Some people group' : null} />
+        <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} defaultValue={this.props.isDevAutoSetup ? 'Some people group' : null} />
         <PeopleGroupsDismissablePrompt onSubmit={this.setPeopleGroups} defaultValue={this.props.compass.center} />
         <TopicPrompt onSubmit={this.setTopic} defaultValue={this.props.compass.topic} />
         <NoteManager/>

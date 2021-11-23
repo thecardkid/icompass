@@ -28,7 +28,8 @@ class LandingPage extends Component {
       const data = await getAPIClient().createWorkspace({ topic });
       const alwaysSend = Storage.getAlwaysSendEmail();
       if (alwaysSend.enabled) {
-        await getAPIClient().sendReminderEmail({
+        // `Await` here would block the critical path by a few seconds.
+        getAPIClient().sendReminderEmail({
           topic: data.topic,
           editCode: data.code,
           username,
