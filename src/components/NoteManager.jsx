@@ -182,6 +182,7 @@ class NoteManager extends Component {
   submitDraft = (note, idx) => {
     this.props.workspaceX.deleteDraft(idx);
     delete note.draft;
+    delete note._id;
     note.color = Storage.getStickyNoteColor();
     // Can't submit draft in visual mode, no need to check
     this.socket.emitNewNote(note);

@@ -11,7 +11,7 @@ class GetStartedModal extends Component {
     return (
       <DynamicModal
         modalName={MODAL_NAME.GET_STARTED_PROMPT}
-        heading={'The Innovator\'s Compass'}
+        heading={'The Innovators\' Compass'}
         width={500}
       >
         <p>

@@ -36,7 +36,7 @@ export default class EditTextForm extends Component {
                 bg={this.props.info.color}
                 switch={false}
                 colors={!this.props.info.draft}
-                noteProgressKey={`text-edit-${this.props.info.idx}`}
+                noteProgressKey={`text-edit-${this.props.info._id}`}
       />
     );
   }

@@ -26,6 +26,8 @@ const createDraft = (state, action) => {
   let note = Object.assign({}, action.note);
   note.draft = true;
   note.color = 'grey';
+  // Drafts need to be assigned fake ids, which are used in the noteProgressKey.
+  note._id = Date.now();
   const drafts = Storage.addDraft(state.editCode, note);
   return { ...state, drafts };
 };
