@@ -13,7 +13,7 @@ describe('help menu', () => {
 
     it('show prompt', () => {
       getElemWithDataCy(helpMenu.getStarted).click();
-      getElemWithDataCy(modal.heading).should('contain', 'Innovator\'s Compass');
+      getElemWithDataCy(modal.heading).should('contain', 'Innovators\' Compass');
       getElemWithDataCy(modal.closeButton).click();
     });
 

@@ -6,6 +6,8 @@ export const contextMenu = {
   bringToFrontAction: 'context-bring-to-front',
   selectAction: 'context-select',
   discardAction: 'context-discard',
+
+  addNoteHere: 'context-add-here',
 };
 
 export const workspaceMenu = {

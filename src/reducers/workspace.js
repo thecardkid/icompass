@@ -7,6 +7,7 @@ const defaultState = {
   drafts: [],
   editCode: null,
   color: null,
+  noteContextMenu: null,
 };
 
 const colorAll = (state, action) => {
@@ -161,6 +162,18 @@ export default (state = defaultState, action) => {
 
     case 'deleteDraft':
       return deleteDraft(state, action);
+
+    case 'showNoteContextMenu':
+      return {
+        ...state,
+        noteContextMenu: action.contextMenu,
+      };
+
+    case 'showCompassContextMenu':
+      return {
+        ...state,
+        compassContextMenu: action.contextMenu,
+      };
 
     default:
       return state;

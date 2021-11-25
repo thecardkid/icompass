@@ -9,6 +9,7 @@ import _ from 'underscore';
 
 import * as compassX from '@actions/compass';
 import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
 
 import SelectArea from './SelectArea';
 import { PeopleGroupsDismissablePrompt, PeopleGroupsPrompt, TopicPrompt } from './modals/Prompt';
@@ -23,6 +24,7 @@ import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
 
 import events from '@socket_events';
+import { contextMenu } from '@cypress/data_cy';
 
 const QUADRANTS = [
   {
@@ -172,6 +174,7 @@ class Compass extends Component {
              width: vw * (0.5 + ((centerPosition.x - 0.5) * q.xOffsetSign)),
              height: vh * (0.5 + ((centerPosition.y - 0.5) * q.yOffsetSign)),
            }}
+           onContextMenu={this.showContextMenu}
            id={q.id}>
         <div className={'interactable'}
              onDoubleClick={this.doubleClickCreate}
@@ -453,6 +456,47 @@ class Compass extends Component {
     );
   };
 
+  executeThenHide = (fn) => (ignoredClickEvent) => {
+    fn({
+      // The note should be placed where the context menu was invoked,
+      // not where the second click happened.
+      clientX: this.props.workspace.compassContextMenu.style.left,
+      clientY: this.props.workspace.compassContextMenu.style.top,
+    });
+    this.hideContextMenu();
+  };
+
+  showContextMenu = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const left = e.clientX;
+    const top = e.clientY;
+    this.props.workspaceX.showCompassContextMenu({ left, top });
+    $(window).on('mousedown', this.hideContextMenuIfNotAction);
+  };
+
+  hideContextMenuIfNotAction = (ev) => {
+    if (!ev.target.classList.contains('ic-menu-item')) {
+      this.hideContextMenu();
+    }
+  };
+
+  hideContextMenu() {
+    this.props.workspaceX.hideCompassContextMenu();
+    $(window).off('mousedown', this.hideContextMenuIfNotAction);
+  }
+
+  renderContextMenu() {
+    return (
+      <div className={'ic-menu context-menu compass-context-menu'} style={this.props.workspace.compassContextMenu.style}>
+        <div data-cy={contextMenu.addNoteHere} className={'ic-menu-item'}
+             onClick={this.executeThenHide(this.props.uiX.showNewNote)}>
+          Add note here
+        </div>
+      </div>
+    );
+  }
+
   render() {
     if (this.props.viewOnly) {
       this.fadeInQuadrants(0);
@@ -489,6 +533,7 @@ class Compass extends Component {
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         <SelectArea show={this.state.select} done={this.onMouseUp}/>
         {compass}
+        {this.props.showContextMenu && this.renderContextMenu()}
       </div>
     );
   }
@@ -499,6 +544,8 @@ const mapStateToProps = (state) => {
     compass: state.compass,
     ui: state.ui,
     visualMode: state.ui.editingMode === EDITING_MODES.VISUAL,
+    workspace: state.workspace,
+    showContextMenu: !!state.workspace.compassContextMenu,
   };
 };
 
@@ -506,6 +553,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     uiX: bindActionCreators(uiX, dispatch),
     compassX: bindActionCreators(compassX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
 };
 

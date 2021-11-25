@@ -15,7 +15,6 @@ const MULTI_MODE_NO_EDIT_MESSAGE = 'Can\'t make changes to individual notes whil
 class StickyNote extends Component {
   constructor(props) {
     super(props);
-    this.state = { contextMenu: null };
     this.hasEditingRights = !this.props.viewOnly;
     this.setModes(this.props);
   }
@@ -224,28 +223,21 @@ class StickyNote extends Component {
   showContextMenu = (ev) => {
     ev.stopPropagation();
     ev.preventDefault();
-
     if (this.visualMode || !this.hasEditingRights) {
       return;
     }
-
-    const contextMenu = {
-      top: ev.clientY,
-      left: ev.clientX,
-    };
-
+    let left = ev.clientX;
+    let top = ev.clientY;
     let $parent = ev.target.parentElement;
     while (!$parent.className.includes('draggable')) {
       $parent = $parent.parentElement;
     }
-
     if ($parent.style.transform || $parent.style.webkitTransform) {
-      contextMenu.top -= this.props.note.y * this.props.ui.vh;
-      contextMenu.left -= this.props.note.x * this.props.ui.vw;
+      left -= this.props.note.x * this.props.ui.vw;
+      top -= this.props.note.y * this.props.ui.vh;
     }
-
     this.focus();
-    this.setState({ contextMenu });
+    this.props.workspaceX.showNoteContextMenu({ left, top }, this.props.i);
     $(window).on('mousedown', this.hideContextMenuIfNotAction);
   };
 
@@ -256,13 +248,12 @@ class StickyNote extends Component {
   };
 
   hideContextMenu = () => {
-    this.setState({ contextMenu: null });
-    $(window).off('mousedown', this.hideContextMenu);
+    this.props.workspaceX.hideNoteContextMenu();
+    $(window).off('mousedown', this.hideContextMenuIfNotAction);
   };
 
   executeThenHide = (fn) => (ev) => {
     ev.stopPropagation();
-
     ev.persist();
     fn(ev);
     this.hideContextMenu();
@@ -322,7 +313,7 @@ class StickyNote extends Component {
     const disableIfBulk = this.visualMode ? 'disabled' : '';
 
     return (
-      <div className={'ic-menu context-menu'} style={this.state.contextMenu}>
+      <div className={'ic-menu context-menu'} style={this.props.workspace.noteContextMenu.style}>
         <section className={'border-bottom'}>
           <div data-cy={contextMenu.editAction} className={`ic-menu-item ${disableIfDoodle} ${disableIfBulk}`}
                onClick={this.executeThenHide(this.edit)}>
@@ -387,6 +378,12 @@ class StickyNote extends Component {
       style.border = `3px solid ${CSS.COLORS.BLUE}`;
     }
 
+    let showContextMenu = false;
+    if (this.props.workspace.noteContextMenu
+      && this.props.workspace.noteContextMenu.noteIdx === this.props.i) {
+      showContextMenu = true;
+    }
+
     return (
       <div className={`ic-sticky-note draggable ${n.draft ? 'draft' : ''}`}
            style={style}
@@ -399,7 +396,7 @@ class StickyNote extends Component {
            height={n.doodle ? '100px' : null}>
         {this.renderCloseButton()}
         {this.renderContents()}
-        {this.state.contextMenu && this.renderContextMenu()}
+        {showContextMenu && this.renderContextMenu()}
       </div>
     );
   }

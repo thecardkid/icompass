@@ -74,3 +74,36 @@ export const removeNotesIfSelected = (deletedIdx) => {
     deletedIdx,
   };
 };
+
+export const showNoteContextMenu = (style, noteIdx) => {
+  return {
+    type: 'showNoteContextMenu',
+    contextMenu: {
+      style,
+      noteIdx,
+    },
+  };
+};
+
+export const hideNoteContextMenu = () => {
+  return {
+    type: 'showNoteContextMenu',
+    contextMenu: null,
+  };
+};
+
+export const showCompassContextMenu = (style) => {
+  return {
+    type: 'showCompassContextMenu',
+    contextMenu: {
+      style,
+    },
+  };
+};
+
+export const hideCompassContextMenu = () => {
+  return {
+    type: 'showCompassContextMenu',
+    contextMenu: null,
+  };
+};
