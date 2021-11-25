@@ -8,8 +8,8 @@ import * as uiX from '@actions/ui';
 
 import { trackFeatureEvent } from '@utils/analytics';
 import SocketSingleton from '@utils/Socket';
+import Storage from '@utils/Storage';
 import FormPalette from './FormPalette';
-import Storage from '../../utils/Storage';
 
 class TextForm extends Component {
   constructor(props) {
@@ -49,7 +49,12 @@ class TextForm extends Component {
 
   handleChange = (text, delta, source, editor) => {
     this.setState({ text, effectiveText: editor.getText() }, () => {
-      Storage.saveNoteProgress(this.props.noteProgressKey, this.state.text);
+      // Sometimes effectiveText is just '\n', unclear why.
+      if (this.state.effectiveText.trim().length) {
+        Storage.saveNoteProgress(this.props.noteProgressKey, this.state.text);
+      } else {
+        Storage.saveNoteProgress(this.props.noteProgressKey, null);
+      }
     });
   };
 
