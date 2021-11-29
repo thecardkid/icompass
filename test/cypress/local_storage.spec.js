@@ -3,12 +3,28 @@ import {
   selectMenuOption,
   setup,
 } from './utils';
-const { modal, workspaceMenu } = require('./data_cy');
+const { modal, helpers, workspaceMenu } = require('./data_cy');
 
 describe('local storage', () => {
   before(setup);
   beforeEach(cy.restoreLocalStorage);
   afterEach(cy.saveLocalStorage);
+
+  describe('email reminders', () => {
+    it('go shows modal', () => {
+      getElemWithDataCy(helpers.triggerEmailReminderToast).click({ force: true });
+      getElemWithDataCy(modal.emailReminderGo).click();
+      getElemWithDataCy(modal.heading).should('contain', 'Receive a link');
+      getElemWithDataCy(modal.closeButton).click();
+    });
+
+    it('disable shows modal', () => {
+      getElemWithDataCy(helpers.triggerEmailReminderToast).click({ force: true });
+      getElemWithDataCy(modal.emailReminderDisable).click();
+      getElemWithDataCy(modal.heading).should('contain', 'Confirm');
+      getElemWithDataCy(modal.confirmButton).click();
+    });
+  });
 
   describe('note progress', () => {
     const createProgress = 'create progress';

@@ -12,6 +12,7 @@ import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
 
 import SelectArea from './SelectArea';
+import { ConfirmDisableEmailReminders } from './modals/ConfirmModal';
 import { PeopleGroupsDismissablePrompt, PeopleGroupsPrompt, TopicPrompt } from './modals/Prompt';
 import NoteManager from '@components/NoteManager.jsx';
 import NoteManagerViewOnly from '@components/NoteManagerViewOnly.jsx';
@@ -24,7 +25,7 @@ import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
 
 import events from '@socket_events';
-import { contextMenu } from '@cypress/data_cy';
+import { contextMenu, helpers } from '@cypress/data_cy';
 
 const QUADRANTS = [
   {
@@ -515,6 +516,11 @@ class Compass extends Component {
       if (this.animateQuadrants) {
         this.animateQuadrants = false;
         this.fadeInQuadrants(800);
+        if (Storage.isEmailReminderEnabled()) {
+          setTimeout(() => {
+            this.props.uiX.toastEmailReminder();
+          }, 3250);
+        }
       } else {
         this.fadeInQuadrants(0);
       }
@@ -528,12 +534,14 @@ class Compass extends Component {
       }}>
         <PeopleGroupsPrompt onSubmit={this.setPeopleGroups} defaultValue={this.props.isDevAutoSetup ? 'Some people group' : null} />
         <PeopleGroupsDismissablePrompt onSubmit={this.setPeopleGroups} defaultValue={this.props.compass.center} />
+        <ConfirmDisableEmailReminders onConfirm={Storage.disableEmailReminder} />
         <TopicPrompt onSubmit={this.setTopic} defaultValue={this.props.compass.topic} />
         <NoteManager/>
         {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         <SelectArea show={this.state.select} done={this.onMouseUp}/>
         {compass}
         {this.props.showContextMenu && this.renderContextMenu()}
+        <button style={{display: 'none'}} data-cy={helpers.triggerEmailReminderToast} onClick={this.props.uiX.toastEmailReminder} />
       </div>
     );
   }

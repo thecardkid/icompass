@@ -72,8 +72,14 @@ export const modal = {
   confirmButton: 'modal-confirm',
   closeButton: 'modal-close',
 
-  // This triggers a modal.
+  // For things that trigger a modal.
   whatsThis: 'whats-this',
+  emailReminderGo: 'email-reminder-go',
+  emailReminderDisable: 'email-reminder-disable',
+};
+
+export const helpers = {
+  triggerEmailReminderToast: 'email',
 };
 
 export function getColorAttr(c) {

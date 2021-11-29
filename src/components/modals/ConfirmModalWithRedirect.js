@@ -9,13 +9,16 @@ import { ModalFooter } from './shared';
 function ConfirmModalWithRedirect(dynamicModalProps, paragraphs) {
   return class X extends React.Component {
     render() {
+      const {
+        redirectURL,
+      } = this.props;
       return (
         <DynamicModal {...dynamicModalProps}>
           {paragraphs.map((text, i) => <p dangerouslySetInnerHTML={{__html: text}} key={i} />)}
           <ModalFooter confirmButton={{
             text: 'OK',
             onConfirm: () => {
-              window.location.href = this.props.redirectURL;
+              window.location.href = redirectURL;
             },
           }}/>
         </DynamicModal>

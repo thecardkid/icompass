@@ -9,13 +9,16 @@ import { ModalFooter } from './shared';
 function ConfirmDeleteModal(dynamicModalProps, paragraphs) {
   return class X extends React.Component {
     render() {
+      const {
+        onConfirm,
+      } = this.props;
       return (
         <DynamicModal {...dynamicModalProps}>
           {paragraphs.map((text, i) => <p dangerouslySetInnerHTML={{__html: text}} key={i} />)}
           <ModalFooter confirmButton={{
             text: 'Delete',
             isDangerous: true,
-            onConfirm: this.props.onConfirm,
+            onConfirm,
           }}/>
         </DynamicModal>
       );

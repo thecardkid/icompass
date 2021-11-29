@@ -106,7 +106,7 @@ export const EmailWorkspacePrompt = Prompt({
   heading: 'Receive a link to this workspace',
 }, [
   `You'll need the link to the compass to access it again. To email yourself the link now, enter your email address below.`,
-  'I will not store your email address or send you spam.',
+  'The app will not store your email address or send you spam.',
 ]);
 
 export const PeopleGroupsPrompt = Prompt({

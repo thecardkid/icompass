@@ -381,6 +381,13 @@ class WorkspaceMenu extends Component {
                                  defaultValue={this.props.compass.topic}
         />
         <EmailWorkspacePrompt onSubmit={this.sendReminderEmail}
+                              defaultValue={(function() {
+                                const x = Storage.getAlwaysSendEmail();
+                                if (!x.enabled) {
+                                  return '';
+                                }
+                                return x.email;
+                              })()}
                               validateFn={modalCheckEmail}
         >
           <div className="ic-always">

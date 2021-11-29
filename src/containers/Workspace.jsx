@@ -27,7 +27,7 @@ import {
 } from '@components/modals/Prompt';
 
 import { EDITING_MODES } from '@utils/constants';
-import { isCharOnly, modalCheckEmail } from '@utils/regex';
+import { isCharOnly } from '@utils/regex';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
 

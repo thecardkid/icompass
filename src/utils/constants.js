@@ -47,6 +47,7 @@ export const MODAL_NAME = {
   DELETE_WORKSPACE: 'delete_workspace',
   // Confirm
   DISCONNECTED: 'disconnected',
+  DISABLE_EMAIL_REMINDER: 'disable_email_reminder',
 
   // Prompts
   BOOKMARK_WORKSPACE: 'bookmark_workspace',

@@ -22,6 +22,14 @@ export default {
     localStorage.setItem('notesProgress', JSON.stringify(x));
   },
 
+  isEmailReminderEnabled() {
+    return localStorage.getItem('disableEmailReminder') !== 'yes';
+  },
+
+  disableEmailReminder() {
+    localStorage.setItem('disableEmailReminder', 'yes');
+  },
+
   setDarkTheme(value) {
     const prefs = this.getUserPrefs();
     prefs.darkTheme = value;

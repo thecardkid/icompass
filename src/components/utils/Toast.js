@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as uiX from '@actions/ui';
-import { isBrowserTestRunning } from '@utils/browser';
 import { modal } from '@cypress/data_cy';
 
 class Toast extends React.Component {
@@ -21,14 +20,14 @@ class Toast extends React.Component {
       if (this.dismisserTimeoutID) {
         clearTimeout(this.dismisserTimeoutID);
       }
-      let timeoutMs = 3000;
-      if (nextProps.toast.type === 'error'
-        || nextProps.toast.message === uiX.specialToasts.automaticEmail) {
-        timeoutMs = 6000;
+      const { type, message } = nextProps.toast;
+      if (type === uiX.specialToasts.emailReminder) {
+        return;
       }
-      if (isBrowserTestRunning()) {
-        // Machines are slow.
-        timeoutMs *= 1.5;
+      let timeoutMs = 10000;
+      if (type === 'error'
+        || message === uiX.specialToasts.automaticEmail) {
+        timeoutMs = 20000;
       }
       this.dismisserTimeoutID = setTimeout(this.props.uiX.toastClear, timeoutMs);
     }
@@ -65,8 +64,19 @@ class Toast extends React.Component {
   };
 
   openAutoEmailFeatureModal = () => {
+    this.props.uiX.toastClear();
     this.props.uiX.openAutoEmailFeatureModal();
   };
+
+  openEmailReminderModal = () => {
+    this.props.uiX.toastClear();
+    this.props.uiX.openEmailWorkspaceModal();
+  };
+
+  openDisableEmailReminderModal = () => {
+    this.props.uiX.toastClear();
+    this.props.uiX.openDisableEmailReminderModal();
+  }
 
   render() {
     let { toast } = this.props;
@@ -79,18 +89,31 @@ class Toast extends React.Component {
       // during its dismissed animation.
       toast = this.toast;
     }
-    let message = toast.message || this.message;
-    if (toast.message === uiX.specialToasts.automaticEmail) {
-      let text;
-      if (toast.type === 'success') {
-        text = `A link to this workspace has automatically been sent to ${toast.recipientEmail}`;
-      } else if (toast.type === 'error') {
-        text = 'Failed sending email, please note down your workspace code somewhere.';
-      }
-      message = this.message = (
-        <span className={'auto-email'}>{text}.<u data-cy={modal.whatsThis} onClick={this.openAutoEmailFeatureModal}>What's this?</u>
-        </span>
-      );
+    let message = toast.message;
+    switch (toast.message) {
+      case uiX.specialToasts.automaticEmail:
+        let text;
+        if (toast.type === 'success') {
+          text = `A link to this workspace has automatically been sent to ${toast.recipientEmail}.`;
+        } else if (toast.type === 'error') {
+          text = 'Failed sending email, please note down your workspace code somewhere.';
+        }
+        message = (
+          <span className={'auto-email'}>{text}<u data-cy={modal.whatsThis} onClick={this.openAutoEmailFeatureModal}>What's this?</u>
+          </span>
+        );
+        break;
+      case uiX.specialToasts.emailReminder:
+        message = (
+          <div className={'email-reminder'}>
+            <span>
+              Email yourself a link to this workspace.
+              <u data-cy={modal.emailReminderGo} onClick={this.openEmailReminderModal}>Go</u>
+              <u data-cy={modal.emailReminderDisable} onClick={this.openDisableEmailReminderModal}>Don't show this again</u>
+            </span>
+          </div>
+        );
+        break;
     }
 
     return (

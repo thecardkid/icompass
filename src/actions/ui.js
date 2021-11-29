@@ -158,6 +158,7 @@ export const openGetStartedModal = openModalAction(MODAL_NAME.GET_STARTED_PROMPT
 export const openImageModal = openModalAction(MODAL_NAME.IMAGE);
 export const openAutoEmailFeatureModal = openModalAction(MODAL_NAME.AUTO_EMAIL_FEATURE);
 export const openTopicPromptModal = openModalAction(MODAL_NAME.TOPIC);
+export const openDisableEmailReminderModal = openModalAction(MODAL_NAME.DISABLE_EMAIL_REMINDER);
 
 // Every open*Modal call will clear out modalExtras, so call this after.
 export const setModalExtras = (modalExtras) => {
@@ -211,6 +212,7 @@ export const toastError = (message) => {
 
 export const specialToasts = {
   automaticEmail: 'auto_email',
+  emailReminder: 'email_reminder',
 };
 export const toastAutomaticEmail = (isSuccess, recipientEmail) => {
   return {
@@ -219,6 +221,15 @@ export const toastAutomaticEmail = (isSuccess, recipientEmail) => {
       type: isSuccess ? 'success' : 'error',
       message: specialToasts.automaticEmail,
       recipientEmail,
+    },
+  };
+};
+export const toastEmailReminder = () => {
+  return {
+    type: 'setToast',
+    toast: {
+      type: 'info',
+      message: specialToasts.emailReminder,
     },
   };
 };
