@@ -23,7 +23,7 @@ export default class EditablesSubmenu extends Component {
         <section>
           <Tappable onTap={this.beginCustomResize}>
             <div data-cy={workspaceMenu.editablesSubactions.peopleGroup} className={'ic-menu-item'} onClick={this.openPeopleGroupModal}>
-              People Groups Involved
+              People Involved
             </div>
           </Tappable>
           <Tappable onTap={this.recenter}>

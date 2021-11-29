@@ -18,7 +18,7 @@ class TextForm extends Component {
     const savedProgressText = Storage.getNoteProgress(this.props.noteProgressKey);
     if (savedProgressText) {
       text = savedProgressText;
-      props.uiX.toastInfo('Your form contents was restored based on a previous edit');
+      props.uiX.toastInfo('Restored your saved progress. "Cancel" to discard.');
     }
 
     this.state = {
@@ -47,13 +47,17 @@ class TextForm extends Component {
     this.setState({ effectiveText: this.refs.quill.getEditor().getText() });
   }
 
+  saveNoteProgress(val) {
+    Storage.saveNoteProgress(this.props.noteProgressKey, val);
+  }
+
   handleChange = (text, delta, source, editor) => {
     this.setState({ text, effectiveText: editor.getText() }, () => {
       // Sometimes effectiveText is just '\n', unclear why.
       if (this.state.effectiveText.trim().length) {
-        Storage.saveNoteProgress(this.props.noteProgressKey, this.state.text);
+        this.saveNoteProgress(this.state.text);
       } else {
-        Storage.saveNoteProgress(this.props.noteProgressKey, null);
+        this.saveNoteProgress(null);
       }
     });
   };
@@ -69,7 +73,7 @@ class TextForm extends Component {
       return;
     }
     this.props.submit(text, false, this.state, isDraft);
-    Storage.saveNoteProgress(this.props.noteProgressKey, null);
+    this.saveNoteProgress(null);
   };
 
   renderStyleToolbar() {
@@ -151,6 +155,11 @@ class TextForm extends Component {
     this.mouseDown = false;
   };
 
+  cancel = () => {
+    this.saveNoteProgress(null);
+    this.props.close();
+  };
+
   render() {
     const submitText = this.props.switch ? 'Publish' : 'Save';
 
@@ -186,7 +195,7 @@ class TextForm extends Component {
               {this.props.switch && this.renderSwitches()}
               <button name="ship" onClick={this.submit(false)}>{submitText}</button>
               {this.props.switch && this.renderDraftButton()}
-              <button name="nvm" onClick={this.props.close}>Cancel</button>
+              <button name="nvm" onClick={this.cancel}>Cancel</button>
             </div>
           </div>
         </div>

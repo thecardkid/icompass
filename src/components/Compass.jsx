@@ -257,7 +257,7 @@ class Compass extends Component {
 
     let textHeight = lineHeight * numLines;
     return {
-      marginTop: (r - textHeight) / 2,
+      marginTop: (r - textHeight) / 3,
       width,
     };
   };
@@ -313,8 +313,9 @@ class Compass extends Component {
   };
 
   renderCenter = () => {
-    const { center } = this.props.compass;
+    let { center } = this.props.compass;
     const { centerPosition } = this.state;
+    center = 'PEOPLE: ' + center;
     let css, length;
     if (center.length <= 40) {
       css = this.getCenterTextCss(11, length = 100);
@@ -340,7 +341,7 @@ class Compass extends Component {
                  cursor: this.hasEditingRights ? 'pointer' : 'auto',
                }}
                onDoubleClick={this.hasEditingRights ? this.editPeopleGroups : _.noop}>
-            <p className="wordwrap" style={css}>{center}</p>
+            <p className="wordwrap">{center}</p>
           </div>
           {this.hasEditingRights && !this.props.ui.dragCenterEnabled &&
             <ReactTooltip
