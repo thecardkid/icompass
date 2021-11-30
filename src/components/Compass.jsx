@@ -376,17 +376,19 @@ class Compass extends Component {
   };
 
   renderCenterDragModal() {
+    // Structure mimics that of a modal.
     return (
       <div id={'center-drag-modal'}>
         <div className={'header'}>
-          Click and drag the center to move it.
+          <h1>Move center</h1>
+          <i onClick={this.cancelCenterDrag} className={'material-icons toolbar-close'}>close</i>
+        </div>
+        <div className={'content'}>
+          Click and drag the center to reposition it.
         </div>
         <div className={'actions'}>
-          <button className={'cancel'} onClick={this.cancelCenterDrag}>
-            Cancel
-          </button>
           <button className={'accept'} onClick={this.submitCenterDrag}>
-            Accept
+            Submit
           </button>
         </div>
       </div>
