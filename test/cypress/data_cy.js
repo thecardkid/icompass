@@ -65,6 +65,7 @@ export const helpMenu = {
   privacyStatement: 'help-privacy-statement',
   whatsNew: 'help-whats-new',
   leaveFeedback: 'help-leave-feedback',
+  github: 'help-github',
 };
 
 export const modal = {

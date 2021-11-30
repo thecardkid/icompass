@@ -46,6 +46,12 @@ describe('help menu', () => {
       cy.get('.ic-dynamic-modal .contents').should('contain', 'Leave your feedback');
       getElemWithDataCy(modal.closeButton).click();
     });
+
+    it('github link', () => {
+      getElemWithDataCy(helpMenu.github).should('have.attr', 'href').should('contain', 'github.com');
+      // hide the form for the next test
+      clickHelpButton();
+    });
   });
 
   describe('dismissability', () => {

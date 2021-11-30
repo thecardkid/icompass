@@ -38,6 +38,7 @@ export const PrivacyStatementModal = SimpleModal({
   'If you choose to "save via email", your email is only used to send you your workspace code at that time, and is not stored. If you enable the "always send email" feature, your email is remembered using storage on your device, and is not stored on the server.',
   `iCompass stores data pertaining to your workspace in a secure manner, in order to provide you reliable access. iCompass will not expose your workspace's contents, code, or any other information, to any third-party for reasons other than storage.`,
   `Anyone who has your workspace's edit code will be able to access and modify any and all data in your Compass. Save and share your workspace link with care, and ask collaborators to do the same.`,
+  `The app is open-source, and can be found on <a href="https://github.com/thecardkid/icompass" target="_blank">GitHub</a>.`,
 ]);
 
 export const WhatsNewModal = SimpleModal({
