@@ -40,6 +40,9 @@ class Workspace extends Component {
     if (this.props.location.query['fi']) {
       this.props.uiX.setIsFiona();
     }
+    if (this.props.location.query['autoEmail']) {
+      this.props.uiX.autoEmailSent();
+    }
     if (this.props.route.viewOnly) {
       request.get('/api/v1/workspace/view')
         .query({ id: this.props.params.code })

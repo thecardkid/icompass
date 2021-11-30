@@ -27,6 +27,7 @@ class LandingPage extends Component {
     try {
       const data = await getAPIClient().createWorkspace({ topic });
       const alwaysSend = Storage.getAlwaysSendEmail();
+      let redirectURL = `/compass/edit/${data.code}/${username}`;
       if (alwaysSend.enabled) {
         // `Await` here would block the critical path by a few seconds.
         getAPIClient().sendReminderEmail({
@@ -36,8 +37,9 @@ class LandingPage extends Component {
           recipientEmail: alwaysSend.email,
           isAutomatic: true,
         });
+        redirectURL += '?autoEmail=1'
       }
-      return browserHistory.push(`/compass/edit/${data.code}/${username}`);
+      return browserHistory.push(redirectURL);
     } catch(err) {
       // eslint-disable-next-line no-console
       console.error(err);
@@ -51,7 +53,12 @@ class LandingPage extends Component {
       alert(resp.body.error);
       return;
     }
-    browserHistory.push(`/compass/edit/${resp.body.code}/dev?auto=1`);
+    const alwaysSend = Storage.getAlwaysSendEmail();
+    let url = `/compass/edit/${resp.body.code}/dev?auto=1`;
+    if (alwaysSend.enabled) {
+      url += '&autoEmail=1';
+    }
+    browserHistory.push(url);
   };
 
   sizeImage() {

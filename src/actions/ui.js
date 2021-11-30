@@ -240,3 +240,9 @@ export const toastClear = () => {
     type: 'clearToast',
   };
 };
+
+export const autoEmailSent = () => {
+  return {
+    type: 'autoEmailSent',
+  };
+};

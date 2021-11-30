@@ -19,6 +19,7 @@ const defaultState = {
   bookmarked: false,
   dragCenterEnabled: false,
   focusedNote: -1,
+  disableEmailReminder: false,
   vw: 0,
   vh: 0,
   editingMode: EDITING_MODES.NORMAL,
@@ -215,6 +216,9 @@ export default (state = defaultState, action) => {
         ...state,
         modalExtras: action.modalExtras,
       };
+
+    case 'autoEmailSent':
+      return { ...state, disableEmailReminder: true };
 
     default:
       return state;

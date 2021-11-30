@@ -517,7 +517,8 @@ class Compass extends Component {
       if (this.animateQuadrants) {
         this.animateQuadrants = false;
         this.fadeInQuadrants(800);
-        if (Storage.isEmailReminderEnabled()) {
+        if (Storage.isEmailReminderEnabled()
+          && !this.props.ui.disableEmailReminder) {
           setTimeout(() => {
             this.props.uiX.toastEmailReminder();
           }, 3250);
