@@ -2,4 +2,6 @@
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
+# --env updateSnapshots=true                Update snapshots.
+# --spec test/cypress/forms.spec.js         Run single spec, cannot provide multiple.
 "$IC_ROOT/node_modules/.bin/cypress" run --config-file config/cypress/config.json "$@"

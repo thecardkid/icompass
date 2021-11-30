@@ -274,7 +274,7 @@ compassSchema.methods.plusOneNote = function(noteId) {
 
 compassSchema.methods.bulkUpdateNotes = function(noteIds, transformation) {
   return new Promise((resolve, reject) => {
-    if (!isValidColor(transformation.color)) {
+    if (transformation.color && !isValidColor(transformation.color)) {
       reject('Invalid data');
       return;
     }
@@ -284,8 +284,20 @@ compassSchema.methods.bulkUpdateNotes = function(noteIds, transformation) {
         reject('Could not find compass to update note', _id, noteIds, err);
       }
       c.notes = _.map(c.notes, function(note) {
-        if (_.contains(noteIds, note._id.toString())) {
-          if (transformation.color) note.color = transformation.color;
+        const noteId = note._id.toString();
+        if (_.contains(noteIds, noteId)) {
+          if (transformation.color) {
+            note.color = transformation.color;
+          }
+          if (transformation.alignLeft) {
+            note.x = transformation.alignLeft;
+          }
+          if (transformation.alignTop) {
+            note.y = transformation.alignTop;
+          }
+          if (transformation.texts && transformation.texts.hasOwnProperty(noteId)) {
+            note.text = transformation.texts[noteId];
+          }
         }
         return note;
       });

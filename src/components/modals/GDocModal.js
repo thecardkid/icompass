@@ -41,20 +41,6 @@ class GDocModal extends Component {
     return data;
   }
 
-  getPreviewSection(header, notes) {
-    if (notes.length > 0) {
-      let bulletPoints = `
-${header}:`;
-      notes.forEach(point => {
-        bulletPoints += `
-    - ${point.text} (${point.user})
-`;
-      });
-      return bulletPoints;
-    }
-    return '';
-  }
-
   renderBulletPoint(note) {
     if (note.isImage) {
       return <p key={note.text}>- <a href={note.text}>image</a> ({note.user})</p>;
@@ -127,8 +113,12 @@ ${header}:`;
       if (n.doodle) return;
       let raw = '';
       const parser = new htmlparser.Parser({
-        ontext: (text) => raw += text,
-      }, { decodeEntities: true });
+        ontext: (text) => {
+          raw += text;
+        },
+      }, {
+        decodeEntities: true
+      });
       parser.write(n.text);
       parser.end();
       docData.getQuadrant(n.x, n.y).push({

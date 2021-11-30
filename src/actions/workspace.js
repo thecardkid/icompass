@@ -12,13 +12,6 @@ export const selectNote = (idx) => {
   };
 };
 
-export const colorAll = (color) => {
-  return {
-    type: 'colorAll',
-    color,
-  };
-};
-
 export const createDraft = (note) => {
   return {
     type: 'createDraft',

@@ -98,35 +98,10 @@ describe('workspace menu', () => {
   });
 
   describe('modes submenu', () => {
-    // it('compact mode', () => {
-    //   selectSubmenuOption({
-    //     submenu: workspaceMenu.modes,
-    //     suboption: workspaceMenu.modesSubactions.compact,
-    //   });
-    //   cy.get('.ic-toast-message').should('contain', 'compact');
-    // });
-
     it('multi-edit mode', () => {
       selectMenuOption(workspaceMenu.modesSubactions.bulk);
-      cy.get('.bulk-edit-btn.cancel').click();
+      cy.get('.toolbar-close').click();
     });
-
-    // it('standard mode', () => {
-    //   selectSubmenuOption({
-    //     submenu: workspaceMenu.modes,
-    //     suboption: workspaceMenu.modesSubactions.standard,
-    //   });
-    //   cy.get('.ic-toast-message').should('contain', 'standard');
-    // });
-    //
-    // it('explain modes', () => {
-    //   selectSubmenuOption({
-    //     submenu: workspaceMenu.modes,
-    //     suboption: workspaceMenu.modesSubactions.explain,
-    //   });
-    //   getElemWithDataCy(modal.heading).should('contain', 'What are these modes');
-    //   getElemWithDataCy(modal.closeButton).click();
-    // });
   });
 
   describe('exports submenu', () => {

@@ -5,6 +5,8 @@ import {
 } from './utils';
 const { modal, helpers, workspaceMenu } = require('./data_cy');
 
+// Do not use hooks like before and beforeAll, as they don't trigger
+// beforeEach and afterEach hooks, which we need to persist local storage.
 describe('local storage', () => {
   before(setup);
   beforeEach(cy.restoreLocalStorage);
@@ -34,8 +36,25 @@ describe('local storage', () => {
 
     const $editor = '#ic-form-text .ql-editor';
 
-    // This is technically a "before", but hooks don't trigger beforeEach and
-    // afterEach hooks, which we need to persist local storage.
+    // A way to close the text form without discarding progress.
+    const clickBackdrop = () => cy.get('#ic-backdrop').click({ force: true });
+
+    let x = 200, y = 200;
+    it('remembers text', () => {
+      // First, set up some notes.
+      cy.get('body').dblclick(x, y);
+      cy.get($editor).type('first note');
+      clickBackdrop();
+      cy.get('body').dblclick(x, y);
+      cy.get($editor).should('contain', 'first note');
+    });
+
+    it('cancel discards progress', () => {
+      cy.get('button[name=nvm]').click();
+      cy.get('body').dblclick(x, y);
+      cy.get($editor).should('not.contain', 'first note');
+    });
+
     it('setup', () => {
       let x = 200, y = 200;
       // First, set up some notes.
@@ -49,20 +68,25 @@ describe('local storage', () => {
       cy.get($editor).type('draft note');
       cy.get('button[name=draft]').click();
 
-      // Set up typing progress.
+      // Set up typing progress for several cases, all of whose progress
+      // should be tracked independently:
+      // - New note form
+      // - Draft
+      // - Submitted note #1
+      // - Submitted note #2
       cy.get('body').dblclick(x+300, y);
       cy.get($editor).type(createProgress);
-      cy.get('button[name=nvm]').click();
-      // Drafts come first.
+      clickBackdrop();
+      // Drafts come first outside of multi-edit mode.
       cy.get('#note0').dblclick();
       cy.get($editor).type(editProgressDraftNote);
-      cy.get('button[name=nvm]').click();
+      clickBackdrop();
       cy.get('#note1').dblclick();
       cy.get($editor).type(editProgressFirstNote);
-      cy.get('button[name=nvm]').click();
+      clickBackdrop();
       cy.get('#note2').dblclick();
       cy.get($editor).type(editProgressSecondNote);
-      cy.get('button[name=nvm]').click();
+      clickBackdrop();
     });
 
     it('create progress', () => {

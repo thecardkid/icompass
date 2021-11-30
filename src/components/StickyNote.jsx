@@ -183,7 +183,7 @@ class StickyNote extends Component {
 
   selectAndEnterVisual = () => {
     if (this.props.note.draft) {
-      this.props.uiX.toastError('Cannot enter multi-edit mode by selecting a draft');
+      this.props.uiX.toastError('Cannot edit drafts with multi-edit mode');
     } else {
       this.props.enterVisualMode(this.props.i);
     }
@@ -191,7 +191,7 @@ class StickyNote extends Component {
 
   selectInVisual = () => {
     if (this.props.note.draft) {
-      this.props.uiX.toastError('Cannot select drafts in multi-edit mode');
+      this.props.uiX.toastError('Cannot edit drafts with multi-edit mode');
     } else {
       this.props.workspaceX.selectNote(this.props.i);
     }

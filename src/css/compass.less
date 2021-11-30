@@ -184,6 +184,9 @@ div#ic-visual-toolbar {
   div#header {
     padding: 20px 10px 5px;
     font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   div#actions {
@@ -229,16 +232,57 @@ div#ic-visual-toolbar {
       // Same width as <hr>.
       width: 90%;
       align-self: center;
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
 
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
+
+      .label {
+        width: 90px;
+        text-align: left;
+        margin-right: 10px;
+      }
+
+      &.align {
+        button {
+          font-size: 14px;
+          margin-right: 3px;
+          padding: 3px 5px;
+          cursor: pointer;
+
+          &.left {
+            border-left: 2px solid @dark;
+          }
+
+          &.top {
+            border-top: 2px solid @dark;
+          }
+        }
+      }
+
+      &.formatting {
+        i {
+          margin-right: 3px;
+          cursor: pointer;
+
+          &.applied {
+            background: @dark;
+            color: @light;
+          }
+
+          &.underline {
+            text-decoration: none !important;
+          }
+        }
+      }
 
       &.update-color {
         background: @light;
-        display: flex;
-        align-items: center;
 
         .ic-form-palette{
-          margin-left: 10px;
-
           .icon .text {
             color: @dark;
           }

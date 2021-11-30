@@ -65,16 +65,11 @@ class NoteManager extends Component {
 
   chooseDisplayedNotes({ workspace, notes, visualMode }) {
     if (visualMode) {
-      const visualNotes = _.map(notes, (note, i) => {
-        let copy = Object.assign({}, note);
-        copy.style = Object.assign({}, note.style);
-        if (workspace.selected[i] && workspace.color !== null) {
-          copy.color = workspace.color;
-        }
-
-        return copy;
-      });
-      return visualNotes.concat(workspace.drafts);
+      // Don't remember why it's notes + drafts here, but drafts + note
+      // in the else case.
+      // But here, notes come first so that workspace.selected indexing
+      // is easy.
+      return notes.concat(workspace.drafts);
     } else {
       return workspace.drafts.concat(notes);
     }

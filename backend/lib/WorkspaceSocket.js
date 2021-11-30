@@ -1,7 +1,5 @@
 require('babel-polyfill');
-const _ = require('underscore');
 
-const { STICKY_COLORS } = require('./constants');
 const events = require('./socket_events');
 const { DefaultLogger, Logger } = require('./logger');
 const Compass = require('../models/compass');
@@ -9,7 +7,6 @@ const Compass = require('../models/compass');
 // TODO standardize logs
 
 const userError = 'UserError';
-const uErrBadInput = 'Invalid input.';
 function throwUserErr(message) {
   throw {
     name: userError,
@@ -212,12 +209,6 @@ class WorkspaceSocket {
   async bulkUpdateNotes(ids, transformation) {
     if (this.clientShouldRefresh()) {
       return;
-    }
-    if (transformation.color == null) {
-      throwUserErr(uErrBadInput);
-    }
-    if (!_.contains(STICKY_COLORS, transformation.color)) {
-      throwUserErr(uErrBadInput);
     }
     const model = await this.room.$workspace.bulkUpdateNotes(ids, transformation);
     this.broadcast(events.frontend.UPDATE_ALL_NOTES, model.notes);

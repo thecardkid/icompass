@@ -31,8 +31,8 @@ describe('workspace menu', () => {
     ];
     activateBulkEditMode();
     // Warns if zero notes.
-    cy.get('.ic-modal-warning').should('be.visible');
-    cy.get('.bulk-edit-btn.cancel').click();
+    cy.get('.ic-modal-warning').should('contain', 'first create');
+    cy.get('.toolbar-close').click();
 
     for (let i = 0; i < positions.length; i++) {
       const p = positions[i];
@@ -41,8 +41,8 @@ describe('workspace menu', () => {
       cy.get('button[name=ship]').click();
     }
     activateBulkEditMode();
-    cy.get('.ic-modal-warning').should('not.exist');
-    cy.get('.bulk-edit-btn.cancel').click();
+    cy.get('.ic-modal-warning').should('contain', 'cannot be undone');
+    cy.get('.toolbar-close').click();
   });
 
   it('visual mode toolbar is draggable', () => {
@@ -69,6 +69,25 @@ describe('workspace menu', () => {
     cy.get('.ic-dynamic-modal .title').should('contain', 'Are you sure');
     cy.get('#ic-modal-confirm').click();
     cy.get(toolbarSelector).should('not.exist');
+  });
+
+  describe('conditional text', () => {
+    it('displays how-to-use if toolbar accessed via menu', () => {
+      activateBulkEditMode();
+      cy.get('#explanation').should('contain', 'Select notes by holding Shift');
+    });
+
+    it('selecting a note should hide', () => {
+      cy.get('#note0').click();
+      cy.get('#explanation').should('not.contain', 'Select notes by holding Shift');
+    });
+
+    it('selecting a note should hide', () => {
+      cy.get('.toolbar-close').click();
+      cy.get('#note0').click({ shiftKey: true });
+      cy.get('#explanation').should('not.contain', 'Select notes by holding Shift');
+      cy.get('.toolbar-close').click();
+    });
   });
 
   // TODO Figure out how drag select in cypress
@@ -101,8 +120,8 @@ describe('workspace menu', () => {
   // });
 
   describe('functionality', () => {
-    describe('changing colors', () => {
-      it('without submitting', () => {
+    describe('bulk updates', () => {
+      it('change colors', () => {
         activateBulkEditMode();
 
         cy.get('#note0').click();
@@ -113,13 +132,94 @@ describe('workspace menu', () => {
         cy.get('#note1 div.contents').should('have.css', 'background-color', 'rgb(255, 204, 255)');
 
         matchImageSnapshot();
-
-        // TODO test that these changes are not visible to another user.
       });
 
-      it('update colors on submit', () => {
-        cy.get('.bulk-edit-btn.submit').click();
-        // TODO test that these changes are visible to another user.
+      it('align left', () => {
+        cy.get('#note1').click(); // Deselect.
+        cy.get('#note2').click(); // Select.
+
+        cy.get('#note0').then($note0 => {
+          cy.get('#note2').then($note2 => {
+            expect($note0.position().left).to.not.equal($note2.position().left);
+          });
+        });
+        cy.get('.align .left').click();
+        cy.get('#note0').then($note0 => {
+          cy.get('#note2').then($note2 => {
+            expect($note0.position().left).to.equal($note2.position().left);
+          });
+        });
+      });
+
+      it('align top', () => {
+        cy.get('#note0').click(); // Deselect.
+        cy.get('#note2').click(); // Deselect.
+        cy.get('#note1').click(); // Select.
+        cy.get('#note3').click(); // Select.
+
+        cy.get('#note1').then($note1 => {
+          cy.get('#note3').then($note3 => {
+            expect($note1.position().top).to.not.equal($note3.position().top);
+          });
+        });
+        cy.get('.align .top').click();
+        cy.get('#note1').then($note1 => {
+          cy.get('#note3').then($note3 => {
+            expect($note1.position().top).to.equal($note3.position().top);
+          });
+        });
+      });
+
+      const expectTag = function(noteID, tag) {
+        cy.get(`${noteID} .contents .text`).then($note => {
+          expect($note.html()).to.contain(tag);
+        });
+      };
+
+      const expectNoTag = function(noteID, tag) {
+        cy.get(`${noteID} .contents .text`).then($note => {
+          expect($note.html()).to.not.contain(tag);
+        });
+      };
+
+      it('format bold', () => {
+        expectNoTag('#note1', '<strong>');
+        cy.get('.formatting .bold').click();
+        expectTag('#note1', '<strong>');
+        cy.get('.formatting .bold').click();
+        expectNoTag('#note1', '<strong>');
+      });
+
+      it('format italic', () => {
+        expectNoTag('#note1', '<em>');
+        cy.get('.formatting .italic').click();
+        expectTag('#note1', '<em>');
+        cy.get('.formatting .italic').click();
+        expectNoTag('#note1', '<em>');
+      });
+
+      it('format underline', () => {
+        expectNoTag('#note1', '<u>');
+        cy.get('.formatting .underline').click();
+        expectTag('#note1', '<u>');
+        cy.get('.formatting .underline').click();
+        expectNoTag('#note1', '<u>');
+      });
+
+      it('format strikethrough', () => {
+        expectNoTag('#note1', '<s>');
+        cy.get('.formatting .strikethrough').click();
+        expectTag('#note1', '<s>');
+        cy.get('.formatting .strikethrough').click();
+        expectNoTag('#note1', '<s>');
+      });
+
+      it('format mixed', () => {
+        cy.get('.formatting .bold').click();
+        cy.get('.formatting .italic').click();
+        expectTag('#note1', '<strong>');
+        expectTag('#note1', '<em>');
+        cy.get('.toolbar-close').click();
       });
     });
 
@@ -163,7 +263,7 @@ describe('workspace menu', () => {
         cy.get('#note0',).should('have.attr', 'data-y', '0');
         cy.get('#note1',).should('have.attr', 'data-x', '0');
         cy.get('#note1',).should('have.attr', 'data-y', '0');
-        cy.get('.bulk-edit-btn.cancel').click();
+        cy.get('.toolbar-close').click();
       });
 
       it('dragging after standard is stable', () => {

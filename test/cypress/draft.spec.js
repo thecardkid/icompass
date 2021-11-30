@@ -147,26 +147,16 @@ describe('draft mode', () => {
 
     it('cannot select draft in bulk mode', () => {
       cy.get('#note3').click(); // drafts come last in bulk mode
-      cy.get('.ic-toast-message').should('contain', 'Cannot select drafts');
+      cy.get('.ic-toast-message').should('contain', 'Cannot edit drafts');
       cy.get('.ic-toast-close').click({ force: true });
     });
 
     it('cannot submit drafts in bulk mode', () => {
       cy.get('#note3 div.contents button.submit').click();
-      cy.get('.ic-toast-message').should('contain', 'Cannot select drafts');
-      cy.get('.bulk-edit-btn.cancel').click();
+      cy.get('.ic-toast-message').should('contain', 'Cannot edit drafts');
+      cy.get('.toolbar-close').click();
     });
   });
-
-  // describe('compact mode', () => {
-  //   it('does not discard drafts', () => {
-  //     selectSubmenuOption({
-  //       submenu: workspaceMenu.modes,
-  //       suboption: workspaceMenu.modesSubactions.compact,
-  //     });
-  //     cy.get('.compact').should('have.length', 5);
-  //   });
-  // });
 
   describe('submit drafts', () => {
     it('text note', () => {

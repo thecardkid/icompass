@@ -103,6 +103,7 @@ export const compactMode = () => {
   };
 };
 
+// There are two reducers for this action.
 export const visualMode = (len) => {
   return {
     type: 'visualMode',

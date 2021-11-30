@@ -1,8 +1,8 @@
+import * as classnames from 'classnames';
 import React, { Component } from 'react';
 import Draggable from 'react-draggable';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import _ from 'underscore';
 
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
@@ -16,38 +16,71 @@ class BulkEditToolbar extends Component {
 
   state = {
     color: STICKY_COLORS[0],
+    boldApplied: false,
+    italicApplied: false,
+    underlineApplied: false,
+    strikethroughApplied: false,
   };
 
   getSelectedNotes = () => {
-    const selected = [];
-    _.each(this.props.notes, (n, i) => {
-      if (this.props.workspace.selected[i]) selected.push(n._id);
-    });
-    return selected;
+    return this.props.notes.filter((n, i) => this.props.workspace.selected[i]);
   };
+
+  getSelectedNoteIDs = () => {
+    return this.getSelectedNotes().map(x => x._id);
+  }
 
   bulkDelete = (ev) => {
     ev.stopPropagation();
     this.props.uiX.openDeleteNotesModal();
   };
 
-  cancel = () => {
-    this.props.uiX.normalMode();
-  };
-
-  submit = (ev) => {
-    ev.stopPropagation();
-    let { color } = this.props.workspace;
-    let transformation = { color };
-    this.socket.emitBulkEditNotes(this.getSelectedNotes(), transformation);
-    trackFeatureEvent('Bulk edit: Submit');
-    this.cancel();
-  };
-
   bulkColor = (color) => {
-    this.props.workspaceX.colorAll(color);
+    this.socket.emitBulkEditNotes(this.getSelectedNoteIDs(), { color });
     this.setState({ color });
     trackFeatureEvent('Bulk edit: Color');
+  };
+
+  alignLeft = () => {
+    const minLeft = Math.min(...this.getSelectedNotes().map(n => n.x));
+    this.socket.emitBulkEditNotes(this.getSelectedNoteIDs(), { alignLeft: minLeft });
+  };
+
+  alignTop = () => {
+    const minTop = Math.min(...this.getSelectedNotes().map(n => n.y));
+    this.socket.emitBulkEditNotes(this.getSelectedNoteIDs(), { alignTop: minTop });
+  };
+
+  bulkToggleFormatting(isApplied, prefix, suffix) {
+    const x = {};
+    this.getSelectedNotes().forEach(n => {
+      if (isApplied) {
+        x[n._id] = n.text.replaceAll(prefix, '',).replaceAll(suffix, '');
+      } else {
+        x[n._id] = prefix + n.text + suffix;
+      }
+    });
+    this.socket.emitBulkEditNotes(this.getSelectedNoteIDs(), { texts: x });
+  }
+
+  toggleBold = () => {
+    this.bulkToggleFormatting(this.state.boldApplied, '<strong>', '</strong>');
+    this.setState({ boldApplied: !this.state.boldApplied });
+  };
+
+  toggleItalic = () => {
+    this.bulkToggleFormatting(this.state.italicApplied, '<em>', '</em>');
+    this.setState({ italicApplied: !this.state.italicApplied });
+  };
+
+  toggleUnderline = () => {
+    this.bulkToggleFormatting(this.state.underlineApplied, '<u>', '</u>');
+    this.setState({ underlineApplied: !this.state.underlineApplied });
+  };
+
+  toggleStrikethrough = () => {
+    this.bulkToggleFormatting(this.state.strikethroughApplied, '<s>', '</s>');
+    this.setState({ strikethroughApplied: !this.state.strikethroughApplied });
   };
 
   render() {
@@ -62,35 +95,54 @@ class BulkEditToolbar extends Component {
           To use this tool, first create some sticky notes.
         </div>
       );
+    } else {
+      warning = (
+        <div className={'ic-modal-warning'}>
+          Actions cannot be undone.
+        </div>
+      );
     }
 
     return (
       <Draggable>
         <div id="ic-visual-toolbar">
           <div id={'header'}>
-            Multi-Edit Toolbar
+            <h1>Multi-Edit Toolbar</h1>
+            <i onClick={this.props.uiX.normalMode} className={'material-icons toolbar-close'}>close</i>
           </div>
           {warning}
           <div id={'explanation'}>
-            <div>Select notes by holding Shift and clicking on individual notes. Alternatively, hold left click and drag across the workspace.</div>
-            <div>Choose an action to perform on selected notes. Dragging one note will move all selected notes.</div>
+            {this.getSelectedNotes().length === 0 && (
+                <div>Select notes by holding Shift and clicking on individual notes. Alternatively, hold left click and drag across the workspace.</div>
+            )}
+            <div>Dragging one note will move all selected notes. Or choose an action below.</div>
           </div>
           <div id={'actions'}>
             <hr />
             <div className={'action update-color'}>
-              Update color
+              <span className={'label'}>Update color</span>
               <FormPalette setColor={this.bulkColor} color={this.state.color}/>
+            </div>
+            <div className={'action align'}>
+              <span className={'label'}>Alignment</span>
+              <button className={'left'} onClick={this.alignLeft}>Left</button>
+              <button className={'top'} onClick={this.alignTop}>Top</button>
+            </div>
+            <div className={'action formatting'}>
+              <span className={'label'}>Formatting</span>
+              <i className={classnames('material-icons bold', { applied: this.state.boldApplied })}
+                 onClick={this.toggleBold}>format_bold</i>
+              <i className={classnames('material-icons italic', { applied: this.state.italicApplied })}
+                 onClick={this.toggleItalic}>format_italic</i>
+              <i className={classnames('material-icons underline', { applied: this.state.underlineApplied })}
+                 onClick={this.toggleUnderline}>format_underline</i>
+              <i className={classnames('material-icons strikethrough', { applied: this.state.strikethroughApplied })}
+                 onClick={this.toggleStrikethrough}>strikethrough_s</i>
             </div>
             <hr />
             <div className={'footer'}>
-              <button className={'bulk-edit-btn cancel'} onClick={this.cancel}>
-                Cancel
-              </button>
               <button className={'bulk-edit-btn delete'} onClick={this.bulkDelete}>
                 Delete all
-              </button>
-              <button className={'bulk-edit-btn submit'} onClick={this.submit}>
-                Submit
               </button>
             </div>
           </div>

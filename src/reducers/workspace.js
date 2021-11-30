@@ -10,11 +10,6 @@ const defaultState = {
   noteContextMenu: null,
 };
 
-const colorAll = (state, action) => {
-  let color = (action.color === state.color ? null : action.color);
-  return { ...state, color };
-};
-
 const removeNotesIfSelected = (state, action) => {
   let selected = _.filter(state.selected, (e, i) => {
     return !_.contains(action.deletedIdx, i);
@@ -135,9 +130,6 @@ export default (state = defaultState, action) => {
 
     case 'ensureSelectNote':
       return select(state, action);
-
-    case 'colorAll':
-      return colorAll(state, action);
 
     case 'removeNotesIfSelected':
       return removeNotesIfSelected(state, action);
