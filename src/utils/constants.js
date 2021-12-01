@@ -46,12 +46,11 @@ export const MODAL_NAME = {
   DELETE_DRAFT: 'delete_draft',
   DELETE_WORKSPACE: 'delete_workspace',
   // Confirm
+  BOOKMARK_DEPRECATION: 'bookmark_deprecation',
   DISCONNECTED: 'disconnected',
   DISABLE_EMAIL_REMINDER: 'disable_email_reminder',
 
   // Prompts
-  BOOKMARK_WORKSPACE: 'bookmark_workspace',
-  EDIT_BOOKMARK: 'edit_bookmark',
   EMAIL_BOOKMARKS: 'email_bookmarks',
   EMAIL_WORKSPACE: 'email_workspace',
   PEOPLE_GROUPS: 'people_groups',

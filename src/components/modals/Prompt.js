@@ -28,7 +28,7 @@ export function Prompt(dynamicModalProps, paragraphs) {
           return;
         }
       }
-      this.props.uiX.closeAllModals();
+      this.props.uiX.closeCurrentModal();
       this.props.onSubmit(value);
     };
 
@@ -78,27 +78,12 @@ export function Prompt(dynamicModalProps, paragraphs) {
   return connect(mapStateToProps, mapDispatchToProps)(x);
 }
 
-export const EditBookmarkPrompt = Prompt({
-  modalName: MODAL_NAME.EDIT_BOOKMARK,
-  heading: 'Edit bookmark',
-}, [
-  'Enter a new name for your bookmark:'
-]);
-
 export const EmailBookmarksPrompt = Prompt({
   modalName: MODAL_NAME.EMAIL_BOOKMARKS,
   heading: 'Email your bookmarks',
 }, [
   'Enter your email below to receive all links to your bookmarked workspaces.',
   'The app will not store your email address, or send you spam.',
-]);
-
-export const BookmarkWorkspacePrompt = Prompt({
-  modalName: MODAL_NAME.BOOKMARK_WORKSPACE,
-  heading: 'Bookmark',
-}, [
-  `Bookmarks give you quick access to workspaces from the app's home page - but can be lost if your browser cache is erased.`,
-  'To never lose access to your compass, email yourself a link, or copy and paste it somewhere secure.'
 ]);
 
 export const EmailWorkspacePrompt = Prompt({

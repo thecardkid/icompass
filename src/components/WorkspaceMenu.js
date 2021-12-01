@@ -10,7 +10,7 @@ import ShortcutManager from './ShortcutManager';
 import { DeleteWorkspaceModal } from './modals/ConfirmDelete';
 import CopyWorkspaceModal from './modals/CopyWorkspaceModal';
 import GDocModal from './modals/GDocModal';
-import { BookmarkWorkspacePrompt, EmailWorkspacePrompt } from './modals/Prompt';
+import { EmailWorkspacePrompt } from './modals/Prompt';
 import { ExplainViewModesModal } from './modals/SimpleModal';
 import ScreenshotModal from './modals/ScreenshotModal';
 import ShareModal from './modals/ShareModal';
@@ -141,16 +141,6 @@ class WorkspaceMenu extends Component {
     this.hideMenu();
   };
 
-  openBookmarkModal = () => {
-    if (Storage.hasBookmark(this.props.compass.editCode)) {
-      this.props.uiX.toastSuccess('Bookmarked this workspace');
-    } else {
-      ReactGA.modalview('modals/menu-bookmark');
-      this.props.uiX.openBookmarkWorkspaceModal();
-    }
-    this.hideMenu();
-  };
-
   logout = () => {
     trackFeatureEvent('Menu: Log out');
     browserHistory.push('/');
@@ -161,12 +151,6 @@ class WorkspaceMenu extends Component {
     this.props.uiX.openDeleteWorkspaceModal();
     this.hideMenu();
   };
-
-  bookmarkWorkspace = (name) => {
-    Storage.addBookmark(name, this.props.compass.editCode, this.props.users.me);
-    this.props.uiX.toastSuccess('Bookmarked this workspace');
-    this.props.uiX.setBookmark(true);
-  }
 
   deleteWorkspace = () => {
     Storage.removeBookmarkByCenter(this.props.compass.topic);
@@ -245,25 +229,10 @@ class WorkspaceMenu extends Component {
             <i className={'material-icons'}>share</i>
             Share Workspace
           </div>
-        </section>
-        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div data-cy={workspaceMenu.email} className={'ic-menu-item'} onClick={this.openEmailPrompt}>
             <i className={'material-icons'}>email</i>
             Save via Email
           </div>
-          <div data-cy={workspaceMenu.bookmark} className={'ic-menu-item'} onClick={this.openBookmarkModal}>
-            <i className={'material-icons'}>bookmark</i>
-            Save as Bookmark
-          </div>
-        </section>
-        <section className={'border-bottom'}>
-          <MaybeTappable onTapOrClick={this.showSubmenu('exports')}>
-            <div data-cy={workspaceMenu.exportAs} className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('exports')}>
-              <i className={'material-icons'}>arrow_right_alt</i>
-              Export as
-              {exports && <ExportSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
-            </div>
-          </MaybeTappable>
         </section>
         <section className={'border-bottom'}>
           <MaybeTappable onTapOrClick={this.showSubmenu('resize')}>
@@ -293,6 +262,12 @@ class WorkspaceMenu extends Component {
             <div data-cy={workspaceMenu.users} className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('users')}>
               Collaborators
               {users && this.renderUsersSubmenu()}
+            </div>
+          </MaybeTappable>
+          <MaybeTappable onTapOrClick={this.showSubmenu('exports')}>
+            <div data-cy={workspaceMenu.exportAs} className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('exports')}>
+              Export
+              {exports && <ExportSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
             </div>
           </MaybeTappable>
         </section>
@@ -377,9 +352,6 @@ class WorkspaceMenu extends Component {
         <CopyWorkspaceModal />
         <ExplainViewModesModal />
         <DeleteWorkspaceModal onConfirm={this.deleteWorkspace} />
-        <BookmarkWorkspacePrompt onSubmit={this.bookmarkWorkspace}
-                                 defaultValue={this.props.compass.topic}
-        />
         <EmailWorkspacePrompt onSubmit={this.sendReminderEmail}
                               defaultValue={(function() {
                                 const x = Storage.getAlwaysSendEmail();
@@ -420,6 +392,7 @@ const mapStateToProps = (state) => {
       bulk: state.ui.editingMode === EDITING_MODES.VISUAL || false,
     },
     hasDrafts: (state.workspace.drafts || []).length > 0,
+    workspace: state.workspace,
   };
 };
 

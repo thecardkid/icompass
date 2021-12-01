@@ -9,13 +9,6 @@ export const disableDragCenter = () => {
   return { type: 'disableDragCenter' };
 };
 
-export const setBookmark = (show) => {
-  return {
-    type: 'setBookmark',
-    show,
-  };
-};
-
 export const showNewNote = (event) => {
   return {
     type: 'showNewNote',
@@ -126,7 +119,7 @@ function openModalAction(modalName) {
   });
 }
 
-export const closeAllModals = openModalAction(null);
+export const closeCurrentModal = openModalAction(null);
 export const openShareModal = openModalAction(MODAL_NAME.SHARE_WORKSPACE);
 export const openExportAsTextModal = openModalAction(MODAL_NAME.EXPORT_AS_TEXT);
 export const openExportAsScreenshotModal = openModalAction(MODAL_NAME.EXPORT_AS_SCREENSHOT);
@@ -147,9 +140,7 @@ export const openDeleteNoteModal = openModalAction(MODAL_NAME.DELETE_NOTE);
 export const openDeleteNotesModal = openModalAction(MODAL_NAME.DELETE_NOTES);
 export const openDeleteDraftModal = openModalAction(MODAL_NAME.DELETE_DRAFT);
 export const openDeleteWorkspaceModal = openModalAction(MODAL_NAME.DELETE_WORKSPACE);
-export const openEditBookmarkModal = openModalAction(MODAL_NAME.EDIT_BOOKMARK);
 export const openEmailBookmarksModal = openModalAction(MODAL_NAME.EMAIL_BOOKMARKS);
-export const openBookmarkWorkspaceModal = openModalAction(MODAL_NAME.BOOKMARK_WORKSPACE);
 export const openEmailWorkspaceModal = openModalAction(MODAL_NAME.EMAIL_WORKSPACE);
 export const openPeopleGroupsModal = openModalAction(MODAL_NAME.PEOPLE_GROUPS);
 export const openPeopleGroupsDismissableModal = openModalAction(MODAL_NAME.PEOPLE_GROUPS_DISMISSABLE);
@@ -160,6 +151,7 @@ export const openImageModal = openModalAction(MODAL_NAME.IMAGE);
 export const openAutoEmailFeatureModal = openModalAction(MODAL_NAME.AUTO_EMAIL_FEATURE);
 export const openTopicPromptModal = openModalAction(MODAL_NAME.TOPIC);
 export const openDisableEmailReminderModal = openModalAction(MODAL_NAME.DISABLE_EMAIL_REMINDER);
+export const showBookmarkDeprecationModal = openModalAction(MODAL_NAME.BOOKMARK_DEPRECATION);
 
 // Every open*Modal call will clear out modalExtras, so call this after.
 export const setModalExtras = (modalExtras) => {

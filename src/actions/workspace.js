@@ -100,3 +100,9 @@ export const hideCompassContextMenu = () => {
     contextMenu: null,
   };
 };
+
+export const supportLegacyBookmarks = () => {
+  return {
+    type: 'supportLegacyBookmarks',
+  };
+};

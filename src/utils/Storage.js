@@ -30,6 +30,14 @@ export default {
     localStorage.setItem('disableEmailReminder', 'yes');
   },
 
+  isBookmarkDeprecationReminderEnabled() {
+    return localStorage.getItem('disableBookmarkReminder') !== 'yes';
+  },
+
+  disableBookmarkDeprecationReminder() {
+    localStorage.setItem('disableBookmarkReminder', 'yes');
+  },
+
   setDarkTheme(value) {
     const prefs = this.getUserPrefs();
     prefs.darkTheme = value;
@@ -92,18 +100,6 @@ export default {
     return { enabled: false };
   },
 
-  setShowBookmarks(value) {
-    const prefs = this.getUserPrefs();
-    prefs.showBookmarks = value;
-    this.setUserPrefs(prefs);
-    return value;
-  },
-
-  getShowBookmarks() {
-    const prefs = this.getUserPrefs();
-    return prefs.showBookmarks == null ? false : prefs.showBookmarks;
-  },
-
   getWorkspace(editCode) {
     const all = JSON.parse(localStorage.getItem('workspaces')) || {};
     return all[editCode] || {};
@@ -160,37 +156,23 @@ export default {
     return ws.drafts || [];
   },
 
+  setShowBookmarks(value) {
+    const prefs = this.getUserPrefs();
+    prefs.showBookmarks = value;
+    this.setUserPrefs(prefs);
+  },
+
+  getShowBookmarks() {
+    const prefs = this.getUserPrefs();
+    return prefs.showBookmarks || false;
+  },
+
   getBookmarks() {
     return JSON.parse(localStorage.getItem('bookmarks')) || [];
   },
 
-  hasBookmark(code) {
-    const bookmarks = this.getBookmarks();
-
-    for (let i = 0; i < bookmarks.length; i++) {
-      const thisCode = bookmarks[i].href.split('/')[3];
-      if (code === thisCode) {
-        return true;
-      }
-    }
-
-    return false;
-  },
-
   setBookmarks(b) {
     localStorage.setItem('bookmarks', JSON.stringify(b));
-  },
-
-  addAllBookmarks(newBookmarks) {
-    let bookmarks = (this.getBookmarks()).concat(newBookmarks);
-    this.setBookmarks(bookmarks);
-  },
-
-  addBookmark(center, code, name) {
-    let href = `/compass/edit/${code}/${name}`;
-    this.addAllBookmarks([
-      { center, href, name },
-    ]);
   },
 
   removeBookmark(idx) {
@@ -203,13 +185,6 @@ export default {
   removeBookmarkByCenter(center) {
     let b = this.getBookmarks();
     b = _.reject(b, e => e.center === center);
-    this.setBookmarks(b);
-    return b;
-  },
-
-  updateName(idx, name) {
-    let b = this.getBookmarks();
-    b[idx].center = name;
     this.setBookmarks(b);
     return b;
   },

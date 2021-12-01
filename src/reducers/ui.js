@@ -16,7 +16,6 @@ const defaultState = {
     type: 'success',
     message: '',
   },
-  bookmarked: false,
   dragCenterEnabled: false,
   focusedNote: -1,
   disableEmailReminder: false,
@@ -60,12 +59,6 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         dragCenterEnabled: false,
-      };
-
-    case 'setBookmark':
-      return {
-        ...state,
-        bookmarked: action.show,
       };
 
     case 'showNewNote':

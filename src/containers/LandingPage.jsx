@@ -83,7 +83,7 @@ class LandingPage extends Component {
     return (
       <div id={'ic-landing'}>
         <img src={'https://s3.us-east-2.amazonaws.com/innovatorscompass/landing.jpg'} className={'ic-background'} style={this.sizeImage()}/>
-        <BookmarkList />
+        {this.props.workspace.supportLegacyBookmarks && <BookmarkList />}
         <PrivacyStatementModal />
         <div id={'ic-landing-container'}>
           <div id={'message'}>
@@ -128,6 +128,7 @@ class LandingPage extends Component {
 const mapStateToProps = (state) => {
   return {
     ui: state.ui,
+    workspace: state.workspace,
   };
 };
 

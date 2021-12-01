@@ -18,7 +18,6 @@ module.exports = {
       'react-dropzone-s3-uploader',
       'react-redux',
       'react-router',
-      'react-sortable',
       'react-swipeable',
       'react-tappable',
       'react-tooltip',

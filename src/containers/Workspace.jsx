@@ -22,9 +22,8 @@ import {
   WorkspaceDeletedModal,
   WorkspaceNotFoundModal,
 } from '@components/modals/ConfirmModalWithRedirect';
-import {
-  UsernamePrompt,
-} from '@components/modals/Prompt';
+import { BookmarkDeprecationModal } from '@components/modals/ConfirmModal';
+import { UsernamePrompt } from '@components/modals/Prompt';
 
 import { EDITING_MODES } from '@utils/constants';
 import { isCharOnly } from '@utils/regex';
@@ -220,6 +219,12 @@ class Workspace extends Component {
                         validateFn={this.checkUsername}
         />
         <AlertDisconnectedModal onConfirm={this.joinRoomReconnect} />
+        <BookmarkDeprecationModal onConfirm={this.props.uiX.closeCurrentModal}
+                                  hasCancelButton={true}
+                                  cancelButton={{
+                                    text: `Don't show this again`,
+                                    onCancel: Storage.disableBookmarkDeprecationReminder,
+                                  }} />
       </div>
     );
   }

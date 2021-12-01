@@ -6,6 +6,7 @@ import ReactGA from 'react-ga';
 import { render } from 'react-dom';
 import { connect, Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
+import { bindActionCreators } from 'redux';
 
 import DisableAutoEmail from './DisableAutoEmail';
 import LandingPage from './LandingPage.jsx';
@@ -13,12 +14,13 @@ import NotFound from './NotFound.jsx';
 import Workspace from './Workspace.jsx';
 
 import * as uiX from '@actions/ui';
+import * as workspaceX from '@actions/workspace';
 import { ExplainAutoEmailFeatureModal } from '@components/modals/SimpleModal';
 import Toast from '@components/utils/Toast';
 import { initializeAPI } from '@utils/api';
+import Storage from '@utils/Storage';
 
 import Store from '../store';
-import { bindActionCreators } from 'redux';
 
 class ConsumerAppInner extends Component {
   constructor(props) {
@@ -31,6 +33,10 @@ class ConsumerAppInner extends Component {
       console.log('Initialized Google Analytics');
     }
     props.uiX.resize();
+
+    if (Storage.getBookmarks().length > 0) {
+      props.workspaceX.supportLegacyBookmarks();
+    }
   }
 
   componentDidMount() {
@@ -68,6 +74,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     uiX: bindActionCreators(uiX, dispatch),
+    workspaceX: bindActionCreators(workspaceX, dispatch),
   };
 };
 

@@ -15,7 +15,6 @@ export const workspaceMenu = {
   copyWorkspace: 'action-copy-workspace',
   darkTheme: 'action-dark-theme',
   email: 'action-email-modal',
-  bookmark: 'action-boomark',
   share: 'action-share-modal',
   users: 'action-users',
   logout: 'action-logout',

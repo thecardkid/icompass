@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
+import { browserHistory } from 'react-router';
 import ReactTooltip from 'react-tooltip';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
@@ -11,9 +12,8 @@ import { modalCheckEmail } from '@utils/regex';
 import Socket from '@utils/Socket';
 import Storage from '@utils/Storage';
 
-import Bookmark from './Bookmark';
 import { DeleteBookmarkModal } from './modals/ConfirmDelete';
-import { EditBookmarkPrompt, EmailBookmarksPrompt } from './modals/Prompt';
+import { EmailBookmarksPrompt } from './modals/Prompt';
 
 class BookmarkList extends Component {
   constructor(props) {
@@ -27,18 +27,6 @@ class BookmarkList extends Component {
       showBookmarks: Storage.getShowBookmarks(),
     };
   }
-
-  edit = (idx) => (e) => {
-    e.stopPropagation();
-    ReactGA.modalview('modals/bookmarks-edit');
-    this.props.uiX.openEditBookmarkModal();
-    this.props.uiX.setModalExtras({ editBookmarkIndex: idx });
-  };
-
-  editBookmark = (value) => {
-    const bookmarks = Storage.updateName(this.props.ui.modalExtras.editBookmarkIndex, value);
-    this.setState({ bookmarks });
-  };
 
   remove = (idx) => (e) => {
     e.stopPropagation();
@@ -61,28 +49,28 @@ class BookmarkList extends Component {
     this.setState({ show });
   };
 
+  openBookmark = (url) => {
+    if (Storage.isBookmarkDeprecationReminderEnabled()) {
+      this.props.uiX.showBookmarkDeprecationModal();
+    }
+    browserHistory.push(url);
+  };
+
   renderBookmark = (w, idx) => {
     return (
-      <Bookmark expand={this.expand(idx)}
-                remove={this.remove(idx)}
-                onSortItems={this.onSort}
-                items={this.state.bookmarks}
-                sortId={idx}
-                edit={this.edit(idx)}
-                w={w}
-                key={idx}
-                show={this.state.show[idx]}
-      />
+      <li className={'ic-saved'} key={idx}>
+        <a onClick={() => this.openBookmark(w.href)}>{w.center}</a>
+        <span className={'delete'} onClick={this.remove(idx)}>
+          <i className={'material-icons'}>close</i>
+        </span>
+      </li>
     );
   };
 
   toggleBookmarks = () => {
-    const showBookmarks = Storage.setShowBookmarks(!this.state.showBookmarks);
+    const showBookmarks = !this.state.showBookmarks;
+    Storage.setShowBookmarks(showBookmarks);
     this.setState({ showBookmarks });
-  };
-
-  clickFile = () => {
-    this.refs.importer.click();
   };
 
   openEmailBookmarksModal = () => {
@@ -96,11 +84,6 @@ class BookmarkList extends Component {
       recipientEmail: email,
     });
   }
-
-  onSort = (bookmarks) => {
-    Storage.setBookmarks(bookmarks);
-    this.setState({ bookmarks });
-  };
 
   filter = (e) => {
     const search = e.target.value.toLowerCase();
@@ -139,7 +122,6 @@ class BookmarkList extends Component {
 
     return (
       <div id={'ic-bookmarks'} style={{left: showBookmarks ? '0' : '-200px'}}>
-        <EditBookmarkPrompt onSubmit={this.editBookmark} />
         <EmailBookmarksPrompt onSubmit={this.emailBookmarks}
                               validateFn={modalCheckEmail} />
         <DeleteBookmarkModal onConfirm={this.deleteBookmark} />

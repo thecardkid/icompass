@@ -13,7 +13,7 @@ import { modal } from '@cypress/data_cy';
 class ModalFooterComponent extends React.Component {
   onConfirm = () => {
     if (!this.props.confirmButton.keepOpenOnConfirm) {
-      this.props.uiX.closeAllModals();
+      this.props.uiX.closeCurrentModal();
     }
     if (this.props.confirmButton.onConfirm) {
       this.props.confirmButton.onConfirm();
@@ -21,7 +21,7 @@ class ModalFooterComponent extends React.Component {
   };
 
   onCancel = () => {
-    this.props.uiX.closeAllModals();
+    this.props.uiX.closeCurrentModal();
     if (this.props.cancelButton && this.props.cancelButton.onCancel) {
       this.props.cancelButton.onCancel();
     }

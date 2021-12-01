@@ -16,7 +16,7 @@ class DynamicModal extends Component {
     if (this.props.disableDismiss) {
       return;
     }
-    this.props.uiX.closeAllModals();
+    this.props.uiX.closeCurrentModal();
     if (this.props.onClose) {
       this.props.onClose();
     }

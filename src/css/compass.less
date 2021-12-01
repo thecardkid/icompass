@@ -12,17 +12,6 @@
   }
 }
 
-div#ic-bookmark-indicator {
-  position: absolute;
-  bottom: 5px;
-  left: 10px;
-  color: @yellow;
-
-  i {
-    font-size: 30px;
-  }
-}
-
 .ic-quadrant {
   color: var(--quadrant-text);
   text-align: center;
@@ -157,6 +146,7 @@ div.ic-compass-label {
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 17px;
 
   p {
     width: 90%;
@@ -200,6 +190,10 @@ div#ic-visual-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    i {
+      cursor: pointer;
+    }
   }
 
   div#actions {

@@ -23,7 +23,7 @@ class ImageModal extends Component {
     }
 
     return ReactDOM.createPortal(
-      <div id={'ic-backdrop2'} onClick={this.props.uiX.closeAllModals}>
+      <div id={'ic-backdrop2'} onClick={this.props.uiX.closeCurrentModal}>
         <div id={'ic-modal-scroller'}>
           <div className={'ic-dynamic-modal'}
                onClick={this.dontClose}

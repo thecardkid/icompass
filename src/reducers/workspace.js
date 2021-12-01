@@ -3,6 +3,7 @@ import _ from 'underscore';
 import Storage from '@utils/Storage';
 
 const defaultState = {
+  supportLegacyBookmarks: false,
   selected: [],
   drafts: [],
   editCode: null,
@@ -166,6 +167,9 @@ export default (state = defaultState, action) => {
         ...state,
         compassContextMenu: action.contextMenu,
       };
+
+    case 'supportLegacyBookmarks':
+      return { ...state, supportLegacyBookmarks: true };
 
     default:
       return state;

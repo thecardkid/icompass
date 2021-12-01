@@ -110,7 +110,6 @@ class Compass extends Component {
         [events.frontend.SET_CENTER_TEXT]: this.setCompassCenter,
         [events.frontend.SET_CENTER_POSITION]: this.setCompassCenterPosition,
       });
-      this.props.uiX.setBookmark(Storage.hasBookmark(this.props.compass.editCode));
     }
   }
 
@@ -541,7 +540,6 @@ class Compass extends Component {
         <ConfirmDisableEmailReminders onConfirm={Storage.disableEmailReminder} />
         <TopicPrompt onSubmit={this.setTopic} defaultValue={this.props.compass.topic} />
         <NoteManager/>
-        {this.props.ui.bookmarked && <div id={'ic-bookmark-indicator'}><i className={'material-icons'}>bookmark</i></div>}
         <SelectArea show={this.state.select} done={this.onMouseUp}/>
         {compass}
         {this.props.showContextMenu && this.renderContextMenu()}
