@@ -31,7 +31,7 @@ describe('help menu', () => {
 
     it('release notes', () => {
       getElemWithDataCy(helpMenu.whatsNew).click();
-      getElemWithDataCy(modal.heading).should('contain', 'New things');
+      getElemWithDataCy(modal.heading).should('contain', 'Updates');
       getElemWithDataCy(modal.closeButton).click();
     });
 

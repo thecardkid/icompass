@@ -17,6 +17,7 @@ import ShareModal from './modals/ShareModal';
 import EditablesSubmenu from './submenus/EditablesSubmenu';
 import ExportSubmenu from './submenus/ExportSubmenu';
 import NotesSubmenu from './submenus/NotesSubmenu';
+import RecentWorkspacesSubmenu, { scrollerClass } from './submenus/RecentWorkspacesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
 import { messages } from './utils/Toast';
 
@@ -43,6 +44,7 @@ class WorkspaceMenu extends Component {
       active: false,
       darkTheme: Storage.isDarkTheme(),
       submenus: {
+        recent: false,
         exports: false,
         notes: false,
         modes: false,
@@ -62,6 +64,7 @@ class WorkspaceMenu extends Component {
     document.addEventListener('click', (e) => {
       const { classList } = e.target;
       if (!classList.contains('ic-menu-item')
+        && !classList.contains(scrollerClass)
         && !classList.contains(sliderClass)
         && !classList.contains(menuButtonClass)) {
         this.hideMenu();
@@ -134,6 +137,7 @@ class WorkspaceMenu extends Component {
 
   showSubmenu = (submenu) => () => {
     this.setState({ submenus: {
+      recent: false,
       exports: false,
       notes: false,
       modes: false,
@@ -146,6 +150,7 @@ class WorkspaceMenu extends Component {
 
   hideSubmenus = () => {
     this.setState({ submenus: {
+      recent: false,
       exports: false,
       notes: false,
       modes: false,
@@ -177,7 +182,7 @@ class WorkspaceMenu extends Component {
   };
 
   renderMenu = () => {
-    const { exports, notes, users, resize, editables } = this.state.submenus;
+    const { exports, notes, users, recent, resize, editables } = this.state.submenus;
 
     return (
       <div className={'ic-menu ic-workspace-menu'}>
@@ -191,11 +196,20 @@ class WorkspaceMenu extends Component {
             </label>
           </div>
         </section>
-        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
-          <div data-cy={workspaceMenu.newWorkspace} className={'ic-menu-item'} onClick={this.openNewWorkspace}>
+        <section className={'border-bottom'}>
+          <div data-cy={workspaceMenu.newWorkspace} className={'ic-menu-item'} onMouseEnter={this.hideSubmenus} onClick={this.openNewWorkspace}>
             <i className={'material-icons'}>create_new_folder</i>
-            New Workspace
+            Open New
           </div>
+          <MaybeTappable onTapOrClick={this.showSubmenu('recent')}>
+            <div data-cy={workspaceMenu.recentWorkspaces} className={'ic-menu-item has-more'} onMouseOver={this.showSubmenu('recent')}>
+              <i className={'material-icons'}>history</i>
+              Open Recent
+              {recent && <RecentWorkspacesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
+            </div>
+          </MaybeTappable>
+        </section>
+        <section className={'border-bottom'} onMouseEnter={this.hideSubmenus}>
           <div data-cy={workspaceMenu.copyWorkspace} className={'ic-menu-item'} onClick={this.openCopyWorkspaceModal}>
             <i className={'material-icons'}>content_copy</i>
             Copy Workspace

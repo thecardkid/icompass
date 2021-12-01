@@ -211,6 +211,7 @@ class Compass extends Component {
 
   setCompassTopic = (topic) => {
     this.props.compassX.setTopic(topic);
+    Storage.updateRecentWorkspaceTopic(this.props.compass.editCode, topic);
   };
 
   setCompassCenter = (center) => {
@@ -543,7 +544,8 @@ class Compass extends Component {
         {!this.props.ui.device.isMobile && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
         {this.props.showContextMenu && this.renderContextMenu()}
-        <button style={{display: 'none'}} data-cy={helpers.triggerEmailReminderToast} onClick={this.props.uiX.toastEmailReminder} />
+        {/* Allows Cypress to control state */}
+        {__DEV__ && <button style={{display: 'none'}} data-cy={helpers.triggerEmailReminderToast} onClick={this.props.uiX.toastEmailReminder} />}
       </div>
     );
   }

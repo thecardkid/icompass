@@ -51,8 +51,8 @@ class Workspace extends Component {
             return;
           }
           this.setupWorkspace(res.body.compass, true);
+          Storage.markVisitedWorkspace(location.pathname, null, res.body.compass.topic);
         });
-      ReactGA.pageview('/compass/view/');
     } else {
       const { code, username } = this.props.params;
       request.get('/api/v1/workspace/edit')
@@ -165,6 +165,7 @@ class Workspace extends Component {
       isReconnecting: false,
     });
     this.props.userX.me(username);
+    Storage.markVisitedWorkspace(location.pathname, username, this.props.compass.topic);
   };
 
   onCompassDeleted = () => {

@@ -43,13 +43,16 @@ export const PrivacyStatementModal = SimpleModal({
 
 export const WhatsNewModal = SimpleModal({
   modalName: MODAL_NAME.WHATS_NEW,
-  heading: 'New things',
+  heading: 'Updates (December 2021)',
 }, [
+  'Workspace topic can be edited. Double-click the topic in the top-right corner, or go to <b>Menu > Edit > Topic</b>.',
+  'When working with text sticky notes, writing progress is remembered (using <a href="https://en.wikipedia.org/wiki/Web_storage" target="_blank" rel="noopener noreferrer">client-side storage</a>) and restored for convenience.',
+  'A redesigned Multi-Edit Toolbar, with new capabilities like bulk formatting and aligning.',
+  'Easily access past workspaces by going to <b>Menu > Open Recent</b>.',
   'New look for notifications!',
   'Cleaner and more consistently formatted modals.',
-  'Workspace topic can be edited. Double-click the topic in the top-right corner, or find the option under the main menu.',
-  'When working with text sticky notes, writing progress is remembered (using <a href="https://en.wikipedia.org/wiki/Web_storage" target="_blank" rel="noopener noreferrer">client-side storage</a>) and restored for convenience.',
   'Both the main menu and the help menu will now dismiss when you click anywhere on the page.',
+  'In-app bookmarks sunsetting: you can no longer create new bookmarks, but existing bookmarks will be available until deleted by you.',
 ]);
 
 export const ExplainViewModesModal = SimpleModal({

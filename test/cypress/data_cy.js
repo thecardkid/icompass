@@ -20,6 +20,8 @@ export const workspaceMenu = {
   logout: 'action-logout',
   deleteWorkspace: 'action-delete-workspace',
 
+  recentWorkspaces: 'action-recent-workspaces',
+
   exportAs: 'action-exports',
   exportAsSubactions: {
     googleDocs: 'export-text',

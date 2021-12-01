@@ -4,13 +4,81 @@ import {
   setup,
 } from './utils';
 const { modal, helpers, workspaceMenu } = require('./data_cy');
+const { makeData } = require('./make_recents_data');
 
 // Do not use hooks like before and beforeAll, as they don't trigger
 // beforeEach and afterEach hooks, which we need to persist local storage.
+//
+// Each describe suite gets a clean (no modals or menus open) workspace,
+// and must leave behind a clean workspace.
 describe('local storage', () => {
   before(setup);
   beforeEach(cy.restoreLocalStorage);
   afterEach(cy.saveLocalStorage);
+
+  const createWorkspace = () => {
+    cy.visit('/');
+    cy.get('#compass-center').type('testing');
+    cy.get('#username').type('sandbox');
+    cy.get('button[type=submit]').click();
+  };
+
+  describe('recently opened', () => {
+    const $items = '.recent-workspace';
+    const lsKey = 'recent-workspaces';
+
+    it('zero items', () => {
+      // User only has to hover to see it, but clicking is harmless and easy.
+      selectMenuOption(workspaceMenu.recentWorkspaces);
+      cy.get($items).should('have.length', 1);
+      cy.get($items).should('contain', 'None');
+
+      // Clicking closes menu.
+      cy.get($items).click();
+      cy.get('.ic-workspace-menu').should('not.exist');
+    });
+
+    it('one item', () => {
+      cy.setLocalStorage(lsKey, JSON.stringify(makeData(1)));
+      selectMenuOption(workspaceMenu.recentWorkspaces);
+      cy.get($items).should('have.length', 1);
+    });
+
+    describe('pagination', () => {
+      const refresh = () => {
+        cy.get('button.ic-workspace-button').click();
+        selectMenuOption(workspaceMenu.recentWorkspaces);
+      };
+      it('two pages', () => {
+        cy.setLocalStorage(lsKey, JSON.stringify(makeData(18)));
+        refresh();
+        cy.get($items).should('have.length', 10);
+        cy.get('.navbar').should('be.visible');
+      });
+
+      it('cant go back on first page', () => {
+        cy.get('.fraction').should('contain', '1/2');
+        cy.get('.back').click();
+        cy.get('.fraction').should('contain', '1/2');
+      });
+
+      it('next works', () => {
+        cy.get('.next').click();
+        cy.get('.fraction').should('contain', '2/2');
+        cy.get($items).should('have.length', 8);
+      });
+
+      it('cant go next on last page', () => {
+        cy.get('.next').click();
+        cy.get('.fraction').should('contain', '2/2');
+      });
+
+      it('back works', () => {
+        cy.get('.back').click();
+        cy.get('.fraction').should('contain', '1/2');
+      });
+    });
+  });
 
   describe('email reminders', () => {
     it('go shows modal', () => {
@@ -112,13 +180,6 @@ describe('local storage', () => {
     const input = '#ic-modal-input';
 
     const validEmail = 'foo@bar.com';
-
-    const createWorkspace = () => {
-      cy.visit('/');
-      cy.get('#compass-center').type('testing');
-      cy.get('#username').type('sandbox');
-      cy.get('button[type=submit]').click();
-    };
 
     // state is in LocalStorage, so we need it to persist between tests.
     beforeEach(cy.restoreLocalStorage);

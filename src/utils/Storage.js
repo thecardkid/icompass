@@ -188,5 +188,56 @@ export default {
     this.setBookmarks(b);
     return b;
   },
+
+  getRecentWorkspaces() {
+    return JSON.parse(localStorage.getItem('recent-workspaces')) || {};
+  },
+
+  setRecentWorkspaces(b) {
+    localStorage.setItem('recent-workspaces', JSON.stringify(b));
+  },
+
+  markVisitedWorkspace(url, username, topic) {
+    if (typeof url !== 'string') {
+      return;
+    }
+    let now = new Date().getTime();
+    const parts = url.split('/').slice(0, 4);
+    // Skip parts[0], which is an empty string.
+    if (parts[1] !== 'compass') {
+      return;
+    }
+    let isViewOnly = false;
+    if (parts[2] !== 'edit') {
+      if (parts[2] === 'view') {
+        isViewOnly = true;
+      } else {
+        return;
+      }
+    }
+    if (parts[3].length !== 8) {
+      return;
+    }
+    if (!isViewOnly) {
+      parts.push(username);
+    }
+
+    const data = this.getRecentWorkspaces();
+    data[parts[3]] = {
+      url: parts.join('/'),
+      visitedAt: now,
+      isViewOnly,
+      topic,
+    };
+    this.setRecentWorkspaces(data);
+  },
+
+  updateRecentWorkspaceTopic(code, topic) {
+    const data = this.getRecentWorkspaces();
+    if (data.hasOwnProperty(code)) {
+      data[code].topic = topic;
+    }
+    this.setRecentWorkspaces(data);
+  },
 };
 
