@@ -144,7 +144,9 @@ class SelectArea extends Component {
   };
 
   render() {
-    if (!this.props.show) return null;
+    if (!this.props.show) {
+      return null;
+    }
 
     return (
       <div id={'select-area-container'}>

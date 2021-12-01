@@ -54,6 +54,9 @@ class BulkEditToolbar extends Component {
   bulkToggleFormatting(isApplied, prefix, suffix) {
     const x = {};
     this.getSelectedNotes().forEach(n => {
+      if (n.isImage || n.doodle) {
+        return;
+      }
       if (isApplied) {
         x[n._id] = n.text.replaceAll(prefix, '',).replaceAll(suffix, '');
       } else {
@@ -95,12 +98,6 @@ class BulkEditToolbar extends Component {
           To use this tool, first create some sticky notes.
         </div>
       );
-    } else {
-      warning = (
-        <div className={'ic-modal-warning'}>
-          Actions cannot be undone.
-        </div>
-      );
     }
 
     return (
@@ -120,7 +117,7 @@ class BulkEditToolbar extends Component {
           <div id={'actions'}>
             <hr />
             <div className={'action update-color'}>
-              <span className={'label'}>Update color</span>
+              <span className={'label'}>Color</span>
               <FormPalette setColor={this.bulkColor} color={this.state.color}/>
             </div>
             <div className={'action align'}>
@@ -142,7 +139,7 @@ class BulkEditToolbar extends Component {
             <hr />
             <div className={'footer'}>
               <button className={'bulk-edit-btn delete'} onClick={this.bulkDelete}>
-                Delete all
+                Delete
               </button>
             </div>
           </div>

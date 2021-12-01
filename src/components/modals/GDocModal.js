@@ -99,7 +99,7 @@ class GDocModal extends Component {
           heading={'Export workspace text'}
           close={this.props.close}>
           <div className={'ic-modal-warning'}>
-            This feature is not available on mobile/tablet. Please access this workspace on your desktop instead.
+            This feature is not available on mobile/tablet. Please access this workspace on a laptop/desktop instead.
           </div>
         </DynamicModal>
       );

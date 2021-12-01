@@ -18,6 +18,7 @@ import EditablesSubmenu from './submenus/EditablesSubmenu';
 import ExportSubmenu from './submenus/ExportSubmenu';
 import NotesSubmenu from './submenus/NotesSubmenu';
 import ResizeSubmenu from './submenus/ResizeSubmenu';
+import { messages } from './utils/Toast';
 
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
@@ -55,11 +56,6 @@ class WorkspaceMenu extends Component {
       68: props.uiX.showDoodle,
       73: props.uiX.showImage,
       78: props.uiX.showNewNote,
-      shift: {
-        // 49: this.changeMode('standard'),
-        // 50: this.changeMode('compact'),
-        51: this.changeMode('bulk'),
-      },
     };
     this.socket = SocketSingleton.getInstance();
 
@@ -87,25 +83,12 @@ class WorkspaceMenu extends Component {
     }
   };
 
-  changeMode = (mode) => () => {
-    switch (mode) {
-      case 'standard':
-        this.props.uiX.toastInfo('Switched to standard view');
-        this.props.uiX.normalMode();
-        break;
-
-      case 'compact':
-        this.props.uiX.toastInfo('Switched to compact view');
-        this.props.uiX.compactMode();
-        break;
-
-      case 'bulk':
-        this.props.uiX.visualMode(this.props.notes.length);
-        break;
-
-      default:
-        return;
+  activateMultiEditMode = () => {
+    if (this.props.ui.device.isMobile) {
+      this.props.uiX.toastError(messages.mobileNoMultiEdit);
+      return;
     }
+    this.props.uiX.visualMode(this.props.notes.length);
     this.hideMenu();
   };
 
@@ -119,14 +102,6 @@ class WorkspaceMenu extends Component {
     ReactGA.modalview('modals/menu-copy-workspace');
     this.props.uiX.openCopyWorkspaceModal();
     this.hideMenu();
-  };
-
-  buttonChangeMode = (switchTo) => () => {
-    this.changeMode(switchTo)();
-    // Hack - for some reason, when clicking on a mode it fires
-    // a "show" event for the submenu. So we get around that by
-    // hiding after a short delay.
-    setTimeout(() => this.hideSubmenus(), 100);
   };
 
   openNewWorkspace = () => {
@@ -247,7 +222,7 @@ class WorkspaceMenu extends Component {
               {notes && <NotesSubmenu uiX={this.props.uiX} hideMenu={this.hideMenu}/>}
             </div>
           </MaybeTappable>
-          <MaybeTappable onTapOrClick={this.changeMode('bulk')}>
+          <MaybeTappable onTapOrClick={this.activateMultiEditMode}>
             <div data-cy={workspaceMenu.modesSubactions.bulk} id={'ic-bulk'} className={'ic-menu-item'} onMouseOver={this.hideSubmenus}>
               Multi-Edit Mode
             </div>
@@ -392,6 +367,7 @@ const mapStateToProps = (state) => {
       bulk: state.ui.editingMode === EDITING_MODES.VISUAL || false,
     },
     hasDrafts: (state.workspace.drafts || []).length > 0,
+    ui: state.ui,
     workspace: state.workspace,
   };
 };

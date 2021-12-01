@@ -22,6 +22,9 @@ const defaultState = {
   vw: 0,
   vh: 0,
   editingMode: EDITING_MODES.NORMAL,
+  device: {
+    isMobile: false,
+  },
   isFiona: false,
 };
 
@@ -212,6 +215,9 @@ export default (state = defaultState, action) => {
 
     case 'autoEmailSent':
       return { ...state, disableEmailReminder: true };
+
+    case 'setIsMobile':
+      return { ...state, device: { ...state.device, isMobile: true }};
 
     default:
       return state;

@@ -31,7 +31,7 @@ describe('workspace menu', () => {
     ];
     activateBulkEditMode();
     // Warns if zero notes.
-    cy.get('.ic-modal-warning').should('contain', 'first create');
+    cy.get('.ic-modal-warning').should('be.visible');
     cy.get('.toolbar-close').click();
 
     for (let i = 0; i < positions.length; i++) {
@@ -41,7 +41,7 @@ describe('workspace menu', () => {
       cy.get('button[name=ship]').click();
     }
     activateBulkEditMode();
-    cy.get('.ic-modal-warning').should('contain', 'cannot be undone');
+    cy.get('.ic-modal-warning').should('not.exist');
     cy.get('.toolbar-close').click();
   });
 

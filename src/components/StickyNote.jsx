@@ -4,35 +4,24 @@ import { connect } from 'react-redux';
 import Tappable from 'react-tappable/lib/Tappable';
 import { bindActionCreators } from 'redux';
 
+import { messages } from './utils/Toast';
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
 import { CSS, EDITING_MODES } from '@utils/constants';
 
 import { contextMenu } from '@cypress/data_cy';
 
-const MULTI_MODE_NO_EDIT_MESSAGE = 'Can\'t make changes to individual notes while in multi-edit mode';
-
 class StickyNote extends Component {
   constructor(props) {
     super(props);
     this.hasEditingRights = !this.props.viewOnly;
-    this.setModes(this.props);
-  }
-
-  componentWillUpdate(nextProps) {
-    this.setModes(nextProps);
-  }
-
-  setModes(props) {
-    this.compactMode = props.ui.editingMode === EDITING_MODES.COMPACT || false;
-    this.visualMode = props.ui.editingMode === EDITING_MODES.VISUAL || false;
   }
 
   confirmDelete = (ev) => {
     ev.stopPropagation();
 
-    if (this.visualMode) {
-      this.props.uiX.toastError('Delete failed. ' + MULTI_MODE_NO_EDIT_MESSAGE);
+    if (this.props.isMultiEditMode) {
+      this.props.uiX.toastError('Delete failed. ' + messages.multiEditNoSingleEdit);
       return;
     }
 
@@ -47,7 +36,7 @@ class StickyNote extends Component {
   };
 
   submitDraft = () => {
-    if (this.visualMode) {
+    if (this.props.isMultiEditMode) {
       return this.props.uiX.toastError('Cannot submit drafts in multi-edit mode');
     }
     this.props.submitDraft(this.props.note, this.props.i);
@@ -55,8 +44,8 @@ class StickyNote extends Component {
 
   upvote = (ev) => {
     ev.stopPropagation();
-    if (this.visualMode) {
-      return this.props.uiX.toastError('Upvote failed. ' + MULTI_MODE_NO_EDIT_MESSAGE);
+    if (this.props.isMultiEditMode) {
+      return this.props.uiX.toastError('Upvote failed. ' + messages.multiEditNoSingleEdit);
     }
 
     if (!this.props.note.draft) {
@@ -91,23 +80,19 @@ class StickyNote extends Component {
       background: n.color || 'chartreuse',
       padding: n.isImage ? '3px' : '0',
     };
-    const clazz = this.compactMode ? 'compact ic-img contents' : 'ic-img contents';
-
     return (
-      <div className={clazz} style={s}>
+      <div className={'ic-img contents'} style={s}>
         <img src={n.doodle || n.text}
              alt={n.altText || ''}
-             width={this.compactMode ? '100px' : '160px'}/>
+             width={160}/>
         {this.getTooltip(n)}
       </div>
     );
   };
 
   renderText = (n) => {
-    const divClass = this.compactMode ? 'compact contents' : 'contents';
-
     return (
-      <div style={{ background: n.color || 'chartreuse' }} className={divClass}>
+      <div style={{ background: n.color || 'chartreuse' }} className={'contents'}>
         <p className={'text'} ref={'text'} dangerouslySetInnerHTML={{__html: n.text}}/>
         {this.getTooltip(n)}
       </div>
@@ -140,8 +125,8 @@ class StickyNote extends Component {
       return this.props.uiX.toastError('Sketches cannot be edited.');
     }
 
-    if (this.visualMode) {
-      return this.props.uiX.toastError('Double-click failed. ' + MULTI_MODE_NO_EDIT_MESSAGE);
+    if (this.props.isMultiEditMode) {
+      return this.props.uiX.toastError('Double-click failed. ' + messages.multiEditNoSingleEdit);
     }
 
     if (this.hasEditingRights) {
@@ -170,11 +155,11 @@ class StickyNote extends Component {
       return;
     }
 
-    if (!this.visualMode && ev.shiftKey) {
+    if (!this.props.isMultiEditMode && ev.shiftKey) {
       this.selectAndEnterVisual();
     }
 
-    if (this.visualMode) {
+    if (this.props.isMultiEditMode) {
       this.selectInVisual();
     } else {
       this.focus();
@@ -183,7 +168,7 @@ class StickyNote extends Component {
 
   selectAndEnterVisual = () => {
     if (this.props.note.draft) {
-      this.props.uiX.toastError('Cannot edit drafts with multi-edit mode');
+      this.props.uiX.toastError(messages.multiEditNoDrafts);
     } else {
       this.props.enterVisualMode(this.props.i);
     }
@@ -191,7 +176,7 @@ class StickyNote extends Component {
 
   selectInVisual = () => {
     if (this.props.note.draft) {
-      this.props.uiX.toastError('Cannot edit drafts with multi-edit mode');
+      this.props.uiX.toastError(messages.multiEditNoDrafts);
     } else {
       this.props.workspaceX.selectNote(this.props.i);
     }
@@ -223,7 +208,7 @@ class StickyNote extends Component {
   showContextMenu = (ev) => {
     ev.stopPropagation();
     ev.preventDefault();
-    if (this.visualMode || !this.hasEditingRights) {
+    if (this.props.isMultiEditMode || !this.hasEditingRights) {
       return;
     }
     let left = ev.clientX;
@@ -310,7 +295,7 @@ class StickyNote extends Component {
     const disableIfDraft = note.draft ? 'disabled' : '';
     const disableIfText = (note.isImage || note.doodle) ? '' : 'disabled';
     const disableIfDoodle = note.doodle ? 'disabled' : '';
-    const disableIfBulk = this.visualMode ? 'disabled' : '';
+    const disableIfBulk = this.props.isMultiEditMode ? 'disabled' : '';
 
     return (
       <div className={'ic-menu context-menu'} style={this.props.workspace.noteContextMenu.style}>
@@ -344,7 +329,7 @@ class StickyNote extends Component {
           </div>
           <div data-cy={contextMenu.selectAction} className={`ic-menu-item ${disableIfDraft}`}
                onClick={this.executeThenHide(
-                 this.visualMode ? this.selectInVisual : this.selectAndEnterVisual
+                 this.props.isMultiEditMode ? this.selectInVisual : this.selectAndEnterVisual
                )}>
             <i className={'material-icons'}>photo_size_select_small</i>
             Select
@@ -407,6 +392,8 @@ const mapStateToProps = (state) => {
     compass: state.compass,
     ui: state.ui,
     workspace: state.workspace,
+
+    isMultiEditMode: state.ui.editingMode === EDITING_MODES.VISUAL,
   };
 };
 

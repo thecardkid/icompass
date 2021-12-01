@@ -380,7 +380,7 @@ class Compass extends Component {
       <div id={'center-drag-modal'}>
         <div className={'header'}>
           <h1>Move center</h1>
-          <i onClick={this.cancelCenterDrag} className={'material-icons toolbar-close'}>close</i>
+          <i onClick={this.cancelCenterDrag} className={'material-icons drag-modal-close'}>close</i>
         </div>
         <div className={'content'}>
           Click and drag the center to reposition it.
@@ -540,7 +540,7 @@ class Compass extends Component {
         <ConfirmDisableEmailReminders onConfirm={Storage.disableEmailReminder} />
         <TopicPrompt onSubmit={this.setTopic} defaultValue={this.props.compass.topic} />
         <NoteManager/>
-        <SelectArea show={this.state.select} done={this.onMouseUp}/>
+        {!this.props.ui.device.isMobile && <SelectArea show={this.state.select} done={this.onMouseUp}/>}
         {compass}
         {this.props.showContextMenu && this.renderContextMenu()}
         <button style={{display: 'none'}} data-cy={helpers.triggerEmailReminderToast} onClick={this.props.uiX.toastEmailReminder} />

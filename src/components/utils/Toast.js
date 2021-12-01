@@ -5,6 +5,12 @@ import { connect } from 'react-redux';
 import * as uiX from '@actions/ui';
 import { modal } from '@cypress/data_cy';
 
+export const messages = {
+  mobileNoMultiEdit: 'Multi-edit mode is not available for mobile devices',
+  multiEditNoDrafts: 'Cannot edit drafts with multi-edit mode',
+  multiEditNoSingleEdit: "Can't make changes to individual notes while in multi-edit mode",
+};
+
 class Toast extends React.Component {
   toast = {
     type: 'success',

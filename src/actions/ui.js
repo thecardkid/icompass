@@ -238,3 +238,9 @@ export const autoEmailSent = () => {
     type: 'autoEmailSent',
   };
 };
+
+export const setIsMobileDevice = () => {
+  return {
+    type: 'setIsMobile',
+  };
+};

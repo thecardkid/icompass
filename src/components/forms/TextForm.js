@@ -18,7 +18,7 @@ class TextForm extends Component {
     const savedProgressText = Storage.getNoteProgress(this.props.noteProgressKey);
     if (savedProgressText) {
       text = savedProgressText;
-      props.uiX.toastInfo('Restored your saved progress. "Cancel" to discard.');
+      props.uiX.toastInfo('Restored your progress. "Cancel" to discard saved changes.');
     }
 
     this.state = {

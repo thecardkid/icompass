@@ -2,6 +2,7 @@ import '@css/app.less';
 
 import $ from 'jquery';
 import React, { Component } from 'react';
+import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
 import { render } from 'react-dom';
 import { connect, Provider } from 'react-redux';
@@ -36,6 +37,9 @@ class ConsumerAppInner extends Component {
 
     if (Storage.getBookmarks().length > 0) {
       props.workspaceX.supportLegacyBookmarks();
+    }
+    if (isMobile) {
+      props.uiX.setIsMobileDevice();
     }
   }
 

@@ -7,6 +7,7 @@ import _ from 'underscore';
 import StickyNote from './StickyNote.jsx';
 import { DeleteDraftModal, DeleteNoteModal, DeleteNotesModal } from './modals/ConfirmDelete';
 import ImageModal from './modals/ImageModal';
+import { messages } from './utils/Toast';
 
 import * as noteX from '@actions/notes';
 import * as uiX from '@actions/ui';
@@ -185,6 +186,10 @@ class NoteManager extends Component {
   };
 
   enterVisualMode = (idx) => {
+    if (this.props.ui.device.isMobile) {
+      this.props.uiX.toastError(messages.mobileNoMultiEdit);
+      return;
+    }
     this.props.uiX.visualMode(this.props.notes.length);
     this.props.workspaceX.selectNote(idx - this.props.drafts.length);
   };

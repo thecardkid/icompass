@@ -148,8 +148,7 @@ describe('workspace menu', () => {
       });
 
       it('cancel will reset', () => {
-        // TODO make selector stricter
-        cy.get('button.cancel').click();
+        cy.get('.drag-modal-close').click();
         cy.get('#center').then($el => {
           const pos = $el.position();
           expect(pos.left).to.equal(defaultCenterX);
