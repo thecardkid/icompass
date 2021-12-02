@@ -1,23 +1,30 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router';
+import * as React from 'react';
+import { browserHistory } from 'react-router';
 
-export default class NotFound extends Component {
+export default class NotFound extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state ={ secondsLeft: 5 };
+    this.decreaseSecond();
+  }
+
+  decreaseSecond = () => {
+    if (this.state.secondsLeft === 0) {
+      browserHistory.push('/');
+      return;
+    }
+    const secondsLeft = this.state.secondsLeft - 1;
+    setTimeout(() => this.setState({ secondsLeft }, this.decreaseSecond), 1000);
+  };
+
   render() {
     return (
       <div id={'ic-404'}>
-        <div id={'emoji'}>
-          <img src={'https://images.emojiterra.com/twitter/v11/512px/1f615.png'} />
-        </div>
-        <div id={'are-you-lost'}>
+        <div id={'text'}>
           <p>
-            Nothing here.
+            There is nothing here. You will be redirected to the home page in {this.state.secondsLeft}.
           </p>
-          <h2>
-            Are you lost?
-          </h2>
-          <h1>
-            Try <Link to='/'>this compass</Link>.
-          </h1>
       </div>
       </div>
     );
