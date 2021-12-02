@@ -109,6 +109,7 @@ function initApp() {
   process.on('SIGINT', cleanup);
   process.on('SIGTERM', cleanup);
 
+  app.get('*', handleConsumerSPA);
   return server;
 }
 
