@@ -66,23 +66,30 @@ class LandingPage extends Component {
     const { vw, vh } = this.props.ui;
     const screenRatio = vw / vh;
 
+    let width, height;
     if (screenRatio <= r) {
-      return {
-        width: r * vh,
-        height: vh,
-      };
+      width = r * vh;
+      height = vh;
     } else {
-      return {
-        width: vw,
-        height: vw / r,
-      };
+      width = vw;
+      height = vw / r;
     }
+
+    // This is to hide the blurry borders of the image, caused
+    // by filter: blur.
+    const blurPx = 5;
+    return {
+      width: width + blurPx,
+      height: height + blurPx,
+      top: -(blurPx / 2),
+      left: -(blurPx / 2),
+    };
   }
 
   render() {
     return (
       <div id={'ic-landing'}>
-        <img src={'https://s3.us-east-2.amazonaws.com/innovatorscompass/landing.jpg'} className={'ic-background'} style={this.sizeImage()}/>
+        <img src={'https://innovatorscompass.s3.us-east-2.amazonaws.com/landingpage.jpg'} className={'ic-background'} style={this.sizeImage()}/>
         {this.props.workspace.supportLegacyBookmarks && <BookmarkList />}
         <PrivacyStatementModal />
         <div id={'ic-landing-container'}>
