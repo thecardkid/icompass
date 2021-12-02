@@ -79,7 +79,7 @@ class HelpAndFeedback extends Component {
             <i className={'material-icons'}>play_arrow</i>
             Get Started
           </div>
-          <a data-cy={helpMenu.guide} href={'https://www.youtube.com/watch?v=3IbxFHQ5Dxo&feature=youtu.be'} target={'_blank'} onClick={this.hideMenu}>
+          <a data-cy={helpMenu.guide} href={'https://youtu.be/qL4Pt9GnvJ0'} target={'_blank'} onClick={this.hideMenu}>
             <div className={'ic-menu-item'}>
               <i className={'material-icons'}>ondemand_video</i>
               iCompass Guide

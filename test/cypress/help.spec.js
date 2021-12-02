@@ -18,7 +18,7 @@ describe('help menu', () => {
     });
 
     it('quick start guide', () => {
-      getElemWithDataCy(helpMenu.guide).should('have.attr', 'href').should('contain', 'youtube.com');
+      getElemWithDataCy(helpMenu.guide).should('have.attr', 'href').should('contain', 'youtu.be');
       // hide the form for the next test
       clickHelpButton();
     });

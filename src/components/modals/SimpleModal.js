@@ -22,10 +22,10 @@ export const AboutUsModal = SimpleModal({
   modalName: MODAL_NAME.ABOUT_US,
   heading: 'Hi!',
 }, [
-  `Ela Ben-Urs mission is making powerful ways forward accessible for any person and moment. She distilled Innovators' Compass from Design Thinking and other practices over a 20-year journey through IDEO, MIT and Olin - and continues to evolve it in collaboration with people around the world, from parents to educators to organizational leaders. More tools and many examples are at <a href="https://innovatorscompass.org"><u>innovatorscompass.org</u></a>.`,
-  `My name is Hieu Nguyen, and I am the creator of this app. I am an Olin graduate, class of 2018. Having worked with this framework from classes with Ela, I saw the potential in an online collaborative workspace and made it a reality.`,
+  `Ela Ben-Ur's mission is making powerful ways forward accessible for any person and moment. She distilled Innovators' Compass from Design Thinking and other practices over a 20-year journey through IDEO, MIT and Olin - and continues to evolve it in collaboration with people around the world, from parents to educators to organizational leaders. More tools and many examples are at <a href="https://innovatorscompass.org">innovatorscompass.org</a>.`,
+  `My name is <a href="https://linkedin.com/in/thecardkid" target="_blank">Hieu Nguyen</a>, and I am the creator of this app. Having worked with this framework from classes with Ela at Olin, I saw the potential in an online collaborative workspace and made it a reality.`,
   `We offer this app for free so you can move forward with it in challenges big or small. So please:`,
-  `1. Use and share this!<br/>2. Share back experiences by <a href="mailto:ela@innovatorscompass.org"><u>email</u></a> or <a href="https://twitter.com" target="_blank"><u>Twitter</u></a>.`,
+  `1. Use and share this!<br/>2. Share back experiences by <a href="mailto:ela@innovatorscompass.org">email</a> or <a href="https://twitter.com" target="_blank">Twitter</a>.`,
   `To changing the world for free,`,
   'Ela & Hieu',
 ]);

@@ -59,7 +59,7 @@ class GetStartedModal extends Component {
         4. Then someone else publishes and reads a different note to start a new cluster, and so on
       </p>
       <p>
-        For more information, visit <a href="http://innovatorscompass.org" target="_blank" rel="noopener noreferrer"><u>innovatorscompass.org</u></a>.
+        For more information, visit <a href="http://innovatorscompass.org" target="_blank" rel="noopener noreferrer">innovatorscompass.org</a>.
       </p>
   </DynamicModal>
   );

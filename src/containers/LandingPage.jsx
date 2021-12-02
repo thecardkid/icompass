@@ -116,8 +116,8 @@ class LandingPage extends Component {
               </DevOnly>
             </form>
           </div>
-          <a href={'https://youtu.be/3IbxFHQ5Dxo'} className={'ic-guide'}>
-            First-timer? Watch this <u>short two-minute video</u>!
+          <a href={'https://youtu.be/qL4Pt9GnvJ0'} className={'ic-guide'}>
+            First-timer? Watch this <u>short one-minute video</u>!
           </a>
         </div>
       </div>

@@ -12,7 +12,7 @@ describe('landing page', () => {
     cy.get('div#get-started-form').should('be.visible');
     cy.get('div#get-started-form input').should('have.length', 2);
     cy.get('a.ic-guide').should('be.visible');
-    cy.get('a.ic-guide').should('have.attr', 'href', 'https://youtu.be/3IbxFHQ5Dxo');
+    cy.get('a.ic-guide').should('have.attr', 'href').should('contain', 'youtu.be');
     matchImageSnapshot();
   });
 
