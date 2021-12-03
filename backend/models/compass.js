@@ -13,7 +13,7 @@ function generateUUID() {
 }
 
 mongoose.Promise = global.Promise;
-let compassSchema = mongoose.Schema({
+let CompassSchema = mongoose.Schema({
   editCode: String,
   viewCode: String,
   topic: String,
@@ -54,7 +54,7 @@ const isValidNote = (note) => {
   return true;
 };
 
-compassSchema.statics.makeCompass = function(topic) {
+CompassSchema.statics.makeCompass = function(topic) {
   return new Promise((resolve, reject) => {
     const newCompass = Object.assign({}, DefaultCompass, {
       editCode: generateUUID(),
@@ -72,7 +72,7 @@ compassSchema.statics.makeCompass = function(topic) {
   });
 };
 
-compassSchema.statics.makeCompassCopy = function(original) {
+CompassSchema.statics.makeCompassCopy = function(original) {
   // TODO check all required fields are present
   return new Promise((resolve, reject) => {
     const newCompass = Object.assign({}, original, {
@@ -105,7 +105,7 @@ function onReadHook(compass) {
   return compass;
 }
 
-compassSchema.statics.findByEditCode = function(code) {
+CompassSchema.statics.findByEditCode = function(code) {
   return new Promise((resolve, reject) => {
     this.findOne({ editCode: code }, function(err, c) {
       if (err) {
@@ -117,7 +117,7 @@ compassSchema.statics.findByEditCode = function(code) {
   });
 };
 
-compassSchema.statics.findByViewCode = function(code) {
+CompassSchema.statics.findByViewCode = function(code) {
   return new Promise((resolve, reject) => {
     this.findOne({ viewCode: code }, function(err, c) {
       if (err) {
@@ -134,7 +134,7 @@ compassSchema.statics.findByViewCode = function(code) {
   });
 };
 
-compassSchema.methods.setCenterPosition = function(x, y) {
+CompassSchema.methods.setCenterPosition = function(x, y) {
   return new Promise((resolve, reject) => {
     const { _id } = this;
     this.model('Compass').findByIdAndUpdate(
@@ -157,7 +157,7 @@ compassSchema.methods.setCenterPosition = function(x, y) {
   });
 };
 
-compassSchema.methods.setCenter = function(center) {
+CompassSchema.methods.setCenter = function(center) {
   return new Promise((resolve, reject) => {
     const { _id } = this;
     this.model('Compass').findByIdAndUpdate(
@@ -175,7 +175,7 @@ compassSchema.methods.setCenter = function(center) {
   });
 };
 
-compassSchema.methods.setTopic = function(topic) {
+CompassSchema.methods.setTopic = function(topic) {
   return new Promise((resolve, reject) => {
     const { _id } = this;
     this.model('Compass').findByIdAndUpdate(
@@ -193,7 +193,7 @@ compassSchema.methods.setTopic = function(topic) {
   });
 };
 
-compassSchema.methods.addNote = function(newNote) {
+CompassSchema.methods.addNote = function(newNote) {
   return new Promise((resolve, reject) => {
     if (!isValidNote(newNote)) {
       reject('Invalid data');
@@ -215,7 +215,7 @@ compassSchema.methods.addNote = function(newNote) {
   });
 };
 
-compassSchema.methods.updateNote = function(updatedNote) {
+CompassSchema.methods.updateNote = function(updatedNote) {
   return new Promise((resolve, reject) => {
     if (!isValidNote(updatedNote)) {
       reject('Invalid data');
@@ -246,7 +246,7 @@ compassSchema.methods.updateNote = function(updatedNote) {
   });
 };
 
-compassSchema.methods.plusOneNote = function(noteId) {
+CompassSchema.methods.plusOneNote = function(noteId) {
   return new Promise((resolve, reject) => {
     const { _id } = this;
     this.model('Compass').findOne({ _id }, function(err, c) {
@@ -272,7 +272,7 @@ compassSchema.methods.plusOneNote = function(noteId) {
   });
 };
 
-compassSchema.methods.bulkUpdateNotes = function(noteIds, transformation) {
+CompassSchema.methods.bulkUpdateNotes = function(noteIds, transformation) {
   return new Promise((resolve, reject) => {
     if (transformation.color && !isValidColor(transformation.color)) {
       reject('Invalid data');
@@ -312,7 +312,7 @@ compassSchema.methods.bulkUpdateNotes = function(noteIds, transformation) {
   });
 };
 
-compassSchema.methods.bulkDragNotes = function(noteIds, { dx, dy }) {
+CompassSchema.methods.bulkDragNotes = function(noteIds, { dx, dy }) {
   return new Promise((resolve, reject) => {
     const { _id } = this;
     this.model('Compass').findOne({ _id }, function(err, c) {
@@ -341,11 +341,11 @@ compassSchema.methods.bulkDragNotes = function(noteIds, { dx, dy }) {
   });
 };
 
-compassSchema.methods.deleteNote = function(noteId) {
+CompassSchema.methods.deleteNote = function(noteId) {
   return this.deleteNotes([noteId]);
 };
 
-compassSchema.methods.deleteNotes = function(noteIds) {
+CompassSchema.methods.deleteNotes = function(noteIds) {
   return new Promise((resolve, reject) => {
     const { _id } = this;
     this.model('Compass').findOne({ _id }, function(err, c) {
@@ -375,4 +375,4 @@ compassSchema.methods.deleteNotes = function(noteIds) {
   });
 };
 
-module.exports = mongoose.model('Compass', compassSchema);
+module.exports = mongoose.model('Compass', CompassSchema);

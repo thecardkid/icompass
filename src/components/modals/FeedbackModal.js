@@ -9,7 +9,6 @@ import { MODAL_NAME } from '@utils/constants';
 import { ModalFooter } from './shared';
 
 class FeedbackModal extends Component {
-
   submitFeedback = async () => {
     const email = this.refs.email.value;
     const note = this.refs.note.value;
@@ -17,10 +16,13 @@ class FeedbackModal extends Component {
       this.props.uiX.toastError('Please include some text in the note');
       return;
     }
-    await getAPIClient().submitFeedback({
+    const ok = await getAPIClient().submitFeedback({
       submitterEmail: email,
       message: note,
     });
+    if (ok) {
+      this.props.uiX.closeCurrentModal();
+    }
   };
 
   render() {
@@ -43,6 +45,7 @@ class FeedbackModal extends Component {
           <ModalFooter confirmButton={{
             text: 'Send',
             onConfirm: this.submitFeedback,
+            keepOpenOnConfirm: true,
           }} />
       </DynamicModal>
     );

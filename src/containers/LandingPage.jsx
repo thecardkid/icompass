@@ -13,7 +13,7 @@ import getAPIClient from '@utils/api';
 import { isCharOnly } from '@utils/regex';
 
 class LandingPage extends Component {
-  validateMakeInput = async (e) => {
+  submit = async (e) => {
     e.preventDefault();
 
     const topic = this.refs.topic.value;
@@ -26,6 +26,9 @@ class LandingPage extends Component {
     this.setState({ username });
     try {
       const data = await getAPIClient().createWorkspace({ topic });
+      if (data === null) {
+        return;
+      }
       const alwaysSend = Storage.getAlwaysSendEmail();
       let redirectURL = `/compass/edit/${data.code}/${username}`;
       if (alwaysSend.enabled) {
@@ -98,7 +101,7 @@ class LandingPage extends Component {
             <h2>Powerful questions, and space to explore them, to make anything better.</h2>
           </div>
           <div id={'get-started-form'}>
-            <form onSubmit={this.validateMakeInput}>
+            <form onSubmit={this.submit}>
               <p>What topic are you working on?</p>
               <input id="compass-center"
                      ref="topic"

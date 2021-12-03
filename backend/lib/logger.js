@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-const _ = require('underscore');
 
 const mail = require('./mailer').getInstance();
 
@@ -22,12 +21,11 @@ class Logger {
 
   error() {
     const args = this._log('ERROR', arguments);
-    mail.sendMessage({
+    mail.sendMail({
       toEmail: 'hieumaster95@gmail.com',
       subject: 'iCompass server error',
       text: args.slice(2).join(' '),
-      cb: _.noop,
-    });
+    }).then(() => {});
   }
 
   warn() {

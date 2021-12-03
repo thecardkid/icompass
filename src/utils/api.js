@@ -13,6 +13,10 @@ class API {
     this.uiX.toastSuccess(msg);
   }
 
+  hasErr(resp) {
+    return resp.body && !!resp.body.error;
+  }
+
   async sendReminderEmail({ topic, editCode, username, recipientEmail, isAutomatic }) {
     const resp = await request.post('/api/v1/workspace/send_reminder_email').send({
       topic,
@@ -21,12 +25,12 @@ class API {
       recipientEmail,
       isAutomatic,
     });
-    if (resp.body && resp.body.error) {
+    if (this.hasErr(resp)) {
       if (isAutomatic) {
         this.uiX.toastAutomaticEmail(false, recipientEmail);
         return;
       }
-      this.error('There was an issue sending you the email. Please note down your codes manually somewhere.');
+      this.error('There was an error sending you an email with your workspace link.');
       return;
     }
     if (isAutomatic) {
@@ -41,8 +45,8 @@ class API {
       bookmarks,
       recipientEmail,
     });
-    if (resp.body && resp.body.error) {
-      this.error('There was an issue sending your bookmarks. Please try again later.');
+    if (this.hasErr(resp)) {
+      this.error('There was an error sending your bookmarks. Please try again later.');
       return;
     }
     this.success('Your bookmarks have been emailed.');
@@ -50,10 +54,9 @@ class API {
 
   async createWorkspace({ topic }) {
     const resp = await request.post('/api/v1/workspace/create').send({ topic });
-    const data = resp.body;
-    if (data.error) {
-      this.error('Error creating workspace. Please try again later');
-      throw new Error(data.error);
+    if (this.hasErr(resp)) {
+      this.error('There was an error creating your workspace. Please try again later');
+      return null;
     }
     return resp.body;
   }
@@ -62,7 +65,7 @@ class API {
     const resp = await request.post('/api/v1/workspace/create_a_copy').send({
       editCode,
     });
-    if (resp.body && (resp.body.error || !resp.body.editCode)) {
+    if (this.hasErr(resp) || !resp.body.editCode) {
       this.error('There was a problem creating a copy of your workspace. Please try again later.');
       return null;
     }
@@ -70,12 +73,16 @@ class API {
   }
 
   async submitFeedback({ submitterEmail, message }) {
-    await request.post('/api/v1/workspace/submit_feedback').send({
+    const resp = await request.post('/api/v1/workspace/submit_feedback').send({
       submitterEmail,
       message,
     });
-    // Don't notify if failed.
+    if (this.hasErr(resp)) {
+      this.error('Failed to submit feedback, please try again later.');
+      return false;
+    }
     this.success('Your feedback has been submitted!');
+    return true;
   }
 }
 

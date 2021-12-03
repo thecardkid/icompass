@@ -2,49 +2,60 @@ require('babel-polyfill');
 const express = require('express');
 const config = require('../config');
 const mailer = require('../lib/mailer').getInstance();
-const compassSchema = require('../models/compass');
+const CompassModel = require('../models/compass');
 
+const error = (msg) => ({ error: msg });
 
-async function handleGetWorkspaceWithViewPermissions(req, res) {
-  if (!req.query.id) {
-    res.json({'error': 'missing id'});
-    return;
+function onErr(res) {
+  return function(err) {
+    res.json(error('server error'));
+    // Throw for uncaughtException handler.
+    throw err;
   }
-  const compass = await compassSchema.findByViewCode(req.query.id);
-  res.json({ compass });
 }
 
-async function handleGetWorkspaceWithEditPermissions(req, res) {
-  if (!req.query.code) {
-    res.json({'error': 'missing id'});
+function handleGetWorkspaceWithViewPermissions(req, res) {
+  if (!req.query.id) {
+    res.status(400);
     return;
   }
-  const compass = await compassSchema.findByEditCode(req.query.code);
-  res.json({ compass });
+  CompassModel.findByViewCode(req.query.id).then(compass => {
+    res.json({ compass });
+  }).catch(onErr(res));
+}
+
+function handleGetWorkspaceWithEditPermissions(req, res) {
+  if (!req.query.code) {
+    res.status(400);
+    return;
+  }
+  CompassModel.findByEditCode(req.query.code).then(compass => {
+    res.json({ compass });
+  }).catch(onErr(res));
 }
 
 // TODO rate-limit request? Let's see.
-async function handleCreateWorkspace(req, res) {
+function handleCreateWorkspace(req, res) {
   const { topic } = req.body;
   if (typeof topic !== 'string' || !topic) {
-    res.json({'error': 'invalid topic'});
+    res.status(400);
     return;
   }
-  const compass = await compassSchema.makeCompass(topic);
-  res.json({
-    topic: topic,
-    code: compass.editCode,
+  CompassModel.makeCompass(topic).then(compass => {
+    res.json({
+      topic: topic,
+      code: compass.editCode,
+    });
+  }).catch(onErr(res));
+}
+
+function handleCreateWorkspaceForDev(req, res) {
+  CompassModel.makeCompass('test-topic').then(compass => {
+    res.json({ code: compass.editCode });
   });
 }
 
-async function handleCreateWorkspaceForDev(req, res) {
-  const compass = await compassSchema.makeCompass('test-topic');
-  res.json({
-    code: compass.editCode,
-  });
-}
-
-async function handleSendReminderEmail(req, res) {
+function handleSendReminderEmail(req, res) {
   const {
     topic,
     editCode,
@@ -62,22 +73,16 @@ ${config.appHost}/disable-auto-email.`
     recipientEmail,
     subject: `Your iCompass workspace "${topic}"`,
     text,
-  }, function(err) {
-    if (err) {
-      res.json({'error': 'failed'});
-      return;
-    }
-    res.send('ok');
-  });
+  }).then(() => res.send('ok')).catch(onErr(res));
 }
 
-async function handleEmailBookmarks(req, res) {
+function handleEmailBookmarks(req, res) {
   const { bookmarks, recipientEmail } = req.body;
   const lines = ['Below are your iCompass bookmarks:', '', ''];
   for (let i = 0; i < bookmarks.length; i++) {
     const { center, href } = bookmarks[i];
     if (!center || !href) {
-      res.json({'error': `bookmark at index ${i} is invalid`});
+      res.json(error(`bookmark at index ${i} is invalid`));
       return;
     }
     lines.push(`${center}: ${config.appHost}${href}`);
@@ -86,63 +91,42 @@ async function handleEmailBookmarks(req, res) {
     subject: 'Your iCompass bookmarks',
     text: lines.join('\n'),
     recipientEmail,
-  }, function(err) {
-    if (err) {
-      res.json({'error': 'failed'});
-      return;
-    }
-    res.send('ok');
-  });
+  }).then(() => res.send('ok')).catch(onErr(res));
 }
 
-async function handleSubmitFeedback(req, res) {
+function handleSubmitFeedback(req, res) {
   const { submitterEmail, message } = req.body;
   mailer.sendMail({
     subject: 'iCompass Feedback',
     recipientEmail: 'hieumaster95@gmail.com',
     text: message + `\n\nFrom: ${submitterEmail || 'No email specified'}`,
-  }, function(err) {
-    if (err) {
-      res.json({'error': 'failed'});
+  }).then(() => res.send('ok')).catch(onErr(res));
+}
+
+function handleCreateCopyOfWorkspace(req, res) {
+  const { editCode } = req.body;
+  CompassModel.findByEditCode(editCode).then(compass => {
+    if (!compass) {
+      res.json({ 'error': `no workspace with code ${editCode}` })
       return;
     }
-    res.send('ok');
-  });
-}
-
-async function handleCreateCopyOfWorkspace(req, res) {
-  const { editCode } = req.body;
-  const compass = await compassSchema.findByEditCode(editCode);
-  if (!compass) {
-    res.json({'error': `no workspace with code ${editCode}`})
-    return;
-  }
-  const copy = await compassSchema.makeCompassCopy(compass);
-  res.json({ editCode: copy.editCode });
-}
-
-function tryCatch(fn) {
-  return function(req, res, next) {
-    try {
-      fn(req, res, next);
-    } catch (ex) {
-      this.logger.error(`Error handling ${req.path} for request body ${req.body}:\n${ex.message}`);
-      res.json({'error': 'server error'});
-    }
-  }
+    CompassModel.makeCompassCopy(compass).then(copy => {
+      res.json({ editCode: copy.editCode });
+    }).catch(onErr(res));
+  }).catch(onErr(res));
 }
 
 module.exports = (function() {
   const router = express.Router();
-  router.get('/view', tryCatch(handleGetWorkspaceWithViewPermissions));
-  router.get('/edit', tryCatch(handleGetWorkspaceWithEditPermissions));
-  router.post('/create', tryCatch(handleCreateWorkspace));
-  router.post('/create_a_copy', tryCatch(handleCreateCopyOfWorkspace));
-  router.post('/send_reminder_email', tryCatch(handleSendReminderEmail));
-  router.post('/send_bookmarks_email', tryCatch(handleEmailBookmarks));
-  router.post('/submit_feedback', tryCatch(handleSubmitFeedback));
+  router.get('/view', handleGetWorkspaceWithViewPermissions);
+  router.get('/edit', handleGetWorkspaceWithEditPermissions);
+  router.post('/create', handleCreateWorkspace);
+  router.post('/create_a_copy', handleCreateCopyOfWorkspace);
+  router.post('/send_reminder_email', handleSendReminderEmail);
+  router.post('/send_bookmarks_email', handleEmailBookmarks);
+  router.post('/submit_feedback', handleSubmitFeedback);
   if (config.serverEnv.isDev) {
-    router.post('/create_dev', tryCatch(handleCreateWorkspaceForDev));
+    router.post('/create_dev', handleCreateWorkspaceForDev);
   }
   return router;
 })();

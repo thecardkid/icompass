@@ -40,51 +40,25 @@ Message: ${text}
     }
   }
 
-  // DEPRECATED.
-  sendMessage({ text, toEmail, subject, cb }) {
-    const message = {
-      to: `<${toEmail}>`,
-      from: 'iCompass <icompass.noreply@gmail.com>',
-      subject,
-      text,
-    };
-
-    this.server.send(message, function(err) {
-      if (err) {
-        // eslint-disable-next-line no-console
-        console.error('Failed sending email: ', err);
-        cb(false);
-        return;
-      }
-
-      cb(true);
-    });
-  }
-
-  sendMail({ text, recipientEmail, subject }, done) {
-    const message = {
-      to: `<${recipientEmail}>`,
-      from: 'iCompass <icompass.noreply@gmail.com>',
-      subject,
-      text,
-    };
-
-    this.server.send(message, function(err) {
-      if (err) {
-        // eslint-disable-next-line no-console
-        console.error('Failed sending email: ', err);
-        if (done) {
-          done(err);
+  sendMail(text, recipientEmail, subject) {
+    return new Promise((resolve, reject) => {
+      const message = {
+        to: `<${recipientEmail}>`,
+        from: 'iCompass <icompass.noreply@gmail.com>',
+        subject,
+        text,
+      };
+      this.server.send(message, function(err) {
+        if (err) {
+          // eslint-disable-next-line no-console
+          console.error('Failed sending email: ', err);
+          reject(err);
+          return;
         }
-        return;
-      }
-
-      if (done) {
-        done(null);
-      }
+        resolve();
+      });
     });
   }
-
 }
 
 module.exports = makeSingleton(Mailer);
