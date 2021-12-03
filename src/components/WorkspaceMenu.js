@@ -2,7 +2,6 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import _ from 'underscore';
 
@@ -117,11 +116,6 @@ class WorkspaceMenu extends Component {
     ReactGA.modalview('modals/menu-email');
     this.props.uiX.openEmailWorkspaceModal();
     this.hideMenu();
-  };
-
-  logout = () => {
-    trackFeatureEvent('Menu: Log out');
-    browserHistory.push('/');
   };
 
   confirmDelete = () => {
@@ -261,10 +255,6 @@ class WorkspaceMenu extends Component {
           </MaybeTappable>
         </section>
         <section onMouseEnter={this.hideSubmenus}>
-          <div data-cy={workspaceMenu.logout} className={'ic-menu-item'} onClick={this.logout}>
-            <i className={'material-icons'}>lock</i>
-            Log Out
-          </div>
           <div data-cy={workspaceMenu.deleteWorkspace} className={'ic-menu-item dangerous'} onClick={this.confirmDelete}>
             <i className={'material-icons'}>delete</i>
             Delete Workspace

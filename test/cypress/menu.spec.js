@@ -1,5 +1,4 @@
 const {
-  expectCompassStructure,
   getElemWithDataCy,
   setup,
   selectMenuOption,
@@ -242,20 +241,6 @@ describe('workspace menu', () => {
       it('can x out', () => {
         getElemWithDataCy(modal.closeButton).click();
         cy.get('.ic-share').should('not.exist');
-      });
-    });
-
-    describe('logout', () => {
-      it('navigates to landing page', () => {
-        selectMenuOption(workspaceMenu.logout);
-        cy.location().should((loc) => {
-          expect(loc.pathname).to.equal('/');
-        });
-      });
-
-      it('workspace still exists', () => {
-        cy.go('back');
-        expectCompassStructure();
       });
     });
 
