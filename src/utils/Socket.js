@@ -26,6 +26,7 @@ const SocketSingleton = (() => {
         return true;
       }
     };
+
     logout = () => {
       this.socket.emit(events.backend.LOGOUT);
     };

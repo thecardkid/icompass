@@ -245,20 +245,6 @@ describe('workspace menu', () => {
       });
     });
 
-    describe('logout', () => {
-      it('navigates to landing page', () => {
-        selectMenuOption(workspaceMenu.logout);
-        cy.location().should((loc) => {
-          expect(loc.pathname).to.equal('/');
-        });
-      });
-
-      it('workspace still exists', () => {
-        cy.go('back');
-        expectCompassStructure();
-      });
-    });
-
     describe('delete workspace', () => {
       it('navigates to landing page', () => {
         selectMenuOption(workspaceMenu.deleteWorkspace);
