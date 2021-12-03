@@ -148,6 +148,7 @@ class Workspace extends Component {
     this.props.compassX.set(compass, isViewOnly);
     this.props.noteX.updateAll(compass.notes);
     this.props.workspaceX.setEditCode(compass.editCode);
+    document.title = 'icompass · ' + compass.topic;
   };
 
   joinRoomReconnect = () => {

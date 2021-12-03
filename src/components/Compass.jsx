@@ -263,6 +263,7 @@ class Compass extends Component {
   };
 
   setTopic = (topic) => {
+    document.title = 'icompass · ' + topic;
     this.socket.emitSetTopic(topic);
   };
 
