@@ -40,7 +40,7 @@ Message: ${text}
     }
   }
 
-  sendMail(text, recipientEmail, subject) {
+  sendMail({ text, recipientEmail, subject }) {
     return new Promise((resolve, reject) => {
       const message = {
         to: `<${recipientEmail}>`,
