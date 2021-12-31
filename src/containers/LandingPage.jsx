@@ -13,6 +13,14 @@ import getAPIClient from '@utils/api';
 import { isCharOnly } from '@utils/regex';
 
 class LandingPage extends Component {
+  constructor(props) {
+    super(props);
+
+    if (this.props.location.query['tutorial']) {
+      props.uiX.enableTutorial();
+    }
+  }
+
   submit = async (e) => {
     e.preventDefault();
 
@@ -42,6 +50,7 @@ class LandingPage extends Component {
         });
         redirectURL += '?autoEmail=1'
       }
+      this.props.uiX.tutorialGoToStep(1);
       return browserHistory.push(redirectURL);
     } catch(err) {
       // eslint-disable-next-line no-console
@@ -90,6 +99,8 @@ class LandingPage extends Component {
   }
 
   render() {
+    const tutorialEnabled = this.props.ui.tutorial.enabled;
+
     return (
       <div id={'ic-landing'}>
         <img src={'https://innovatorscompass.s3.us-east-2.amazonaws.com/landingpage.jpg'} className={'ic-background'} style={this.sizeImage()}/>
@@ -126,9 +137,15 @@ class LandingPage extends Component {
               </DevOnly>
             </form>
           </div>
-          <a href={'https://youtu.be/qL4Pt9GnvJ0'} className={'ic-guide'}>
-            First-timer? Watch this <u>short one-minute video</u>!
-          </a>
+          {tutorialEnabled ? (
+            <p className={'ic-guide'}>
+              First-timer? Start the <u onClick={() => this.props.uiX.startTutorial(0)}>tutorial</u>.
+            </p>
+          ): (
+            <a href={'https://youtu.be/qL4Pt9GnvJ0'} className={'ic-guide'}>
+              First-timer? Watch this <u>short one-minute video</u>!
+            </a>
+          )}
         </div>
       </div>
     );

@@ -244,3 +244,35 @@ export const setIsMobileDevice = () => {
     type: 'setIsMobile',
   };
 };
+
+export const startTutorial = (atStep) => {
+  return {
+    type: 'setTutorialActive',
+    active: true,
+    atStep,
+  };
+};
+
+export const endTutorial = () => {
+  return {
+    type: 'setTutorialActive',
+    active: false,
+  };
+};
+
+export const tutorialGoToStep = (stepNum) => {
+  return {
+    type: 'tutorialGoToStep',
+    stepNum,
+  };
+};
+
+export const tutorialNextStep = () => {
+  return {
+    type: 'tutorialNextStep',
+  };
+};
+
+export const enableTutorial = () => ({
+  type: 'enableTutorial',
+});

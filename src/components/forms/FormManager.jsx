@@ -27,6 +27,7 @@ class FormManager extends Component {
                       info={this.props.forms.formInfo}
                       asNote={this.socket.emitNewNote}
                       asDraft={this.props.workspaceX.createDraft}
+                      tutorialGoToStep={this.props.uiX.tutorialGoToStep}
                       {...this.props.commonAttrs} />
     );
   };
@@ -43,9 +44,10 @@ class FormManager extends Component {
 
     return (
       <EditTextForm title={'Edit this note'}
-                      info={this.props.forms.formInfo}
-                      ship={this.socket.emitEditNote}
-                      {...this.props.commonAttrs} />
+                    info={this.props.forms.formInfo}
+                    ship={this.socket.emitEditNote}
+                    tutorialGoToStep={this.props.uiX.tutorialGoToStep}
+                    {...this.props.commonAttrs} />
     );
   };
 

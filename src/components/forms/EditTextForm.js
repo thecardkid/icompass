@@ -23,6 +23,7 @@ export default class EditTextForm extends Component {
 
     trackFeatureEvent('Edit note (text)');
     this.props.ship(edited, idx);
+    this.props.tutorialGoToStep(7);
     this.props.close();
   };
 

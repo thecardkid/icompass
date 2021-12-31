@@ -16,6 +16,7 @@ import Workspace from './Workspace.jsx';
 
 import * as uiX from '@actions/ui';
 import * as workspaceX from '@actions/workspace';
+import Tutorial from '@components/Tutorial';
 import { ExplainAutoEmailFeatureModal } from '@components/modals/SimpleModal';
 import Toast from '@components/utils/Toast';
 import { initializeAPI } from '@utils/api';
@@ -56,6 +57,7 @@ class ConsumerAppInner extends Component {
       <div>
         <ExplainAutoEmailFeatureModal />
         <Toast />
+        <Tutorial />
         {/* This is the portal for DynamicModal */}
         <div id={'ic-modal-container2'} />
         <Router history={browserHistory}>

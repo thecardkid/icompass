@@ -9,6 +9,11 @@ const defaultState = {
     editText: false,
     editImage: false,
   },
+  tutorial: {
+    enabled: false,
+    active: false,
+    step: 0,
+  },
   openModal: null,
   modalBacklog: [],
   modalExtras: {},
@@ -218,6 +223,54 @@ export default (state = defaultState, action) => {
 
     case 'setIsMobile':
       return { ...state, device: { ...state.device, isMobile: true }};
+
+    case 'enableTutorial':
+      return {
+        ...state,
+        tutorial: {
+          ...state.tutorial,
+          enabled: true,
+        },
+      };
+
+    case 'setTutorialActive':
+      if (!state.tutorial.enabled) {
+        return state;
+      }
+      return { ...state, tutorial: {
+        ...state.tutorial,
+        active: action.active,
+        step: action.atStep,
+      }};
+
+    case 'tutorialGoToStep':
+      if (!state.tutorial.enabled) {
+        return state;
+      }
+      if (!state.tutorial.active) {
+        return state;
+      }
+      if (action.stepNum !== state.tutorial.step + 1) {
+        return state;
+      }
+      return { ...state, tutorial: {
+        ...state.tutorial,
+        active: true,
+        step: action.stepNum,
+      }};
+
+    case 'tutorialNextStep':
+      if (!state.tutorial.enabled) {
+        return state;
+      }
+      if (!state.tutorial.active) {
+        return state;
+      }
+      return { ...state, tutorial: {
+        ...state.tutorial,
+        active: true,
+        step: state.tutorial.step + 1,
+      }};
 
     default:
       return state;

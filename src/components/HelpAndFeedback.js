@@ -71,6 +71,11 @@ class HelpAndFeedback extends Component {
     this.hideMenu();
   }
 
+  startTutorial = () => {
+    this.props.uiX.startTutorial(3);
+    this.hideMenu();
+  }
+
   renderHelpMenu() {
     return (
       <div className={'ic-menu ic-help-menu'}>
@@ -79,12 +84,19 @@ class HelpAndFeedback extends Component {
             <i className={'material-icons'}>play_arrow</i>
             Get Started
           </div>
-          <a data-cy={helpMenu.guide} href={'https://youtu.be/qL4Pt9GnvJ0'} target={'_blank'} onClick={this.hideMenu}>
-            <div className={'ic-menu-item'}>
-              <i className={'material-icons'}>ondemand_video</i>
-              iCompass Guide
+          {this.props.tutorialEnabled ? (
+            <div className={'ic-menu-item'} onClick={this.startTutorial}>
+              <i className={'material-icons'}>school</i>
+              Tutorial
             </div>
-          </a>
+          ): (
+            <a data-cy={helpMenu.guide} href={'https://youtu.be/qL4Pt9GnvJ0'} target={'_blank'} onClick={this.hideMenu}>
+              <div className={'ic-menu-item'}>
+                <i className={'material-icons'}>ondemand_video</i>
+                iCompass Guide
+              </div>
+            </a>
+          )}
         </section>
         <section className={'border-bottom'}>
           <div data-cy={helpMenu.aboutUs} className={'ic-menu-item'} onClick={this.showAboutUs}>
@@ -138,8 +150,10 @@ class HelpAndFeedback extends Component {
   }
 }
 
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = (state) => {
+  return {
+    tutorialEnabled: state.ui.tutorial.enabled,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {

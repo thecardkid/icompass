@@ -1,0 +1,62 @@
+.ic-tutorial-container {
+  .guider {
+    position: absolute;
+    z-index: @tutorialZIndex;
+    width: 400px;
+    top: 50px;
+    right: 50px;
+    -webkit-box-shadow: var(--shadow);
+    -moz-box-shadow: var(--shadow);
+    box-shadow: var(--shadow);
+    background: @light;
+    font-family: @notosans;
+    padding: 20px;
+    box-sizing: border-box;
+    line-height: 20px;
+    .border-radius(3px);
+
+    h2 {
+      margin-bottom: 20px;
+      font-weight: bold;
+      font-size: 19px;
+    }
+
+    .body {
+      font-size: 14px;
+
+      p {
+        margin-bottom: 10px;
+
+        &:last-child {
+          margin-bottom: 20px;
+        }
+      }
+    }
+
+    .footer {
+      display: flex;
+      justify-content: right;
+
+      button {
+        cursor: pointer;
+        height: 28px;
+        font-size: 12px;
+        font-family: inherit;
+        margin-left: 10px;
+        padding: 0 10px;
+        .border-radius(2px);
+
+        &.next {
+          background: @dark;
+          color: @light;
+        }
+
+        &.leave {
+          background: none;
+          color: @dark;
+          border: 1px solid @dark;
+        }
+      }
+    }
+  }
+}

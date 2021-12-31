@@ -40,6 +40,7 @@ class StickyNote extends Component {
       return this.props.uiX.toastError('Cannot submit drafts in multi-edit mode');
     }
     this.props.submitDraft(this.props.note, this.props.i);
+    this.props.uiX.tutorialGoToStep(6);
   };
 
   upvote = (ev) => {

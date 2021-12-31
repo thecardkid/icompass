@@ -268,6 +268,7 @@ class Compass extends Component {
   };
 
   setPeopleGroups = (x) => {
+    this.props.uiX.tutorialGoToStep(2);
     this.socket.emitSetCenter(this.props.compass._id, x);
   };
 
@@ -521,6 +522,7 @@ class Compass extends Component {
         this.animateQuadrants = false;
         this.fadeInQuadrants(800);
         if (Storage.isEmailReminderEnabled()
+          && !this.props.ui.tutorial.active
           && !this.props.ui.disableEmailReminder) {
           setTimeout(() => {
             this.props.uiX.toastEmailReminder();

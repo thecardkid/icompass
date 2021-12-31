@@ -20,9 +20,11 @@ export default class CreateTextForm extends Component {
 
     if (isDraft) {
       this.props.asDraft(note);
+      this.props.tutorialGoToStep(5);
       trackFeatureEvent('Create draft (text)');
     } else {
       this.props.asNote(note);
+      this.props.tutorialGoToStep(4);
       trackFeatureEvent('Create note (text)');
     }
     this.props.close();
