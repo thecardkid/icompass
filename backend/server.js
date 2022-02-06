@@ -100,7 +100,7 @@ function initApp() {
 
   const cleanup = function() {
     logger.info('Disconnecting from MongoDB');
-    if (db.connections.length) {
+    if (db && db.connections && db.connections.length) {
       db.connections[0].close();
     }
     process.exit(0);

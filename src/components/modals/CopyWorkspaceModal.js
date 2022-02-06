@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import getAPIClient from '@utils/api';
 import { MODAL_NAME } from '@utils/constants';
+import Storage from '@utils/Storage';
 import DynamicModal from './DynamicModal';
 import { ModalFooter } from './shared';
 
@@ -12,6 +13,9 @@ class CopyWorkspaceModal extends Component {
     if (!out) {
       return;
     }
+    Storage.setWorkspace(out.newWorkspaceCode, {
+      drafts: Storage.getDrafts(this.props.compass.editCode),
+    });
     window.open(`/compass/edit/${out.newWorkspaceCode}`, '_blank');
   };
 
