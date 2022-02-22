@@ -69,7 +69,7 @@ function handleSendReminderEmail(req, res) {
 whenever you create one. To stop receiving these automatic emails, please go to this link:
 ${config.appHost}/disable-auto-email.`
   }
-  mailer.sendMail({
+  mailer.sendEmailSES({
     recipientEmail,
     subject: `Your iCompass workspace "${topic}"`,
     text,
@@ -87,7 +87,7 @@ function handleEmailBookmarks(req, res) {
     }
     lines.push(`${center}: ${config.appHost}${href}`);
   }
-  mailer.sendMail({
+  mailer.sendEmailSES({
     subject: 'Your iCompass bookmarks',
     text: lines.join('\n'),
     recipientEmail,
@@ -96,7 +96,7 @@ function handleEmailBookmarks(req, res) {
 
 function handleSubmitFeedback(req, res) {
   const { submitterEmail, message } = req.body;
-  mailer.sendMail({
+  mailer.sendEmailSES({
     subject: 'iCompass Feedback',
     recipientEmail: 'hieumaster95@gmail.com',
     text: message + `\n\nFrom: ${submitterEmail || 'No email specified'}`,

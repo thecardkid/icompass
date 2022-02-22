@@ -21,8 +21,8 @@ class Logger {
 
   error() {
     const args = this._log('ERROR', arguments);
-    mail.sendMail({
-      toEmail: 'hieumaster95@gmail.com',
+    mail.sendEmailSES({
+      recipientEmail: 'hieumaster95@gmail.com',
       subject: 'iCompass server error',
       text: args.slice(2).join(' '),
     }).then(() => {});
