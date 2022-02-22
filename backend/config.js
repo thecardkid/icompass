@@ -33,8 +33,7 @@ const config = {
 
   build: {
     // Set in .github/workflows/build-production-image.yml.
-    id: getEnvVar('IC_BUILD_ID'),
-    sha: getEnvVar('IC_BUILD_SHA'),
+    sha: getEnvVar('RENDER_GIT_COMMIT'),
   },
 
   credentials: {
