@@ -69,7 +69,7 @@ function handleSendReminderEmail(req, res) {
 whenever you create one. To stop receiving these automatic emails, please go to this link:
 ${config.appHost}/disable-auto-email.`
   }
-  mailer.sendMail({
+  mailer.sendEmailSES({
     recipientEmail,
     subject: `Your iCompass workspace "${topic}"`,
     text,

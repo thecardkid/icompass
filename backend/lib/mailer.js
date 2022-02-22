@@ -8,6 +8,9 @@
 const email = require('emailjs/email');
 const config = require('../config');
 const makeSingleton = require('./singletonFactory');
+const AWS = require('aws-sdk');
+
+AWS.config.update({ region: 'us-east-1' });
 // Cannot import our logger, as it depends on the Mailer.
 
 
@@ -16,6 +19,7 @@ class Mailer {
     if (!config.serverEnv.isProd) {
       // Mock out email to avoid Google thinking our gmail account
       // is being accessed from unsafe IP addresses (Travis' VMs).
+      this.sesClient = new AWS.SES({ apiVersion: '2010-12-01' });
       this.server = {
         send: function({ to, subject, text }, cb) {
           // eslint-disable-next-line no-console
@@ -31,6 +35,7 @@ Message: ${text}
         },
       };
     } else {
+      this.sesClient = new AWS.SES({ apiVersion: '2010-12-01' });
       this.server = email.server.connect({
         user: 'icompass.noreply@gmail.com',
         password: config.credentials.emailPassword,
@@ -58,6 +63,33 @@ Message: ${text}
         resolve();
       });
     });
+  }
+
+  sendEmailSES({ text, recipientEmail, subject }) {
+    const params = {
+      Source: 'noreply@icompass.me', /* required */
+      Destination: {
+        ToAddresses: [recipientEmail],
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: 'UTF-8',
+            Data: 'HTML_FORMAT_BODY'
+          },
+          Text: {
+            Charset: 'UTF-8',
+            Data: text,
+          }
+        },
+        Subject: {
+          Charset: 'UTF-8',
+          Data: subject,
+        }
+      },
+    };
+    // Create the promise and SES service object
+    return this.sesClient.sendEmail(params).promise();
   }
 }
 
