@@ -9,7 +9,11 @@ import { ModalFooter } from './shared';
 
 class CopyWorkspaceModal extends Component {
   makeACopyOfWorkspace = async () => {
-    const out = await getAPIClient().createCopyOfWorkspace({ editCode: this.props.compass.editCode });
+    const alwaysSend = Storage.getAlwaysSendEmail();
+    const out = await getAPIClient().createCopyOfWorkspace({
+      editCode: this.props.compass.editCode,
+      emailTo: alwaysSend.enabled ? alwaysSend.email : null,
+    });
     if (!out) {
       return;
     }

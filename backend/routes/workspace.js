@@ -55,25 +55,28 @@ function handleCreateWorkspaceForDev(req, res) {
   });
 }
 
-function handleSendReminderEmail(req, res) {
-  const {
-    topic,
-    editCode,
-    recipientEmail,
-    isAutomatic,
-  } = req.body;
-  let text = `Access your workspace via this link: ${config.appHost}/compass/edit/${editCode}`;
+function sendReminderEmail({ recipientEmail, topic, editCode, isAutomatic }) {
+  let text = `Access your workspace using this link: ${config.appHost}/compass/edit/${editCode}`;
   if (isAutomatic) {
     text += `
-\nYou received this email because you asked iCompass to automatically send you the link to a workspace
-whenever you create one. To stop receiving these automatic emails, please go to this link:
-${config.appHost}/disable-auto-email.`
+<br/><br/>
+You received this email because you asked iCompass to automatically send you the link<br/>
+to a workspace whenever you create one. To stop receiving these automatic emails, click on<br/>
+this link:<br/>
+<br/>
+${config.appHost}/disable-auto-email.
+<br/>
+`;
   }
-  mailer.sendEmailSES({
+  return mailer.sendEmailSES({
     recipientEmail,
     subject: `Your iCompass workspace "${topic}"`,
     text,
-  }).then(() => res.send('ok')).catch(onErr(res));
+  });
+}
+
+function handleSendReminderEmail(req, res) {
+  sendReminderEmail(req.body).then(() => res.send('ok')).catch(onErr(res));
 }
 
 function handleEmailBookmarks(req, res) {
@@ -104,13 +107,22 @@ function handleSubmitFeedback(req, res) {
 }
 
 function handleCreateCopyOfWorkspace(req, res) {
-  const { editCode } = req.body;
+  const { editCode, emailTo } = req.body;
   CompassModel.findByEditCode(editCode).then(compass => {
     if (!compass) {
       res.json({ 'error': `no workspace with code ${editCode}` })
       return;
     }
     CompassModel.makeCompassCopy(compass).then(copy => {
+      if (emailTo) {
+        // Ignore the promise returned.
+        sendReminderEmail({
+          recipientEmail: emailTo,
+          topic: copy.topic,
+          editCode: copy.editCode,
+          isAutomatic: true, // emailTo is only set if always-email is enabled.
+        });
+      }
       res.json({ editCode: copy.editCode });
     }).catch(onErr(res));
   }).catch(onErr(res));

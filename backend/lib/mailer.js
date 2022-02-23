@@ -12,28 +12,24 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 // Cannot import our logger, as it depends on the Mailer.
 
+const sendEmailInDev = true;
 
 class Mailer {
   constructor() {
-    if (!config.serverEnv.isProd) {
-      this.sesClient = {
-        sendEmail: function(params) {
-          // eslint-disable-next-line no-console
-          console.log(`In production, would've sent email:\n
-
-To: ${params.Destination.ToAddresses}
-Subject: ${params.Message.Subject}
-Message: ${params.Message.Body.Html.Data}
-`);
-          return new Promise(resolve => resolve());
-        },
-      };
-    } else {
-      this.sesClient = new AWS.SES({ apiVersion: '2010-12-01' });
-    }
+    this.sesClient = new AWS.SES({ apiVersion: '2010-12-01' });
   }
 
   sendEmailSES({ text, recipientEmail, subject }) {
+    if (config.serverEnv.isDev && !sendEmailInDev) {
+      console.log(`In production, would've sent email:\n
+
+To: ${recipientEmail}
+Subject: ${subject}
+Message: ${text}
+`);
+      return new Promise(resolve => resolve());
+    }
+
     const params = {
       Source: 'noreply@icompass.me', /* required */
       Destination: {

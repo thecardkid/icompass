@@ -61,9 +61,10 @@ class API {
     return resp.body;
   }
 
-  async createCopyOfWorkspace({ editCode }) {
+  async createCopyOfWorkspace({ editCode, emailTo }) {
     const resp = await request.post('/api/v1/workspace/create_a_copy').send({
       editCode,
+      emailTo,
     });
     if (this.hasErr(resp) || !resp.body.editCode) {
       this.error('There was a problem creating a copy of your workspace. Please try again later.');
