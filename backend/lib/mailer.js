@@ -21,6 +21,7 @@ class Mailer {
 
   sendEmailSES({ text, recipientEmail, subject }) {
     if (config.serverEnv.isDev && !sendEmailInDev) {
+      // eslint-disable-next-line no-console
       console.log(`In production, would've sent email:\n
 
 To: ${recipientEmail}
