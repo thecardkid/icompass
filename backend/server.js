@@ -33,7 +33,9 @@ function handleAdminSPA(req, res) {
 }
 
 function apiLoggerMiddleware(req, res, next) {
-  logger.info(req.method, req.url, res.statusCode);
+  if (req.url !== '/ping') {
+    logger.info(req.method, req.url, res.statusCode);
+  }
   next();
 }
 
