@@ -38,6 +38,7 @@ class FormManager extends Component {
         <EditTextForm title={'Edit this draft'}
                       info={this.props.forms.formInfo}
                       ship={this.props.workspaceX.editDraft}
+                      tutorialGoToStep={this.props.uiX.tutorialGoToStep}
                       {...this.props.commonAttrs} />
       );
     }
