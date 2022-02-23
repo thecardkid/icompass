@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-. "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
-ensure_credentials_exist
-
-. "$IC_ROOT/build/credentials/runner.sh"
-echo "Connecting to $EC2_INSTANCE.."
-ssh -i "$pem_file" "$EC2_INSTANCE"
