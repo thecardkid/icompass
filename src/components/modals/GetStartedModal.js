@@ -41,6 +41,9 @@ class GetStartedModal extends Component {
       <p>
         Cluster related stickies together and add a label with a sticky that stands out—e.g. in bold capitals, and/or a different color.
       </p>
+      <p>
+        Zoom out to make stickies take up less space on your screen.
+      </p>
 
       <h4>Tips for groups</h4>
       <p>
