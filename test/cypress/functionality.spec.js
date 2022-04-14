@@ -23,6 +23,10 @@ describe('basic functionality', () => {
       cy.get('#ic-compass-topic').should('contain', 'e2e');
       cy.get('#center').should('contain', 'center');
       expectCompassStructure();
+
+      cy.get('#center').dblclick();
+      cy.get('#ic-modal-input').should('have.value', 'center');
+      getElemWithDataCy(modal.closeButton).click();
     });
   });
 

@@ -16,6 +16,12 @@ export function Prompt(dynamicModalProps, paragraphs) {
       this.state = { value: this.props.defaultValue || '' };
     }
 
+    componentDidUpdate(prevProps) {
+      if (prevProps.defaultValue === '' && this.props.defaultValue !== '') {
+        this.setState({ value: this.props.defaultValue });
+      }
+    }
+
     onSubmit = () => {
       const { value } = this.state;
       if (value === '') {
