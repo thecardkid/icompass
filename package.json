@@ -9,6 +9,7 @@
     "build": "webpack --config ./config/webpack/prod.js",
     "vendor": "webpack --config ./config/webpack/vendor.js",
     "start": "./scripts/run",
+    "start-test": "NODE_ENV=test node backend/server.js",
     "start-server": "npm run build && node backend/server.js",
     "lint": "./node_modules/.bin/eslint --config config/eslint/.eslintrc.js src/ test/ backend/lib/ backend/models/ --ignore-pattern=*.less --quiet",
     "mocha": "NODE_ENV=test mocha --require @babel/register --timeout 300000 --exit test/server",
