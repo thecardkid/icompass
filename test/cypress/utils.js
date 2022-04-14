@@ -12,7 +12,7 @@ export function setup({ topic, centerTextInput } = {}) {
   cy.visit('/');
   // TODO compass-center is legacy (from before "topic" existed).
   // Rename to compass-topic
-  cy.get('#compass-center').type(topic || 'webdriverio');
+  cy.get('#compass-center').type(topic || 'e2e');
   cy.get('#username').type('sandbox');
   cy.get('button[type=submit]').click();
   // Check modal is not dismissable via backdrop or close button.

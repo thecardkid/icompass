@@ -20,7 +20,7 @@ describe('basic functionality', () => {
       cy.get('.ic-workspace-button').should('be.visible');
       cy.get('.ic-help-button').should('be.visible');
       // Set it the setup() call.
-      cy.get('#ic-compass-topic').should('contain', 'webdriverio');
+      cy.get('#ic-compass-topic').should('contain', 'e2e');
       cy.get('#center').should('contain', 'center');
       expectCompassStructure();
     });
@@ -46,19 +46,6 @@ describe('basic functionality', () => {
     it('drag', () => {
       assertDraggable('#note0', { deltaX: 100, deltaY: 100 });
     });
-
-    // it('compact mode', () => {
-    //   cy.get('div.compact').should('have.length', 0);
-    //   selectSubmenuOption({
-    //     submenu: workspaceMenu.modes,
-    //     suboption: workspaceMenu.modesSubactions.compact,
-    //   });
-    //   cy.get('div.compact').should('have.length', 1);
-    //   selectSubmenuOption({
-    //     submenu: workspaceMenu.modes,
-    //     suboption: workspaceMenu.modesSubactions.standard,
-    //   });
-    // });
 
     describe('delete', () => {
       it('rejecting alert preserves note', () => {

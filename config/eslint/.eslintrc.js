@@ -6,7 +6,6 @@ module.exports = {
     'jquery': true,
     'mocha': true,
     'jasmine': true,
-    'webdriverio/wdio': true,
     'es6': true,
   },
   globals: {
@@ -30,7 +29,6 @@ module.exports = {
     'babel',
     'react',
     'jasmine',
-    'webdriverio',
   ],
   rules: {
     'indent': 0,

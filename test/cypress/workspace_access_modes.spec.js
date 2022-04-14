@@ -40,7 +40,7 @@ describe('workspace access modes', () => {
       cy.get('#vline').should('be.visible');
       cy.get('#hline').should('be.visible');
       // From setup function;
-      cy.get('#ic-compass-topic').should('contain', 'webdriverio');
+      cy.get('#ic-compass-topic').should('contain', 'e2e');
       cy.get('.ic-workspace-button').should('not.exist');
       cy.get('.ic-help-button').should('not.exist');
       expectCompassStructure();
