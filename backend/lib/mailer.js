@@ -12,7 +12,7 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 // Cannot import our logger, as it depends on the Mailer.
 
-const sendEmailInDev = true;
+const sendEmailInDev = false;
 
 class Mailer {
   constructor() {
@@ -20,7 +20,7 @@ class Mailer {
   }
 
   sendEmailSES({ text, recipientEmail, subject }) {
-    if (config.serverEnv.isDev && !sendEmailInDev) {
+    if (config.serverEnv.isTest || (config.serverEnv.isDev && !sendEmailInDev)) {
       // eslint-disable-next-line no-console
       console.log(`In production, would've sent email:\n
 
