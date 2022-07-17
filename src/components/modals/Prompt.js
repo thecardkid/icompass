@@ -9,7 +9,7 @@ import { ModalFooter } from './shared';
 import * as uiX from '@actions/ui';
 import { MODAL_NAME } from '@utils/constants';
 
-export function Prompt(dynamicModalProps, paragraphs) {
+export function Prompt(dynamicModalProps, paragraphs, paragraphsAfterInput = [], inputStyle = {}) {
   const x = class X extends React.Component {
     constructor(props) {
       super(props);
@@ -54,11 +54,13 @@ export function Prompt(dynamicModalProps, paragraphs) {
                  value={this.state.value}
                  autoFocus={true}
                  spellCheck={false}
+                 style={inputStyle}
                  onFocus={(e)=> {
                    // A hack to make the cursor come after the default text, instead of before.
                    e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length);
                  }}
                  onChange={this.setValue} />
+          {paragraphsAfterInput.map((text, i) => <p dangerouslySetInnerHTML={{__html: text}} key={i} />)}
           {this.props.children}
           <ModalFooter confirmButton={{
             text: 'Submit',
@@ -104,16 +106,20 @@ export const PeopleGroupsPrompt = Prompt({
   modalName: MODAL_NAME.PEOPLE_GROUPS,
   heading: `1. Who's involved, including you?`,
   disableDismiss: true,
-}, [
-  `<p>For and with everyone involved, explore...</p>`,
-]);
+},
+  [], // No paragraphs before input
+  [`<p>For and with everyone involved, explore...</p>`],
+  { marginTop: 0 }, // Remove margin-top of input box because there is no text before it.
+);
 
 export const PeopleGroupsDismissablePrompt = Prompt({
   modalName: MODAL_NAME.PEOPLE_GROUPS_DISMISSABLE,
   heading: `1. Who's involved, including you?`,
-}, [
-  `<p>For and with everyone involved, explore...</p>`,
-]);
+},
+  [],
+  [`<p>For and with everyone involved, explore...</p>`],
+  { marginTop: 0 },
+);
 
 export const UsernamePrompt = Prompt({
   modalName: MODAL_NAME.USERNAME,
