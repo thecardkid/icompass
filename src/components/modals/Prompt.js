@@ -133,5 +133,5 @@ export const TopicPrompt = Prompt({
   modalName: MODAL_NAME.TOPIC,
   heading: 'Edit workspace topic',
 }, [
-  'What are you working on:',
+  'What are you working on?',
 ]);
