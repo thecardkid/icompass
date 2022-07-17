@@ -137,7 +137,7 @@ module.exports = (function() {
   router.post('/send_reminder_email', handleSendReminderEmail);
   router.post('/send_bookmarks_email', handleEmailBookmarks);
   router.post('/submit_feedback', handleSubmitFeedback);
-  if (config.serverEnv.isDev) {
+  if (config.serverEnv.isDev || config.serverEnv.isTest) {
     router.post('/create_dev', handleCreateWorkspaceForDev);
   }
   return router;
