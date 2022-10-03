@@ -92,7 +92,7 @@ class Compass extends Component {
 
     this.hasEditingRights = !this.props.viewOnly;
     this.state = {
-      showFullTopic: false,
+      showFullTopic: true,
       isDraggingCenter: false,
       centerPosition: {
         // buffer these in the state to bypass redux when
