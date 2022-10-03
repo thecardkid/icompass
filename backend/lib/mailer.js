@@ -32,7 +32,7 @@ Message: ${text}
     }
 
     const params = {
-      Source: 'noreply@icompass.me', /* required */
+      Source: 'iCompass <noreply@icompass.me>',
       Destination: {
         ToAddresses: [recipientEmail],
       },
