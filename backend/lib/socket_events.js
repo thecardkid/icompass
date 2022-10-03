@@ -18,6 +18,9 @@ module.exports = {
     BULK_UPDATE_NOTES: 'bulk update notes',
     BULK_DRAG_NOTES: 'bulk drag notes',
     BULK_DELETE_NOTES: 'bulk delete notes',
+    // Frontend uses this event to check the fact that server does not require a client refresh.
+    // If the data comes back, then it will take action to delete the local storage key.
+    CLEAR_NOTE_PROGRESS: 'clear note progress',
   },
 
   // Events emitted by the server and handled by the client.
@@ -35,5 +38,8 @@ module.exports = {
     REFRESH_REQUIRED: 'refresh required',
     USER_ERROR: 'user error',
     SERVER_ERROR: 'server error',
+    // Frontend uses this event to check the fact that server does not require a client refresh.
+    // If the data comes back, then it will take action to delete the local storage key.
+    CLEAR_NOTE_PROGRESS: 'clear note progress',
   },
 };

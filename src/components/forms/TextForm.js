@@ -73,7 +73,9 @@ class TextForm extends Component {
       return;
     }
     this.props.submit(text, false, this.state, isDraft);
-    this.saveNoteProgress(null);
+    // Do not clear note progress here, as the user may have to refresh the page due
+    // to a server restart. Instead, progress is cleared in the success handler of `submit`.
+    this.socket.emitClearNoteProgress({ key: this.props.noteProgressKey });
   };
 
   renderStyleToolbar() {

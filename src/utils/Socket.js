@@ -37,6 +37,12 @@ const SocketSingleton = (() => {
       }
     };
 
+    emitClearNoteProgress = (data) => {
+      if (this.checkConnected()) {
+        this.socket.emit(events.backend.CLEAR_NOTE_PROGRESS, data);
+      }
+    };
+
     emitEditNote = (edited) => {
       if (this.checkConnected()) {
         this.socket.emit(events.backend.UPDATE_NOTE, edited);

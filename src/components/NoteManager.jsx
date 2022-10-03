@@ -26,6 +26,7 @@ class NoteManager extends Component {
     this.socket = Socket.getInstance();
     this.socket.subscribe({
       [events.frontend.UPDATE_ALL_NOTES]: this.onUpdateNotes,
+      [events.frontend.CLEAR_NOTE_PROGRESS]: this.clearNoteProgress,
       [events.frontend.DELETED_NOTE]: this.onDeleteNotes,
     });
 
@@ -41,6 +42,10 @@ class NoteManager extends Component {
       onend: this.dragEnd,
     });
   }
+
+  clearNoteProgress = ({ key }) => {
+    Storage.saveNoteProgress(key, null);
+  };
 
   onUpdateNotes = (notes) => {
     this.props.noteX.updateAll(notes);

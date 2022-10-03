@@ -44,6 +44,12 @@ class WorkspaceSocket {
     this.socket.on(events.backend.BULK_DRAG_NOTES, this.wrapTryCatchAndBind(this.bulkDragNotes, 'Update sticky notes'));
     this.socket.on(events.backend.BULK_DELETE_NOTES, this.wrapTryCatchAndBind(this.bulkDeleteNotes, 'Delete sticky notes'));
     this.socket.on(events.backend.DELETE_WORKSPACE, this.wrapTryCatchAndBind(this.deleteCompass, 'Delete workspace'));
+    this.socket.on(events.backend.CLEAR_NOTE_PROGRESS, this.wrapTryCatchAndBind(async (data) => {
+      if (this.clientShouldRefresh()) {
+        return;
+      }
+      this.socket.emit(events.frontend.CLEAR_NOTE_PROGRESS, data);
+    }, 'Clear note progress'));
   }
 
   // Necessary for handlers that want to report failures back to the client.
@@ -51,6 +57,7 @@ class WorkspaceSocket {
     const bindedFn = asyncFn.bind(this);
     return async (...args) => {
       try {
+        // Can't call clientShouldRefresh here, it doesn't apply to every event.
         await bindedFn(...args);
       } catch (ex) {
         if (ex.name === userError) {
