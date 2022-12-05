@@ -204,37 +204,6 @@ div#ic-visual-toolbar {
       width: 90%;
     }
 
-    .footer {
-      display: flex;
-      justify-content: right;
-      padding: 10px;
-
-      button.bulk-edit-btn {
-        font-family: @notosans;
-        font-size: 12px;
-        color: @light;
-        .border-radius(3px);
-        padding: 5px 10px;
-        margin: 5px 2px 0;
-
-        &.cancel {
-          border: 1px solid @dark;
-          background: @light;
-          color: @dark;
-          // Undo the 1px border
-          padding: 4px 10px;
-        }
-
-        &.submit {
-          background: @dark;
-        }
-
-        &.delete {
-          background: @red;
-        }
-      }
-    }
-
     .action {
       // Same width as <hr>.
       width: 90%;
@@ -297,6 +266,21 @@ div#ic-visual-toolbar {
           span.ic-color {
             .border-radius(100%);
             border: 1px solid @dark;
+          }
+        }
+      }
+
+      &.delete {
+        button.bulk-edit-btn {
+          font-family: @notosans;
+          font-size: 12px;
+          color: @light;
+          .border-radius(3px);
+          padding: 5px 10px;
+          margin: 5px 2px 0;
+
+          &.delete {
+            background: @red;
           }
         }
       }

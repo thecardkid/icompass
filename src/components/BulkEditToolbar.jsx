@@ -115,7 +115,6 @@ class BulkEditToolbar extends Component {
             <div>Dragging one note will move all selected notes. Or choose an action below.</div>
           </div>
           <div id={'actions'}>
-            <hr />
             <div className={'action update-color'}>
               <span className={'label'}>Color</span>
               <FormPalette setColor={this.bulkColor} color={this.state.color}/>
@@ -136,11 +135,13 @@ class BulkEditToolbar extends Component {
               <i className={classnames('material-icons strikethrough', { applied: this.state.strikethroughApplied })}
                  onClick={this.toggleStrikethrough}>strikethrough_s</i>
             </div>
-            <hr />
-            <div className={'footer'}>
+            <div className={'action delete'}>
+              <span className={'label'}>Delete</span>
               <button className={'bulk-edit-btn delete'} onClick={this.bulkDelete}>
                 Delete
               </button>
+            </div>
+            <div className={'footer'}>
             </div>
           </div>
         </div>
