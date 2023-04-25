@@ -64,7 +64,7 @@ CompassSchema.statics.makeCompass = function(topic) {
     });
     this.create(newCompass, function(err, compass) {
       if (err) {
-        reject('Failed to create compass');
+        reject('Failed to create compass: ' + err.message);
         return;
       }
       resolve(compass);
