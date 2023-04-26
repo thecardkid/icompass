@@ -13,9 +13,6 @@ async function getMongoURI() {
 async function initializeDB() {
   const db = await mongoose.connect(await getMongoURI(), {
     useNewUrlParser: true,
-    autoReconnect: true,
-    reconnectTries: 100,
-    reconnectInterval: 2000,
   });
   if (db.connections.length) {
     const conn = db.connections[0];
