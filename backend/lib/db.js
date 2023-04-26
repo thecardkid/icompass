@@ -23,7 +23,6 @@ async function initializeDB() {
     logger.error('Could not connect to mongoose', e);
     throw new Error(e);
   });
-  mongoose.set('useFindAndModify', false);
   return db;
 }
 
